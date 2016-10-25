@@ -69,7 +69,7 @@ module.exports = function(opts) {
 };
 
 function getDeepMoreThenOneChild(tree) {
-  if (tree.children && tree.children.length === 1) {
+  if (tree.children.length === 1) {
     return getDeepMoreThenOneChild(tree.children[0]);
   }
   return tree;
@@ -100,7 +100,6 @@ function addToPath(tree, p, value) {
   }
   if (p.length === 1) {
     Object.assign(child, value);
-    delete child.children;
     return;
   }
   p.shift();

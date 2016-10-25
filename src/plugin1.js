@@ -11,7 +11,7 @@ var width = 700,
     radius = (Math.min(width, height) / 2) - 10;
 
 function color(node) {
-  if (node.children) {
+  if (node.children && node.children.length) {
     var parents = getAncestors(node);
     var hasNodeModules = !!parents.filter(n => n.data.name === 'node_modules').length;
     return hasNodeModules ? '#599e59' : '#487ea4';
@@ -40,7 +40,7 @@ var arc = d3arc()
     .innerRadius(function(d) { return y(d.y0); })
     .outerRadius(function(d) { return y(d.y1); });
 
-var root = d3hierarchy(data, function(d) { return d.children; })
+var root = d3hierarchy(data)
   .sum(function(d) {
     if (d.children) {
       return 0;
