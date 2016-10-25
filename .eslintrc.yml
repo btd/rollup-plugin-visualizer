@@ -1,0 +1,55 @@
+---
+root: true
+
+extends: eslint:recommended
+
+env:
+  node: true
+  mocha: true
+  browser: true
+  es6: true
+
+parserOptions:
+  ecmaVersion: 6
+  sourceType: "module"
+  ecmaFeatures:
+    jsx: true
+
+plugins:
+  - react
+
+rules:
+  quotes: 0
+  indent: 0
+  require-jsdoc: 0
+  eqeqeq: 0
+  no-invalid-this: 0
+  default-case: 0
+  no-nested-ternary: 0
+  no-underscore-dangle: 0
+  func-style: 0
+  new-cap: 0
+  callback-return: 0
+  no-loop-func: 0
+  strict: 0
+  semi: [1, "always"]
+  space-before-function-paren: [1, "never"]
+  space-before-blocks: [1, "always"]
+  keyword-spacing: [1, {"before": true, "after": true, "overrides": {}}]
+  no-sequences: 2
+  dot-notation: 1
+  dot-location: [2, "property"]
+  curly: 2
+  no-case-declarations: 0
+  no-console: 0
+
+  global-require: 2
+  no-path-concat: 2
+
+  no-restricted-globals: [2, "Promise"]
+
+  react/no-direct-mutation-state: 2
+  react/react-in-jsx-scope: 2
+  react/jsx-no-undef: 1
+  react/jsx-uses-react: 2
+  react/jsx-uses-vars: 1
