@@ -1,10 +1,13 @@
 {
   "name": "rollup-plugin-visualizer",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "main": "plugin.js",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
-
+  "files": [
+    "lib/*",
+    "plugin.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:btd/rollup-plugin-visualizer.git"
