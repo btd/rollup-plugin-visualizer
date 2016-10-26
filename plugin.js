@@ -6,22 +6,10 @@ const jsString = fs.readFileSync(path.join(__dirname, 'lib', './pluginmain.js'),
 
 const COMMONJS_PLUGIN_PREFIX = '\u0000commonjs-proxy:';
 
-function writeFile(fileName, content) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(fileName, content, (err) => {
-      if (err) {
-        return reject(err);
-      }
-
-      resolve();
-    });
-  });
-}
-
 module.exports = function(opts) {
+  opts = opts || {};
   var filename = opts.filename || 'stats.html';
 
-  var html;
   return {
     ongenerate({ bundle }) {
       let root = {
@@ -52,7 +40,7 @@ module.exports = function(opts) {
       });
       flattenTree(root);
 
-      html = `<!doctype html>
+      var html = `<!doctype html>
           <title>RollUp Visualizer</title>
           <meta charset="utf-8">
           <style>${cssString}</style>
@@ -75,15 +63,13 @@ module.exports = function(opts) {
             ${jsString}
           </script>
       `;
-    },
-    onwrite() {
-      return writeFile(filename, html);
+      fs.writeFileSync(filename, html);
     }
   };
 };
 
 function getDeepMoreThenOneChild(tree) {
-  if (tree.children.length === 1) {
+  if (tree.children && tree.children.length === 1) {
     return getDeepMoreThenOneChild(tree.children[0]);
   }
   return tree;
