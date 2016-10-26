@@ -14,7 +14,8 @@
   },
   "scripts": {
     "build": "npm run buildplugin",
-    "buildplugin": "rollup -c rollup.config.js -o ./lib/pluginmain.js"
+    "buildplugin": "rollup -c rollup.config.js -o ./lib/pluginmain.js",
+    "prepublish": "npm run build"
   },
   "dependencies": {},
   "devDependencies": {
@@ -27,6 +28,7 @@
     "eslint-plugin-react": "^3.5.1",
     "rollup": "^0.36.3",
     "rollup-plugin-commonjs": "^5.0.5",
-    "rollup-plugin-node-resolve": "^2.0.0"
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-uglify": "^1.0.1"
   }
 }

@@ -8,6 +8,7 @@ const COMMONJS_PLUGIN_PREFIX = '\u0000commonjs-proxy:';
 
 
 module.exports = function(opts) {
+  opts = opts || {};
   var filename = opts.filename || 'stats.html';
 
   return {
@@ -69,7 +70,7 @@ module.exports = function(opts) {
 };
 
 function getDeepMoreThenOneChild(tree) {
-  if (tree.children.length === 1) {
+  if (tree.children && tree.children.length === 1) {
     return getDeepMoreThenOneChild(tree.children[0]);
   }
   return tree;

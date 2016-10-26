@@ -13,7 +13,7 @@ var width = 700,
 function color(node) {
   if (node.children && node.children.length) {
     var parents = getAncestors(node);
-    var hasNodeModules = !!parents.filter(n => n.data.name === 'node_modules').length;
+    var hasNodeModules = !!parents.filter(function(n) { return n.data.name === 'node_modules'; }).length;
     return hasNodeModules ? '#599e59' : '#487ea4';
   } else {
     return '#db7100';
@@ -42,7 +42,7 @@ var arc = d3arc()
 
 var root = d3hierarchy(data)
   .sum(function(d) {
-    if (d.children) {
+    if (d.children && d.children.length) {
       return 0;
     } else {
       return d.size;
