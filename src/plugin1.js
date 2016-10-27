@@ -2,7 +2,7 @@ import { select } from 'd3-selection';
 import { partition as d3partition, hierarchy as d3hierarchy } from 'd3-hierarchy';
 import { arc as d3arc } from 'd3-shape';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
-import bytes from 'bytes';
+import { format as formatBytes } from 'bytes';
 
 var data = window.nodesData;
 
@@ -80,7 +80,7 @@ function mouseover(d) {
     .text(percentageString);
 
   select(".details-size")
-    .text(bytes(d.value));
+    .text(formatBytes(d.value));
 
   select(".details")
       .style("display", "block");
