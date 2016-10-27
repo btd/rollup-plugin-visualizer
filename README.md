@@ -1,6 +1,9 @@
 # Rollup Plugin Visualizer
 Visualize and analyze your Rollup bundle to see which modules are taking up space.
 
+## Screenshot
+
+![Screenshot](https://github.com/btd/rollup-plugin-visualizer/blob/master/pic.png?raw=true)
 
 ## Plugin Usage
 
