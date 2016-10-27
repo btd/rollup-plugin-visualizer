@@ -48,7 +48,7 @@ var root = d3hierarchy(data)
       return d.size;
     }
   })
-  .sort(null);
+  .sort();
 
 partition(root);
 
