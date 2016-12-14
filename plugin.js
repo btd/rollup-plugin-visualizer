@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const SourceMapConsumer = require('source-map').SourceMapConsumer;
 
 const cssString = fs.readFileSync(path.join(__dirname, 'lib', './style.css'), 'utf8');
 const jsString = fs.readFileSync(path.join(__dirname, 'lib', './pluginmain.js'), 'utf8');
@@ -10,19 +11,25 @@ const COMMONJS_PLUGIN_PREFIX = '\u0000commonjs-proxy:';
 module.exports = function(opts) {
   opts = opts || {};
   var filename = opts.filename || 'stats.html';
+  var useSourceMap = !!opts.sourcemap
 
   return {
-    ongenerate({ bundle }) {
+    ongenerate({ bundle }, rendered) {
+
       let root = {
         name: 'root',
         children: []
       };
 
+      if (useSourceMap) {
+        addMinifiedSizesToModules(bundle, rendered);
+      } 
+
       bundle.modules.forEach(module => {
         let name = module.id;
         let m = {
           //dependencies: module.dependencies,
-          size: Buffer.byteLength(module.code, 'utf8'),
+          size: useSourceMap ? (module.minifiedSize || 0) : Buffer.byteLength(module.code, 'utf8'),
           originalSize: Buffer.byteLength(module.originalCode, 'utf8')
         };
 
@@ -105,4 +112,68 @@ function addToPath(tree, p, value) {
   }
   p.shift();
   addToPath(child, p, value);
+}
+
+function getBytesPerFileUsingSourceMap(rendered) {
+
+  let map = new SourceMapConsumer(rendered.map);
+  let lines = rendered.code.split(/[\r\n]/);
+
+  let bytesPerFile = {};
+
+  // For every byte in the minified code, do a sourcemap lookup.
+  for (let line = 0; line < lines.length; line++) {
+    for (let col = 0; col < lines[line].length; col++) {
+      let result = map.originalPositionFor({ line: line + 1, column: col });
+      let source = result.source || 'root'
+      if (!bytesPerFile[source]) bytesPerFile[source] = 0;
+      bytesPerFile[source]++
+    }
+  }
+  return Object.keys(bytesPerFile).map(file =>
+      ({ file: path.resolve(file), bytes: bytesPerFile[file] }));
+} 
+
+
+
+// Given a file /path/to/file/on/filesystem.js
+// - remove extension
+// - return `segmentCount` number of path segments, starting from the tail and working backwards
+// segments('/path/to/file/on/filesystem.js')(3) === ['filesystem', 'on', 'file']
+const segments = filepath => segmentCount =>
+  filepath.replace(/\.\w{1,6}$/, "").split(path.sep).reverse().slice(0, segmentCount);
+
+
+// Adds a .minifiedSize property to each module in the bundle (using sourcemap data)
+// If the minified size could not be computed, no property is added.
+// Module id are mapped to sources by finding the best match.
+// Matching is done by removing the file extensions and comparing path segments 
+function addMinifiedSizesToModules(bundle, rendered) {
+  let fileSizes = getBytesPerFileUsingSourceMap(rendered);
+
+  const findBestMatchingModule = filename => {
+    let totalSegments = filename.split(path.sep).length;
+
+    for (let i = 1; i <= totalSegments; i++) {
+
+      let leftVals = segments(filename)(i);
+
+      let matches = bundle.modules.filter(module => {
+        let rightVals = segments(module.id)(i)
+        return rightVals.every((rightVal, i) => rightVal === leftVals[i]);
+      })
+
+      if (matches.length === 1) {
+        return matches[0];
+      }
+    }
+
+    return null;
+  }
+
+  fileSizes.forEach(tuple => {
+    let module = findBestMatchingModule(tuple.file);
+    if (module) module.minifiedSize = tuple.bytes;
+  })
+
 }
