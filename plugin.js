@@ -125,9 +125,11 @@ function getBytesPerFileUsingSourceMap(rendered) {
   for (let line = 0; line < lines.length; line++) {
     for (let col = 0; col < lines[line].length; col++) {
       let result = map.originalPositionFor({ line: line + 1, column: col });
-      let source = result.source || 'root'
-      if (!bytesPerFile[source]) bytesPerFile[source] = 0;
-      bytesPerFile[source]++
+      let source = result.source || 'root';
+      if (!bytesPerFile[source]) {
+        bytesPerFile[source] = 0;
+      }
+      bytesPerFile[source]++;
     }
   }
   return Object.keys(bytesPerFile).map(file =>
@@ -136,13 +138,17 @@ function getBytesPerFileUsingSourceMap(rendered) {
 
 
 
-// Given a file /path/to/file/on/filesystem.js
+// Given a file C:/path/to/file/on/filesystem.js
 // - remove extension
-// - return `segmentCount` number of path segments, starting from the tail and working backwards
-// segments('/path/to/file/on/filesystem.js')(3) === ['filesystem', 'on', 'file']
-const segments = filepath => segmentCount =>
-  filepath.replace(/\.\w{1,6}$/, "").split(path.sep).reverse().slice(0, segmentCount);
+// - strip filesytstem root
+// - return path segments, starting from the tail and working backwards
+// segments('C:/path/to/file/on/filesystem.js') === ['filesystem', 'on', 'file', 'to', 'path']
+function segments(filepath) {
+  let parsed = path.parse(filepath);
+  let dirWithoutRoot = parsed.dir.substring(parsed.root.length);
 
+  return dirWithoutRoot.split(path.sep).concat(parsed.name).reverse();
+}
 
 // Adds a .minifiedSize property to each module in the bundle (using sourcemap data)
 // If the minified size could not be computed, no property is added.
@@ -152,16 +158,19 @@ function addMinifiedSizesToModules(bundle, rendered) {
   let fileSizes = getBytesPerFileUsingSourceMap(rendered);
 
   const findBestMatchingModule = filename => {
-    let totalSegments = filename.split(path.sep).length;
+    let filenameSegments = segments(filename);
 
-    for (let i = 1; i <= totalSegments; i++) {
-
-      let leftVals = segments(filename)(i);
+    for (let i = 1; i <= filenameSegments.length; i++) {
+      let leftVals = filenameSegments.slice(0, i);
 
       let matches = bundle.modules.filter(module => {
-        let rightVals = segments(module.id)(i)
+        let moduleSegments = segments(module.id);
+        let rightVals = moduleSegments.slice(0, i)
+        if (rightVals.length !== leftVals.length) {
+          return false;
+        }
         return rightVals.every((rightVal, i) => rightVal === leftVals[i]);
-      })
+      });
 
       if (matches.length === 1) {
         return matches[0];
@@ -174,6 +183,6 @@ function addMinifiedSizesToModules(bundle, rendered) {
   fileSizes.forEach(tuple => {
     let module = findBestMatchingModule(tuple.file);
     if (module) module.minifiedSize = tuple.bytes;
-  })
-
+  });
 }
+
