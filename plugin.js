@@ -11,7 +11,7 @@ const COMMONJS_PLUGIN_PREFIX = '\u0000commonjs-proxy:';
 module.exports = function(opts) {
   opts = opts || {};
   var filename = opts.filename || 'stats.html';
-  var useSourceMap = !!opts.sourcemap
+  var useSourceMap = !!opts.sourcemap;
 
   return {
     ongenerate({ bundle }, rendered) {
@@ -23,7 +23,7 @@ module.exports = function(opts) {
 
       if (useSourceMap) {
         addMinifiedSizesToModules(bundle, rendered);
-      } 
+      }
 
       bundle.modules.forEach(module => {
         let name = module.id;
@@ -134,7 +134,7 @@ function getBytesPerFileUsingSourceMap(rendered) {
   }
   return Object.keys(bytesPerFile).map(file =>
       ({ file: path.resolve(file), bytes: bytesPerFile[file] }));
-} 
+}
 
 
 
@@ -153,7 +153,7 @@ function segments(filepath) {
 // Adds a .minifiedSize property to each module in the bundle (using sourcemap data)
 // If the minified size could not be computed, no property is added.
 // Module id are mapped to sources by finding the best match.
-// Matching is done by removing the file extensions and comparing path segments 
+// Matching is done by removing the file extensions and comparing path segments
 function addMinifiedSizesToModules(bundle, rendered) {
   let fileSizes = getBytesPerFileUsingSourceMap(rendered);
 
@@ -165,7 +165,7 @@ function addMinifiedSizesToModules(bundle, rendered) {
 
       let matches = bundle.modules.filter(module => {
         let moduleSegments = segments(module.id);
-        let rightVals = moduleSegments.slice(0, i)
+        let rightVals = moduleSegments.slice(0, i);
         if (rightVals.length !== leftVals.length) {
           return false;
         }
@@ -178,11 +178,10 @@ function addMinifiedSizesToModules(bundle, rendered) {
     }
 
     return null;
-  }
+  };
 
   fileSizes.forEach(tuple => {
     let module = findBestMatchingModule(tuple.file);
-    if (module) module.minifiedSize = tuple.bytes;
+    if (module) {module.minifiedSize = tuple.bytes;}
   });
 }
-
