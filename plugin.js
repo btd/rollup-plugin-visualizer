@@ -140,7 +140,7 @@ function getBytesPerFileUsingSourceMap(rendered) {
 
 // Given a file C:/path/to/file/on/filesystem.js
 // - remove extension
-// - strip filesytstem root
+// - strip filesystem root
 // - return path segments, starting from the tail and working backwards
 // segments('C:/path/to/file/on/filesystem.js') === ['filesystem', 'on', 'file', 'to', 'path']
 function segments(filepath) {
