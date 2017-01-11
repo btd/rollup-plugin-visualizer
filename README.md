@@ -30,6 +30,19 @@ plugins: [Visualizer({
 //...
 ```
 
+The file sizes reported are before any minification happens (if UglifyJS is being used, for example).
+Minified module sizes can be calculated using the source maps.
+To enable this mode, pass `{ sourcemap: true }`
+
+```javascript
+var Visualizer = require('rollup-plugin-visualizer');
+
+//...
+plugins: [Visualizer({
+  sourcemap: true
+})],
+//...
+```
 ## Acknowledges
 
 Initially this plugin is based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but at the end rest only styles and layout. Thanks tons of people around internet for great examples of d3 usage.
