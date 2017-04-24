@@ -14,9 +14,10 @@ module.exports = function(opts) {
   var useSourceMap = !!opts.sourcemap;
 
   return {
-    ongenerate({ bundle }, rendered) {
+    ongenerate(args, rendered) {
+      var bundle = args.bundle;
 
-      let root = {
+      var root = {
         name: 'root',
         children: []
       };
@@ -26,8 +27,8 @@ module.exports = function(opts) {
       }
 
       bundle.modules.forEach(module => {
-        let name = module.id;
-        let m = {
+        var name = module.id;
+        var m = {
           //dependencies: module.dependencies,
           size: useSourceMap ? (module.minifiedSize || 0) : Buffer.byteLength(module.code, 'utf8'),
           originalSize: Buffer.byteLength(module.originalCode, 'utf8')
@@ -84,9 +85,9 @@ function getDeepMoreThenOneChild(tree) {
 }
   // if root children have only on child we can flatten this
 function flattenTree(root) {
-  let newChildren = [];
+  var newChildren = [];
   root.children.forEach((child) => {
-    let commonParent = getDeepMoreThenOneChild(child);
+    var commonParent = getDeepMoreThenOneChild(child);
     newChildren = newChildren.concat(commonParent.children);
   });
   root.children = newChildren;
@@ -98,7 +99,7 @@ function addToPath(tree, p, value) {
     p.shift();
   }
 
-  let child = tree.children.filter(c => c.name === p[0])[0];
+  var child = tree.children.filter(c => c.name === p[0])[0];
   if (!child) {
     child = {
       name: p[0],
@@ -115,17 +116,16 @@ function addToPath(tree, p, value) {
 }
 
 function getBytesPerFileUsingSourceMap(rendered) {
+  var map = new SourceMapConsumer(rendered.map);
+  var lines = rendered.code.split(/[\r\n]/);
 
-  let map = new SourceMapConsumer(rendered.map);
-  let lines = rendered.code.split(/[\r\n]/);
-
-  let bytesPerFile = {};
+  var bytesPerFile = {};
 
   // For every byte in the minified code, do a sourcemap lookup.
-  for (let line = 0; line < lines.length; line++) {
-    for (let col = 0; col < lines[line].length; col++) {
-      let result = map.originalPositionFor({ line: line + 1, column: col });
-      let source = result.source || 'root';
+  for (var line = 0; line < lines.length; line++) {
+    for (var col = 0; col < lines[line].length; col++) {
+      var result = map.originalPositionFor({ line: line + 1, column: col });
+      var source = result.source || 'root';
       if (!bytesPerFile[source]) {
         bytesPerFile[source] = 0;
       }
@@ -144,8 +144,8 @@ function getBytesPerFileUsingSourceMap(rendered) {
 // - return path segments, starting from the tail and working backwards
 // segments('C:/path/to/file/on/filesystem.js') === ['filesystem', 'on', 'file', 'to', 'path']
 function segments(filepath) {
-  let parsed = path.parse(filepath);
-  let dirWithoutRoot = parsed.dir.substring(parsed.root.length);
+  var parsed = path.parse(filepath);
+  var dirWithoutRoot = parsed.dir.substring(parsed.root.length);
 
   return dirWithoutRoot.split(path.sep).concat(parsed.name).reverse();
 }
@@ -155,17 +155,17 @@ function segments(filepath) {
 // Module id are mapped to sources by finding the best match.
 // Matching is done by removing the file extensions and comparing path segments
 function addMinifiedSizesToModules(bundle, rendered) {
-  let fileSizes = getBytesPerFileUsingSourceMap(rendered);
+  var fileSizes = getBytesPerFileUsingSourceMap(rendered);
 
   const findBestMatchingModule = filename => {
-    let filenameSegments = segments(filename);
+    var filenameSegments = segments(filename);
 
-    for (let i = 1; i <= filenameSegments.length; i++) {
-      let leftVals = filenameSegments.slice(0, i);
+    for (var i = 1; i <= filenameSegments.length; i++) {
+      var leftVals = filenameSegments.slice(0, i);
 
-      let matches = bundle.modules.filter(module => {
-        let moduleSegments = segments(module.id);
-        let rightVals = moduleSegments.slice(0, i);
+      var matches = bundle.modules.filter(module => {
+        var moduleSegments = segments(module.id);
+        var rightVals = moduleSegments.slice(0, i);
         if (rightVals.length !== leftVals.length) {
           return false;
         }
@@ -181,7 +181,7 @@ function addMinifiedSizesToModules(bundle, rendered) {
   };
 
   fileSizes.forEach(tuple => {
-    let module = findBestMatchingModule(tuple.file);
+    var module = findBestMatchingModule(tuple.file);
     if (module) {module.minifiedSize = tuple.bytes;}
   });
 }
