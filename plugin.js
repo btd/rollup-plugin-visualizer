@@ -34,7 +34,7 @@ module.exports = function(opts) {
         };
 
         if (name.indexOf(PLUGIN_PREFIX) === 0) {
-          addToPath(root, name, m);
+          addToPath(root, [name], m);
         } else {
           addToPath(root, name.split(path.sep), m);
         }
