@@ -1,16 +1,15 @@
-const fs = require('fs');
-const path = require('path');
-const SourceMapConsumer = require('source-map').SourceMapConsumer;
+const fs = require("fs");
+const path = require("path");
+const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
-const cssString = fs.readFileSync(path.join(__dirname, 'lib', './style.css'), 'utf8');
-const jsString = fs.readFileSync(path.join(__dirname, 'lib', './pluginmain.js'), 'utf8');
+const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
+const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
 
-const COMMONJS_PLUGIN_PREFIX = '\u0000commonjs-proxy:';
-
+const PLUGIN_PREFIX = "\u0000";
 
 module.exports = function(opts) {
   opts = opts || {};
-  var filename = opts.filename || 'stats.html';
+  var filename = opts.filename || "stats.html";
   var useSourceMap = !!opts.sourcemap;
 
   return {
@@ -18,7 +17,7 @@ module.exports = function(opts) {
       var bundle = args.bundle;
 
       var root = {
-        name: 'root',
+        name: "root",
         children: []
       };
 
@@ -30,22 +29,15 @@ module.exports = function(opts) {
         var name = module.id;
         var m = {
           //dependencies: module.dependencies,
-          size: useSourceMap ? (module.minifiedSize || 0) : Buffer.byteLength(module.code, 'utf8'),
-          originalSize: Buffer.byteLength(module.originalCode, 'utf8')
+          size: useSourceMap ? module.minifiedSize || 0 : Buffer.byteLength(module.code, "utf8"),
+          originalSize: Buffer.byteLength(module.originalCode, "utf8")
         };
 
-        if (name.indexOf(COMMONJS_PLUGIN_PREFIX) === 0) {
-          m.name = COMMONJS_PLUGIN_PREFIX;
-          m = {
-            plugin: [
-              m
-            ]
-          };
-          name = name.substr(COMMONJS_PLUGIN_PREFIX.length);
+        if (name.indexOf(PLUGIN_PREFIX) === 0) {
+          addToPath(root, name, m);
+        } else {
+          addToPath(root, name.split(path.sep), m);
         }
-
-        addToPath(root, name.split(path.sep), m);
-
       });
       flattenTree(root);
 
@@ -83,19 +75,18 @@ function getDeepMoreThenOneChild(tree) {
   }
   return tree;
 }
-  // if root children have only on child we can flatten this
+// if root children have only on child we can flatten this
 function flattenTree(root) {
   var newChildren = [];
-  root.children.forEach((child) => {
+  root.children.forEach(child => {
     var commonParent = getDeepMoreThenOneChild(child);
     newChildren = newChildren.concat(commonParent.children);
   });
   root.children = newChildren;
 }
 
-
 function addToPath(tree, p, value) {
-  if (p[0] === '') {
+  if (p[0] === "") {
     p.shift();
   }
 
@@ -125,18 +116,15 @@ function getBytesPerFileUsingSourceMap(rendered) {
   for (var line = 0; line < lines.length; line++) {
     for (var col = 0; col < lines[line].length; col++) {
       var result = map.originalPositionFor({ line: line + 1, column: col });
-      var source = result.source || 'root';
+      var source = result.source || "root";
       if (!bytesPerFile[source]) {
         bytesPerFile[source] = 0;
       }
       bytesPerFile[source]++;
     }
   }
-  return Object.keys(bytesPerFile).map(file =>
-      ({ file: path.resolve(file), bytes: bytesPerFile[file] }));
+  return Object.keys(bytesPerFile).map(file => ({ file: path.resolve(file), bytes: bytesPerFile[file] }));
 }
-
-
 
 // Given a file C:/path/to/file/on/filesystem.js
 // - remove extension
@@ -182,6 +170,8 @@ function addMinifiedSizesToModules(bundle, rendered) {
 
   fileSizes.forEach(tuple => {
     var module = findBestMatchingModule(tuple.file);
-    if (module) {module.minifiedSize = tuple.bytes;}
+    if (module) {
+      module.minifiedSize = tuple.bytes;
+    }
   });
 }
