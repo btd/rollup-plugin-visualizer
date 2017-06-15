@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-visualizer",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": "plugin.js",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
