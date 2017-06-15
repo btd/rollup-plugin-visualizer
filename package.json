@@ -17,7 +17,9 @@
     "buildplugin": "rollup -c rollup.config.js -o ./lib/pluginmain.js",
     "prepublish": "npm run build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "source-map": "^0.5.6"
+  },
   "devDependencies": {
     "bytes": "^2.4.0",
     "d3-hierarchy": "^1.0.2",
