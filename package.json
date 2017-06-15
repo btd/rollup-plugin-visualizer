@@ -27,10 +27,9 @@
     "d3-selection": "^1.0.2",
     "d3-shape": "^1.0.3",
     "eslint": "^3.8.1",
-    "eslint-plugin-react": "^3.5.1",
-    "rollup": "^0.36.3",
-    "rollup-plugin-commonjs": "^5.0.5",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-uglify": "^1.0.1"
+    "rollup": "^0.43.0",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
   }
 }
