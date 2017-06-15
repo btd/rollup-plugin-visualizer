@@ -15,9 +15,6 @@ parserOptions:
   ecmaFeatures:
     jsx: true
 
-plugins:
-  - react
-
 rules:
   quotes: 0
   indent: 0
@@ -47,9 +44,3 @@ rules:
   no-path-concat: 2
 
   no-restricted-globals: [2, "Promise"]
-
-  react/no-direct-mutation-state: 2
-  react/react-in-jsx-scope: 2
-  react/jsx-no-undef: 1
-  react/jsx-uses-react: 2
-  react/jsx-uses-vars: 1
