@@ -1,32 +1,49 @@
 # Rollup Plugin Visualizer
+
+[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer)
+
 Visualize and analyze your Rollup bundle to see which modules are taking up space.
 
 ## Screenshot
 
 ![Screenshot](https://github.com/btd/rollup-plugin-visualizer/blob/master/pic.png?raw=true)
 
-## Plugin Usage
+## Installation
 
+```sh
+npm install --save-dev rollup-plugin-visualizer
 ```
-npm i -D rollup-plugin-visualizer
+
+or via yarn:
+
+```sh
+yarn add --dev rollup-plugin-visualizer
 ```
+
+## Usage
 
 ```javascript
-var Visualizer = require('rollup-plugin-visualizer');
+import visualizer from 'rollup-plugin-visualizer';
 
 //...
-plugins: [Visualizer()],
+plugins: [
+  visualizer()
+],
 //...
 ```
-This will output a file named `stats.html` in current directory. You can modify the name/location by passing a `filename` parameter into the constructor.
+
+This will output a file named `stats.html` in current directory. You can modify the name/location by passing a `filename` parameter into the constructor. You can also set a title by passing a `title` parameter.
 
 ```javascript
-var Visualizer = require('rollup-plugin-visualizer');
+import visualizer from 'rollup-plugin-visualizer';
 
 //...
-plugins: [Visualizer({
-  filename: './statistics.html'
-})],
+plugins: [
+  visualizer({
+    filename: './statistics.html',
+    title: 'My Bundle'
+  })
+],
 //...
 ```
 
@@ -35,14 +52,17 @@ Minified module sizes can be calculated using the source maps.
 To enable this mode, pass `{ sourcemap: true }`
 
 ```javascript
-var Visualizer = require('rollup-plugin-visualizer');
+import visualizer from 'rollup-plugin-visualizer';
 
 //...
-plugins: [Visualizer({
-  sourcemap: true
-})],
+plugins: [
+  visualizer({
+    sourcemap: true
+  })
+],
 //...
 ```
-## Acknowledges
 
-Initially this plugin is based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but at the end rest only styles and layout. Thanks tons of people around internet for great examples of d3 usage.
+## Acknowledgements
+
+Initially this plugin was based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage.

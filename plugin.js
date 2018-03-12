@@ -10,6 +10,7 @@ const PLUGIN_PREFIX = "\u0000";
 module.exports = function(opts) {
   opts = opts || {};
   var filename = opts.filename || "stats.html";
+  var title = opts.title || "RollUp Visualizer";
   var useSourceMap = !!opts.sourcemap;
 
   return {
@@ -42,12 +43,12 @@ module.exports = function(opts) {
       flattenTree(root);
 
       var html = `<!doctype html>
-          <title>RollUp Visualizer</title>
+          <title>${title}</title>
           <meta charset="utf-8">
           <style>${cssString}</style>
           <div>
           <div>
-              <h1>RollUp Visualizer</h1>
+              <h1>${title}</h1>
 
               <div id="chart">
                 <div class="details" style="display: none;">
