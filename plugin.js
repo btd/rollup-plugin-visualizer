@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const mkdirp = require('mkdirp');
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
 const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
@@ -65,6 +66,7 @@ module.exports = function(opts) {
             ${jsString}
           </script>
       `;
+      mkdirp.sync(path.dirname(filename));
       fs.writeFileSync(filename, html);
     }
   };

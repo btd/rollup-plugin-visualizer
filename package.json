@@ -18,6 +18,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "source-map": "^0.7.2"
   },
   "devDependencies": {
