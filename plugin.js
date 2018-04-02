@@ -31,53 +31,53 @@ module.exports = function(opts) {
 };
 
 function buildTree(bundle, useSourceMap) {
-      var root = {
-        name: "root",
-        children: []
-      };
-      bundle.modules.forEach(module => {
-        var name = module.id;
-        var m = {
-          //dependencies: module.dependencies,
-          size: useSourceMap ? module.minifiedSize || 0 : Buffer.byteLength(module.code, "utf8"),
-          originalSize: Buffer.byteLength(module.originalCode, "utf8")
-        };
+  var root = {
+    name: "root",
+    children: []
+  };
+  bundle.modules.forEach(module => {
+    var name = module.id;
+    var m = {
+      //dependencies: module.dependencies,
+      size: useSourceMap ? module.minifiedSize || 0 : Buffer.byteLength(module.code, "utf8"),
+      originalSize: Buffer.byteLength(module.originalCode, "utf8")
+    };
 
-        if (name.indexOf(PLUGIN_PREFIX) === 0) {
-          addToPath(root, [name], m);
-        } else {
-          addToPath(root, name.split(path.sep), m);
-        }
-      });
-      return root;
+    if (name.indexOf(PLUGIN_PREFIX) === 0) {
+      addToPath(root, [name], m);
+    } else {
+      addToPath(root, name.split(path.sep), m);
+    }
+  });
+  return root;
 }
 
 function writeHtml(title, root, filename) {
-      var html = `<!doctype html>
-          <title>${title}</title>
-          <meta charset="utf-8">
-          <style>${cssString}</style>
-          <div>
-          <div>
-              <h1>${title}</h1>
+  var html = `<!doctype html>
+      <title>${title}</title>
+      <meta charset="utf-8">
+      <style>${cssString}</style>
+      <div>
+      <div>
+          <h1>${title}</h1>
 
-              <div id="chart">
-                <div class="details" style="display: none;">
-                  <span class="details-name"></span>
-                  <div class="details-percentage"></div>
-                  of bundle size
-                  <div class="details-size"></div>
-                </div>
-              </div>
+          <div id="chart">
+            <div class="details" style="display: none;">
+              <span class="details-name"></span>
+              <div class="details-percentage"></div>
+              of bundle size
+              <div class="details-size"></div>
+            </div>
           </div>
-          </div>
-          <script>window.nodesData = ${JSON.stringify(root)};</script>
-          <script charset="UTF-8">
-            ${jsString}
-          </script>
-      `;
-      mkdirp.sync(path.dirname(filename));
-      fs.writeFileSync(filename, html);
+      </div>
+      </div>
+      <script>window.nodesData = ${JSON.stringify(root)};</script>
+      <script charset="UTF-8">
+        ${jsString}
+      </script>
+  `;
+  mkdirp.sync(path.dirname(filename));
+  fs.writeFileSync(filename, html);
 }
 
 function getDeepMoreThenOneChild(tree) {
