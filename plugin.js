@@ -18,15 +18,23 @@ module.exports = function(opts) {
     ongenerate(args, rendered) {
       var bundle = args.bundle;
 
-      var root = {
-        name: "root",
-        children: []
-      };
-
       if (useSourceMap) {
         addMinifiedSizesToModules(bundle, rendered);
       }
 
+      var root = buildTree(bundle, useSourceMap);
+      flattenTree(root);
+
+      writeHtml(title, root, filename);
+    }
+  };
+};
+
+function buildTree(bundle, useSourceMap) {
+      var root = {
+        name: "root",
+        children: []
+      };
       bundle.modules.forEach(module => {
         var name = module.id;
         var m = {
@@ -41,8 +49,10 @@ module.exports = function(opts) {
           addToPath(root, name.split(path.sep), m);
         }
       });
-      flattenTree(root);
+      return root;
+}
 
+function writeHtml(title, root, filename) {
       var html = `<!doctype html>
           <title>${title}</title>
           <meta charset="utf-8">
@@ -68,9 +78,7 @@ module.exports = function(opts) {
       `;
       mkdirp.sync(path.dirname(filename));
       fs.writeFileSync(filename, html);
-    }
-  };
-};
+}
 
 function getDeepMoreThenOneChild(tree) {
   if (tree.children && tree.children.length === 1) {
