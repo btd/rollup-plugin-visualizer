@@ -189,9 +189,9 @@ function addMinifiedSizesToModules(bundle, rendered) {
     return null;
   };
 
-  return new SourceMapConsumer(rendered.map)
-    .then(map => getBytesPerFileUsingSourceMap(rendered.code, map))
-    .then(fileSizes => {
+  return SourceMapConsumer
+    .with(rendered.map, null, map => {
+      const fileSizes = getBytesPerFileUsingSourceMap(rendered.code, map);
       fileSizes.forEach(tuple => {
         var module = findBestMatchingModule(tuple.file);
         if (module) {
