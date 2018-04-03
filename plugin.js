@@ -18,14 +18,18 @@ module.exports = function(opts) {
     ongenerate(args, rendered) {
       var bundle = args.bundle;
 
+      return Promise.resolve()
+      .then(() => {
       if (useSourceMap) {
-        addMinifiedSizesToModules(bundle, rendered);
+        return addMinifiedSizesToModules(bundle, rendered);
       }
-
+      })
+      .then(() => {
       var root = buildTree(bundle, useSourceMap);
       flattenTree(root);
 
       writeHtml(title, root, filename);
+      });
     }
   };
 };
@@ -117,9 +121,8 @@ function addToPath(tree, p, value) {
   addToPath(child, p, value);
 }
 
-function getBytesPerFileUsingSourceMap(rendered) {
-  var map = new SourceMapConsumer(rendered.map);
-  var lines = rendered.code.split(/[\r\n]/);
+function getBytesPerFileUsingSourceMap(code, map) {
+  var lines = code.split(/[\r\n]/);
 
   var bytesPerFile = {};
 
@@ -154,8 +157,6 @@ function segments(filepath) {
 // Module id are mapped to sources by finding the best match.
 // Matching is done by removing the file extensions and comparing path segments
 function addMinifiedSizesToModules(bundle, rendered) {
-  var fileSizes = getBytesPerFileUsingSourceMap(rendered);
-
   const findBestMatchingModule = filename => {
     var filenameSegments = segments(filename);
 
@@ -179,10 +180,14 @@ function addMinifiedSizesToModules(bundle, rendered) {
     return null;
   };
 
+  return new SourceMapConsumer(rendered.map)
+  .then(map => getBytesPerFileUsingSourceMap(rendered.code, map))
+  .then(fileSizes => {
   fileSizes.forEach(tuple => {
     var module = findBestMatchingModule(tuple.file);
     if (module) {
       module.minifiedSize = tuple.bytes;
     }
+  });
   });
 }
