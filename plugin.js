@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const mkdirp = require('mkdirp');
+const mkdirp = require("mkdirp");
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
 const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
@@ -90,6 +90,7 @@ function getDeepMoreThenOneChild(tree) {
   }
   return tree;
 }
+
 // if root children have only on child we can flatten this
 function flattenTree(root) {
   var newChildren = [];
