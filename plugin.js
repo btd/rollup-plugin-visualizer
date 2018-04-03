@@ -19,17 +19,17 @@ module.exports = function(opts) {
       var bundle = args.bundle;
 
       return Promise.resolve()
-      .then(() => {
-      if (useSourceMap) {
-        return addMinifiedSizesToModules(bundle, rendered);
-      }
-      })
-      .then(() => {
-      var root = buildTree(bundle, useSourceMap);
-      flattenTree(root);
+        .then(() => {
+          if (useSourceMap) {
+            return addMinifiedSizesToModules(bundle, rendered);
+          }
+        })
+        .then(() => {
+          var root = buildTree(bundle, useSourceMap);
+          flattenTree(root);
 
-      writeHtml(title, root, filename);
-      });
+          writeHtml(title, root, filename);
+        });
     }
   };
 };
@@ -181,13 +181,13 @@ function addMinifiedSizesToModules(bundle, rendered) {
   };
 
   return new SourceMapConsumer(rendered.map)
-  .then(map => getBytesPerFileUsingSourceMap(rendered.code, map))
-  .then(fileSizes => {
-  fileSizes.forEach(tuple => {
-    var module = findBestMatchingModule(tuple.file);
-    if (module) {
-      module.minifiedSize = tuple.bytes;
-    }
-  });
-  });
+    .then(map => getBytesPerFileUsingSourceMap(rendered.code, map))
+    .then(fileSizes => {
+      fileSizes.forEach(tuple => {
+        var module = findBestMatchingModule(tuple.file);
+        if (module) {
+          module.minifiedSize = tuple.bytes;
+        }
+      });
+    });
 }
