@@ -189,14 +189,13 @@ function addMinifiedSizesToModules(bundle, rendered) {
     return null;
   };
 
-  return SourceMapConsumer
-    .with(rendered.map, null, map => {
-      const fileSizes = getBytesPerFileUsingSourceMap(rendered.code, map);
-      fileSizes.forEach(tuple => {
-        var module = findBestMatchingModule(tuple.file);
-        if (module) {
-          module.minifiedSize = tuple.bytes;
-        }
-      });
+  return SourceMapConsumer.with(rendered.map, null, map => {
+    const fileSizes = getBytesPerFileUsingSourceMap(rendered.code, map);
+    fileSizes.forEach(tuple => {
+      var module = findBestMatchingModule(tuple.file);
+      if (module) {
+        module.minifiedSize = tuple.bytes;
+      }
     });
+  });
 }
