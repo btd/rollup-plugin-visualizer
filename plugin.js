@@ -1,7 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const mkdirp = require("mkdirp");
+const promisify = require("util.promisify");
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
+
+const writeFileAsync = promisify(fs.writeFile);
+const mkdirpAsync = promisify(mkdirp);
 
 const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
 const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
@@ -28,7 +32,8 @@ module.exports = function(opts) {
           var root = buildTree(bundle, useSourceMap);
           flattenTree(root);
 
-          writeHtml(title, root, filename);
+          var html = buildHtml(title, root, filename);
+          return writeFile(filename, html);
         });
     }
   };
@@ -56,8 +61,8 @@ function buildTree(bundle, useSourceMap) {
   return root;
 }
 
-function writeHtml(title, root, filename) {
-  var html = `<!doctype html>
+function buildHtml(title, root) {
+  return `<!doctype html>
       <title>${title}</title>
       <meta charset="utf-8">
       <style>${cssString}</style>
@@ -80,8 +85,11 @@ function writeHtml(title, root, filename) {
         ${jsString}
       </script>
   `;
-  mkdirp.sync(path.dirname(filename));
-  fs.writeFileSync(filename, html);
+}
+
+function writeFile(filename, contents) {
+  return mkdirpAsync(path.dirname(filename))
+    .then(() => writeFileAsync(filename, contents));
 }
 
 function getDeepMoreThenOneChild(tree) {
