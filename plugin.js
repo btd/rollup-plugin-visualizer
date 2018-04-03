@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const mkdirp = require("mkdirp");
-const promisify = require("util.promisify");
+const util = require("util");
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
-const writeFileAsync = promisify(fs.writeFile);
-const mkdirpAsync = promisify(mkdirp);
+const writeFileAsync = util.promisify(fs.writeFile);
+const mkdirpAsync = util.promisify(mkdirp);
 
 const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
 const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");

@@ -19,8 +19,7 @@
   },
   "dependencies": {
     "mkdirp": "^0.5.1",
-    "source-map": "^0.7.2",
-    "util.promisify": "^1.0.0"
+    "source-map": "^0.7.2"
   },
   "devDependencies": {
     "bytes": "^3.0.0",
