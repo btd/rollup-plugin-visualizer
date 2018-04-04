@@ -1,7 +1,11 @@
 const fs = require("fs");
 const path = require("path");
-const mkdirp = require('mkdirp');
+const mkdirp = require("mkdirp");
+const util = require("util");
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
+
+const writeFileAsync = util.promisify(fs.writeFile);
+const mkdirpAsync = util.promisify(mkdirp);
 
 const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
 const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
@@ -18,59 +22,75 @@ module.exports = function(opts) {
     ongenerate(args, rendered) {
       var bundle = args.bundle;
 
-      var root = {
-        name: "root",
-        children: []
-      };
+      return Promise.resolve()
+        .then(() => {
+          if (useSourceMap) {
+            return addMinifiedSizesToModules(bundle, rendered);
+          }
+        })
+        .then(() => {
+          var root = buildTree(bundle, useSourceMap);
+          flattenTree(root);
 
-      if (useSourceMap) {
-        addMinifiedSizesToModules(bundle, rendered);
-      }
-
-      bundle.modules.forEach(module => {
-        var name = module.id;
-        var m = {
-          //dependencies: module.dependencies,
-          size: useSourceMap ? module.minifiedSize || 0 : Buffer.byteLength(module.code, "utf8"),
-          originalSize: Buffer.byteLength(module.originalCode, "utf8")
-        };
-
-        if (name.indexOf(PLUGIN_PREFIX) === 0) {
-          addToPath(root, [name], m);
-        } else {
-          addToPath(root, name.split(path.sep), m);
-        }
-      });
-      flattenTree(root);
-
-      var html = `<!doctype html>
-          <title>${title}</title>
-          <meta charset="utf-8">
-          <style>${cssString}</style>
-          <div>
-          <div>
-              <h1>${title}</h1>
-
-              <div id="chart">
-                <div class="details" style="display: none;">
-                  <span class="details-name"></span>
-                  <div class="details-percentage"></div>
-                  of bundle size
-                  <div class="details-size"></div>
-                </div>
-              </div>
-          </div>
-          </div>
-          <script>window.nodesData = ${JSON.stringify(root)};</script>
-          <script charset="UTF-8">
-            ${jsString}
-          </script>
-      `;
-      mkdirp.sync(path.dirname(filename));
-      fs.writeFileSync(filename, html);
+          var html = buildHtml(title, root, filename);
+          return writeFile(filename, html);
+        });
     }
   };
 };
+
+function buildTree(bundle, useSourceMap) {
+  var root = {
+    name: "root",
+    children: []
+  };
+  bundle.modules.forEach(module => {
+    var name = module.id;
+    var m = {
+      //dependencies: module.dependencies,
+      size: useSourceMap ? module.minifiedSize || 0 : Buffer.byteLength(module.code, "utf8"),
+      originalSize: Buffer.byteLength(module.originalCode, "utf8")
+    };
+
+    if (name.indexOf(PLUGIN_PREFIX) === 0) {
+      addToPath(root, [name], m);
+    } else {
+      addToPath(root, name.split(path.sep), m);
+    }
+  });
+  return root;
+}
+
+function buildHtml(title, root) {
+  return `<!doctype html>
+      <title>${title}</title>
+      <meta charset="utf-8">
+      <style>${cssString}</style>
+      <div>
+      <div>
+          <h1>${title}</h1>
+
+          <div id="chart">
+            <div class="details" style="display: none;">
+              <span class="details-name"></span>
+              <div class="details-percentage"></div>
+              of bundle size
+              <div class="details-size"></div>
+            </div>
+          </div>
+      </div>
+      </div>
+      <script>window.nodesData = ${JSON.stringify(root)};</script>
+      <script charset="UTF-8">
+        ${jsString}
+      </script>
+  `;
+}
+
+function writeFile(filename, contents) {
+  return mkdirpAsync(path.dirname(filename))
+    .then(() => writeFileAsync(filename, contents));
+}
 
 function getDeepMoreThenOneChild(tree) {
   if (tree.children && tree.children.length === 1) {
@@ -78,6 +98,7 @@ function getDeepMoreThenOneChild(tree) {
   }
   return tree;
 }
+
 // if root children have only on child we can flatten this
 function flattenTree(root) {
   var newChildren = [];
@@ -109,9 +130,8 @@ function addToPath(tree, p, value) {
   addToPath(child, p, value);
 }
 
-function getBytesPerFileUsingSourceMap(rendered) {
-  var map = new SourceMapConsumer(rendered.map);
-  var lines = rendered.code.split(/[\r\n]/);
+function getBytesPerFileUsingSourceMap(code, map) {
+  var lines = code.split(/[\r\n]/);
 
   var bytesPerFile = {};
 
@@ -146,8 +166,6 @@ function segments(filepath) {
 // Module id are mapped to sources by finding the best match.
 // Matching is done by removing the file extensions and comparing path segments
 function addMinifiedSizesToModules(bundle, rendered) {
-  var fileSizes = getBytesPerFileUsingSourceMap(rendered);
-
   const findBestMatchingModule = filename => {
     var filenameSegments = segments(filename);
 
@@ -171,10 +189,13 @@ function addMinifiedSizesToModules(bundle, rendered) {
     return null;
   };
 
-  fileSizes.forEach(tuple => {
-    var module = findBestMatchingModule(tuple.file);
-    if (module) {
-      module.minifiedSize = tuple.bytes;
-    }
+  return SourceMapConsumer.with(rendered.map, null, map => {
+    const fileSizes = getBytesPerFileUsingSourceMap(rendered.code, map);
+    fileSizes.forEach(tuple => {
+      var module = findBestMatchingModule(tuple.file);
+      if (module) {
+        module.minifiedSize = tuple.bytes;
+      }
+    });
   });
 }
