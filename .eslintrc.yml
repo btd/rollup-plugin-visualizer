@@ -1,25 +1,22 @@
 ---
 root: true
 
-extends: eslint:recommended
+extends:
+  - eslint:recommended
+
+parserOptions:
+  ecmaVersion: 2018
 
 env:
   node: true
-  mocha: true
-  browser: true
   es6: true
-
-parserOptions:
-  ecmaVersion: 6
-  sourceType: "module"
-  ecmaFeatures:
-    jsx: true
 
 rules:
   quotes: 0
   indent: 0
   require-jsdoc: 0
   eqeqeq: 0
+  curly: 0
   no-invalid-this: 0
   default-case: 0
   no-nested-ternary: 0
@@ -28,16 +25,12 @@ rules:
   new-cap: 0
   callback-return: 0
   no-loop-func: 0
-  strict: 0
+  prefer-const: 1
+  strict: [2, "global"]
   semi: [1, "always"]
   no-sequences: 2
   dot-notation: 1
   dot-location: [2, "property"]
-  curly: 2
-  no-case-declarations: 0
-  no-console: 0
 
   global-require: 2
   no-path-concat: 2
-
-  no-restricted-globals: [2, "Promise"]

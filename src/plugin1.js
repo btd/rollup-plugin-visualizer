@@ -1,5 +1,8 @@
 import { select } from "d3-selection";
-import { partition as d3partition, hierarchy as d3hierarchy } from "d3-hierarchy";
+import {
+  partition as d3partition,
+  hierarchy as d3hierarchy
+} from "d3-hierarchy";
 import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { format as formatBytes } from "bytes";

@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require("fs");
 const path = require("path");
 const mkdirp = require("mkdirp");
@@ -7,20 +9,26 @@ const SourceMapConsumer = require("source-map").SourceMapConsumer;
 const writeFileAsync = util.promisify(fs.writeFile);
 const mkdirpAsync = util.promisify(mkdirp);
 
-const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
-const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
+const cssString = fs.readFileSync(
+  path.join(__dirname, "lib", "./style.css"),
+  "utf8"
+);
+const jsString = fs.readFileSync(
+  path.join(__dirname, "lib", "./pluginmain.js"),
+  "utf8"
+);
 
 const PLUGIN_PREFIX = "\u0000";
 
 module.exports = function(opts) {
   opts = opts || {};
-  var filename = opts.filename || "stats.html";
-  var title = opts.title || "RollUp Visualizer";
-  var useSourceMap = !!opts.sourcemap;
+  const filename = opts.filename || "stats.html";
+  const title = opts.title || "RollUp Visualizer";
+  const useSourceMap = !!opts.sourcemap;
 
   return {
     ongenerate(args, rendered) {
-      var bundle = args.bundle;
+      const bundle = args.bundle;
 
       return Promise.resolve()
         .then(() => {
@@ -29,10 +37,10 @@ module.exports = function(opts) {
           }
         })
         .then(() => {
-          var root = buildTree(bundle, useSourceMap);
+          const root = buildTree(bundle, useSourceMap);
           flattenTree(root);
 
-          var html = buildHtml(title, root, filename);
+          const html = buildHtml(title, root, filename);
           return writeFile(filename, html);
         });
     }
@@ -40,15 +48,17 @@ module.exports = function(opts) {
 };
 
 function buildTree(bundle, useSourceMap) {
-  var root = {
+  const root = {
     name: "root",
     children: []
   };
   bundle.modules.forEach(module => {
-    var name = module.id;
-    var m = {
+    const name = module.id;
+    const m = {
       //dependencies: module.dependencies,
-      size: useSourceMap ? module.minifiedSize || 0 : Buffer.byteLength(module.code, "utf8"),
+      size: useSourceMap
+        ? module.minifiedSize || 0
+        : Buffer.byteLength(module.code, "utf8"),
       originalSize: Buffer.byteLength(module.originalCode, "utf8")
     };
 
@@ -88,8 +98,9 @@ function buildHtml(title, root) {
 }
 
 function writeFile(filename, contents) {
-  return mkdirpAsync(path.dirname(filename))
-    .then(() => writeFileAsync(filename, contents));
+  return mkdirpAsync(path.dirname(filename)).then(() =>
+    writeFileAsync(filename, contents)
+  );
 }
 
 function getDeepMoreThenOneChild(tree) {
@@ -101,9 +112,9 @@ function getDeepMoreThenOneChild(tree) {
 
 // if root children have only on child we can flatten this
 function flattenTree(root) {
-  var newChildren = [];
+  let newChildren = [];
   root.children.forEach(child => {
-    var commonParent = getDeepMoreThenOneChild(child);
+    const commonParent = getDeepMoreThenOneChild(child);
     newChildren = newChildren.concat(commonParent.children);
   });
   root.children = newChildren;
@@ -114,7 +125,7 @@ function addToPath(tree, p, value) {
     p.shift();
   }
 
-  var child = tree.children.filter(c => c.name === p[0])[0];
+  let child = tree.children.filter(c => c.name === p[0])[0];
   if (!child) {
     child = {
       name: p[0],
@@ -131,22 +142,25 @@ function addToPath(tree, p, value) {
 }
 
 function getBytesPerFileUsingSourceMap(code, map) {
-  var lines = code.split(/[\r\n]/);
+  const lines = code.split(/[\r\n]/);
 
-  var bytesPerFile = {};
+  const bytesPerFile = {};
 
   // For every byte in the minified code, do a sourcemap lookup.
-  for (var line = 0; line < lines.length; line++) {
-    for (var col = 0; col < lines[line].length; col++) {
-      var result = map.originalPositionFor({ line: line + 1, column: col });
-      var source = result.source || "root";
+  for (let line = 0; line < lines.length; line++) {
+    for (let col = 0; col < lines[line].length; col++) {
+      const result = map.originalPositionFor({ line: line + 1, column: col });
+      const source = result.source || "root";
       if (!bytesPerFile[source]) {
         bytesPerFile[source] = 0;
       }
       bytesPerFile[source]++;
     }
   }
-  return Object.keys(bytesPerFile).map(file => ({ file: path.resolve(file), bytes: bytesPerFile[file] }));
+  return Object.keys(bytesPerFile).map(file => ({
+    file: path.resolve(file),
+    bytes: bytesPerFile[file]
+  }));
 }
 
 // Given a file C:/path/to/file/on/filesystem.js
@@ -155,10 +169,13 @@ function getBytesPerFileUsingSourceMap(code, map) {
 // - return path segments, starting from the tail and working backwards
 // segments('C:/path/to/file/on/filesystem.js') === ['filesystem', 'on', 'file', 'to', 'path']
 function segments(filepath) {
-  var parsed = path.parse(filepath);
-  var dirWithoutRoot = parsed.dir.substring(parsed.root.length);
+  const parsed = path.parse(filepath);
+  const dirWithoutRoot = parsed.dir.substring(parsed.root.length);
 
-  return dirWithoutRoot.split(path.sep).concat(parsed.name).reverse();
+  return dirWithoutRoot
+    .split(path.sep)
+    .concat(parsed.name)
+    .reverse();
 }
 
 // Adds a .minifiedSize property to each module in the bundle (using sourcemap data)
@@ -167,14 +184,14 @@ function segments(filepath) {
 // Matching is done by removing the file extensions and comparing path segments
 function addMinifiedSizesToModules(bundle, rendered) {
   const findBestMatchingModule = filename => {
-    var filenameSegments = segments(filename);
+    const filenameSegments = segments(filename);
 
-    for (var i = 1; i <= filenameSegments.length; i++) {
-      var leftVals = filenameSegments.slice(0, i);
+    for (let i = 1; i <= filenameSegments.length; i++) {
+      const leftVals = filenameSegments.slice(0, i);
 
-      var matches = bundle.modules.filter(module => {
-        var moduleSegments = segments(module.id);
-        var rightVals = moduleSegments.slice(0, i);
+      const matches = bundle.modules.filter(module => {
+        const moduleSegments = segments(module.id);
+        const rightVals = moduleSegments.slice(0, i);
         if (rightVals.length !== leftVals.length) {
           return false;
         }
@@ -192,7 +209,7 @@ function addMinifiedSizesToModules(bundle, rendered) {
   return SourceMapConsumer.with(rendered.map, null, map => {
     const fileSizes = getBytesPerFileUsingSourceMap(rendered.code, map);
     fileSizes.forEach(tuple => {
-      var module = findBestMatchingModule(tuple.file);
+      const module = findBestMatchingModule(tuple.file);
       if (module) {
         module.minifiedSize = tuple.bytes;
       }
