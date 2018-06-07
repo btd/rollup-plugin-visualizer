@@ -1,5 +1,8 @@
+"use strict";
+
 const rollupCommonJs = require("rollup-plugin-commonjs");
 const rollupNodeResolve = require("rollup-plugin-node-resolve");
+const { uglify: rollupUglify } = require("rollup-plugin-uglify");
 const plugin = require("./plugin");
 
 module.exports = {
@@ -15,6 +18,7 @@ module.exports = {
       ignoreGlobal: true,
       include: "node_modules/**"
     }),
+    rollupUglify(),
     plugin()
   ]
 };

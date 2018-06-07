@@ -9,14 +9,8 @@ const SourceMapConsumer = require("source-map").SourceMapConsumer;
 const writeFileAsync = util.promisify(fs.writeFile);
 const mkdirpAsync = util.promisify(mkdirp);
 
-const cssString = fs.readFileSync(
-  path.join(__dirname, "lib", "./style.css"),
-  "utf8"
-);
-const jsString = fs.readFileSync(
-  path.join(__dirname, "lib", "./pluginmain.js"),
-  "utf8"
-);
+const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
+const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
 
 const PLUGIN_PREFIX = "\u0000";
 
@@ -27,22 +21,23 @@ module.exports = function(opts) {
   const useSourceMap = !!opts.sourcemap;
 
   return {
-    ongenerate(args, rendered) {
-      const bundle = args.bundle;
+    generateBundle(outputOptions, outputBundle) {
+      //XXX fix how multi entry files rendered
+      //XXX not sure what is a best UI
+      //XXX maybe multiple circles?
+      Object.keys(outputBundle).forEach(id => {
+        const bundle = outputBundle[id];
 
-      return Promise.resolve()
-        .then(() => {
-          if (useSourceMap) {
-            return addMinifiedSizesToModules(bundle, rendered);
-          }
-        })
-        .then(() => {
-          const root = buildTree(bundle, useSourceMap);
-          flattenTree(root);
+        if (useSourceMap) {
+          return addMinifiedSizesToModules(bundle);
+        }
 
-          const html = buildHtml(title, root, filename);
-          return writeFile(filename, html);
-        });
+        const root = buildTree(bundle, useSourceMap);
+        flattenTree(root);
+
+        const html = buildHtml(title, root, filename);
+        return writeFile(filename, html);
+      });
     }
   };
 };
@@ -52,14 +47,12 @@ function buildTree(bundle, useSourceMap) {
     name: "root",
     children: []
   };
-  bundle.modules.forEach(module => {
-    const name = module.id;
+  Object.keys(bundle.modules).forEach(id => {
+    const module = bundle.modules[id];
+    const name = id;
     const m = {
-      //dependencies: module.dependencies,
-      size: useSourceMap
-        ? module.minifiedSize || 0
-        : Buffer.byteLength(module.code, "utf8"),
-      originalSize: Buffer.byteLength(module.originalCode, "utf8")
+      size: useSourceMap ? module.minifiedSize || 0 : module.renderedLength,
+      originalSize: module.originalLength
     };
 
     if (name.indexOf(PLUGIN_PREFIX) === 0) {
@@ -98,9 +91,7 @@ function buildHtml(title, root) {
 }
 
 function writeFile(filename, contents) {
-  return mkdirpAsync(path.dirname(filename)).then(() =>
-    writeFileAsync(filename, contents)
-  );
+  return mkdirpAsync(path.dirname(filename)).then(() => writeFileAsync(filename, contents));
 }
 
 function getDeepMoreThenOneChild(tree) {
@@ -182,15 +173,15 @@ function segments(filepath) {
 // If the minified size could not be computed, no property is added.
 // Module id are mapped to sources by finding the best match.
 // Matching is done by removing the file extensions and comparing path segments
-function addMinifiedSizesToModules(bundle, rendered) {
+function addMinifiedSizesToModules(bundle) {
   const findBestMatchingModule = filename => {
     const filenameSegments = segments(filename);
 
     for (let i = 1; i <= filenameSegments.length; i++) {
       const leftVals = filenameSegments.slice(0, i);
 
-      const matches = bundle.modules.filter(module => {
-        const moduleSegments = segments(module.id);
+      const matches = Object.keys(bundle.modules).filter(id => {
+        const moduleSegments = segments(id);
         const rightVals = moduleSegments.slice(0, i);
         if (rightVals.length !== leftVals.length) {
           return false;
@@ -206,8 +197,8 @@ function addMinifiedSizesToModules(bundle, rendered) {
     return null;
   };
 
-  return SourceMapConsumer.with(rendered.map, null, map => {
-    const fileSizes = getBytesPerFileUsingSourceMap(rendered.code, map);
+  return SourceMapConsumer.with(bundle.map, null, map => {
+    const fileSizes = getBytesPerFileUsingSourceMap(bundle.code, map);
     fileSizes.forEach(tuple => {
       const module = findBestMatchingModule(tuple.file);
       if (module) {

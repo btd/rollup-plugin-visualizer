@@ -1,8 +1,5 @@
 import { select } from "d3-selection";
-import {
-  partition as d3partition,
-  hierarchy as d3hierarchy
-} from "d3-hierarchy";
+import { partition as d3partition, hierarchy as d3hierarchy } from "d3-hierarchy";
 import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { format as formatBytes } from "bytes";
@@ -62,8 +59,7 @@ var root = d3hierarchy(data)
 
 partition(root);
 
-g
-  .selectAll("path")
+g.selectAll("path")
   .data(partition(root).descendants())
   .enter()
   .append("path")
@@ -83,7 +79,7 @@ var totalSize = root.value;
 select("#chart").on("mouseleave", mouseleave);
 
 function mouseover(d) {
-  var percentage = (100 * d.value / totalSize).toPrecision(2);
+  var percentage = ((100 * d.value) / totalSize).toPrecision(2);
   var percentageString = percentage + "%";
   if (percentage < 0.1) {
     percentageString = "< 0.1%";
@@ -104,8 +100,7 @@ function mouseover(d) {
   g.selectAll("path").style("opacity", 0.3);
 
   // Then highlight only those that are an ancestor of the current segment.
-  g
-    .selectAll("path")
+  g.selectAll("path")
     .filter(function(node) {
       return sequenceArray.indexOf(node) >= 0;
     })

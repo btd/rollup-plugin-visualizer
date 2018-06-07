@@ -24,8 +24,7 @@ svg {
 }
 
 h1 {
-  font-family: "Oswald", "HelveticaNeue-CondensedBold", "Arial Narrow",
-    sans-serif;
+  font-family: "Oswald", "HelveticaNeue-CondensedBold", "Arial Narrow", sans-serif;
   font-weight: bold;
   font-size: 70px;
   text-transform: uppercase;
