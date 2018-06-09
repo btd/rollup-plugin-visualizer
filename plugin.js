@@ -22,22 +22,21 @@ module.exports = function(opts) {
 
   return {
     generateBundle(outputOptions, outputBundle) {
-      //XXX fix how multi entry files rendered
-      //XXX not sure what is a best UI
-      //XXX maybe multiple circles?
-      Object.keys(outputBundle).forEach(id => {
+      const root = Object.keys(outputBundle).map(id => {
         const bundle = outputBundle[id];
 
         if (useSourceMap) {
-          return addMinifiedSizesToModules(bundle);
+          addMinifiedSizesToModules(bundle);
         }
 
         const root = buildTree(bundle, useSourceMap);
         flattenTree(root);
 
-        const html = buildHtml(title, root, filename);
-        return writeFile(filename, html);
+        return { id, root };
       });
+
+      const html = buildHtml(title, root, filename);
+      return writeFile(filename, html);
     }
   };
 };
@@ -73,13 +72,7 @@ function buildHtml(title, root) {
       <div>
           <h1>${title}</h1>
 
-          <div id="chart">
-            <div class="details" style="display: none;">
-              <span class="details-name"></span>
-              <div class="details-percentage"></div>
-              of bundle size
-              <div class="details-size"></div>
-            </div>
+          <div id="charts">
           </div>
       </div>
       </div>

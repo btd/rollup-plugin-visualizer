@@ -18,7 +18,6 @@ module.exports = {
       ignoreGlobal: true,
       include: "node_modules/**"
     }),
-    rollupUglify(),
     plugin()
   ]
 };

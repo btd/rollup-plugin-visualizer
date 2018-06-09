@@ -10,8 +10,7 @@ body {
   padding: 0 10px;
 }
 
-a,
-.destyledButton {
+a {
   color: #347ab7;
 }
 
@@ -57,7 +56,7 @@ hr {
 
 .details {
   position: absolute;
-  top: 470px;
+  top: 350px;
   left: 50%;
   width: 170px;
   margin-left: -85px;
@@ -102,15 +101,6 @@ footer {
 footer h2 {
   margin: 1.5em 0 0.5em;
   font-size: 1.3em;
-}
-
-.destyledButton {
-  background: none;
-  border: 0 none;
-  cursor: pointer;
-  font-size: inherit;
-  padding: 0;
-  text-decoration: underline;
 }
 
 @font-face {
