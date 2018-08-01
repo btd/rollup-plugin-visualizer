@@ -188,7 +188,7 @@ function addMinifiedSizesToModules(bundle) {
       });
 
       if (matches.length === 1) {
-        return matches[0];
+        return bundle.modules[matches[0]];
       }
     }
 
