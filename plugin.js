@@ -22,21 +22,26 @@ module.exports = function(opts) {
 
   return {
     generateBundle(outputOptions, outputBundle) {
-      const root = Object.keys(outputBundle).map(id => {
+      const promises = Object.keys(outputBundle).map(id => {
         const bundle = outputBundle[id];
+        return Promise.resolve()
+          .then(() => {
+            if (useSourceMap) {
+              return addMinifiedSizesToModules(bundle);
+            }
+          })
+          .then(() => {
+            const root = buildTree(bundle, useSourceMap);
+            flattenTree(root);
 
-        if (useSourceMap) {
-          addMinifiedSizesToModules(bundle);
-        }
-
-        const root = buildTree(bundle, useSourceMap);
-        flattenTree(root);
-
-        return { id, root };
+            return { id, root };
+          });
       });
-
-      const html = buildHtml(title, root, filename);
-      return writeFile(filename, html);
+      return Promise.all(promises)
+        .then(roots => {
+          const html = buildHtml(title, roots, filename);
+          return writeFile(filename, html);
+        });
     }
   };
 };
