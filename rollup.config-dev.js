@@ -18,6 +18,6 @@ module.exports = {
       ignoreGlobal: true,
       include: "node_modules/**"
     }),
-    plugin()
+    plugin({ open: true })
   ]
 };

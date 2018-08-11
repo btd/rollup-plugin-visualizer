@@ -4,13 +4,20 @@ const fs = require("fs");
 const path = require("path");
 const mkdirp = require("mkdirp");
 const util = require("util");
+const opn = require("opn");
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
 const writeFileAsync = util.promisify(fs.writeFile);
 const mkdirpAsync = util.promisify(mkdirp);
 
-const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
-const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
+const cssString = fs.readFileSync(
+  path.join(__dirname, "lib", "./style.css"),
+  "utf8"
+);
+const jsString = fs.readFileSync(
+  path.join(__dirname, "lib", "./pluginmain.js"),
+  "utf8"
+);
 
 const PLUGIN_PREFIX = "\u0000";
 
@@ -19,6 +26,8 @@ module.exports = function(opts) {
   const filename = opts.filename || "stats.html";
   const title = opts.title || "RollUp Visualizer";
   const useSourceMap = !!opts.sourcemap;
+  const open = !!opts.open;
+  const openOptions = opts.openOptions || {}
 
   return {
     generateBundle(outputOptions, outputBundle) {
@@ -41,6 +50,11 @@ module.exports = function(opts) {
         .then(roots => {
           const html = buildHtml(title, roots, filename);
           return writeFile(filename, html);
+        })
+        .then(() => {
+          if (open) {
+            return opn(filename, openOptions);
+          }
         });
     }
   };
@@ -89,7 +103,9 @@ function buildHtml(title, root) {
 }
 
 function writeFile(filename, contents) {
-  return mkdirpAsync(path.dirname(filename)).then(() => writeFileAsync(filename, contents));
+  return mkdirpAsync(path.dirname(filename)).then(() =>
+    writeFileAsync(filename, contents)
+  );
 }
 
 function getDeepMoreThenOneChild(tree) {
