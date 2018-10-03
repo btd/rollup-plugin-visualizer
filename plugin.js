@@ -10,6 +10,11 @@ const SourceMapConsumer = require("source-map").SourceMapConsumer;
 const writeFileAsync = util.promisify(fs.writeFile);
 const mkdirpAsync = util.promisify(mkdirp);
 
+const readFont = (type = 'woff', weight = 700) => {
+  const fonts = path.join(require.resolve('typeface-oswald'), '../files/');
+  return fs.readFileSync(path.join(fonts, `./oswald-latin-${weight}.${type}`));
+};
+
 const cssString = fs.readFileSync(
   path.join(__dirname, "lib", "./style.css"),
   "utf8"
@@ -18,6 +23,11 @@ const jsString = fs.readFileSync(
   path.join(__dirname, "lib", "./pluginmain.js"),
   "utf8"
 );
+const fontWeight = 500;
+const fontface = buildFontface('Oswald', fontWeight, {
+  woff: readFont('woff', fontWeight).toString('base64'),
+  woff2: readFont('woff2', fontWeight).toString('base64')
+});
 
 const PLUGIN_PREFIX = "\u0000";
 
@@ -86,7 +96,7 @@ function buildHtml(title, root) {
   return `<!doctype html>
       <title>${title}</title>
       <meta charset="utf-8">
-      <style>${cssString}</style>
+      <style>${cssString}\n${fontface}</style>
       <div>
       <div>
           <h1>${title}</h1>
@@ -100,6 +110,19 @@ function buildHtml(title, root) {
         ${jsString}
       </script>
   `;
+}
+
+function buildFontface(name, weight, { woff2, woff }) {
+  return `
+    @font-face {
+      font-family: '${name}';
+      font-display: swap;
+      font-style: normal;
+      font-weight: ${weight};
+      src:
+        url(data:application/font-woff2;charset=utf-8;base64,${woff2}) format('woff2'),
+        url(data:application/font-woff;charset=utf-8;base64,${woff}) format('woff');
+    }`;
 }
 
 function writeFile(filename, contents) {
