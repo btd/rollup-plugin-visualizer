@@ -23,6 +23,9 @@
     "source-map": "^0.7.3",
     "typeface-oswald": "0.0.54"
   },
+  "peerDependencies": {
+    "rollup": ">=0.60.0 <1"
+  },
   "devDependencies": {
     "bytes": "^3.0.0",
     "d3-hierarchy": "^1.1.6",
