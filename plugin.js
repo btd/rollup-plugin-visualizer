@@ -120,7 +120,7 @@ function buildFontface(name, weight, { woff2, woff }) {
       font-style: normal;
       font-weight: ${weight};
       src:
-        url(data:application/font-woff2;charset=utf-8;base64,${woff2}) format('woff2'),
+        url(data:font/woff2;charset=utf-8;base64,${woff2}) format('woff2'),
         url(data:application/font-woff;charset=utf-8;base64,${woff}) format('woff');
     }`;
 }
