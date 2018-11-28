@@ -41,7 +41,7 @@ module.exports = function(opts) {
 
   return {
     generateBundle(outputOptions, outputBundle) {
-      const promises = Object.keys(outputBundle).map(id => {
+      const promises = Object.keys(outputBundle).filter(id => outputBundle[id].isEntry).map(id => {
         const bundle = outputBundle[id];
         return Promise.resolve()
           .then(() => {
