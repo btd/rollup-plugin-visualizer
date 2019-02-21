@@ -10,23 +10,17 @@ const SourceMapConsumer = require("source-map").SourceMapConsumer;
 const writeFileAsync = util.promisify(fs.writeFile);
 const mkdirpAsync = util.promisify(mkdirp);
 
-const readFont = (type = 'woff', weight = 700) => {
-  const fonts = path.join(require.resolve('typeface-oswald'), '../files/');
+const readFont = (type = "woff", weight = 700) => {
+  const fonts = path.join(require.resolve("typeface-oswald"), "../files/");
   return fs.readFileSync(path.join(fonts, `./oswald-latin-${weight}.${type}`));
 };
 
-const cssString = fs.readFileSync(
-  path.join(__dirname, "lib", "./style.css"),
-  "utf8"
-);
-const jsString = fs.readFileSync(
-  path.join(__dirname, "lib", "./pluginmain.js"),
-  "utf8"
-);
+const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
+const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
 const fontWeight = 500;
-const fontface = buildFontface('Oswald', fontWeight, {
-  woff: readFont('woff', fontWeight).toString('base64'),
-  woff2: readFont('woff2', fontWeight).toString('base64')
+const fontface = buildFontface("Oswald", fontWeight, {
+  woff: readFont("woff", fontWeight).toString("base64"),
+  woff2: readFont("woff2", fontWeight).toString("base64")
 });
 
 const PLUGIN_PREFIX = "\u0000";
@@ -37,35 +31,27 @@ module.exports = function(opts) {
   const title = opts.title || "RollUp Visualizer";
   const useSourceMap = !!opts.sourcemap;
   const open = !!opts.open;
-  const openOptions = opts.openOptions || {}
+  const openOptions = opts.openOptions || {};
 
   return {
-    generateBundle(outputOptions, outputBundle) {
-      const promises = Object.keys(outputBundle).map(id => {
-        const bundle = outputBundle[id];
-        return Promise.resolve()
-          .then(() => {
-            if (useSourceMap) {
-              return addMinifiedSizesToModules(bundle);
-            }
-          })
-          .then(() => {
-            const root = buildTree(bundle, useSourceMap);
-            flattenTree(root);
+    async generateBundle(outputOptions, outputBundle) {
+      const roots = [];
 
-            return { id, root };
-          });
-      });
-      return Promise.all(promises)
-        .then(roots => {
-          const html = buildHtml(title, roots, filename);
-          return writeFile(filename, html);
-        })
-        .then(() => {
-          if (open) {
-            return opn(filename, openOptions);
-          }
-        });
+      for (const [id, bundle] of Object.entries(outputBundle)) {
+        if (bundle.isAsset) continue; //only chunks
+
+        if (useSourceMap) {
+          await addMinifiedSizesToModules(bundle);
+        }
+        const root = buildTree(bundle, useSourceMap);
+        flattenTree(root);
+        roots.push({ id, root });
+      }
+      const html = buildHtml(title, roots, filename);
+      await writeFile(filename, html);
+      if (open) {
+        return opn(filename, openOptions);
+      }
     }
   };
 };
@@ -125,10 +111,9 @@ function buildFontface(name, weight, { woff2, woff }) {
     }`;
 }
 
-function writeFile(filename, contents) {
-  return mkdirpAsync(path.dirname(filename)).then(() =>
-    writeFileAsync(filename, contents)
-  );
+async function writeFile(filename, contents) {
+  await mkdirpAsync(path.dirname(filename));
+  return await writeFileAsync(filename, contents);
 }
 
 function getDeepMoreThenOneChild(tree) {

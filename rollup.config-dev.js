@@ -2,7 +2,6 @@
 
 const rollupCommonJs = require("rollup-plugin-commonjs");
 const rollupNodeResolve = require("rollup-plugin-node-resolve");
-const { uglify: rollupUglify } = require("rollup-plugin-uglify");
 const plugin = require("./plugin");
 
 module.exports = {
