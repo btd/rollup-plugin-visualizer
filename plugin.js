@@ -38,12 +38,14 @@ module.exports = function(opts) {
       const roots = [];
 
       for (const [id, bundle] of Object.entries(outputBundle)) {
+        //console.log(id, bundle);
         if (bundle.isAsset) continue; //only chunks
 
         if (useSourceMap) {
           await addMinifiedSizesToModules(bundle);
         }
         const root = buildTree(bundle, useSourceMap);
+
         flattenTree(root);
         roots.push({ id, root });
       }
@@ -128,7 +130,11 @@ function flattenTree(root) {
   let newChildren = [];
   root.children.forEach(child => {
     const commonParent = getDeepMoreThenOneChild(child);
-    newChildren = newChildren.concat(commonParent.children);
+    if (commonParent.children.length === 0) {
+      newChildren.push(commonParent);
+    } else {
+      newChildren = newChildren.concat(commonParent.children);
+    }
   });
   root.children = newChildren;
 }
