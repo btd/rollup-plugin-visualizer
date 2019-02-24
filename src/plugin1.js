@@ -99,11 +99,8 @@ window.nodesData.forEach(({ id, root: data }) => {
 
   function mouseover(d) {
     const percentageNum = (100 * d.value) / totalSize;
-    const percentage = percentageNum === 100 ? "100" : percentageNum.toPrecision(2);
-    let percentageString = percentage + "%";
-    if (percentage < 0.1) {
-      percentageString = "< 0.1%";
-    }
+    const percentage = percentageNum.toFixed(2);
+    const percentageString = percentage + "%";
 
     select(chartNode)
       .select(".details-name")
