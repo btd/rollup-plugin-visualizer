@@ -62,8 +62,8 @@ hr {
   margin-left: -85px;
   font-size: 14px;
   text-align: center;
-  color: #666;
-  z-index: -1;
+  color: #eee;
+  z-index: 100;
   overflow: hidden;
   text-overflow: ellipsis;
 }

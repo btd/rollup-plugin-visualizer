@@ -9,21 +9,20 @@ const HEIGHT = 700;
 const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;
 
 function getAncestors(node) {
-  const path = [];
-  let current = node;
-  while (current.parent) {
-    path.unshift(current);
-    current = current.parent;
+  const parents = [];
+  while (node != null) {
+    parents.push(node);
+    node = node.parent;
   }
-  return path;
+  return parents;
 }
 
 function color(node) {
   if (node.children && node.children.length) {
     const parents = getAncestors(node);
-    const hasNodeModules = !!parents.filter(function(n) {
+    const hasNodeModules = !!parents.find(n => {
       return n.data.name === "node_modules";
-    }).length;
+    });
     return hasNodeModules ? "#599e59" : "#487ea4";
   } else {
     return "#db7100";
@@ -65,7 +64,7 @@ window.nodesData.forEach(({ id, root: data }) => {
     .outerRadius(d => y(d.y1));
 
   const root = d3hierarchy(data)
-    .sum(function(d) {
+    .sum(d => {
       if (d.children && d.children.length) {
         return 0;
       } else {
@@ -82,15 +81,11 @@ window.nodesData.forEach(({ id, root: data }) => {
     .data(partition(root).descendants())
     .enter()
     .append("path")
-    .attr("display", function(d) {
-      return d.depth ? null : "none";
-    })
+
     .attr("d", arc)
     .attr("fill-rule", "evenodd")
     .style("stroke", "#fff")
-    .style("fill", function(d) {
-      return color(d);
-    })
+    .style("fill", d => color(d))
     .on("mouseover", mouseover);
 
   const totalSize = root.value;
@@ -126,9 +121,7 @@ window.nodesData.forEach(({ id, root: data }) => {
 
     // Then highlight only those that are an ancestor of the current segment.
     g.selectAll("path")
-      .filter(function(node) {
-        return sequenceArray.indexOf(node) >= 0;
-      })
+      .filter(node => sequenceArray.indexOf(node) >= 0)
       .style("opacity", 1);
   }
 
