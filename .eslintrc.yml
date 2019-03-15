@@ -25,12 +25,14 @@ rules:
   new-cap: 0
   callback-return: 0
   no-loop-func: 0
-  prefer-const: 1
+  prefer-const: 2
   strict: [2, "global"]
-  semi: [1, "always"]
+  semi: [2, "always"]
   no-sequences: 2
   dot-notation: 1
   dot-location: [2, "property"]
-
   global-require: 2
   no-path-concat: 2
+  prefer-arrow-callback: 2
+  no-var: 2
+  
