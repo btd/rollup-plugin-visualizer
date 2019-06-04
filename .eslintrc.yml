@@ -35,4 +35,3 @@ rules:
   no-path-concat: 2
   prefer-arrow-callback: 2
   no-var: 2
-  

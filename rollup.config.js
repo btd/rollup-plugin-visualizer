@@ -1,3 +1,5 @@
+"use strict";
+
 const rollupCommonJs = require("rollup-plugin-commonjs");
 const rollupNodeResolve = require("rollup-plugin-node-resolve");
 //const rollupUglify = require("rollup-plugin-uglify");

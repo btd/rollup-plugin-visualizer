@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const mkdirp = require("mkdirp");
 const util = require("util");
-const opn = require("opn");
+const opn = require("open");
 const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
 const writeFileAsync = util.promisify(fs.writeFile);

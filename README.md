@@ -1,6 +1,6 @@
 # Rollup Plugin Visualizer
 
-[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer)
+[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer) [![Travis CI build status](https://img.shields.io/travis/com/btd/rollup-plugin-visualizer.svg)](https://travis-ci.com/btd/rollup-plugin-visualizer)
 
 Visualize and analyze your Rollup bundle to see which modules are taking up space.
 
