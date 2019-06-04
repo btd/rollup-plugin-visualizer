@@ -16,7 +16,8 @@
     "lint": "eslint .",
     "build": "rollup -c rollup.config.js -o ./lib/pluginmain.js",
     "build:dev": "rollup -c rollup.config-dev.js -o ./lib/pluginmain.js",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
     "mkdirp": "^0.5.1",
