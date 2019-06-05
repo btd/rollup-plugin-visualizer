@@ -9,9 +9,7 @@ module.exports = {
   output: { format: "iife" },
   plugins: [
     rollupNodeResolve({
-      jsnext: true,
-      main: true,
-      module: true
+      mainFields: ['module', 'jsnext', 'main']
     }),
     rollupCommonJs({
       ignoreGlobal: true,
