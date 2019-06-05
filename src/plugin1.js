@@ -55,7 +55,7 @@ window.nodesData.forEach(({ id, root: data }) => {
     .attr("width", WIDTH)
     .attr("height", HEIGHT)
     .append("g")
-    .attr("transform", "translate(" + WIDTH / 2 + "," + HEIGHT / 2 + ")");
+    .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
 
   const arc = d3arc()
     .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))

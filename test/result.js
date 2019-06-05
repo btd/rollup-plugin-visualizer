@@ -1,6 +1,4 @@
-(function () {
-	'use strict';
+"use strict";
 
-	consoe.log("hey");
-
-}());
+// eslint-disable-next-line no-console
+console.log("hey");
