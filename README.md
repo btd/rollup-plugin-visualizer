@@ -65,6 +65,11 @@ plugins: [
 
 You can use option `open` like `{ open: true }` to open generated file in default browser.
 
+## Diagram template
+
+Currently this plugin can generate 'sunburst' and 'treemap' style diagrams.
+Use `template` options with one of `sunburst` (default) or `treemap`.
+
 ## Acknowledgements
 
 Initially this plugin was based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage.
