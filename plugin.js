@@ -1,27 +1,11 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
-const mkdirp = require("mkdirp");
-const util = require("util");
 const opn = require("open");
-const SourceMapConsumer = require("source-map").SourceMapConsumer;
+const { SourceMapConsumer } = require("source-map");
 
-const writeFileAsync = util.promisify(fs.writeFile);
-const mkdirpAsync = util.promisify(mkdirp);
-
-const readFont = (type = "woff", weight = 700) => {
-  const fonts = path.join(require.resolve("typeface-oswald"), "../files/");
-  return fs.readFileSync(path.join(fonts, `./oswald-latin-${weight}.${type}`));
-};
-
-const cssString = fs.readFileSync(path.join(__dirname, "lib", "./style.css"), "utf8");
-const jsString = fs.readFileSync(path.join(__dirname, "lib", "./pluginmain.js"), "utf8");
-const fontWeight = 500;
-const fontface = buildFontface("Oswald", fontWeight, {
-  woff: readFont("woff", fontWeight).toString("base64"),
-  woff2: readFont("woff2", fontWeight).toString("base64")
-});
+const buildHtml = require("./build-html");
 
 const PLUGIN_PREFIX = "\u0000";
 
@@ -32,6 +16,8 @@ module.exports = function(opts) {
   const useSourceMap = !!opts.sourcemap;
   const open = !!opts.open;
   const openOptions = opts.openOptions || {};
+
+  const template = opts.template || "sunburst"; //'sunburst'
 
   return {
     async generateBundle(outputOptions, outputBundle) {
@@ -49,7 +35,7 @@ module.exports = function(opts) {
         flattenTree(root);
         roots.push({ id, root });
       }
-      const html = buildHtml(title, roots, filename);
+      const html = await buildHtml(title, roots, template);
       await writeFile(filename, html);
       if (open) {
         return opn(filename, openOptions);
@@ -58,13 +44,13 @@ module.exports = function(opts) {
   };
 };
 
-function buildTree(bundle, useSourceMap) {
+const buildTree = (bundle, useSourceMap) => {
   const root = {
     name: "root",
     children: []
   };
-  Object.keys(bundle.modules).forEach(id => {
-    const module = bundle.modules[id];
+
+  for (const [id, module] of Object.entries(bundle.modules)) {
     const name = id;
     const m = {
       size: useSourceMap ? module.minifiedSize || 0 : module.renderedLength,
@@ -76,46 +62,13 @@ function buildTree(bundle, useSourceMap) {
     } else {
       addToPath(root, name.split(path.sep), m);
     }
-  });
+  }
   return root;
-}
-
-function buildHtml(title, root) {
-  return `<!doctype html>
-      <title>${title}</title>
-      <meta charset="utf-8">
-      <style>${cssString}\n${fontface}</style>
-      <div>
-      <div>
-          <h1>${title}</h1>
-
-          <div id="charts">
-          </div>
-      </div>
-      </div>
-      <script>window.nodesData = ${JSON.stringify(root)};</script>
-      <script charset="UTF-8">
-        ${jsString}
-      </script>
-  `;
-}
-
-function buildFontface(name, weight, { woff2, woff }) {
-  return `
-    @font-face {
-      font-family: '${name}';
-      font-display: swap;
-      font-style: normal;
-      font-weight: ${weight};
-      src:
-        url(data:font/woff2;charset=utf-8;base64,${woff2}) format('woff2'),
-        url(data:application/font-woff;charset=utf-8;base64,${woff}) format('woff');
-    }`;
-}
+};
 
 async function writeFile(filename, contents) {
-  await mkdirpAsync(path.dirname(filename));
-  return await writeFileAsync(filename, contents);
+  await fs.mkdir(path.dirname(filename), { recursive: true });
+  return await fs.writeFile(filename, contents);
 }
 
 function getDeepMoreThenOneChild(tree) {

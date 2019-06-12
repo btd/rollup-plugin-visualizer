@@ -5,13 +5,10 @@ const rollupNodeResolve = require("rollup-plugin-node-resolve");
 const plugin = require("./plugin");
 
 module.exports = {
-  input: "./src/plugin1.js",
   output: { format: "iife" },
   plugins: [
     rollupNodeResolve({
-      jsnext: true,
-      main: true,
-      module: true
+      mainFields: ["module", "jsnext", "main"]
     }),
     rollupCommonJs({
       ignoreGlobal: true,

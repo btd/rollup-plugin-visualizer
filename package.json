@@ -14,12 +14,13 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "rollup -c rollup.config.js -o ./lib/pluginmain.js",
-    "build:dev": "rollup -c rollup.config-dev.js -o ./lib/pluginmain.js",
-    "prepare": "npm run build",
+    "build": "cp ./src/*.css ./lib/ && rollup -c rollup.config.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config.js -i ./src/script-treemap.js -o ./lib/main-treemap.js",
+    "build:dev": "cp ./src/*.css ./lib/ && rollup -c rollup.config-dev.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config-dev.js -i ./src/script-treemap.js -o ./lib/main-treemap.js",
+    "prepare": "yarn run build",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
+    "d3-collection": "^1.0.7",
     "mkdirp": "^0.5.1",
     "open": "^6.3.0",
     "source-map": "^0.7.3",

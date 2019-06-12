@@ -102,3 +102,9 @@ footer h2 {
   margin: 1.5em 0 0.5em;
   font-size: 1.3em;
 }
+
+rect {
+  fill: cadetblue;
+  opacity: 0.3;
+  stroke: white;
+}
