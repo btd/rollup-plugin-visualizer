@@ -4,9 +4,11 @@
 
 Visualize and analyze your Rollup bundle to see which modules are taking up space.
 
-## Screenshot
+## Screenshots
 
-![Screenshot](https://github.com/btd/rollup-plugin-visualizer/blob/master/pic.png?raw=true)
+![sunburst](https://github.com/btd/rollup-plugin-visualizer/blob/master/sunburst.jpg?raw=true)
+![treemap](https://github.com/btd/rollup-plugin-visualizer/blob/master/treemap.jpg?raw=true)
+![circlepacking](https://github.com/btd/rollup-plugin-visualizer/blob/master/circlepacking.jpg?raw=true)
 
 ## Installation
 
@@ -32,44 +34,15 @@ plugins: [
 //...
 ```
 
-This will output a file named `stats.html` in current directory. You can modify the name/location by passing a `filename` parameter into the constructor. You can also set a title by passing a `title` parameter.
+## Options
 
-```javascript
-import visualizer from 'rollup-plugin-visualizer';
+`filename` (string, default `stats.html`) - name of the file with diagram to generate
+`title` (string, default `Rollup Visualizer`) - title tag value
+`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs) 
+`open` (boolean, default `false`) - Open generated file in default user agent
+`template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`
 
-//...
-plugins: [
-  visualizer({
-    filename: './statistics.html',
-    title: 'My Bundle'
-  })
-],
-//...
-```
-
-The file sizes reported are before any minification happens (if UglifyJS is being used, for example).
-Minified module sizes can be calculated using the source maps.
-To enable this mode, pass `{ sourcemap: true }`
-
-```javascript
-import visualizer from 'rollup-plugin-visualizer';
-
-//...
-plugins: [
-  visualizer({
-    sourcemap: true
-  })
-],
-//...
-```
-
-You can use option `open` like `{ open: true }` to open generated file in default browser.
-
-## Diagram template
-
-Currently this plugin can generate 'sunburst' and 'treemap' style diagrams.
-Use `template` options with one of `sunburst` (default) or `treemap`.
 
 ## Acknowledgements
 
-Initially this plugin was based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage.
+Initially this plugin was based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage. Also i would like to thank you Mike Bostock for awesome D3, and tons of examples.
