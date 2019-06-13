@@ -1,0 +1,46 @@
+html {
+  background-color: #f7eedf;
+  color: #333;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 10px auto 0;
+  width: 1000px;
+  padding: 0 10px;
+}
+
+a {
+  color: #347ab7;
+}
+
+p {
+  margin-top: 0.5em;
+}
+
+svg {
+  vertical-align: middle;
+}
+
+h1 {
+  font-family: "Oswald", "HelveticaNeue-CondensedBold", "Arial Narrow", sans-serif;
+  font-weight: 500;
+  font-size: 70px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.chart {
+  position: relative;
+  margin: 0 auto;
+  min-height: 350px;
+}
+
+circle {
+  stroke: white;
+}
+
+text {
+  font-size: 0.7em;
+  fill: white;
+}

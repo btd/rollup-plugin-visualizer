@@ -1,6 +1,7 @@
 import { select } from "d3-selection";
 import { nest as d3nest } from "d3-collection";
 import uid from "./uid";
+import color from "./color";
 import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
 import { format as formatBytes } from "bytes";
 
@@ -8,27 +9,6 @@ const WIDTH = 1000;
 const HEIGHT = 700;
 
 const chartsContainer = document.querySelector("#charts");
-
-function getAncestors(node) {
-  const parents = [];
-  while (node != null) {
-    parents.push(node);
-    node = node.parent;
-  }
-  return parents;
-}
-
-function color(node) {
-  if (node.children && node.children.length) {
-    const parents = getAncestors(node);
-    const hasNodeModules = !!parents.find(n => {
-      return n.data.name === "node_modules";
-    });
-    return hasNodeModules ? "#599e59" : "#487ea4";
-  } else {
-    return "#db7100";
-  }
-}
 
 const format = formatBytes;
 

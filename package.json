@@ -14,8 +14,8 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "cp ./src/*.css ./lib/ && rollup -c rollup.config.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config.js -i ./src/script-treemap.js -o ./lib/main-treemap.js",
-    "build:dev": "cp ./src/*.css ./lib/ && rollup -c rollup.config-dev.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config-dev.js -i ./src/script-treemap.js -o ./lib/main-treemap.js",
+    "build": "cp ./src/*.css ./lib/ && rollup -c rollup.config.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config.js -i ./src/script-treemap.js -o ./lib/main-treemap.js && rollup -c rollup.config.js -i ./src/script-circlepacking.js -o ./lib/main-circlepacking.js",
+    "build:dev": "cp ./src/*.css ./lib/ && rollup -c rollup.config-dev.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config-dev.js -i ./src/script-treemap.js -o ./lib/main-treemap.js && rollup -c rollup.config-dev.js -i ./src/script-circlepacking.js -o ./lib/main-circlepacking.js",
     "prepare": "yarn run build",
     "test": "echo \"Error: no test specified\" && exit 0"
   },

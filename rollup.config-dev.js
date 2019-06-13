@@ -1,19 +1,12 @@
 "use strict";
 
-const rollupCommonJs = require("rollup-plugin-commonjs");
-const rollupNodeResolve = require("rollup-plugin-node-resolve");
 const plugin = require("./plugin");
+const config = require("./rollup.config");
 
-module.exports = {
-  output: { format: "iife" },
-  plugins: [
-    rollupNodeResolve({
-      mainFields: ["module", "jsnext", "main"]
-    }),
-    rollupCommonJs({
-      ignoreGlobal: true,
-      include: "node_modules/**"
-    }),
-    plugin({ open: true })
-  ]
-};
+config.plugins.push(plugin({ open: true, filename: "sunburst.html", template: "sunburst" }));
+config.plugins.push(plugin({ open: true, filename: "treemap.html", template: "treemap" }));
+config.plugins.push(
+  plugin({ open: true, filename: "circlepacking.html", template: "circlepacking" })
+);
+
+module.exports = config;

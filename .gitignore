@@ -1,4 +1,5 @@
-node_modules
+
 npm-debug.log
-stats.html
-lib/
+lib/*
+node_modules/
+*.html

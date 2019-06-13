@@ -4,37 +4,19 @@ import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { format as formatBytes } from "bytes";
 
+import color from "./color";
+import getAncestors from "./get-ancestors";
+
 const WIDTH = 700;
 const HEIGHT = 700;
 const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;
-
-function getAncestors(node) {
-  const parents = [];
-  while (node != null) {
-    parents.push(node);
-    node = node.parent;
-  }
-  return parents;
-}
-
-function color(node) {
-  if (node.children && node.children.length) {
-    const parents = getAncestors(node);
-    const hasNodeModules = !!parents.find(n => {
-      return n.data.name === "node_modules";
-    });
-    return hasNodeModules ? "#599e59" : "#487ea4";
-  } else {
-    return "#db7100";
-  }
-}
 
 const x = scaleLinear().range([0, 2 * Math.PI]);
 const y = scaleSqrt().range([0, RADIUS]);
 
 const chartsContainer = document.querySelector("#charts");
 
-window.nodesData.forEach(({ id, root: data }) => {
+for (const { id, root: data } of window.nodesData) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = `
     <div class="chart">
@@ -52,16 +34,9 @@ window.nodesData.forEach(({ id, root: data }) => {
 
   const g = select(chartNode)
     .append("svg")
-    .attr("width", WIDTH)
-    .attr("height", HEIGHT)
+    .attr("viewBox", [0, 0, WIDTH, HEIGHT])
     .append("g")
     .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
-
-  const arc = d3arc()
-    .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
-    .endAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
-    .innerRadius(d => y(d.y0))
-    .outerRadius(d => y(d.y1));
 
   const root = d3hierarchy(data)
     .sum(d => {
@@ -72,6 +47,12 @@ window.nodesData.forEach(({ id, root: data }) => {
       }
     })
     .sort();
+
+  const arc = d3arc()
+    .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
+    .endAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
+    .innerRadius(d => y(d.y0))
+    .outerRadius(d => y(d.y1));
 
   const partition = d3partition();
 
@@ -86,48 +67,44 @@ window.nodesData.forEach(({ id, root: data }) => {
     .attr("fill-rule", "evenodd")
     .style("stroke", "#fff")
     .style("fill", d => color(d))
-    .on("mouseover", mouseover);
+    .on("mouseover", d => {
+      const percentageNum = (100 * d.value) / totalSize;
+      const percentage = percentageNum.toFixed(2);
+      const percentageString = percentage + "%";
+
+      select(chartNode)
+        .select(".details-name")
+        .text(d.data.name);
+
+      select(chartNode)
+        .select(".details-percentage")
+        .text(percentageString);
+
+      select(chartNode)
+        .select(".details-size")
+        .text(formatBytes(d.value));
+
+      select(chartNode)
+        .select(".details")
+        .style("display", "block");
+
+      const sequenceArray = getAncestors(d);
+      //updateBreadcrumbs(sequenceArray, percentageString);
+
+      // Fade all the segments.
+      g.selectAll("path").style("opacity", 0.3);
+
+      // Then highlight only those that are an ancestor of the current segment.
+      g.selectAll("path")
+        .filter(node => sequenceArray.indexOf(node) >= 0)
+        .style("opacity", 1);
+    });
 
   const totalSize = root.value;
 
-  select(chartNode).on("mouseleave", mouseleave);
-
-  function mouseover(d) {
-    const percentageNum = (100 * d.value) / totalSize;
-    const percentage = percentageNum.toFixed(2);
-    const percentageString = percentage + "%";
-
-    select(chartNode)
-      .select(".details-name")
-      .text(d.data.name);
-
-    select(chartNode)
-      .select(".details-percentage")
-      .text(percentageString);
-
-    select(chartNode)
-      .select(".details-size")
-      .text(formatBytes(d.value));
-
-    select(chartNode)
-      .select(".details")
-      .style("display", "block");
-
-    const sequenceArray = getAncestors(d);
-    //updateBreadcrumbs(sequenceArray, percentageString);
-
-    // Fade all the segments.
-    g.selectAll("path").style("opacity", 0.3);
-
-    // Then highlight only those that are an ancestor of the current segment.
-    g.selectAll("path")
-      .filter(node => sequenceArray.indexOf(node) >= 0)
-      .style("opacity", 1);
-  }
-
-  function mouseleave() {
+  select(chartNode).on("mouseleave", () => {
     g.selectAll("path").style("opacity", 1);
 
     select(".details").style("display", "none");
-  }
-});
+  });
+}
