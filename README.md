@@ -37,9 +37,13 @@ plugins: [
 ## Options
 
 `filename` (string, default `stats.html`) - name of the file with diagram to generate
+
 `title` (string, default `Rollup Visualizer`) - title tag value
+
 `sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs) 
+
 `open` (boolean, default `false`) - Open generated file in default user agent
+
 `template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`
 
 
