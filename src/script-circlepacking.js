@@ -3,14 +3,13 @@ import { nest as d3nest } from "d3-collection";
 import uid from "./uid";
 import color from "./color";
 import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
-import { format as formatBytes } from "bytes";
+
+import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
 const WIDTH = 1000;
 const HEIGHT = 1000;
 
 const chartsContainer = document.querySelector("#charts");
-
-const format = formatBytes;
 
 for (const { id, root: data } of window.nodesData) {
   const wrapper = document.createElement("div");
@@ -32,9 +31,13 @@ for (const { id, root: data } of window.nodesData) {
     })
     .sort();
 
+  const totalSize = root.value;
+
   const layout = d3pack()
     .size([WIDTH - 2, HEIGHT - 2])
     .padding(3);
+
+  const tooltip = createTooltip(select(chartNode));
 
   layout(root);
 
@@ -65,7 +68,10 @@ for (const { id, root: data } of window.nodesData) {
     .selectAll("g")
     .data(d => d.values)
     .join("g")
-    .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`);
+    .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
+    .on("mouseover", createMouseover(tooltip, chartNode))
+    .on("mousemove", createMousemove(tooltip, chartNode, totalSize))
+    .on("mouseleave", createMouseleave(tooltip, chartNode));
 
   node
     .append("circle")
@@ -91,13 +97,4 @@ for (const { id, root: data } of window.nodesData) {
     .attr("x", 0)
     .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
     .text(d => d);
-
-  node.append("title").text(
-    d =>
-      `${d
-        .ancestors()
-        .map(d => d.data.name)
-        .reverse()
-        .join("/")}\n${format(d.value)}`
-  );
 }

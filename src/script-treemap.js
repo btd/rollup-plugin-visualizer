@@ -4,6 +4,7 @@ import uid from "./uid";
 import color from "./color";
 import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
 import { format as formatBytes } from "bytes";
+import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
 const WIDTH = 1000;
 const HEIGHT = 700;
@@ -29,6 +30,8 @@ for (const { id, root: data } of window.nodesData) {
     .paddingInner(5)
     .round(true);
 
+  const tooltip = createTooltip(select(chartNode));
+
   const root = d3hierarchy(data)
     .sum(d => {
       if (d.children && d.children.length) {
@@ -38,6 +41,8 @@ for (const { id, root: data } of window.nodesData) {
       }
     })
     .sort();
+
+  const totalSize = root.value;
 
   treemapLayout(root);
 
@@ -67,16 +72,10 @@ for (const { id, root: data } of window.nodesData) {
     .selectAll("g")
     .data(d => d.values)
     .join("g")
-    .attr("transform", d => `translate(${d.x0},${d.y0})`);
-
-  node.append("title").text(
-    d =>
-      `${d
-        .ancestors()
-        .reverse()
-        .map(d => d.data.name)
-        .join("/")}\n${format(d.value)}`
-  );
+    .attr("transform", d => `translate(${d.x0},${d.y0})`)
+    .on("mouseover", createMouseover(tooltip, chartNode))
+    .on("mousemove", createMousemove(tooltip, chartNode, totalSize))
+    .on("mouseleave", createMouseleave(tooltip, chartNode));
 
   node
     .append("rect")
