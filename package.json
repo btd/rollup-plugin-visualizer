@@ -6,6 +6,7 @@
   "license": "MIT",
   "files": [
     "lib/*",
+    "build-html.js",
     "plugin.js"
   ],
   "repository": {
