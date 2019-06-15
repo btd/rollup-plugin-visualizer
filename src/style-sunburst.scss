@@ -1,0 +1,51 @@
+@import "./base";
+
+path {
+  stroke: #fff;
+}
+
+#charts {
+  width: 700px;
+}
+
+.details {
+  position: absolute;
+  top: 350px;
+  left: 50%;
+  width: 170px;
+  margin-left: -85px;
+  font-size: 14px;
+  text-align: center;
+  color: #eee;
+  z-index: 100;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.details-size {
+  font-size: 0.8em;
+  margin-top: 1em;
+}
+
+.details-name {
+  font-weight: bold;
+}
+
+.details-size::before {
+  content: "(";
+}
+.details-size::after {
+  content: ")";
+}
+
+.details-percentage {
+  margin: 0.4em 0 0em;
+  font-size: 2.4em;
+  line-height: 1em;
+}
+
+rect {
+  fill: cadetblue;
+  opacity: 0.3;
+  stroke: white;
+}

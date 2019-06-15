@@ -43,14 +43,8 @@ const buildHtml = async (title, root, template) => {
         <title>${title}</title>
         <meta charset="utf-8">
         <style>${cssString}\n${fontface}</style>
-        <div>
-        <div>
-            <h1>${title}</h1>
-  
-            <div id="charts">
-            </div>
-        </div>
-        </div>
+        <h1>${title}</h1>
+        <div id="charts"></div>
         <script>window.nodesData = ${JSON.stringify(root)};</script>
         <script charset="UTF-8">
           ${jsString}

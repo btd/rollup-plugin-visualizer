@@ -46,7 +46,13 @@ plugins: [
 
 `template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`
 
+## Build plugin
+
+For development if you need to build plugin, just exec:
+```js
+yarn run build
+```
 
 ## Acknowledgements
 
-Initially this plugin was based on [webpack-visualizer](http://chrisbateman.github.io/webpack-visualizer/), but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage. Also i would like to thank you Mike Bostock for awesome D3, and tons of examples.
+Initially this plugin was based on `webpack-visualizer`, but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage. Also i would like to thank you Mike Bostock for awesome D3, and tons of examples.

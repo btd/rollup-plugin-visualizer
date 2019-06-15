@@ -15,17 +15,13 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "cp ./src/*.css ./lib/ && rollup -c rollup.config.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config.js -i ./src/script-treemap.js -o ./lib/main-treemap.js && rollup -c rollup.config.js -i ./src/script-circlepacking.js -o ./lib/main-circlepacking.js",
-    "build:dev": "cp ./src/*.css ./lib/ && rollup -c rollup.config-dev.js -i ./src/script-sunburst.js -o ./lib/main-sunburst.js && rollup -c rollup.config-dev.js -i ./src/script-treemap.js -o ./lib/main-treemap.js && rollup -c rollup.config-dev.js -i ./src/script-circlepacking.js -o ./lib/main-circlepacking.js",
-    "prepare": "yarn run build",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "build": "gulp",
+    "prepare": "yarn run build"
   },
   "dependencies": {
-    "d3-collection": "^1.0.7",
     "mkdirp": "^0.5.1",
     "open": "^6.3.0",
-    "source-map": "^0.7.3",
-    "typeface-oswald": "0.0.54"
+    "source-map": "^0.7.3"
   },
   "peerDependencies": {
     "rollup": ">=0.60.0"
@@ -33,15 +29,25 @@
   "devDependencies": {
     "bytes": "^3.1.0",
     "d3-hierarchy": "^1.1.8",
+    "typeface-oswald": "0.0.54",
+    "d3-collection": "^1.0.7",
     "d3-scale": "^3.0.0",
     "d3-selection": "^1.4.0",
     "d3-shape": "^1.3.4",
+    "del": "^4.1.1",
     "eslint": "^5.14.1",
+    "gulp": "^4.0.2",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.12.0",
     "prettier": "^1.16.4",
     "rollup": "^1.14.0",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.1",
-    "rollup-plugin-uglify": "^6.0.2"
+    "rollup-plugin-uglify": "^6.0.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "yargs": "^13.2.4"
   },
   "engines": {
     "node": ">=8.10"
