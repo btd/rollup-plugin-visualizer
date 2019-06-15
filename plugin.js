@@ -17,14 +17,13 @@ module.exports = function(opts) {
   const open = !!opts.open;
   const openOptions = opts.openOptions || {};
 
-  const template = opts.template || "sunburst"; //'sunburst'
+  const template = opts.template || "sunburst";
 
   return {
     async generateBundle(outputOptions, outputBundle) {
       const roots = [];
 
       for (const [id, bundle] of Object.entries(outputBundle)) {
-        //console.log(id, bundle);
         if (bundle.isAsset) continue; //only chunks
 
         if (useSourceMap) {
@@ -50,11 +49,11 @@ const buildTree = (bundle, useSourceMap) => {
     children: []
   };
 
-  for (const [id, module] of Object.entries(bundle.modules)) {
+  for (const [id, mod] of Object.entries(bundle.modules)) {
     const name = id;
     const m = {
-      size: useSourceMap ? module.minifiedSize || 0 : module.renderedLength,
-      originalSize: module.originalLength
+      size: useSourceMap ? mod.minifiedSize || 0 : mod.renderedLength,
+      originalSize: mod.originalLength
     };
 
     if (name.indexOf(PLUGIN_PREFIX) === 0) {
