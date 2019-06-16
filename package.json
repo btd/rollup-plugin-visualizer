@@ -19,7 +19,6 @@
     "prepare": "yarn run build"
   },
   "dependencies": {
-    "mkdirp": "^0.5.1",
     "open": "^6.3.0",
     "source-map": "^0.7.3"
   },
