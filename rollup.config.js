@@ -31,7 +31,15 @@ function getConfig(templateType) {
       file: path.join(__dirname, `./lib/main-${templateType}.js`)
     },
     plugins: plugins.concat(postcss({
-      extract: path.join(__dirname, `./lib/style-${templateType}.css`)
+      extract: path.join(__dirname, `./lib/style-${templateType}.css`),
+      plugins: [
+        /* eslint-disable global-require */
+        require("postcss-url")({
+          basePath: __dirname,
+          url: "inline"
+        })
+        /* eslint-enable */
+      ]
     }))
   };
   return config;
