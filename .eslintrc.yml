@@ -1,4 +1,3 @@
----
 root: true
 
 extends:
@@ -9,29 +8,28 @@ parserOptions:
 
 env:
   node: true
-  es6: true
 
 rules:
-  quotes: 0
-  indent: 0
-  require-jsdoc: 0
-  eqeqeq: 0
-  curly: 0
-  no-invalid-this: 0
-  default-case: 0
-  no-nested-ternary: 0
-  no-underscore-dangle: 0
-  func-style: 0
-  new-cap: 0
-  callback-return: 0
-  no-loop-func: 0
-  prefer-const: 2
-  strict: [2, "global"]
-  semi: [2, "always"]
-  no-sequences: 2
-  dot-notation: 1
-  dot-location: [2, "property"]
-  global-require: 2
-  no-path-concat: 2
-  prefer-arrow-callback: 2
-  no-var: 2
+  quotes: ["error", "double"]
+  indent: "off"
+  require-jsdoc: "off"
+  eqeqeq: "off"
+  curly: "off"
+  no-invalid-this: "off"
+  default-case: "off"
+  no-nested-ternary: "off"
+  no-underscore-dangle: "off"
+  func-style: "off"
+  new-cap: "off"
+  callback-return: "off"
+  no-loop-func: "off"
+  prefer-const: "error"
+  strict: ["error", "global"]
+  semi: ["error", "always"]
+  no-sequences: "error"
+  dot-notation: "warn"
+  dot-location: ["error", "property"]
+  global-require: "error"
+  no-path-concat: "error"
+  prefer-arrow-callback: "error"
+  no-var: "error"

@@ -7,6 +7,8 @@ import { format as formatBytes } from "bytes";
 import color from "./color";
 import getAncestors from "./get-ancestors";
 
+import "./style/style-sunburst.scss";
+
 const WIDTH = 700;
 const HEIGHT = 700;
 const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;

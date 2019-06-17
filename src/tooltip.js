@@ -1,7 +1,7 @@
 import { mouse as d3mouse } from "d3-selection";
 import { format as formatBytes } from "bytes";
 
-//https://www.d3-graph-gallery.com/graph/interactivity_tooltip.html#template
+// https://www.d3-graph-gallery.com/graph/interactivity_tooltip.html#template
 
 export const createTooltip = node =>
   node
@@ -14,7 +14,7 @@ export const createTooltip = node =>
     .style("border-radius", "5px")
     .style("padding", "5px");
 
-export const createMouseover = (tooltipNode, container) => d => tooltipNode.style("opacity", 1);
+export const createMouseover = (tooltipNode) => () => tooltipNode.style("opacity", 1);
 
 export const createMousemove = (tooltipNode, container, totalSize) => d => {
   const [x, y] = d3mouse(container);
@@ -34,4 +34,4 @@ export const createMousemove = (tooltipNode, container, totalSize) => d => {
     .style("top", y + "px");
 };
 
-export const createMouseleave = (tooltipNode, container) => d => tooltipNode.style("opacity", 0);
+export const createMouseleave = (tooltipNode) => () => tooltipNode.style("opacity", 0);

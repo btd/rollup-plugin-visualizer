@@ -1,11 +1,14 @@
 "use strict";
 
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 const opn = require("open");
+const { promisify } = require("util");
 const { SourceMapConsumer } = require("source-map");
 
-const buildHtml = require("./build-html");
+const buildStats = require("./build-stats");
+const mkdir = promisify(fs.mkdir);
+const writeFile = promisify(fs.writeFile);
 
 const PLUGIN_PREFIX = "\u0000";
 
@@ -34,7 +37,8 @@ module.exports = function(opts) {
         flattenTree(root);
         roots.push({ id, root });
       }
-      const html = await buildHtml(title, roots, template);
+      const html = await buildStats(title, roots, template);
+      await mkdir(path.dirname(filename), { recursive: true });
       await writeFile(filename, html);
       if (open) {
         return opn(filename, openOptions);
@@ -64,11 +68,6 @@ const buildTree = (bundle, useSourceMap) => {
   }
   return root;
 };
-
-async function writeFile(filename, contents) {
-  await fs.mkdir(path.dirname(filename), { recursive: true });
-  return await fs.writeFile(filename, contents);
-}
 
 function getDeepMoreThenOneChild(tree) {
   if (tree.children && tree.children.length === 1) {

@@ -6,6 +6,8 @@ import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
 import { format as formatBytes } from "bytes";
 import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
+import "./style/style-treemap.scss";
+
 const WIDTH = 1000;
 const HEIGHT = 700;
 
