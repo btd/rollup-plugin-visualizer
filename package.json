@@ -6,9 +6,7 @@
   "license": "MIT",
   "files": [
     "lib/*",
-    "plugin.js",
-    "build-stats.js",
-    "stats.template"
+    "plugin/*"
   ],
   "repository": {
     "type": "git",
