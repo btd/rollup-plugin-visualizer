@@ -6,6 +6,8 @@ import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
 
 import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
+import "./style/style-circlepacking.scss";
+
 const WIDTH = 1000;
 const HEIGHT = 1000;
 

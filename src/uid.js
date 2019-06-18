@@ -1,14 +1,31 @@
 let count = 0;
 
+class Id {
+  constructor(id) {
+    this._id = id;
+    this._href = createUrl({ hash: id }).href;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  get href() {
+    return this._href;
+  }
+
+  toString() {
+    return `url(${this.href})`;
+  }
+}
+
 export default function(name) {
-  return new Id("O-" + (name == null ? "" : name + "-") + ++count);
+  count += 1;
+  const id = ["O", name, count].filter(Boolean).join("-");
+  return new Id(id);
 }
 
-function Id(id) {
-  this.id = id;
-  this.href = window.location.href + "#" + id;
+function createUrl(options = {}) {
+  const url = new URL(window.location);
+  return Object.assign(url, options);
 }
-
-Id.prototype.toString = function() {
-  return "url(" + this.href + ")";
-};
