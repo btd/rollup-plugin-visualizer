@@ -24,7 +24,6 @@ module.exports = [
 function getConfig(templateType) {
   /** @type {import('rollup').RollupOptions} */
   const config = {
-    $template: `${templateType}`,
     input: `./src/script-${templateType}.js`,
     output: {
       format: "iife",
