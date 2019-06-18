@@ -9,6 +9,7 @@ module.exports = baseConfig.map(config => {
   config.plugins.push(
     plugin({
       open: true,
+      title: `test ${templateType}`,
       filename: `stats.${templateType}.html`,
       template: templateType
     })
