@@ -6,9 +6,9 @@ Visualize and analyze your Rollup bundle to see which modules are taking up spac
 
 ## Screenshots
 
-![sunburst](https://github.com/btd/rollup-plugin-visualizer/blob/master/sunburst.jpg?raw=true)
-![treemap](https://github.com/btd/rollup-plugin-visualizer/blob/master/treemap.jpg?raw=true)
-![circlepacking](https://github.com/btd/rollup-plugin-visualizer/blob/master/circlepacking.jpg?raw=true)
+![sunburst](https://github.com/btd/rollup-plugin-visualizer/blob/master/pics/sunburst.jpg?raw=true)
+![treemap](https://github.com/btd/rollup-plugin-visualizer/blob/master/pics/treemap.jpg?raw=true)
+![circlepacking](https://github.com/btd/rollup-plugin-visualizer/blob/master/pics/circlepacking.jpg?raw=true)
 
 ## Installation
 
