@@ -2,12 +2,19 @@
 
 const baseConfig = require("./rollup.config");
 const plugin = require("./plugin");
+const path = require("path");
 
-module.exports = baseConfig.map((options, index) => {
-  options.plugins.push(plugin({
+module.exports = baseConfig.map((config, index) => {
+  config.plugins.push(plugin({
     open: true,
     filename: `stats.${index}.html`,
-    template: options.$template
+    template: getTemplate(config)
   }));
-  return options;
+  return config;
 });
+
+function getTemplate({ input }) {
+  const filename = path.basename(input, path.extname(input));
+  const [_, template] = filename.split("-");
+  return template;
+}
