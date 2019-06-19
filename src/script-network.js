@@ -3,6 +3,8 @@ import { drag as d3drag } from "d3-drag";
 
 import { mouse as d3mouse } from "d3-selection";
 
+import uid from "./uid";
+
 import {
   forceSimulation as d3forceSimulation,
   forceLink as d3forceLink,
@@ -103,6 +105,16 @@ for (const { id, root: data } of window.nodesData) {
     .force("center", d3forceCenter(WIDTH / 2, HEIGHT / 2))
     .force("collide", d3forceCollide().radius(radius));
 
+  const shadow = uid("shadow");
+
+  svg
+    .append("filter")
+    .attr("id", shadow.id)
+    .append("feDropShadow")
+    .attr("flood-opacity", 0.3)
+    .attr("dx", 0)
+    .attr("dy", 1);
+
   const link = svg
     .append("g")
     .attr("stroke", "#999")
@@ -121,6 +133,7 @@ for (const { id, root: data } of window.nodesData) {
     .join("circle")
     .attr("r", radius)
     .attr("fill", d => color(d.group))
+
     .on("mouseover", createMouseover(tooltip, chartNode))
     .on("mousemove", createMousemove(tooltip, chartNode))
     .on("mouseleave", createMouseleave(tooltip, chartNode))
@@ -136,5 +149,9 @@ for (const { id, root: data } of window.nodesData) {
       .attr("y2", d => d.target.y);
 
     node.attr("cx", d => d.x).attr("cy", d => d.y);
+  });
+
+  simulation.on("end", () => {
+    node.attr("filter", shadow);
   });
 }
