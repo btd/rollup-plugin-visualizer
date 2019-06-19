@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
 
-const mkdir = promisify(fs.mkdir);
+const mkdirp = require("mkdirp");
+
+const mkdir = promisify(mkdirp);
 const writeFile = promisify(fs.writeFile);
 
 const opn = require("open");
@@ -80,7 +82,7 @@ module.exports = function(opts) {
 
       const html = await buildStats(title, roots, template);
 
-      await mkdir(path.dirname(filename), { recursive: true });
+      await mkdir(path.dirname(filename));
       await writeFile(filename, html);
 
       if (open) {
