@@ -6,18 +6,15 @@ const path = require("path");
 
 const PLUGIN_PREFIX = "\u0000";
 
-const buildTree = (bundle, useSourceMap, flatten = true) => {
+const buildTree = (ids, getInitialModuleData, flatten = true) => {
   const root = {
     name: "root",
     children: []
   };
 
-  for (const [id, mod] of Object.entries(bundle.modules)) {
+  for (const id of ids) {
     const name = id;
-    const m = {
-      size: useSourceMap ? mod.minifiedSize || 0 : mod.renderedLength,
-      originalSize: mod.originalLength
-    };
+    const m = getInitialModuleData(id);
 
     if (name.indexOf(PLUGIN_PREFIX) === 0) {
       addToPath(root, [name], m);

@@ -14,7 +14,7 @@ export const createTooltip = node =>
     .style("border-radius", "5px")
     .style("padding", "5px");
 
-export const createMouseover = (tooltipNode) => () => tooltipNode.style("opacity", 1);
+export const createMouseover = tooltipNode => () => tooltipNode.style("opacity", 1);
 
 export const createMousemove = (tooltipNode, container, totalSize) => d => {
   const [x, y] = d3mouse(container);
@@ -28,10 +28,12 @@ export const createMousemove = (tooltipNode, container, totalSize) => d => {
   const percentage = percentageNum.toFixed(2);
   const percentageString = percentage + "%";
 
+  const str = `${nodePath}<br/><b>${formatBytes(d.value || d.size)}</b><br/>${percentageString}`;
+
   tooltipNode
-    .html(`${nodePath}<br/><b>${formatBytes(d.value)}</b><br/>${percentageString}`)
+    .html(str)
     .style("left", x + 30 + "px")
     .style("top", y + "px");
 };
 
-export const createMouseleave = (tooltipNode) => () => tooltipNode.style("opacity", 0);
+export const createMouseleave = tooltipNode => () => tooltipNode.style("opacity", 0);
