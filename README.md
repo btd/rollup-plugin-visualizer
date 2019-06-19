@@ -44,7 +44,7 @@ plugins: [
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`
+`template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
 
 ## Build plugin
 
