@@ -1,14 +1,16 @@
-import { select, event as d3event } from "d3-selection";
-import { drag as d3drag } from "d3-drag";
+import { select } from "d3-selection";
+import { max as d3max, extent as d3extent } from "d3-array";
+import { scaleSqrt } from "d3-scale";
 
 import { mouse as d3mouse } from "d3-selection";
 
 import {
-  forceSimulation as d3forceSimulation,
-  forceLink as d3forceLink,
-  forceManyBody as d3forceManyBody,
-  forceCenter as d3forceCenter,
-  forceCollide as d3forceCollide
+  forceSimulation,
+  forceLink,
+  forceManyBody,
+  forceCenter,
+  forceCollide,
+  forceX
 } from "d3-force";
 
 import { format as formatBytes } from "bytes";
@@ -27,30 +29,6 @@ const createMousemove = (tooltipNode, container) => d => {
     .style("top", y + "px");
 };
 
-const drag = simulation => {
-  function dragstarted(d) {
-    if (!d3event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(d) {
-    d.fx = d3event.x;
-    d.fy = d3event.y;
-  }
-
-  function dragended(d) {
-    if (!d3event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
-  return d3drag()
-    .on("start", dragstarted)
-    .on("drag", dragged)
-    .on("end", dragended);
-};
-
 import "./style/style-network.scss";
 
 function color(group) {
@@ -60,11 +38,6 @@ function color(group) {
     return "#599e59";
   }
 }
-
-const radius = d => {
-  const r = Math.sqrt(d.size) / 3;
-  return r < 5 ? 5 : r;
-};
 
 const WIDTH = 1000;
 const HEIGHT = 1000;
@@ -93,49 +66,73 @@ for (const { id, root: data } of window.nodesData) {
     })
   );
 
+  const maxLines = d3max(nodes, d => d.size);
+  const size = scaleSqrt()
+    .domain([1, maxLines])
+    .range([1, 30]);
+
   const svg = select(chartNode)
     .append("svg")
     .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
 
-  const simulation = d3forceSimulation(nodes)
-    .force("link", d3forceLink(links).id(d => d.id))
-    .force("charge", d3forceManyBody())
-    .force("center", d3forceCenter(WIDTH / 2, HEIGHT / 2))
-    .force("collide", d3forceCollide().radius(radius));
+  const simulation = forceSimulation()
+    .force(
+      "link",
+      forceLink()
+        .id(d => d.id)
+        .strength(2)
+    )
+    .force("collide", forceCollide().radius(d => size(d.size) + 1))
+    .force("forceX", forceX(HEIGHT / 2).strength(0.05))
+    .force("charge", forceManyBody().strength(-10))
+    .force("center", forceCenter(WIDTH / 2, HEIGHT / 2));
 
-  const link = svg
+  simulation.nodes(nodes);
+  simulation.force("link").links(links);
+  simulation.stop();
+
+  for (let i = 0; i < 150; i++) simulation.tick();
+
+  const xExtent = d3extent(nodes, d => d.x);
+  const yExtent = d3extent(nodes, d => d.y);
+
+  const xRange = xExtent[1] - xExtent[0];
+  const yRange = yExtent[1] - yExtent[0];
+
+  if (yRange > xRange) {
+    nodes.forEach(d => {
+      const y = parseFloat(d.y);
+      d.y = parseFloat(d.x);
+      d.x = y;
+    });
+  }
+
+  svg
     .append("g")
     .attr("stroke", "#999")
     .attr("stroke-opacity", 0.6)
     .selectAll("line")
     .data(links)
     .join("line")
-    .attr("stroke-width", d => Math.sqrt(d.value));
+    .attr("stroke-width", 1)
+    // set correct positions
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
 
-  const node = svg
+  svg
     .append("g")
     .attr("stroke", "#fff")
     .attr("stroke-width", 1.5)
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("r", radius)
+    .attr("r", d => size(d.size))
     .attr("fill", d => color(d.group))
-
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
     .on("mouseover", createMouseover(tooltip, chartNode))
     .on("mousemove", createMousemove(tooltip, chartNode))
-    .on("mouseleave", createMouseleave(tooltip, chartNode))
-    .call(drag(simulation));
-
-  //node.append("title").text(d => d.id);
-
-  simulation.on("tick", () => {
-    link
-      .attr("x1", d => d.source.x)
-      .attr("y1", d => d.source.y)
-      .attr("x2", d => d.target.x)
-      .attr("y2", d => d.target.y);
-
-    node.attr("cx", d => d.x).attr("cy", d => d.y);
-  });
+    .on("mouseleave", createMouseleave(tooltip, chartNode));
 }
