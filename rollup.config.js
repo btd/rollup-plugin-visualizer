@@ -16,9 +16,9 @@ const plugins = [
 ];
 
 module.exports = [
-  //getConfig("sunburst"),
-  //getConfig("treemap"),
-  //getConfig("circlepacking"),
+  getConfig("sunburst"),
+  getConfig("treemap"),
+  getConfig("circlepacking"),
   getConfig("network")
 ];
 
