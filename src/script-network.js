@@ -69,7 +69,7 @@ for (const { id, root: data } of window.nodesData) {
   const maxLines = d3max(nodes, d => d.size);
   const size = scaleSqrt()
     .domain([1, maxLines])
-    .range([1, 30]);
+    .range([5, 30]);
 
   const svg = select(chartNode)
     .append("svg")
@@ -80,7 +80,7 @@ for (const { id, root: data } of window.nodesData) {
       "link",
       forceLink()
         .id(d => d.id)
-        .strength(2)
+        .strength(1)
     )
     .force("collide", forceCollide().radius(d => size(d.size) + 1))
     .force("forceX", forceX(HEIGHT / 2).strength(0.05))
