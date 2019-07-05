@@ -26,10 +26,15 @@ const DATA_TYPE_FOR_TEMPLATE = {
   network: GRAPH
 };
 
+const WARN_SOURCEMAP_DISABLED =
+  "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
+const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
+
 module.exports = function(opts) {
   opts = opts || {};
   const filename = opts.filename || "stats.html";
   const title = opts.title || "RollUp Visualizer";
+
   const useSourceMap = !!opts.sourcemap;
   const open = !!opts.open;
   const openOptions = opts.openOptions || {};
@@ -40,12 +45,19 @@ module.exports = function(opts) {
     name: "visualizer",
 
     async generateBundle(outputOptions, outputBundle) {
+      if (useSourceMap && !outputOptions.sourcemap) {
+        this.warn(WARN_SOURCEMAP_DISABLED);
+      }
+
       const roots = [];
 
       for (const [id, bundle] of Object.entries(outputBundle)) {
         if (bundle.isAsset) continue; //only chunks
 
         if (useSourceMap) {
+          if (!bundle.map) {
+            this.warn(WARN_SOURCEMAP_MISSING(id));
+          }
           await addMinifiedSizesToModules(bundle);
         }
 
