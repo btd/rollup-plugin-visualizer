@@ -51,6 +51,15 @@ For development if you need to build plugin, just exec:
 yarn run build
 ```
 
+## Disclaimer about generated files
+
+Generated files does not and never will be contain your source code (contents of files). They can contains only js/html/css code required to build chart (plugin code) and statistical information about your source code.
+This statistical information can contain:
+* byte size of files included in bundled
+* size of files included in source map
+* file's path
+* files hierarchy (fs tree for your files)
+
 ## Acknowledgements
 
 Initially this plugin was based on `webpack-visualizer`, but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage. Also i would like to thank you Mike Bostock for awesome D3, and tons of examples.
