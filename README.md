@@ -44,6 +44,8 @@ plugins: [
 
 `template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
 
+`bundlesRelative` (boolean, default `false`) - Combine all bundles to one diagram
+
 ## Build plugin
 
 For development if you need to build plugin, just exec:

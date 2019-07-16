@@ -41,6 +41,8 @@ module.exports = function(opts) {
 
   const template = opts.template || "sunburst";
 
+  const bundlesRelative = !!opts.bundlesRelative;
+
   return {
     name: "visualizer",
 
@@ -49,7 +51,7 @@ module.exports = function(opts) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
 
-      const roots = [];
+      let roots = [];
 
       for (const [id, bundle] of Object.entries(outputBundle)) {
         if (bundle.isAsset) continue; //only chunks
@@ -85,11 +87,23 @@ module.exports = function(opts) {
             break;
           }
           default: {
-            this.error(`Unknown template ${template}`);
+            this.error(`Unknown template ${template} type`);
           }
         }
 
         roots.push({ id, root });
+      }
+
+      if (bundlesRelative) {
+        roots = [
+          {
+            id: "bundles",
+            root: {
+              name: "root",
+              children: roots.map(({ id, root }) => ({ name: id, children: root.children }))
+            }
+          }
+        ];
       }
 
       const html = await buildStats(title, roots, template);
