@@ -33,7 +33,7 @@ import "./style/style-network.scss";
 
 function color(group) {
   if (group === 0) {
-    return "#db7100";
+    return "#487ea4";
   } else {
     return "#599e59";
   }
