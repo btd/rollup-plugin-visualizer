@@ -62,6 +62,10 @@ This statistical information can contain:
 * file's path
 * files hierarchy (fs tree for your files)
 
+## Upgrades
+
+v1 -> v2: For v2 was a lot of internal changes, but external interface has not changed. 
+
 ## Acknowledgements
 
 Initially this plugin was based on `webpack-visualizer`, but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage. Also i would like to thank you Mike Bostock for awesome D3, and tons of examples.
