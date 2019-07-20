@@ -72,4 +72,14 @@ function addToPath(tree, p, value) {
   addToPath(child, p, value);
 }
 
-module.exports = buildTree;
+const mergeTrees = (id, trees) => {
+  return {
+    id,
+    root: {
+      name: "root",
+      children: trees.map(({ id, root }) => ({ name: id, children: root.children }))
+    }
+  };
+};
+
+module.exports = { buildTree, mergeTrees };

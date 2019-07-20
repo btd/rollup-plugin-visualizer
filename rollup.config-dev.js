@@ -11,7 +11,8 @@ module.exports = baseConfig.map(config => {
       open: true,
       title: `test ${templateType}`,
       filename: `stats.${templateType}.html`,
-      template: templateType
+      template: templateType,
+      bundlesRelative: true
     })
   );
   return config;

@@ -68,7 +68,72 @@ const buildGraph = (startModuleId, getModuleInfo, getInitialModuleData) => {
 
   const start = startModuleId.slice(commonPrefixLength);
 
-  return { start, links, nodes, groups };
+  return { start, links, nodes, groups, commonPrefix };
 };
 
-module.exports = buildGraph;
+const mergeGraphs = (id, graphs) => {
+  let groupId = 0;
+  const newGroups = {};
+
+  const firstGraph = graphs[0].root;
+
+  let commonCommonPrefix = firstGraph.commonPrefix;
+
+  const reMapGroups = new Map();
+
+  for (const { root } of graphs) {
+    const { groups, commonPrefix } = root;
+    const reMappedGroups = { "0": 0 };
+
+    for (const [moduleName, prevGroupId] of Object.entries(groups)) {
+      if (newGroups[moduleName] == null) {
+        newGroups[moduleName] = ++groupId;
+      }
+
+      reMappedGroups[prevGroupId] = newGroups[moduleName];
+    }
+
+    for (let i = 0; i < commonCommonPrefix.length && i < commonPrefix.length; i++) {
+      if (commonCommonPrefix[i] !== commonPrefix[i]) {
+        commonCommonPrefix = commonCommonPrefix.slice(0, i);
+        break;
+      }
+    }
+
+    reMapGroups.set(root, reMappedGroups);
+  }
+
+  const newLinks = [];
+  const newNodes = {};
+
+  for (const { root } of graphs) {
+    const { links, nodes, commonPrefix } = root;
+    const notCommonPrefix = commonPrefix.slice(commonCommonPrefix.length);
+
+    const reMappedGroups = reMapGroups.get(root);
+    for (const [id, mod] of Object.entries(nodes)) {
+      newNodes[notCommonPrefix + id] = mod;
+      mod.group = reMappedGroups[mod.group];
+    }
+
+    for (const { source, target } of links) {
+      newLinks.push({ source: notCommonPrefix + source, target: notCommonPrefix + target });
+    }
+  }
+
+  const notCommonPrefix = firstGraph.commonPrefix.slice(commonCommonPrefix.length);
+  const newStart = notCommonPrefix + firstGraph.start;
+
+  return {
+    id,
+    root: {
+      groups: newGroups,
+      nodes: newNodes,
+      links: newLinks,
+      start: newStart,
+      commonPrefix: commonCommonPrefix
+    }
+  };
+};
+
+module.exports = { buildGraph, mergeGraphs };

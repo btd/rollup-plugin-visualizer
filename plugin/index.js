@@ -12,8 +12,8 @@ const writeFile = promisify(fs.writeFile);
 const opn = require("open");
 
 const buildStats = require("./build-stats");
-const buildTree = require("./hierarchy");
-const buildGraph = require("./graph");
+const { buildTree, mergeTrees } = require("./hierarchy");
+const { buildGraph, mergeGraphs } = require("./graph");
 const addMinifiedSizesToModules = require("./sourcemap");
 
 const HIERARCHY = "hierarchy";
@@ -53,6 +53,8 @@ module.exports = function(opts) {
 
       let roots = [];
 
+      const dataType = DATA_TYPE_FOR_TEMPLATE[template];
+
       for (const [id, bundle] of Object.entries(outputBundle)) {
         if (bundle.isAsset) continue; //only chunks
 
@@ -73,7 +75,7 @@ module.exports = function(opts) {
         };
 
         let root = null;
-        switch (DATA_TYPE_FOR_TEMPLATE[template]) {
+        switch (dataType) {
           case HIERARCHY: {
             root = buildTree(Object.keys(bundle.modules), getInitialModuleData);
             break;
@@ -94,17 +96,21 @@ module.exports = function(opts) {
         roots.push({ id, root });
       }
 
+      const id = "bundles";
       if (bundlesRelative) {
-        roots = [
-          {
-            id: "bundles",
-            root: {
-              name: "root",
-              children: roots.map(({ id, root }) => ({ name: id, children: root.children }))
-            }
+        switch (dataType) {
+          case HIERARCHY: {
+            roots = mergeTrees(id, roots);
+            break;
           }
-        ];
+          case GRAPH: {
+            roots = mergeGraphs(id, roots);
+            break;
+          }
+        }
       }
+
+      roots = [roots];
 
       const html = await buildStats(title, roots, template);
 
