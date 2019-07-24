@@ -108,9 +108,9 @@ module.exports = function(opts) {
             break;
           }
         }
-      }
 
-      roots = [roots];
+        roots = [roots];
+      }
 
       const html = await buildStats(title, roots, template);
 

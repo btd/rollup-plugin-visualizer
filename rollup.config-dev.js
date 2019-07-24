@@ -12,7 +12,7 @@ module.exports = baseConfig.map(config => {
       title: `test ${templateType}`,
       filename: `stats.${templateType}.html`,
       template: templateType,
-      bundlesRelative: true
+      bundlesRelative: false
     })
   );
   return config;
