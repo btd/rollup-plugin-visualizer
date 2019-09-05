@@ -44,6 +44,8 @@ plugins: [
 
 `template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
 
+`styleOverridePath` (string, default `undefined`) - Link your own css file to override or enhance the current templates
+
 `bundlesRelative` (boolean, default `false`) - Combine all bundles to one diagram
 
 ## Build plugin

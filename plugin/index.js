@@ -40,6 +40,7 @@ module.exports = function(opts) {
   const openOptions = opts.openOptions || {};
 
   const template = opts.template || "sunburst";
+  const styleOverridePath = opts.styleOverridePath;
 
   const bundlesRelative = !!opts.bundlesRelative;
 
@@ -112,7 +113,7 @@ module.exports = function(opts) {
         roots = [roots];
       }
 
-      const html = await buildStats(title, roots, template);
+      const html = await buildStats(title, roots, template, styleOverridePath);
 
       await mkdir(path.dirname(filename));
       await writeFile(filename, html);

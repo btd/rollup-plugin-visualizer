@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{title}}</title>
   <style>{style}</style>
+  <style>{styleOverride}</style>
 </head>
 <body>
   <h1>{{title}}</h1>
