@@ -4,7 +4,6 @@ const commonJs = require("rollup-plugin-commonjs");
 const path = require("path");
 const postcss = require("rollup-plugin-postcss");
 const resolve = require("rollup-plugin-node-resolve");
-// const rollupUglify = require("rollup-plugin-uglify");
 
 const plugins = [
   resolve(),
@@ -12,7 +11,6 @@ const plugins = [
     ignoreGlobal: true,
     include: "node_modules/**"
   })
-  // rollupUglify()
 ];
 
 module.exports = [
