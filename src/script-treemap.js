@@ -1,9 +1,11 @@
 import { select } from "d3-selection";
 import { nest as d3nest } from "d3-collection";
-import uid from "./uid";
-import color from "./color";
+import { descending } from "d3-array";
 import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
 import { format as formatBytes } from "bytes";
+
+import uid from "./uid";
+import color from "./color";
 import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
 import "./style/style-treemap.scss";
@@ -62,13 +64,14 @@ for (const { id, root: data } of window.nodesData) {
     .attr("dx", 0)
     .attr("stdDeviation", 3);
 
+  const nestedData = d3nest()
+    .key(d => d.height)
+    .sortKeys(descending)
+    .entries(root.descendants());
+
   const node = svg
     .selectAll("g")
-    .data(
-      d3nest()
-        .key(d => d.height)
-        .entries(root.descendants())
-    )
+    .data(nestedData)
     .join("g")
     .attr("filter", shadow)
     .selectAll("g")
