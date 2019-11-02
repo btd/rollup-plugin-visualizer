@@ -44,6 +44,8 @@ module.exports = function(opts) {
 
   const bundlesRelative = !!opts.bundlesRelative;
 
+  const chartParameters = opts.chartParameters || {};
+
   return {
     name: "visualizer",
 
@@ -113,7 +115,7 @@ module.exports = function(opts) {
         roots = [roots];
       }
 
-      const html = await buildStats(title, roots, template, styleOverridePath);
+      const html = await buildStats(title, roots, template, styleOverridePath, chartParameters);
 
       await mkdir(path.dirname(filename));
       await writeFile(filename, html);

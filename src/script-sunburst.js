@@ -9,8 +9,8 @@ import getAncestors from "./get-ancestors";
 
 import "./style/style-sunburst.scss";
 
-const WIDTH = 700;
-const HEIGHT = 700;
+const WIDTH = window.chartParameters.width || 700;
+const HEIGHT = window.chartParameters.height || 700;
 const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;
 
 const x = scaleLinear().range([0, 2 * Math.PI]);

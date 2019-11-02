@@ -48,6 +48,10 @@ plugins: [
 
 `bundlesRelative` (boolean, default `false`) - Combine all bundles to one diagram
 
+`chartParameters.width` (number, default `undefined`) - Set svg viewBox width to this number
+
+`chartParameters.height` (number, default `undefined`) - Set svg viewBox height to this number
+
 ## Build plugin
 
 For development if you need to build plugin, just exec:

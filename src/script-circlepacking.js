@@ -10,8 +10,8 @@ import { createTooltip, createMouseleave, createMouseover, createMousemove } fro
 
 import "./style/style-circlepacking.scss";
 
-const WIDTH = 1000;
-const HEIGHT = 1000;
+const WIDTH = window.chartParameters.width || 1000;
+const HEIGHT = window.chartParameters.height || 1000;
 
 const mainContainer = document.querySelector("#main");
 
