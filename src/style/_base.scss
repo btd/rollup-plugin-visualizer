@@ -1,21 +1,14 @@
-@font-face {
-  font-family: "Oswald";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 500;
-  src:
-    local("Oswald Medium"),
-    local("Oswald-Medium"),
-    url("node_modules/typeface-oswald/files/oswald-latin-500.woff2") format("woff2"),
-    url("node_modules/typeface-oswald/files/oswald-latin-500.woff") format("woff");
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --background-color: #f7eedf;
+  --text-color: #333;
 }
 
 html {
-  background-color: #f7eedf;
-  color: #333;
+  background-color: var(--background-color);
+  color: var(--text-color);
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: var(--font-family);
 
   width: 100%;
 }
@@ -31,7 +24,6 @@ svg {
 }
 
 h1 {
-  font-family: "Oswald", "HelveticaNeue-CondensedBold", "Arial Narrow", sans-serif;
   font-weight: 500;
   font-size: 70px;
   text-transform: uppercase;

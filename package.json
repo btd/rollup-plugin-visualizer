@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "mkdirp": "^0.5.1",
-    "open": "^7.0.0",
+    "open": "^6.0.0",
     "pupa": "^2.0.0",
     "source-map": "^0.7.3"
   },
@@ -49,8 +49,7 @@
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.3",
     "rollup-plugin-postcss": "^2.0.3",
-    "sass": "^1.22.7",
-    "typeface-oswald": "0.0.75"
+    "sass": "^1.22.7"
   },
   "engines": {
     "node": ">=8.10"
