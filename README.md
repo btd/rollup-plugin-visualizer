@@ -61,9 +61,10 @@ yarn run build
 
 ## Disclaimer about generated files
 
-Generated files does not and never will be contain your source code (contents of files). They can contains only js/html/css code required to build chart (plugin code) and statistical information about your source code.
+Generated html files do not and never will contain your source code (contents of files). They can contain only js/html/css code required to build chart (plugin code) and statistical information about your source code.
+
 This statistical information can contain:
-* byte size of files included in bundled
+* size of files included in bundle
 * size of files included in source map
 * file's path
 * files hierarchy (fs tree for your files)
