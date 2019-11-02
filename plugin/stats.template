@@ -14,7 +14,7 @@
   </header>
   <main id="main"></main>
   <footer>
-
+    <span>Generated with <a href="https://github.com/btd/rollup-plugin-visualizer" target="_blank" rel="noopener noreferrer">rollup-plugin-visualizer</a></span>
   </footer>
   <script>window.nodesData = {nodesData};</script>
   <script>{script}</script>

@@ -14,18 +14,35 @@
 }
 
 html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html {
   background-color: var(--background-color);
   color: var(--text-color);
-
   font-family: var(--font-family);
+}
 
+body {
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
   width: 100%;
 }
 
 body {
-  width: 100%;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 svg {
@@ -48,6 +65,18 @@ h1 {
 #main {
   width: 1000px;
   margin: 0 auto;
+  flex: 1;
+}
+
+footer {
+  text-align: center;
+  font-size: 10px;
+
+  padding: 20px;
+}
+
+a {
+  color: var(--text-color);
 }
 
 .tooltip {
