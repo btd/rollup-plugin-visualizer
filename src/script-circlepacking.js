@@ -13,7 +13,7 @@ import "./style/style-circlepacking.scss";
 const WIDTH = 1000;
 const HEIGHT = 1000;
 
-const chartsContainer = document.querySelector("#charts");
+const mainContainer = document.querySelector("#main");
 
 for (const { id, root: data } of window.nodesData) {
   const wrapper = document.createElement("div");
@@ -23,7 +23,7 @@ for (const { id, root: data } of window.nodesData) {
       </div>
       `;
   const chartNode = wrapper.querySelector(".chart");
-  chartsContainer.appendChild(chartNode);
+  mainContainer.appendChild(chartNode);
 
   const root = d3hierarchy(data)
     .sum(d => {

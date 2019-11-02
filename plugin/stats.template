@@ -9,8 +9,13 @@
   <style>{styleOverride}</style>
 </head>
 <body>
-  <h1>{{title}}</h1>
-  <div id="charts"></div>
+  <header>
+    <h1>{{title}}</h1>
+  </header>
+  <main id="main"></main>
+  <footer>
+
+  </footer>
   <script>window.nodesData = {nodesData};</script>
   <script>{script}</script>
 </body>

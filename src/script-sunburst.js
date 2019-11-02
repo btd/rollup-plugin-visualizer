@@ -16,7 +16,7 @@ const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;
 const x = scaleLinear().range([0, 2 * Math.PI]);
 const y = scaleSqrt().range([0, RADIUS]);
 
-const chartsContainer = document.querySelector("#charts");
+const mainContainer = document.querySelector("#main");
 
 for (const { id, root: data } of window.nodesData) {
   const wrapper = document.createElement("div");
@@ -32,7 +32,7 @@ for (const { id, root: data } of window.nodesData) {
     </div>
     `;
   const chartNode = wrapper.querySelector(".chart");
-  chartsContainer.appendChild(chartNode);
+  mainContainer.appendChild(chartNode);
 
   const g = select(chartNode)
     .append("svg")
