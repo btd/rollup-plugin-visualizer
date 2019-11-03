@@ -4,14 +4,7 @@ import { scaleSqrt } from "d3-scale";
 
 import { mouse as d3mouse } from "d3-selection";
 
-import {
-  forceSimulation,
-  forceLink,
-  forceManyBody,
-  forceCenter,
-  forceCollide,
-  forceX
-} from "d3-force";
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from "d3-force";
 
 import { format as formatBytes } from "bytes";
 
@@ -21,7 +14,11 @@ const createMousemove = (tooltipNode, container) => d => {
   const [x, y] = d3mouse(container);
   const nodePath = d.id;
 
-  const str = `${nodePath}<br/><b>${formatBytes(d.value || d.size)}</b>`;
+  let str = `${nodePath}`;
+  const size = d.value || d.size;
+  if (size !== 0) {
+    str += `<br/><b>${formatBytes(size)}</b>`;
+  }
 
   tooltipNode
     .html(str)
@@ -39,7 +36,7 @@ function color(group) {
   }
 }
 
-const WIDTH = window.chartParameters.width || 1000;
+const WIDTH = window.chartParameters.width || 1500;
 const HEIGHT = window.chartParameters.height || 1000;
 
 const mainContainer = document.querySelector("#main");
@@ -81,17 +78,18 @@ for (const { id, root: data } of window.nodesData) {
       forceLink()
         .id(d => d.id)
         .strength(1)
+        .distance(50)
+        .iterations(10)
     )
     .force("collide", forceCollide().radius(d => size(d.size) + 1))
-    .force("forceX", forceX(HEIGHT / 2).strength(0.05))
-    .force("charge", forceManyBody().strength(-10))
+    .force("charge", forceManyBody().strength(-100))
     .force("center", forceCenter(WIDTH / 2, HEIGHT / 2));
 
   simulation.nodes(nodes);
   simulation.force("link").links(links);
   simulation.stop();
 
-  for (let i = 0; i < 150; i++) simulation.tick();
+  for (let i = 0; i < 300; i++) simulation.tick();
 
   const xExtent = d3extent(nodes, d => d.x);
   const yExtent = d3extent(nodes, d => d.y);
@@ -129,7 +127,7 @@ for (const { id, root: data } of window.nodesData) {
     .data(nodes)
     .join("circle")
     .attr("r", d => size(d.size))
-    .attr("fill", d => color(d.group))
+    .attr("fill", d => (d.size === 0 ? "#ccc" : color(d.group)))
     .attr("cx", d => d.x)
     .attr("cy", d => d.y)
     .on("mouseover", createMouseover(tooltip, chartNode))
