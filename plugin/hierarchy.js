@@ -16,7 +16,11 @@ const buildTree = (ids, getInitialModuleData, flatten = true) => {
     const name = id;
     const m = getInitialModuleData(id);
 
-    if (name.indexOf(PLUGIN_PREFIX) === 0) {
+    if (m.size === 0) {
+      continue;
+    }
+
+    if (name.startsWith(PLUGIN_PREFIX)) {
       addToPath(root, [name], m);
     } else {
       addToPath(root, name.split(path.sep), m);
