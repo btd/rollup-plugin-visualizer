@@ -10,10 +10,10 @@ import { createTooltip, createMouseleave, createMouseover, createMousemove } fro
 
 import "./style/style-treemap.scss";
 
-const WIDTH = window.chartParameters.width || 1000;
-const HEIGHT = window.chartParameters.height || 700;
+const WIDTH = window.chartParameters.width || 1600;
+const HEIGHT = window.chartParameters.height || 900;
 
-const mainContainer = document.querySelector("#main");
+const mainContainer = document.querySelector("main");
 
 const format = formatBytes;
 
@@ -86,7 +86,10 @@ for (const data of window.nodesData) {
     .attr("id", d => (d.nodeUid = uid("node")).id)
     .attr("fill", d => color(d))
     .attr("width", d => d.x1 - d.x0)
-    .attr("height", d => d.y1 - d.y0);
+    .attr("height", d => d.y1 - d.y0)
+    .style("stroke", "#fff")
+    .attr("rx", 2)
+    .attr("ry", 2);
 
   node
     .append("clipPath")
@@ -101,6 +104,8 @@ for (const data of window.nodesData) {
     .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
     .join("tspan")
     .attr("fill-opacity", (d, i, nodes) => (i === nodes.length - 1 ? 0.7 : null))
+    .style("fill", "#fff")
+    .style("font-size", "0.7em")
     .text(d => d);
 
   node

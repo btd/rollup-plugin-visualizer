@@ -39,7 +39,7 @@ function color(group) {
 const WIDTH = window.chartParameters.width || 1500;
 const HEIGHT = window.chartParameters.height || 1000;
 
-const mainContainer = document.querySelector("#main");
+const mainContainer = document.querySelector("main");
 
 for (const data of window.nodesData) {
   const wrapper = document.createElement("div");

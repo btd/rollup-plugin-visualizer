@@ -1,19 +1,6 @@
 @import "./base";
 
-rect {
-  stroke: white;
-}
-
-text {
-  font-size: 0.7em;
-  fill: white;
-}
-
-header {
-  display: none;
-}
-
-#main {
+main {
   width: 100%;
-  padding: 20px;
+  padding: 0 20px;
 }

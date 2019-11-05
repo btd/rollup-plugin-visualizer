@@ -13,7 +13,7 @@ import "./style/style-circlepacking.scss";
 const WIDTH = window.chartParameters.width || 1000;
 const HEIGHT = window.chartParameters.height || 1000;
 
-const mainContainer = document.querySelector("#main");
+const mainContainer = document.querySelector("main");
 
 for (const data of window.nodesData) {
   const wrapper = document.createElement("div");
@@ -80,6 +80,7 @@ for (const data of window.nodesData) {
   node
     .append("circle")
     .attr("r", d => d.r)
+    .style("stroke", "#fff")
     .attr("fill", d => color(d));
 
   const leaf = node.filter(d => !d.children);
@@ -100,5 +101,7 @@ for (const data of window.nodesData) {
     .join("tspan")
     .attr("x", 0)
     .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
+    .style("fill", "#fff")
+    .style("font-size", "0.7em")
     .text(d => d);
 }
