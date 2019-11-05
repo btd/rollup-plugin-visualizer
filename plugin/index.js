@@ -42,7 +42,7 @@ module.exports = function(opts) {
   const template = opts.template || "sunburst";
   const styleOverridePath = opts.styleOverridePath;
 
-  const bundlesRelative = !!opts.bundlesRelative;
+  const bundlesRelative = opts.bundlesRelative == null ? true : opts.bundlesRelative;
 
   const chartParameters = opts.chartParameters || {};
 
@@ -81,6 +81,7 @@ module.exports = function(opts) {
         switch (dataType) {
           case HIERARCHY: {
             root = buildTree(Object.keys(bundle.modules), getInitialModuleData);
+            root.name = id;
             break;
           }
           case GRAPH: {
@@ -96,18 +97,17 @@ module.exports = function(opts) {
           }
         }
 
-        roots.push({ id, root });
+        roots.push(root);
       }
 
-      const id = "bundles";
       if (bundlesRelative) {
         switch (dataType) {
           case HIERARCHY: {
-            roots = mergeTrees(id, roots);
+            roots = mergeTrees(roots);
             break;
           }
           case GRAPH: {
-            roots = mergeGraphs(id, roots);
+            roots = mergeGraphs(roots);
             break;
           }
         }

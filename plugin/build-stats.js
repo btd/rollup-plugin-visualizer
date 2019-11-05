@@ -16,7 +16,7 @@ module.exports = async function buildHtml(
     readFile(path.join(__dirname, "stats.template"), "utf-8"),
     readFile(path.join(__dirname, "..", "lib", `main-${graphType}.js`), "utf8"),
     readFile(path.join(__dirname, "..", "lib", `style-${graphType}.css`), "utf8"),
-    styleOverridePath ? readFile(styleOverridePath, "utf8") : Promise.resolve()
+    styleOverridePath ? readFile(styleOverridePath, "utf8") : Promise.resolve("")
   ]);
 
   return pupa(template, {

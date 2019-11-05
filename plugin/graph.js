@@ -71,17 +71,17 @@ const buildGraph = (startModuleId, getModuleInfo, getInitialModuleData) => {
   return { start, links, nodes, groups, commonPrefix };
 };
 
-const mergeGraphs = (id, graphs) => {
+const mergeGraphs = graphs => {
   let groupId = 0;
   const newGroups = {};
 
-  const firstGraph = graphs[0].root;
+  const firstGraph = graphs[0];
 
   let commonCommonPrefix = firstGraph.commonPrefix;
 
   const reMapGroups = new Map();
 
-  for (const { root } of graphs) {
+  for (const root of graphs) {
     const { groups, commonPrefix } = root;
     const reMappedGroups = { "0": 0 };
 
@@ -106,7 +106,7 @@ const mergeGraphs = (id, graphs) => {
   const newLinks = [];
   const newNodes = {};
 
-  for (const { root } of graphs) {
+  for (const root of graphs) {
     const { links, nodes, commonPrefix } = root;
     const notCommonPrefix = commonPrefix.slice(commonCommonPrefix.length);
 
@@ -125,14 +125,11 @@ const mergeGraphs = (id, graphs) => {
   const newStart = notCommonPrefix + firstGraph.start;
 
   return {
-    id,
-    root: {
-      groups: newGroups,
-      nodes: newNodes,
-      links: newLinks,
-      start: newStart,
-      commonPrefix: commonCommonPrefix
-    }
+    groups: newGroups,
+    nodes: newNodes,
+    links: newLinks,
+    start: newStart,
+    commonPrefix: commonCommonPrefix
   };
 };
 

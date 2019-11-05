@@ -18,11 +18,10 @@ const y = scaleSqrt().range([0, RADIUS]);
 
 const mainContainer = document.querySelector("#main");
 
-for (const { id, root: data } of window.nodesData) {
+for (const data of window.nodesData) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = `
     <div class="chart">
-      <h3>${id}</h3>
       <div class="details" style="display: none;">
         <div class="details-name" ></div>
         <div class="details-percentage" ></div>
@@ -60,35 +59,38 @@ for (const { id, root: data } of window.nodesData) {
 
   partition(root);
 
+  const showDetails = d => {
+    const percentageNum = (100 * d.value) / totalSize;
+    const percentage = percentageNum.toFixed(2);
+    const percentageString = percentage + "%";
+
+    select(chartNode)
+      .select(".details-name")
+      .text(d.data.name);
+
+    select(chartNode)
+      .select(".details-percentage")
+      .text(percentageString);
+
+    select(chartNode)
+      .select(".details-size")
+      .text(formatBytes(d.value));
+
+    select(chartNode)
+      .select(".details")
+      .style("display", "block");
+  };
+
   g.selectAll("path")
     .data(partition(root).descendants())
     .enter()
     .append("path")
-
     .attr("d", arc)
     .attr("fill-rule", "evenodd")
     .style("stroke", "#fff")
     .style("fill", d => color(d))
     .on("mouseover", d => {
-      const percentageNum = (100 * d.value) / totalSize;
-      const percentage = percentageNum.toFixed(2);
-      const percentageString = percentage + "%";
-
-      select(chartNode)
-        .select(".details-name")
-        .text(d.data.name);
-
-      select(chartNode)
-        .select(".details-percentage")
-        .text(percentageString);
-
-      select(chartNode)
-        .select(".details-size")
-        .text(formatBytes(d.value));
-
-      select(chartNode)
-        .select(".details")
-        .style("display", "block");
+      showDetails(d);
 
       const sequenceArray = getAncestors(d);
       //updateBreadcrumbs(sequenceArray, percentageString);
@@ -109,4 +111,6 @@ for (const { id, root: data } of window.nodesData) {
 
     select(".details").style("display", "none");
   });
+
+  showDetails(root);
 }

@@ -7,7 +7,7 @@ const path = require("path");
 const PLUGIN_PREFIX = "\u0000";
 
 const buildTree = (ids, getInitialModuleData, flatten = true) => {
-  const root = {
+  let root = {
     name: "root",
     children: []
   };
@@ -28,31 +28,19 @@ const buildTree = (ids, getInitialModuleData, flatten = true) => {
   }
 
   if (flatten) {
-    flattenTree(root);
+    root = flattenTree(root);
   }
 
   return root;
 };
 
-const getDeepMoreThenOneChild = tree => {
-  if (tree.children && tree.children.length === 1) {
-    return getDeepMoreThenOneChild(tree.children[0]);
-  }
-  return tree;
-};
-
 // if root children have only on child we can flatten this
 const flattenTree = root => {
-  let newChildren = [];
-  root.children.forEach(child => {
-    const commonParent = getDeepMoreThenOneChild(child);
-    if (commonParent.children.length === 0) {
-      newChildren.push(commonParent);
-    } else {
-      newChildren = newChildren.concat(commonParent.children);
-    }
-  });
-  root.children = newChildren;
+  let newRoot = root;
+  while (newRoot.children && newRoot.children.length === 1) {
+    newRoot = newRoot.children[0];
+  }
+  return newRoot;
 };
 
 function addToPath(tree, p, value) {
@@ -76,14 +64,17 @@ function addToPath(tree, p, value) {
   addToPath(child, p, value);
 }
 
-const mergeTrees = (id, trees) => {
-  return {
-    id,
-    root: {
-      name: "root",
-      children: trees.map(({ id, root }) => ({ name: id, children: root.children }))
-    }
+const mergeTrees = (children, flatten = true) => {
+  let root = {
+    name: "root",
+    children
   };
+
+  if (flatten) {
+    root = flattenTree(root);
+  }
+
+  return root;
 };
 
 module.exports = { buildTree, mergeTrees };

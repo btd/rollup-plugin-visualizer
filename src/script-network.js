@@ -41,11 +41,10 @@ const HEIGHT = window.chartParameters.height || 1000;
 
 const mainContainer = document.querySelector("#main");
 
-for (const { id, root: data } of window.nodesData) {
+for (const data of window.nodesData) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = `
       <div class="chart">
-        <h3>${id}</h3>
       </div>
       `;
   const chartNode = wrapper.querySelector(".chart");
