@@ -1,5 +1,5 @@
 import { scaleSequential } from "d3-scale";
-import { interpolatePlasma } from "d3-scale-chromatic";
+import { interpolateTurbo } from "d3-scale-chromatic";
 
 const COLOR_DEFAULT_FILE = "#db7100";
 const COLOR_DEFAULT_OWN_SOURCE = "#487ea4";
@@ -18,13 +18,9 @@ const colorDefault = node => {
 const COLOR_RAINBOW_BASE = "#cecece";
 
 export const createRainbowColor = root => {
-  const colorScale = scaleSequential([0, root.children.length - 1], interpolatePlasma);
+  const colorScale = scaleSequential([0, root.children.length - 1], interpolateTurbo);
 
-  const colorMap = new Map(
-    root.children.map((c, id) => {
-      return [c.data.name, colorScale(id)];
-    })
-  );
+  const colorMap = new Map(root.children.map((c, id) => [c.data.name, colorScale(id)]));
   colorMap.set(root.data.name, COLOR_RAINBOW_BASE);
 
   const getColorByRootChild = node => {
