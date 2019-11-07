@@ -5,7 +5,6 @@ import { scaleLinear, scaleSqrt } from "d3-scale";
 import { format as formatBytes } from "bytes";
 
 import color from "./color";
-import getAncestors from "./get-ancestors";
 
 import "./style/style-sunburst.scss";
 
@@ -92,7 +91,7 @@ for (const data of window.nodesData) {
     .on("mouseover", d => {
       showDetails(d);
 
-      const sequenceArray = getAncestors(d);
+      const sequenceArray = d.ancestors();
       //updateBreadcrumbs(sequenceArray, percentageString);
 
       // Fade all the segments.
