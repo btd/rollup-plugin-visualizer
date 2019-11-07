@@ -5,7 +5,7 @@ import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
 import { format as formatBytes } from "bytes";
 
 import uid from "./uid";
-import color from "./color";
+import { createRainbowColor } from "./color";
 import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
 import "./style/style-treemap.scss";
@@ -49,19 +49,11 @@ for (const data of window.nodesData) {
 
   treemapLayout(root);
 
+  const color = createRainbowColor(root);
+
   const svg = select(chartNode)
     .append("svg")
     .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
-
-  const shadow = uid("shadow");
-
-  svg
-    .append("filter")
-    .attr("id", shadow.id)
-    .append("feDropShadow")
-    .attr("flood-opacity", 0.3)
-    .attr("dx", 0)
-    .attr("stdDeviation", 3);
 
   const nestedData = d3nest()
     .key(d => d.height)
@@ -72,7 +64,6 @@ for (const data of window.nodesData) {
     .selectAll("g")
     .data(nestedData)
     .join("g")
-    .attr("filter", shadow)
     .selectAll("g")
     .data(d => d.values)
     .join("g")
@@ -87,7 +78,7 @@ for (const data of window.nodesData) {
     .attr("fill", d => color(d))
     .attr("width", d => d.x1 - d.x0)
     .attr("height", d => d.y1 - d.y0)
-    .style("stroke", "#fff")
+    .attr("opacity", d => (d.parent == null ? 1 : 0.15))
     .attr("rx", 2)
     .attr("ry", 2);
 
