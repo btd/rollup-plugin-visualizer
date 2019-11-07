@@ -9,13 +9,7 @@
   <style>{styleOverride}</style>
 </head>
 <body>
-  <header>
-    <h1>{{title}}</h1>
-  </header>
-  <main id="main"></main>
-  <footer>
-    <span>Generated with <a href="https://github.com/btd/rollup-plugin-visualizer" target="_blank" rel="noopener noreferrer">rollup-plugin-visualizer</a></span>
-  </footer>
+  <main></main>
   <script>window.nodesData = {nodesData};</script>
   <script>window.chartParameters = {chartParameters};</script>
   <script>{script}</script>
