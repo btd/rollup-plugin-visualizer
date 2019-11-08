@@ -6,24 +6,19 @@ import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
 import uid from "./uid";
 import color from "./color";
 
-import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
+import {
+  createTooltip,
+  createMouseleave,
+  createMouseover,
+  createMousemove
+} from "./tooltip";
 
 import "./style/style-circlepacking.scss";
 
 const WIDTH = window.chartParameters.width || 1000;
 const HEIGHT = window.chartParameters.height || 1000;
 
-const mainContainer = document.querySelector("main");
-
-for (const data of window.nodesData) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = `
-      <div class="chart">
-      </div>
-      `;
-  const chartNode = wrapper.querySelector(".chart");
-  mainContainer.appendChild(chartNode);
-
+const addChart = (data, chartNode) => {
   const root = d3hierarchy(data)
     .sum(d => {
       if (d.children && d.children.length) {
@@ -104,4 +99,20 @@ for (const data of window.nodesData) {
     .style("fill", "#fff")
     .style("font-size", "0.7em")
     .text(d => d);
+};
+
+const mainContainer = document.querySelector("main");
+
+if (window.nodesData.length === 1) {
+  mainContainer.className = "chart";
+
+  addChart(window.nodesData[0], mainContainer);
+} else {
+  for (const data of window.nodesData) {
+    const chartNode = document.createElement("div");
+    chartNode.className = "chart";
+    mainContainer.appendChild(chartNode);
+
+    addChart(data, chartNode);
+  }
 }

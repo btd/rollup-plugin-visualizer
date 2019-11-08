@@ -6,26 +6,21 @@ import { format as formatBytes } from "bytes";
 
 import uid from "./uid";
 import { createRainbowColor } from "./color";
-import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
+import {
+  createTooltip,
+  createMouseleave,
+  createMouseover,
+  createMousemove
+} from "./tooltip";
 
 import "./style/style-treemap.scss";
 
 const WIDTH = window.chartParameters.width || 1600;
 const HEIGHT = window.chartParameters.height || 900;
 
-const mainContainer = document.querySelector("main");
-
 const format = formatBytes;
 
-for (const data of window.nodesData) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = `
-      <div class="chart">
-      </div>
-      `;
-  const chartNode = wrapper.querySelector(".chart");
-  mainContainer.appendChild(chartNode);
-
+const addChart = (data, chartNode) => {
   const treemapLayout = d3treemap()
     .size([WIDTH, HEIGHT])
     .paddingOuter(8)
@@ -78,7 +73,6 @@ for (const data of window.nodesData) {
     .attr("fill", d => color(d))
     .attr("width", d => d.x1 - d.x0)
     .attr("height", d => d.y1 - d.y0)
-    .attr("opacity", d => (d.parent == null ? 1 : 0.15))
     .attr("rx", 2)
     .attr("ry", 2);
 
@@ -94,7 +88,9 @@ for (const data of window.nodesData) {
     .selectAll("tspan")
     .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
     .join("tspan")
-    .attr("fill-opacity", (d, i, nodes) => (i === nodes.length - 1 ? 0.7 : null))
+    .attr("fill-opacity", (d, i, nodes) =>
+      i === nodes.length - 1 ? 0.7 : null
+    )
     .style("fill", "#fff")
     .style("font-size", "0.7em")
     .text(d => d);
@@ -109,5 +105,24 @@ for (const data of window.nodesData) {
     .filter(d => !d.children)
     .selectAll("tspan")
     .attr("x", 3)
-    .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`);
+    .attr(
+      "y",
+      (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
+    );
+};
+
+const mainContainer = document.querySelector("main");
+
+if (window.nodesData.length === 1) {
+  mainContainer.className = "chart";
+
+  addChart(window.nodesData[0], mainContainer);
+} else {
+  for (const data of window.nodesData) {
+    const chartNode = document.createElement("div");
+    chartNode.className = "chart";
+    mainContainer.appendChild(chartNode);
+
+    addChart(data, chartNode);
+  }
 }

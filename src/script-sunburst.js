@@ -1,5 +1,8 @@
 import { select } from "d3-selection";
-import { partition as d3partition, hierarchy as d3hierarchy } from "d3-hierarchy";
+import {
+  partition as d3partition,
+  hierarchy as d3hierarchy
+} from "d3-hierarchy";
 import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { format as formatBytes } from "bytes";
@@ -15,23 +18,7 @@ const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;
 const x = scaleLinear().range([0, 2 * Math.PI]);
 const y = scaleSqrt().range([0, RADIUS]);
 
-const mainContainer = document.querySelector("main");
-
-for (const data of window.nodesData) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = `
-    <div class="chart">
-      <div class="details" style="display: none;">
-        <div class="details-name" ></div>
-        <div class="details-percentage" ></div>
-        of bundle size
-        <div class="details-size" ></div>
-      </div>
-    </div>
-    `;
-  const chartNode = wrapper.querySelector(".chart");
-  mainContainer.appendChild(chartNode);
-
+const addChart = (data, chartNode) => {
   const g = select(chartNode)
     .append("svg")
     .attr("viewBox", [0, 0, WIDTH, HEIGHT])
@@ -112,4 +99,30 @@ for (const data of window.nodesData) {
   });
 
   showDetails(root);
+};
+
+const chartContainerMarkup = `
+<div class="details" style="display: none;">
+  <div class="details-name" ></div>
+  <div class="details-percentage" ></div>
+  of bundle size
+  <div class="details-size" ></div>
+</div>
+`;
+const mainContainer = document.querySelector("main");
+
+if (window.nodesData.length === 1) {
+  mainContainer.className = "chart";
+  mainContainer.innerHTML = chartContainerMarkup;
+
+  addChart(window.nodesData[0], mainContainer);
+} else {
+  for (const data of window.nodesData) {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = `<div class="chart">${chartContainerMarkup}</div>`;
+    const chartNode = wrapper.querySelector(".chart");
+    mainContainer.appendChild(chartNode);
+
+    addChart(data, chartNode);
+  }
 }

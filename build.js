@@ -10,10 +10,14 @@ const postcssUrl = require("postcss-url");
 
 const TEMPLATE = ["sunburst", "treemap", "circlepacking", "network"];
 
-let args = require("yargs").option("all", {
-  describe: "Build all templates",
-  boolean: true
-});
+let args = require("yargs")
+  .option("all", {
+    describe: "Build all templates",
+    boolean: true
+  })
+  .option("dev", { describe: "Build stats file(s)", boolean: true })
+  .option("open", { describe: "Open browser with stat files", boolean: true })
+  .option("build-all", { describe: "Build combined bundle", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {

@@ -47,18 +47,18 @@ body {
 
 svg {
   vertical-align: middle;
+  height: 100%;
 }
 
 .chart {
   position: relative;
-  margin: 0 auto;
-  min-height: 350px;
 }
 
 main {
-  width: 1000px;
   margin: 0 auto;
   flex: 1;
+  height: 100%;
+  padding: 20px;
 }
 
 .tooltip {

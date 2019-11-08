@@ -4,7 +4,13 @@ import { scaleSqrt } from "d3-scale";
 
 import { mouse as d3mouse } from "d3-selection";
 
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from "d3-force";
+import {
+  forceSimulation,
+  forceLink,
+  forceManyBody,
+  forceCenter,
+  forceCollide
+} from "d3-force";
 
 import { format as formatBytes } from "bytes";
 
@@ -39,17 +45,7 @@ function color(group) {
 const WIDTH = window.chartParameters.width || 1500;
 const HEIGHT = window.chartParameters.height || 1000;
 
-const mainContainer = document.querySelector("main");
-
-for (const data of window.nodesData) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = `
-      <div class="chart">
-      </div>
-      `;
-  const chartNode = wrapper.querySelector(".chart");
-  mainContainer.appendChild(chartNode);
-
+const addChart = (data, chartNode) => {
   const tooltip = createTooltip(select(chartNode));
 
   const nodes = Object.entries(data.nodes).map(([id, mod]) => ({ id, ...mod }));
@@ -132,4 +128,20 @@ for (const data of window.nodesData) {
     .on("mouseover", createMouseover(tooltip, chartNode))
     .on("mousemove", createMousemove(tooltip, chartNode))
     .on("mouseleave", createMouseleave(tooltip, chartNode));
+};
+
+const mainContainer = document.querySelector("main");
+
+if (window.nodesData.length === 1) {
+  mainContainer.className = "chart";
+
+  addChart(window.nodesData[0], mainContainer);
+} else {
+  for (const data of window.nodesData) {
+    const chartNode = document.createElement("div");
+    chartNode.className = "chart";
+    mainContainer.appendChild(chartNode);
+
+    addChart(data, chartNode);
+  }
 }
