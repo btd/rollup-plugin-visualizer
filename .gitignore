@@ -3,3 +3,4 @@ npm-debug.log
 lib/*
 node_modules/
 *.html
+temp/
