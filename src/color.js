@@ -1,5 +1,5 @@
 import { scaleSequential, scaleLinear } from "d3-scale";
-import { interpolateTurbo } from "d3-scale-chromatic";
+import { interpolateSpectral as colorRainbow } from "d3-scale-chromatic";
 import { hsl } from "d3-color";
 
 const COLOR_DEFAULT_FILE = "#db7100";
@@ -25,7 +25,7 @@ const COLOR_RAINBOW_BASE = "#cecece";
 export const createRainbowColor = root => {
   const colorScale = scaleSequential(
     [0, root.children.length - 1],
-    interpolateTurbo
+    colorRainbow
   );
 
   const colorMap = new Map(
