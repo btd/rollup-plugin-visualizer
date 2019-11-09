@@ -15,9 +15,7 @@ let args = require("yargs")
     describe: "Build all templates",
     boolean: true
   })
-  .option("dev", { describe: "Build stats file(s)", boolean: true })
-  .option("open", { describe: "Open browser with stat files", boolean: true })
-  .option("build-all", { describe: "Build combined bundle", boolean: true });
+  .option("open", { describe: "Open browser with stat files", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -41,7 +39,6 @@ if (argv.all) {
   }
 }
 
-const isDev = argv.dev;
 const open = argv.open;
 
 const COMMON_PLUGINS = [
@@ -60,27 +57,13 @@ const COMMON_PLUGINS = [
   })
 ];
 
-const runBuild = async (template, dev) => {
+const runBuild = async template => {
   const inputOptions = {
     input: `./src/script-${template}.js`,
-    plugins: [
-      ...COMMON_PLUGINS,
-      dev
-        ? require("./")({
-            open,
-            title: `test ${template}`,
-            filename: `stats.${template}.html`,
-            template
-          })
-        : null
-    ].filter(Boolean),
+    plugins: [...COMMON_PLUGINS],
     onwarn: warning => {
       const { code } = warning;
-      if (
-        code === "CIRCULAR_DEPENDENCY" ||
-        code === "CIRCULAR" ||
-        code === "THIS_IS_UNDEFINED"
-      ) {
+      if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
         return;
       }
       // eslint-disable-next-line no-console
@@ -97,7 +80,7 @@ const runBuild = async (template, dev) => {
   await bundle.write(outputOptions);
 };
 
-const runBuildCombined = async template => {
+const runBuildDev = async template => {
   const input = {};
   for (const t of TEMPLATE) {
     input[t] = `./src/script-${t}.js`;
@@ -115,11 +98,7 @@ const runBuildCombined = async template => {
     ],
     onwarn: warning => {
       const { code } = warning;
-      if (
-        code === "CIRCULAR_DEPENDENCY" ||
-        code === "CIRCULAR" ||
-        code === "THIS_IS_UNDEFINED"
-      ) {
+      if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
         return;
       }
       // eslint-disable-next-line no-console
@@ -135,17 +114,9 @@ const runBuildCombined = async template => {
 
   await bundle.write(outputOptions);
 };
+const run = async () => {
+  await Promise.all(TEMPLATE.map(t => runBuild(t)));
+  await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+};
 
-if (argv.buildAll) {
-  Promise.all(TEMPLATE.map(t => runBuild(t))).then(() =>
-    Promise.all(templatesToBuild.map(t => runBuildCombined(t)))
-  );
-} else {
-  for (const t of templatesToBuild) {
-    runBuild(t).then(() => {
-      if (isDev) {
-        runBuild(t, true);
-      }
-    });
-  }
-}
+run();
