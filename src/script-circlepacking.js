@@ -6,12 +6,7 @@ import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
 import uid from "./uid";
 import color from "./color";
 
-import {
-  createTooltip,
-  createMouseleave,
-  createMouseover,
-  createMousemove
-} from "./tooltip";
+import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
 import "./style/style-circlepacking.scss";
 
@@ -92,7 +87,7 @@ const addChart = (data, chartNode) => {
     .append("text")
     .attr("clip-path", d => d.clipUid)
     .selectAll("tspan")
-    .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g))
+    .data(d => [d.data.name])
     .join("tspan")
     .attr("x", 0)
     .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)

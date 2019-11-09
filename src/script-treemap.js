@@ -82,7 +82,7 @@ const addChart = (data, chartNode) => {
     .attr("clip-path", d => d.clipUid)
     .style("fill", d => color(d).fontColor)
     .selectAll("tspan")
-    .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
+    .data(d => [d.data.name, format(d.value)])
     .join("tspan")
     .attr("fill-opacity", (d, i, nodes) => (i === nodes.length - 1 ? 0.7 : null))
     .style("font-size", "0.7em")
