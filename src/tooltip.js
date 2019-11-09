@@ -11,24 +11,54 @@ export const createTooltip = node =>
 
 export const createMouseover = tooltipNode => () => tooltipNode.style("opacity", 1);
 
+const tooltipCache = new Map();
+
 export const createMousemove = (tooltipNode, container, totalSize) => d => {
+  if (!tooltipCache.has(d)) {
+    const nodePath = d
+      .ancestors()
+      .reverse()
+      .map(d => d.data.name)
+      .join("/");
+
+    const percentageNum = (100 * d.value) / totalSize;
+    const percentage = percentageNum.toFixed(2);
+    const percentageString = percentage + "%";
+
+    const str = `${nodePath}<br/><b>${formatBytes(d.value || d.size)}</b><br/>${percentageString}`;
+
+    tooltipCache.set(d, { html: str });
+  }
+
+  const { html } = tooltipCache.get(d);
+
+  tooltipNode.html(html);
+
   const [x, y] = d3mouse(container);
-  const nodePath = d
-    .ancestors()
-    .reverse()
-    .map(d => d.data.name)
-    .join("/");
 
-  const percentageNum = (100 * d.value) / totalSize;
-  const percentage = percentageNum.toFixed(2);
-  const percentageString = percentage + "%";
+  const tooltipBox = tooltipNode.node().getBoundingClientRect();
+  const containerBox = container.getBoundingClientRect();
 
-  const str = `${nodePath}<br/><b>${formatBytes(d.value || d.size)}</b><br/>${percentageString}`;
+  const availableWidthRight = containerBox.width - x;
+  const availableHeightBottom = containerBox.height - y;
 
-  tooltipNode
-    .html(str)
-    .style("left", x + 30 + "px")
-    .style("top", y + "px");
+  const positionStyles = [];
+  const offsetX = 10;
+  const offsetY = 10;
+  if (availableHeightBottom >= tooltipBox.height + offsetY) {
+    positionStyles.push(["top", y + offsetY], ["bottom", null]);
+  } else {
+    positionStyles.push(["top", null], ["bottom", availableHeightBottom + offsetY]);
+  }
+  if (availableWidthRight >= tooltipBox.width + offsetX) {
+    positionStyles.push(["left", x + offsetX], ["right", null]);
+  } else {
+    positionStyles.push(["left", null], ["right", availableWidthRight + offsetX]);
+  }
+
+  for (const [pos, offset] of positionStyles) {
+    tooltipNode.style(pos, typeof offset === "number" ? offset + "px" : offset);
+  }
 };
 
 export const createMouseleave = tooltipNode => () => tooltipNode.style("opacity", 0);
