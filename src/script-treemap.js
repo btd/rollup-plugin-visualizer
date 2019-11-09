@@ -6,12 +6,7 @@ import { format as formatBytes } from "bytes";
 
 import uid from "./uid";
 import { createRainbowColor } from "./color";
-import {
-  createTooltip,
-  createMouseleave,
-  createMouseover,
-  createMousemove
-} from "./tooltip";
+import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
 
 import "./style/style-treemap.scss";
 
@@ -70,7 +65,7 @@ const addChart = (data, chartNode) => {
   node
     .append("rect")
     .attr("id", d => (d.nodeUid = uid("node")).id)
-    .attr("fill", d => color(d))
+    .attr("fill", d => color(d).backgroundColor)
     .attr("width", d => d.x1 - d.x0)
     .attr("height", d => d.y1 - d.y0)
     .attr("rx", 2)
@@ -85,13 +80,11 @@ const addChart = (data, chartNode) => {
   node
     .append("text")
     .attr("clip-path", d => d.clipUid)
+    .style("fill", d => color(d).fontColor)
     .selectAll("tspan")
     .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
     .join("tspan")
-    .attr("fill-opacity", (d, i, nodes) =>
-      i === nodes.length - 1 ? 0.7 : null
-    )
-    .style("fill", "#fff")
+    .attr("fill-opacity", (d, i, nodes) => (i === nodes.length - 1 ? 0.7 : null))
     .style("font-size", "0.7em")
     .text(d => d);
 
@@ -105,10 +98,7 @@ const addChart = (data, chartNode) => {
     .filter(d => !d.children)
     .selectAll("tspan")
     .attr("x", 3)
-    .attr(
-      "y",
-      (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
-    );
+    .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`);
 };
 
 const mainContainer = document.querySelector("main");
