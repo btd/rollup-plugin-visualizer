@@ -15,7 +15,8 @@ let args = require("yargs")
     describe: "Build all templates",
     boolean: true
   })
-  .option("open", { describe: "Open browser with stat files", boolean: true });
+  .option("open", { describe: "Open browser with stat files", boolean: true })
+  .option("json", { describe: "Generate json", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -27,6 +28,8 @@ for (const t of TEMPLATE) {
 args = args.help();
 
 const argv = args.argv;
+
+const fileExt = argv.json ? ".json" : ".html";
 
 const templatesToBuild = [];
 if (argv.all) {
@@ -57,18 +60,20 @@ const COMMON_PLUGINS = [
   })
 ];
 
+const onwarn = warning => {
+  const { code } = warning;
+  if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
+    return;
+  }
+  // eslint-disable-next-line no-console
+  console.warn("WARNING: ", warning.toString());
+};
+
 const runBuild = async template => {
   const inputOptions = {
     input: `./src/script-${template}.js`,
     plugins: [...COMMON_PLUGINS],
-    onwarn: warning => {
-      const { code } = warning;
-      if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
-        return;
-      }
-      // eslint-disable-next-line no-console
-      console.warn("WARNING: ", warning.toString());
-    }
+    onwarn
   };
   const outputOptions = {
     format: "iife",
@@ -92,18 +97,12 @@ const runBuildDev = async template => {
       require("./")({
         open,
         title: `test ${template}`,
-        filename: `stats.${template}.html`,
+        filename: `stats.${template}${fileExt}`,
+        json: argv.json,
         template
       })
     ],
-    onwarn: warning => {
-      const { code } = warning;
-      if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
-        return;
-      }
-      // eslint-disable-next-line no-console
-      console.warn("WARNING: ", warning.toString());
-    }
+    onwarn
   };
   const outputOptions = {
     format: "es",

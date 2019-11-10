@@ -32,6 +32,8 @@ module.exports = function(opts) {
   const template = opts.template || "sunburst";
   const styleOverridePath = opts.styleOverridePath;
 
+  const json = !!opts.json;
+
   const chartParameters = opts.chartParameters || {};
 
   return {
@@ -78,10 +80,12 @@ module.exports = function(opts) {
 
       const data = { tree, nodes };
 
-      const html = await buildStats(title, data, template, styleOverridePath, chartParameters);
+      const fileContent = json
+        ? JSON.stringify(data, null, 2)
+        : await buildStats(title, data, template, styleOverridePath, chartParameters);
 
       await mkdir(path.dirname(filename));
-      await writeFile(filename, html);
+      await writeFile(filename, fileContent);
 
       if (open) {
         return opn(filename, openOptions);
