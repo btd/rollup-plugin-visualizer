@@ -11,9 +11,10 @@ const writeFile = promisify(fs.writeFile);
 
 const opn = require("open");
 
+const ModuleMapper = require("./module-mapper");
+
 const buildStats = require("./build-stats");
-const { buildTree, mergeTrees } = require("./hierarchy");
-const { buildGraph, mergeGraphs } = require("./graph");
+const { buildTree, mergeTrees, addLinks, removeCommonPrefix } = require("./data");
 const addMinifiedSizesToModules = require("./sourcemap");
 
 const WARN_SOURCEMAP_DISABLED =
@@ -45,6 +46,8 @@ module.exports = function(opts) {
       }
 
       const roots = [];
+      const mapper = new ModuleMapper();
+      const links = [];
 
       for (const [id, bundle] of Object.entries(outputBundle)) {
         if (bundle.isAsset) continue; //only chunks
@@ -65,20 +68,24 @@ module.exports = function(opts) {
           };
         };
 
-        /*const graph = buildGraph(
-          bundle.facadeModuleId,
-          this.getModuleInfo.bind(this),
-          getInitialModuleData
-        );*/
+        const tree = buildTree(id, Object.keys(bundle.modules), getInitialModuleData, mapper);
 
-        const tree = buildTree(id, Object.keys(bundle.modules), getInitialModuleData);
-
-        roots.push({ ...tree });
+        roots.push(tree);
       }
 
-      const { tree, nodes } = mergeTrees(roots);
+      // after trees we process links (this is mostly for uids)
+      for (const bundle of Object.values(outputBundle)) {
+        if (bundle.isAsset || bundle.facadeModuleId == null) continue; //only chunks
 
-      const data = { tree, nodes };
+        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
+      }
+
+      const tree = mergeTrees(roots);
+
+      const { nodes, nodeIds } = mapper;
+      removeCommonPrefix(nodeIds);
+
+      const data = { tree, nodes, nodeIds, links };
 
       const fileContent = json
         ? JSON.stringify(data, null, 2)

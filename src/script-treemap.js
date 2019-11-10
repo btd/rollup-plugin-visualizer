@@ -63,7 +63,7 @@ const node = svg
   .join("g")
   .attr("transform", d => `translate(${d.x0},${d.y0})`)
   .on("mouseover", createMouseover(tooltip, chartNode))
-  .on("mousemove", createMousemove(tooltip, chartNode, totalSize))
+  .on("mousemove", createMousemove(tooltip, chartNode, { totalSize }))
   .on("mouseleave", createMouseleave(tooltip, chartNode));
 
 node

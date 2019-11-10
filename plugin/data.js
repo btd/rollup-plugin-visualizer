@@ -1,0 +1,137 @@
+"use strict";
+
+const path = require("path");
+
+const PLUGIN_PREFIX = "\u0000";
+
+const buildTree = (name, ids, getInitialModuleData, mapper) => {
+  let tree = {
+    name: "root",
+    children: []
+  };
+
+  for (const id of ids) {
+    const name = id;
+    const mod = getInitialModuleData(id);
+
+    const uid = mapper.setValueByModuleId(id, mod);
+
+    if (mod.size === 0) {
+      continue;
+    }
+
+    const nodeData = { uid };
+
+    if (name.startsWith(PLUGIN_PREFIX)) {
+      addToPath(tree, [name], nodeData);
+    } else {
+      addToPath(tree, name.split(path.sep), nodeData);
+    }
+  }
+
+  tree = flattenTree(tree);
+  tree.name = name;
+
+  return tree;
+};
+
+// if root children have only on child we can flatten this
+const flattenTree = root => {
+  let newRoot = root;
+  while (newRoot.children && newRoot.children.length === 1) {
+    newRoot = newRoot.children[0];
+  }
+  return newRoot;
+};
+
+// ugly but works for now
+function addToPath(tree, p, value) {
+  if (p[0] === "") {
+    p.shift();
+  }
+
+  let child = tree.children.find(c => c.name === p[0]);
+  if (child == null) {
+    child = {
+      name: p[0],
+      children: []
+    };
+    tree.children.push(child);
+  }
+  if (p.length === 1) {
+    Object.assign(child, value);
+    delete child.children;
+    return;
+  }
+  p.shift();
+  addToPath(child, p, value);
+}
+
+const mergeTrees = trees => {
+  const newTree = {
+    name: "root",
+    children: trees
+  };
+
+  return newTree;
+};
+
+const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
+  const processedNodes = {};
+
+  const moduleIds = [startModuleId];
+
+  while (moduleIds.length > 0) {
+    const moduleId = moduleIds.shift();
+
+    const moduleUid = mapper.getUid(moduleId);
+
+    if (processedNodes[moduleUid]) {
+      continue;
+    } else {
+      processedNodes[moduleUid] = true;
+    }
+
+    const mod = mapper.getValue(moduleUid);
+
+    const info = getModuleInfo(moduleId);
+    const { importedIds, isEntry, isExternal } = info;
+
+    if (isEntry) {
+      mod.isEntry = true;
+    }
+    if (isExternal) {
+      mod.isExternal = true;
+    }
+
+    for (const importedId of importedIds) {
+      const importedUid = mapper.getUid(importedId);
+      links.push({ source: moduleUid, target: importedUid });
+      moduleIds.push(importedId);
+    }
+  }
+};
+
+const removeCommonPrefix = nodeIds => {
+  const moduleIds = Object.keys(nodeIds);
+  let commonPrefix = moduleIds[0];
+
+  for (const moduleId of moduleIds) {
+    for (let i = 0; i < commonPrefix.length && i < moduleId.length; i++) {
+      if (commonPrefix[i] !== moduleId[i]) {
+        commonPrefix = commonPrefix.slice(0, i);
+        break;
+      }
+    }
+  }
+
+  const commonPrefixLength = commonPrefix.length;
+  for (const moduleId of moduleIds) {
+    const newModuleId = moduleId.slice(commonPrefixLength);
+    const value = nodeIds[moduleId];
+    delete nodeIds[moduleId];
+    nodeIds[newModuleId] = value;
+  }
+};
+
+module.exports = { buildTree, mergeTrees, addLinks, removeCommonPrefix };

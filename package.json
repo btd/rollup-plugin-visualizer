@@ -18,9 +18,10 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "node build.js --all",
+    "build": "node build.js",
     "clean": "del-cli lib",
-    "prepare": "yarn run build"
+    "prepare": "yarn run build",
+    "test": "node build.js --all"
   },
   "dependencies": {
     "mkdirp": "^0.5.1",

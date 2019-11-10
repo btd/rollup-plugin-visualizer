@@ -13,21 +13,35 @@ export const createMouseover = tooltipNode => () => tooltipNode.style("opacity",
 
 const tooltipCache = new Map();
 
-export const createMousemove = (tooltipNode, container, totalSize) => d => {
+const getNodePathTree = d =>
+  d
+    .ancestors()
+    .reverse()
+    .map(d => d.data.name)
+    .join("/");
+
+export const createMousemove = (
+  tooltipNode,
+  container,
+  { totalSize, getNodePath = getNodePathTree }
+) => d => {
   if (!tooltipCache.has(d)) {
-    const nodePath = d
-      .ancestors()
-      .reverse()
-      .map(d => d.data.name)
-      .join("/");
+    const str = [getNodePath(d)];
 
-    const percentageNum = (100 * d.value) / totalSize;
-    const percentage = percentageNum.toFixed(2);
-    const percentageString = percentage + "%";
+    const size = d.value || d.size;
+    if (size !== 0) {
+      str.push(`<b>${formatBytes(size)}</b>`);
+    }
 
-    const str = `${nodePath}<br/><b>${formatBytes(d.value || d.size)}</b><br/>${percentageString}`;
+    if (totalSize != null) {
+      const percentageNum = (100 * d.value) / totalSize;
+      const percentage = percentageNum.toFixed(2);
+      const percentageString = percentage + "%";
 
-    tooltipCache.set(d, { html: str });
+      str.push(percentageString);
+    }
+
+    tooltipCache.set(d, { html: str.join("<br/>") });
   }
 
   const { html } = tooltipCache.get(d);
