@@ -16,16 +16,6 @@ const { buildTree, mergeTrees } = require("./hierarchy");
 const { buildGraph, mergeGraphs } = require("./graph");
 const addMinifiedSizesToModules = require("./sourcemap");
 
-const HIERARCHY = "hierarchy";
-const GRAPH = "graph";
-
-const DATA_TYPE_FOR_TEMPLATE = {
-  circlepacking: HIERARCHY,
-  sunburst: HIERARCHY,
-  treemap: HIERARCHY,
-  network: GRAPH
-};
-
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
@@ -42,8 +32,6 @@ module.exports = function(opts) {
   const template = opts.template || "sunburst";
   const styleOverridePath = opts.styleOverridePath;
 
-  const bundlesRelative = opts.bundlesRelative == null ? true : opts.bundlesRelative;
-
   const chartParameters = opts.chartParameters || {};
 
   return {
@@ -54,9 +42,7 @@ module.exports = function(opts) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
 
-      let roots = [];
-
-      const dataType = DATA_TYPE_FOR_TEMPLATE[template];
+      const roots = [];
 
       for (const [id, bundle] of Object.entries(outputBundle)) {
         if (bundle.isAsset) continue; //only chunks
@@ -77,45 +63,21 @@ module.exports = function(opts) {
           };
         };
 
-        let root = null;
-        switch (dataType) {
-          case HIERARCHY: {
-            root = buildTree(Object.keys(bundle.modules), getInitialModuleData);
-            root.name = id;
-            break;
-          }
-          case GRAPH: {
-            root = buildGraph(
-              bundle.facadeModuleId,
-              this.getModuleInfo.bind(this),
-              getInitialModuleData
-            );
-            break;
-          }
-          default: {
-            this.error(`Unknown template ${template} type`);
-          }
-        }
+        /*const graph = buildGraph(
+          bundle.facadeModuleId,
+          this.getModuleInfo.bind(this),
+          getInitialModuleData
+        );*/
 
-        roots.push(root);
+        const tree = buildTree(Object.keys(bundle.modules), getInitialModuleData);
+        tree.name = id;
+
+        roots.push({ tree });
       }
 
-      if (bundlesRelative) {
-        switch (dataType) {
-          case HIERARCHY: {
-            roots = mergeTrees(roots);
-            break;
-          }
-          case GRAPH: {
-            roots = mergeGraphs(roots);
-            break;
-          }
-        }
+      const data = { tree: mergeTrees(roots.map(r => r.tree)) };
 
-        roots = [roots];
-      }
-
-      const html = await buildStats(title, roots, template, styleOverridePath, chartParameters);
+      const html = await buildStats(title, data, template, styleOverridePath, chartParameters);
 
       await mkdir(path.dirname(filename));
       await writeFile(filename, html);

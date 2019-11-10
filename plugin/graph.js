@@ -27,7 +27,9 @@ const buildGraph = (startModuleId, getModuleInfo, getInitialModuleData) => {
       }
     }
 
-    const { id, importedIds } = getModuleInfo(moduleId);
+    const info = getModuleInfo(moduleId);
+    const { id, importedIds } = info;
+    console.log(moduleId, info);
     const modData = getInitialModuleData(id);
 
     nodes[id] = modData;
