@@ -15,13 +15,14 @@ const HEIGHT = window.chartParameters.height || 1000;
 
 const chartNode = document.querySelector("main");
 const data = window.nodesData.tree;
+const nodes = window.nodesData.nodes;
 
 const root = d3hierarchy(data)
   .sum(d => {
     if (d.children && d.children.length) {
       return 0;
     } else {
-      return d.size;
+      return nodes[d.uid].size;
     }
   })
   .sort();

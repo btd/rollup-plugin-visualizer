@@ -27,6 +27,7 @@ const chartNode = document.querySelector("main");
 chartNode.innerHTML = chartContainerMarkup;
 
 const data = window.nodesData.tree;
+const nodes = window.nodesData.nodes;
 
 const g = select(chartNode)
   .append("svg")
@@ -39,7 +40,7 @@ const root = d3hierarchy(data)
     if (d.children && d.children.length) {
       return 0;
     } else {
-      return d.size;
+      return nodes[d.uid].size;
     }
   })
   .sort();

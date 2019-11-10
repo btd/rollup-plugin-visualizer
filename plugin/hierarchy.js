@@ -6,32 +6,46 @@ const path = require("path");
 
 const PLUGIN_PREFIX = "\u0000";
 
-const buildTree = (ids, getInitialModuleData, flatten = true) => {
-  let root = {
+let _counter = 0;
+const UID = name => {
+  return `${name}-${_counter++}`;
+};
+
+const buildTree = (name, ids, getInitialModuleData) => {
+  let tree = {
     name: "root",
     children: []
   };
 
+  const nodes = {};
+
+  const nodeIds = {};
+
   for (const id of ids) {
     const name = id;
-    const m = getInitialModuleData(id);
+    const mod = getInitialModuleData(id);
 
-    if (m.size === 0) {
+    const uid = UID("node");
+    nodes[uid] = mod;
+    nodeIds[id] = uid;
+
+    if (mod.size === 0) {
       continue;
     }
 
+    const nodeData = { uid };
+
     if (name.startsWith(PLUGIN_PREFIX)) {
-      addToPath(root, [name], m);
+      addToPath(tree, [name], nodeData);
     } else {
-      addToPath(root, name.split(path.sep), m);
+      addToPath(tree, name.split(path.sep), nodeData);
     }
   }
 
-  if (flatten) {
-    root = flattenTree(root);
-  }
+  tree = flattenTree(tree);
+  tree.name = name;
 
-  return root;
+  return { tree, nodes, nodeIds };
 };
 
 // if root children have only on child we can flatten this
@@ -43,13 +57,14 @@ const flattenTree = root => {
   return newRoot;
 };
 
+// ugly but works for now
 function addToPath(tree, p, value) {
   if (p[0] === "") {
     p.shift();
   }
 
-  let child = tree.children.filter(c => c.name === p[0])[0];
-  if (!child) {
+  let child = tree.children.find(c => c.name === p[0]);
+  if (child == null) {
     child = {
       name: p[0],
       children: []
@@ -58,23 +73,27 @@ function addToPath(tree, p, value) {
   }
   if (p.length === 1) {
     Object.assign(child, value);
+    delete child.children;
     return;
   }
   p.shift();
   addToPath(child, p, value);
 }
 
-const mergeTrees = (children, flatten = true) => {
-  let root = {
+const mergeTrees = trees => {
+  const newTree = {
     name: "root",
-    children
+    children: trees.map(({ tree }) => tree)
   };
 
-  if (flatten) {
-    root = flattenTree(root);
+  const newNodes = {};
+  const newNodeIds = {};
+  for (const { nodes, nodeIds } of trees) {
+    Object.assign(newNodes, nodes);
+    Object.assign(newNodeIds, nodeIds);
   }
 
-  return root;
+  return { tree: newTree, nodes: newNodes, nodeIds: newNodeIds };
 };
 
 module.exports = { buildTree, mergeTrees };

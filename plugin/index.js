@@ -69,13 +69,14 @@ module.exports = function(opts) {
           getInitialModuleData
         );*/
 
-        const tree = buildTree(Object.keys(bundle.modules), getInitialModuleData);
-        tree.name = id;
+        const tree = buildTree(id, Object.keys(bundle.modules), getInitialModuleData);
 
-        roots.push({ tree });
+        roots.push({ ...tree });
       }
 
-      const data = { tree: mergeTrees(roots.map(r => r.tree)) };
+      const { tree, nodes } = mergeTrees(roots);
+
+      const data = { tree, nodes };
 
       const html = await buildStats(title, data, template, styleOverridePath, chartParameters);
 

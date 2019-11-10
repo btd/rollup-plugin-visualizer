@@ -18,6 +18,7 @@ const format = formatBytes;
 const chartNode = document.querySelector("main");
 
 const data = window.nodesData.tree;
+const nodes = window.nodesData.nodes;
 
 const treemapLayout = d3treemap()
   .size([WIDTH, HEIGHT])
@@ -33,7 +34,7 @@ const root = d3hierarchy(data)
     if (d.children && d.children.length) {
       return 0;
     } else {
-      return d.size;
+      return nodes[d.uid].size;
     }
   })
   .sort();
