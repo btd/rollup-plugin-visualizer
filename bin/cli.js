@@ -9,18 +9,16 @@ const mkdirp = require("mkdirp");
 
 const mkdir = promisify(mkdirp);
 const writeFile = promisify(fs.writeFile);
+const readFile = promisify(fs.readFile);
 
-const buildStats = require("./build-stats");
+const buildStats = require("../plugin/build-stats");
 const TEMPLATE = require("../plugin/template-types");
 
 const argv = require("yargs")
+  .strict()
   .option("extra-style-path", {
     describe: "Extra override css file path",
     string: true
-  })
-  .option("tree-merge-new-root", {
-    describe: "Merge all trees by appending as a child to new root",
-    boolean: true
   })
   .option("filename", {
     describe: "Output file name",
@@ -47,27 +45,38 @@ const run = async (title, template, extraStylePath, filename, files) => {
     throw new Error("Empty file list");
   }
 
-  const data = { tree, nodes, nodeIds, links };
+  const fileContents = await Promise.all(files.map(file => readFile(file).then(JSON.parse)));
 
-  const fileContent = await buildStats(
-    title,
-    data,
-    template,
-    extraStylePath,
-    {}
-  );
+  const tree = {
+    name: "root",
+    children: []
+  };
+  const nodes = Object.create(null);
+  const nodeIds = Object.create(null);
+  let links = [];
+
+  for (const fileContent of fileContents) {
+    if (fileContent.tree.name === "root") {
+      tree.children = tree.children.concat(fileContent.tree.children);
+    } else {
+      tree.children.push(fileContent.tree);
+    }
+
+    Object.assign(nodes, fileContent.nodes);
+    Object.assign(nodeIds, fileContent.nodeIds);
+
+    links = links.concat(fileContent.links);
+  }
+
+  const data = { tree, links, nodeIds, nodes };
+
+  const fileContent = await buildStats(title, data, template, extraStylePath, {});
 
   await mkdir(path.dirname(filename));
   await writeFile(filename, fileContent);
 };
 
-run(
-  argv.title,
-  argv.template,
-  argv.extraStylePath,
-  argv.filename,
-  listOfFiles
-).catch(err => {
+run(argv.title, argv.template, argv.extraStylePath, argv.filename, listOfFiles).catch(err => {
   console.error(err.message);
   process.exit(1);
 });

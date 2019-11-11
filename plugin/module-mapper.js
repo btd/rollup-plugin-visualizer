@@ -1,8 +1,11 @@
 "use strict";
 
+const generate = require("nanoid/non-secure/generate");
+
 class ModuleMapper {
   constructor() {
     this.id = 0;
+    this.prefix = generate("1234567890abcdef", 4);
     this.nodes = Object.create(null);
     this.nodeIds = Object.create(null);
   }
@@ -10,7 +13,7 @@ class ModuleMapper {
   getUid(moduleId) {
     if (!(moduleId in this.nodeIds)) {
       const id = this.id;
-      this.nodeIds[moduleId] = id;
+      this.nodeIds[moduleId] = `${this.prefix}-${id}`;
       this.id += 1;
     }
     return this.nodeIds[moduleId];
