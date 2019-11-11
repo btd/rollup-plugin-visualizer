@@ -8,7 +8,7 @@ const postcss = require("rollup-plugin-postcss");
 const resolve = require("rollup-plugin-node-resolve");
 const postcssUrl = require("postcss-url");
 
-const TEMPLATE = ["sunburst", "treemap", "circlepacking", "network"];
+const TEMPLATE = require("./plugin/template-types");
 
 let args = require("yargs")
   .option("all", {
@@ -62,7 +62,11 @@ const COMMON_PLUGINS = [
 
 const onwarn = warning => {
   const { code } = warning;
-  if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
+  if (
+    code === "CIRCULAR_DEPENDENCY" ||
+    code === "CIRCULAR" ||
+    code === "THIS_IS_UNDEFINED"
+  ) {
     return;
   }
   // eslint-disable-next-line no-console
