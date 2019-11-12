@@ -45,7 +45,13 @@ const run = async (title, template, extraStylePath, filename, files) => {
     throw new Error("Empty file list");
   }
 
-  const fileContents = await Promise.all(files.map(file => readFile(file).then(JSON.parse)));
+  const fileContents = await Promise.all(
+    files.map(async file => {
+      const textContent = readFile(file, { encoding: "utf-8" });
+      const jsonContent = JSON.parse(textContent);
+      return [file, jsonContent];
+    })
+  );
 
   const tree = {
     name: "root",
@@ -55,7 +61,7 @@ const run = async (title, template, extraStylePath, filename, files) => {
   const nodeIds = Object.create(null);
   let links = [];
 
-  for (const fileContent of fileContents) {
+  for (const [, fileContent] of fileContents) {
     if (fileContent.tree.name === "root") {
       tree.children = tree.children.concat(fileContent.tree.children);
     } else {
@@ -63,20 +69,32 @@ const run = async (title, template, extraStylePath, filename, files) => {
     }
 
     Object.assign(nodes, fileContent.nodes);
-    Object.assign(nodeIds, fileContent.nodeIds);
+    Object.assign(nodeIds, fileContent.nodeIds);//TODO this will override things
 
     links = links.concat(fileContent.links);
   }
 
   const data = { tree, links, nodeIds, nodes };
 
-  const fileContent = await buildStats(title, data, template, extraStylePath, {});
+  const fileContent = await buildStats(
+    title,
+    data,
+    template,
+    extraStylePath,
+    {}
+  );
 
   await mkdir(path.dirname(filename));
   await writeFile(filename, fileContent);
 };
 
-run(argv.title, argv.template, argv.extraStylePath, argv.filename, listOfFiles).catch(err => {
+run(
+  argv.title,
+  argv.template,
+  argv.extraStylePath,
+  argv.filename,
+  listOfFiles
+).catch(err => {
   console.error(err.message);
   process.exit(1);
 });

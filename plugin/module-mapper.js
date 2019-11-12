@@ -22,7 +22,7 @@ class ModuleMapper {
   setValueByModuleId(moduleId, value) {
     const uid = this.getUid(moduleId);
     if (uid in this.nodes) {
-      console.warn("Override", moduleId, uid, value, this.nodes[uid]);
+      console.warn("Override (probably this is a bug)", moduleId, uid, value, this.nodes[uid]);
     }
     this.nodes[uid] = value;
     return uid;
