@@ -61,7 +61,7 @@ const run = async (title, template, extraStylePath, filename, files) => {
   const nodeIds = Object.create(null);
   let links = [];
 
-  for (const [, fileContent] of fileContents) {
+  for (const [file, fileContent] of fileContents) {
     if (fileContent.tree.name === "root") {
       tree.children = tree.children.concat(fileContent.tree.children);
     } else {
@@ -69,7 +69,10 @@ const run = async (title, template, extraStylePath, filename, files) => {
     }
 
     Object.assign(nodes, fileContent.nodes);
-    Object.assign(nodeIds, fileContent.nodeIds);//TODO this will override things
+
+    for (const [id, uid] of fileContent.nodeIds) {
+      nodeIds[file + "/" + id] = uid;
+    }
 
     links = links.concat(fileContent.links);
   }
