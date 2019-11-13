@@ -11,6 +11,7 @@ const postcssUrl = require("postcss-url");
 const TEMPLATE = require("./plugin/template-types");
 
 let args = require("yargs")
+  .strict()
   .option("all", {
     describe: "Build all templates",
     boolean: true

@@ -33,9 +33,12 @@ const chartNode = document.querySelector("main");
 const { nodes: origNodes, links: origLinks } = window.nodesData;
 
 const tooltip = new Tooltip(select(chartNode), {
-  getNodePath: d => d.id
+  getNodeUid: d => d.uid,
+  getNodePath: d => d.id,
+  getNodeSize: d => d.size,
+  nodes: origNodes,
+  links: origLinks
 });
-
 
 const nodes = Object.entries(origNodes).map(([uid, node]) => ({
   uid,

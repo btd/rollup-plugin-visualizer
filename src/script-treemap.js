@@ -48,7 +48,8 @@ const svg = select(chartNode)
 const color = createRainbowColor(root);
 const tooltip = new Tooltip(select(chartNode), {
   totalSize: root.value,
-  getNodePath: d => nodes[d.data.uid].id
+  nodes,
+  links
 });
 
 const node = svg

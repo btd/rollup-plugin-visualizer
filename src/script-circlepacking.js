@@ -35,7 +35,8 @@ layout(root);
 
 const tooltip = new Tooltip(select(chartNode), {
   totalSize: root.value,
-  getNodePath: d => nodes[d.data.uid].id
+  nodes,
+  links
 });
 
 const svg = select(chartNode)
