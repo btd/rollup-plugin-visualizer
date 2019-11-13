@@ -107,7 +107,11 @@ module.exports = function(opts) {
       const { nodes, nodeIds } = mapper;
       removeCommonPrefix(nodeIds);
 
-      const data = { tree, nodes, nodeIds, links };
+      for(const [id, uid] of Object.entries(nodeIds)) {
+        nodes[uid].id = id;
+      }
+
+      const data = { tree, nodes, links };
 
       const fileContent = json
         ? JSON.stringify(data, null, 2)

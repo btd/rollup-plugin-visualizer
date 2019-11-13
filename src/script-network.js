@@ -2,17 +2,32 @@ import { select } from "d3-selection";
 import { max as d3max, extent as d3extent } from "d3-array";
 import { scaleSqrt } from "d3-scale";
 
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from "d3-force";
+import {
+  forceSimulation,
+  forceLink,
+  forceManyBody,
+  forceCenter,
+  forceCollide,
+  forceX
+} from "d3-force";
 
-import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
+import {
+  createTooltip,
+  createMouseleave,
+  createMouseover,
+  createMousemove
+} from "./tooltip";
 
 import "./style/style-network.scss";
 
-function color(group) {
-  if (group === 0) {
-    return "#487ea4";
-  } else {
+const NODE_MODULES = /.*(?:\/|\\\\)?node_modules(?:\/|\\\\)([^/\\]+)(?:\/|\\\\).+/;
+
+function color({ id }) {
+  const match = id.match(NODE_MODULES);
+  if (match) {
     return "#599e59";
+  } else {
+    return "#487ea4";
   }
 }
 
@@ -20,11 +35,14 @@ const WIDTH = window.chartParameters.width || 1500;
 const HEIGHT = window.chartParameters.height || 1000;
 
 const chartNode = document.querySelector("main");
-const { nodes: origNodes, links: origLinks, nodeIds } = window.nodesData;
+const { nodes: origNodes, links: origLinks } = window.nodesData;
 
 const tooltip = createTooltip(select(chartNode));
 
-const nodes = Object.entries(nodeIds).map(([id, uid]) => ({ id, uid, ...origNodes[uid] }));
+const nodes = Object.entries(origNodes).map(([uid, node]) => ({
+  uid,
+  ...node
+}));
 const nodesCache = new Map(nodes.map(d => [d.uid, d]));
 const links = origLinks.map(({ source, target }) => ({
   source: nodesCache.get(source),
@@ -54,6 +72,7 @@ const simulation = forceSimulation()
     "collide",
     forceCollide().radius(d => size(d.size) + 1)
   )
+  .force("forceX", forceX(HEIGHT / 2).strength(0.05))
   .force("charge", forceManyBody().strength(-100))
   .force("center", forceCenter(WIDTH / 2, HEIGHT / 2));
 
@@ -101,9 +120,12 @@ svg
   .data(nodes)
   .join("circle")
   .attr("r", d => size(d.size))
-  .attr("fill", d => (d.size === 0 ? "#ccc" : color(d.group)))
+  .attr("fill", d => (d.size === 0 ? "#ccc" : color(d)))
   .attr("cx", d => d.x)
   .attr("cy", d => d.y)
   .on("mouseover", createMouseover(tooltip, chartNode))
-  .on("mousemove", createMousemove(tooltip, chartNode, { getNodePath: d => d.id }))
+  .on(
+    "mousemove",
+    createMousemove(tooltip, chartNode, { getNodePath: d => d.id })
+  )
   .on("mouseleave", createMouseleave(tooltip, chartNode));
