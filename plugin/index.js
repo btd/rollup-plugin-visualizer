@@ -16,12 +16,7 @@ const TEMPLATE = require("./template-types");
 const ModuleMapper = require("./module-mapper");
 
 const buildStats = require("./build-stats");
-const {
-  buildTree,
-  mergeTrees,
-  addLinks,
-  removeCommonPrefix
-} = require("./data");
+const { buildTree, mergeTrees, addLinks, removeCommonPrefix } = require("./data");
 const addMinifiedSizesToModules = require("./sourcemap");
 
 const WARN_SOURCEMAP_DISABLED =
@@ -41,8 +36,12 @@ module.exports = function(opts) {
   if (!TEMPLATE.includes(template)) {
     throw new Error(`Unknown template type ${template}`);
   }
-  
-  const extraStylePath = opts.extraStylePath;
+
+  let extraStylePath = opts.extraStylePath;
+  if (opts.styleOverridePath) {
+    console.warn("[rollup-plugin-visualizer] `styleOverridePath` was renamed to `extraStylePath`");
+    extraStylePath = opts.styleOverridePath;
+  }
 
   const json = !!opts.json;
 
@@ -80,12 +79,7 @@ module.exports = function(opts) {
           };
         };
 
-        const tree = buildTree(
-          id,
-          Object.keys(bundle.modules),
-          getInitialModuleData,
-          mapper
-        );
+        const tree = buildTree(id, Object.keys(bundle.modules), getInitialModuleData, mapper);
 
         roots.push(tree);
       }
@@ -94,12 +88,7 @@ module.exports = function(opts) {
       for (const bundle of Object.values(outputBundle)) {
         if (bundle.isAsset || bundle.facadeModuleId == null) continue; //only chunks
 
-        addLinks(
-          bundle.facadeModuleId,
-          this.getModuleInfo.bind(this),
-          links,
-          mapper
-        );
+        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
       }
 
       const tree = mergeTrees(roots);
@@ -107,7 +96,7 @@ module.exports = function(opts) {
       const { nodes, nodeIds } = mapper;
       removeCommonPrefix(nodeIds);
 
-      for(const [id, uid] of Object.entries(nodeIds)) {
+      for (const [id, uid] of Object.entries(nodeIds)) {
         nodes[uid].id = id;
       }
 
@@ -115,13 +104,7 @@ module.exports = function(opts) {
 
       const fileContent = json
         ? JSON.stringify(data, null, 2)
-        : await buildStats(
-            title,
-            data,
-            template,
-            extraStylePath,
-            chartParameters
-          );
+        : await buildStats(title, data, template, extraStylePath, chartParameters);
 
       await mkdir(path.dirname(filename));
       await writeFile(filename, fileContent);

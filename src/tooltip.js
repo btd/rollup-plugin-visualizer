@@ -52,14 +52,14 @@ export class Tooltip {
   refillLinksCache({ nodes, links }) {
     for (const { source, target } of links) {
       if (!this.importedByCache.has(target)) {
-        this.importedByCache.set(target, new Set());
+        this.importedByCache.set(target, []);
       }
       if (!this.importedCache.has(source)) {
-        this.importedCache.set(source, new Set());
+        this.importedCache.set(source, []);
       }
 
-      this.importedByCache.get(target).add(nodes[source]);
-      this.importedCache.get(source).add(nodes[target]);
+      this.importedByCache.get(target).push({ uid: source, ...nodes[source] });
+      this.importedCache.get(source).push({ uid: target, ...nodes[target] });
     }
   }
 
@@ -71,6 +71,8 @@ export class Tooltip {
     if (this.tooltipContentCache.has(data)) {
       return this.tooltipContentCache.get(data);
     }
+
+    const contentCache = {};
 
     const str = [];
     if (this.getNodePath != null) {
@@ -95,13 +97,13 @@ export class Tooltip {
     if (uid && this.importedByCache.has(uid)) {
       const importedBy = this.importedByCache.get(uid);
       str.push(
-        `<b>Imported By</b>: <br/>${[...importedBy]
-          .map(i => i.id)
-          .join("<br/>")}`
+        `<b>Imported By</b>: <br/>${[...new Set(importedBy.map(({ id }) => id))].join("<br/>")}`
       );
     }
 
-    this.tooltipContentCache.set(data, { html: str.join("<br/>") });
+    contentCache.html = str.join("<br/>");
+
+    this.tooltipContentCache.set(data, contentCache);
 
     return this.tooltipContentCache.get(data);
   }
@@ -125,29 +127,26 @@ export class Tooltip {
     if (availableHeightBottom >= tooltipBox.height + offsetY) {
       positionStyles.push(["top", y + offsetY], ["bottom", null]);
     } else {
-      positionStyles.push(
-        ["top", null],
-        ["bottom", availableHeightBottom + offsetY]
-      );
+      positionStyles.push(["top", null], ["bottom", availableHeightBottom + offsetY]);
     }
     if (availableWidthRight >= tooltipBox.width + offsetX) {
       positionStyles.push(["left", x + offsetX], ["right", null]);
     } else {
-      positionStyles.push(
-        ["left", null],
-        ["right", availableWidthRight + offsetX]
-      );
+      positionStyles.push(["left", null], ["right", availableWidthRight + offsetX]);
     }
 
     for (const [pos, offset] of positionStyles) {
-      this.tooltip.style(
-        pos,
-        typeof offset === "number" ? offset + "px" : offset
-      );
+      this.tooltip.style(pos, typeof offset === "number" ? offset + "px" : offset);
     }
   }
 
   onMouseLeave() {
     this.tooltip.style("opacity", 0);
+  }
+
+  buildCache(nodes) {
+    nodes.each(data => {
+      this.getTooltipContent(data);
+    });
   }
 }

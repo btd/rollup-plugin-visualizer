@@ -100,7 +100,6 @@ node
   .filter(d => !d.children)
   .selectAll("tspan")
   .attr("x", 3)
-  .attr(
-    "y",
-    (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
-  );
+  .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`);
+
+tooltip.buildCache(node.selectAll("rect"));

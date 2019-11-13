@@ -89,14 +89,13 @@ g.selectAll("path")
     showDetails(d);
 
     const sequenceArray = d.ancestors();
-    //updateBreadcrumbs(sequenceArray, percentageString);
 
     // Fade all the segments.
     g.selectAll("path").style("opacity", 0.3);
 
     // Then highlight only those that are an ancestor of the current segment.
     g.selectAll("path")
-      .filter(node => sequenceArray.indexOf(node) >= 0)
+      .filter(node => sequenceArray.includes(node))
       .style("opacity", 1);
   });
 

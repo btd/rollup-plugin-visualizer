@@ -42,11 +42,9 @@ plugins: [
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `sunburst`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
+`template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
 
-`styleOverridePath` (string, default `undefined`) - Link your own css file to override or enhance the current templates
-
-`bundlesRelative` (boolean, default `false`) - Combine all bundles to one diagram
+`extraStylePath` (string, default `undefined`) - Link your own css file to override or enhance the current templates
 
 `chartParameters.width` (number, default `undefined`) - Set svg viewBox width to this number
 

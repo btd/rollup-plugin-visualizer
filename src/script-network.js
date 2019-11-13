@@ -127,3 +127,5 @@ svg
   .on("mouseover", tooltip.onMouseOver)
   .on("mousemove", tooltip.onMouseMove)
   .on("mouseleave", tooltip.onMouseLeave);
+
+tooltip.buildCache(svg.selectAll("circle"));

@@ -99,3 +99,5 @@ leaf
   .style("fill", "#fff")
   .style("font-size", "0.7em")
   .text(d => d);
+
+tooltip.buildCache(node.selectAll("circle"));
