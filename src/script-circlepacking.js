@@ -6,16 +6,16 @@ import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
 import uid from "./uid";
 import color from "./color";
 
-import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
+import { Tooltip } from "./tooltip";
 
 import "./style/style-circlepacking.scss";
 
 const WIDTH = window.chartParameters.width || 1000;
 const HEIGHT = window.chartParameters.height || 1000;
 
+const { tree: data, nodes, links } = window.nodesData;
+
 const chartNode = document.querySelector("main");
-const data = window.nodesData.tree;
-const nodes = window.nodesData.nodes;
 
 const root = d3hierarchy(data)
   .sum(d => {
@@ -27,15 +27,16 @@ const root = d3hierarchy(data)
   })
   .sort();
 
-const totalSize = root.value;
-
 const layout = d3pack()
   .size([WIDTH - 2, HEIGHT - 2])
   .padding(3);
 
-const tooltip = createTooltip(select(chartNode));
-
 layout(root);
+
+const tooltip = new Tooltip(select(chartNode), {
+  totalSize: root.value,
+  getNodePath: d => nodes[d.data.uid].id
+});
 
 const svg = select(chartNode)
   .append("svg")
@@ -66,9 +67,9 @@ const node = svg
   .data(d => d.values)
   .join("g")
   .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
-  .on("mouseover", createMouseover(tooltip, chartNode))
-  .on("mousemove", createMousemove(tooltip, chartNode, { totalSize }))
-  .on("mouseleave", createMouseleave(tooltip, chartNode));
+  .on("mouseover", tooltip.onMouseOver)
+  .on("mousemove", tooltip.onMouseMove)
+  .on("mouseleave", tooltip.onMouseLeave);
 
 node
   .append("circle")

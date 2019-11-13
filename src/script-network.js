@@ -11,12 +11,7 @@ import {
   forceX
 } from "d3-force";
 
-import {
-  createTooltip,
-  createMouseleave,
-  createMouseover,
-  createMousemove
-} from "./tooltip";
+import { Tooltip } from "./tooltip";
 
 import "./style/style-network.scss";
 
@@ -37,7 +32,10 @@ const HEIGHT = window.chartParameters.height || 1000;
 const chartNode = document.querySelector("main");
 const { nodes: origNodes, links: origLinks } = window.nodesData;
 
-const tooltip = createTooltip(select(chartNode));
+const tooltip = new Tooltip(select(chartNode), {
+  getNodePath: d => d.id
+});
+
 
 const nodes = Object.entries(origNodes).map(([uid, node]) => ({
   uid,
@@ -123,9 +121,6 @@ svg
   .attr("fill", d => (d.size === 0 ? "#ccc" : color(d)))
   .attr("cx", d => d.x)
   .attr("cy", d => d.y)
-  .on("mouseover", createMouseover(tooltip, chartNode))
-  .on(
-    "mousemove",
-    createMousemove(tooltip, chartNode, { getNodePath: d => d.id })
-  )
-  .on("mouseleave", createMouseleave(tooltip, chartNode));
+  .on("mouseover", tooltip.onMouseOver)
+  .on("mousemove", tooltip.onMouseMove)
+  .on("mouseleave", tooltip.onMouseLeave);

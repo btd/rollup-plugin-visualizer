@@ -1,78 +1,98 @@
 import { mouse as d3mouse } from "d3-selection";
 import { format as formatBytes } from "bytes";
 
-// https://www.d3-graph-gallery.com/graph/interactivity_tooltip.html#template
+export class Tooltip {
+  constructor(container, { totalSize, getNodePath }) {
+    this.tooltip = container
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip");
 
-export const createTooltip = node =>
-  node
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip");
+    this.totalSize = totalSize;
+    this.getNodePath = getNodePath;
 
-export const createMouseover = tooltipNode => () => tooltipNode.style("opacity", 1);
+    this.tooltipContentCache = new Map();
+    this.container = container;
 
-const tooltipCache = new Map();
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+  }
 
-const getNodePathTree = d =>
-  d
-    .ancestors()
-    .reverse()
-    .map(d => d.data.name)
-    .join("/");
+  onMouseOver() {
+    this.tooltip.style("opacity", 1);
+  }
 
-export const createMousemove = (
-  tooltipNode,
-  container,
-  { totalSize, getNodePath = getNodePathTree }
-) => d => {
-  if (!tooltipCache.has(d)) {
-    const str = [getNodePath(d)];
+  getTooltipContent(data) {
+    if (this.tooltipContentCache.has(data)) {
+      return this.tooltipContentCache.get(data);
+    }
 
-    const size = d.value || d.size;
+    const str = [];
+    if (this.getNodePath != null) {
+      str.push(this.getNodePath(data));
+    }
+
+    const size = data.value || data.size;
     if (size !== 0) {
       str.push(`<b>${formatBytes(size)}</b>`);
     }
 
-    if (totalSize != null) {
-      const percentageNum = (100 * d.value) / totalSize;
+    if (this.totalSize != null) {
+      const percentageNum = (100 * data.value) / this.totalSize;
       const percentage = percentageNum.toFixed(2);
       const percentageString = percentage + "%";
 
       str.push(percentageString);
     }
 
-    tooltipCache.set(d, { html: str.join("<br/>") });
+    this.tooltipContentCache.set(data, { html: str.join("<br/>") });
+
+    return this.tooltipContentCache.get(data);
   }
 
-  const { html } = tooltipCache.get(d);
+  onMouseMove(data) {
+    const { html } = this.getTooltipContent(data);
 
-  tooltipNode.html(html);
+    this.tooltip.html(html);
 
-  const [x, y] = d3mouse(container);
+    const [x, y] = d3mouse(this.container.node());
 
-  const tooltipBox = tooltipNode.node().getBoundingClientRect();
-  const containerBox = container.getBoundingClientRect();
+    const tooltipBox = this.tooltip.node().getBoundingClientRect();
+    const containerBox = this.container.node().getBoundingClientRect();
 
-  const availableWidthRight = containerBox.width - x;
-  const availableHeightBottom = containerBox.height - y;
+    const availableWidthRight = containerBox.width - x;
+    const availableHeightBottom = containerBox.height - y;
 
-  const positionStyles = [];
-  const offsetX = 10;
-  const offsetY = 10;
-  if (availableHeightBottom >= tooltipBox.height + offsetY) {
-    positionStyles.push(["top", y + offsetY], ["bottom", null]);
-  } else {
-    positionStyles.push(["top", null], ["bottom", availableHeightBottom + offsetY]);
+    const positionStyles = [];
+    const offsetX = 10;
+    const offsetY = 10;
+    if (availableHeightBottom >= tooltipBox.height + offsetY) {
+      positionStyles.push(["top", y + offsetY], ["bottom", null]);
+    } else {
+      positionStyles.push(
+        ["top", null],
+        ["bottom", availableHeightBottom + offsetY]
+      );
+    }
+    if (availableWidthRight >= tooltipBox.width + offsetX) {
+      positionStyles.push(["left", x + offsetX], ["right", null]);
+    } else {
+      positionStyles.push(
+        ["left", null],
+        ["right", availableWidthRight + offsetX]
+      );
+    }
+
+    for (const [pos, offset] of positionStyles) {
+      this.tooltip.style(
+        pos,
+        typeof offset === "number" ? offset + "px" : offset
+      );
+    }
   }
-  if (availableWidthRight >= tooltipBox.width + offsetX) {
-    positionStyles.push(["left", x + offsetX], ["right", null]);
-  } else {
-    positionStyles.push(["left", null], ["right", availableWidthRight + offsetX]);
-  }
 
-  for (const [pos, offset] of positionStyles) {
-    tooltipNode.style(pos, typeof offset === "number" ? offset + "px" : offset);
+  onMouseLeave() {
+    this.tooltip.style("opacity", 0);
   }
-};
-
-export const createMouseleave = tooltipNode => () => tooltipNode.style("opacity", 0);
+}

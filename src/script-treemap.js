@@ -2,32 +2,20 @@ import { select } from "d3-selection";
 import { nest as d3nest } from "d3-collection";
 import { descending } from "d3-array";
 import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
-import { format as formatBytes } from "bytes";
+import { format } from "bytes";
 
 import uid from "./uid";
 import { createRainbowColor } from "./color";
-import { createTooltip, createMouseleave, createMouseover, createMousemove } from "./tooltip";
+import { Tooltip } from "./tooltip";
 
 import "./style/style-treemap.scss";
 
 const WIDTH = window.chartParameters.width || 1600;
 const HEIGHT = window.chartParameters.height || 900;
 
-const format = formatBytes;
-
 const chartNode = document.querySelector("main");
 
-const data = window.nodesData.tree;
-const nodes = window.nodesData.nodes;
-
-const treemapLayout = d3treemap()
-  .size([WIDTH, HEIGHT])
-  .paddingOuter(8)
-  .paddingTop(20)
-  .paddingInner(5)
-  .round(true);
-
-const tooltip = createTooltip(select(chartNode));
+const { tree: data, nodes, links } = window.nodesData;
 
 const root = d3hierarchy(data)
   .sum(d => {
@@ -39,20 +27,29 @@ const root = d3hierarchy(data)
   })
   .sort();
 
-const totalSize = root.value;
+const treemapLayout = d3treemap()
+  .size([WIDTH, HEIGHT])
+  .paddingOuter(8)
+  .paddingTop(20)
+  .paddingInner(5)
+  .round(true);
 
 treemapLayout(root);
-
-const color = createRainbowColor(root);
-
-const svg = select(chartNode)
-  .append("svg")
-  .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
 
 const nestedData = d3nest()
   .key(d => d.height)
   .sortKeys(descending)
   .entries(root.descendants());
+
+const svg = select(chartNode)
+  .append("svg")
+  .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
+
+const color = createRainbowColor(root);
+const tooltip = new Tooltip(select(chartNode), {
+  totalSize: root.value,
+  getNodePath: d => nodes[d.data.uid].id
+});
 
 const node = svg
   .selectAll("g")
@@ -62,9 +59,9 @@ const node = svg
   .data(d => d.values)
   .join("g")
   .attr("transform", d => `translate(${d.x0},${d.y0})`)
-  .on("mouseover", createMouseover(tooltip, chartNode))
-  .on("mousemove", createMousemove(tooltip, chartNode, { totalSize }))
-  .on("mouseleave", createMouseleave(tooltip, chartNode));
+  .on("mouseover", tooltip.onMouseOver)
+  .on("mousemove", tooltip.onMouseMove)
+  .on("mouseleave", tooltip.onMouseLeave);
 
 node
   .append("rect")
@@ -102,4 +99,7 @@ node
   .filter(d => !d.children)
   .selectAll("tspan")
   .attr("x", 3)
-  .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`);
+  .attr(
+    "y",
+    (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
+  );
