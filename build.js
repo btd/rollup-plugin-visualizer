@@ -116,7 +116,7 @@ const runBuildDev = async template => {
 };
 const run = async () => {
   await Promise.all(TEMPLATE.map(t => runBuild(t)));
-  //await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+  await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
 };
 
 run();
