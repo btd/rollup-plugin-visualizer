@@ -4,7 +4,7 @@ import { descending } from "d3-array";
 import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
 
 import uid from "./uid";
-import color from "./color";
+import { createRainbowColor } from "./color";
 
 import { Tooltip } from "./tooltip";
 
@@ -33,6 +33,7 @@ const nestedData = d3nest()
   .sortKeys(descending)
   .entries(root.descendants());
 
+const color = createRainbowColor(root);
 const tooltip = new Tooltip(select(chartNode));
 
 const svg = select(chartNode)
@@ -40,21 +41,12 @@ const svg = select(chartNode)
   .attr("viewBox", [0, 0, WIDTH, HEIGHT])
   .attr("text-anchor", "middle");
 
-const shadow = uid("shadow");
 
-svg
-  .append("filter")
-  .attr("id", shadow.id)
-  .append("feDropShadow")
-  .attr("flood-opacity", 0.3)
-  .attr("dx", 0)
-  .attr("dy", 1);
 
 const node = svg
   .selectAll("g")
   .data(nestedData)
   .join("g")
-  .attr("filter", shadow)
   .selectAll("g")
   .data(d => d.values)
   .join("g")
@@ -66,8 +58,7 @@ const node = svg
 node
   .append("circle")
   .attr("r", d => d.r)
-  .style("stroke", "#fff")
-  .attr("fill", d => color(d));
+  .attr("fill", d => color(d).backgroundColor);
 
 const leaf = node.filter(d => !d.children);
 
@@ -82,12 +73,12 @@ leaf
 leaf
   .append("text")
   .attr("clip-path", d => d.clipUid)
+  .style("fill", d => color(d).fontColor)
   .selectAll("tspan")
   .data(d => [d.data.name])
   .join("tspan")
   .attr("x", 0)
   .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
-  .style("fill", "#fff")
   .style("font-size", "0.7em")
   .text(d => d);
 

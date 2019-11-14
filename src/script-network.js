@@ -11,28 +11,29 @@ import {
   forceX
 } from "d3-force";
 
+import {
+  COLOR_DEFAULT_OWN_SOURCE,
+  COLOR_DEFAULT_VENDOR_SOURCE,
+  COLOR_BASE
+} from "./color";
+
 import { Tooltip } from "./tooltip";
 
 import "./style/style-network.scss";
 
 const NODE_MODULES = /.*(?:\/|\\\\)?node_modules(?:\/|\\\\)([^/\\]+)(?:\/|\\\\).+/;
 
-function color({ id }) {
-  const match = id.match(NODE_MODULES);
-  if (match) {
-    return "#599e59";
-  } else {
-    return "#487ea4";
-  }
-}
+const color = ({ size, id }) =>
+  size === 0
+    ? COLOR_BASE
+    : id.match(NODE_MODULES)
+    ? COLOR_DEFAULT_VENDOR_SOURCE
+    : COLOR_DEFAULT_OWN_SOURCE;
 
 const WIDTH = window.chartParameters.width || 1500;
 const HEIGHT = window.chartParameters.height || 1000;
 
-const chartNode = document.querySelector("main");
 const { nodes: origNodes, links: origLinks } = window.nodesData;
-
-const tooltip = new Tooltip(select(chartNode));
 
 const nodes = Object.entries(origNodes).map(([uid, node]) => ({
   uid,
@@ -49,10 +50,6 @@ const maxLines = d3max(nodes, d => d.size);
 const size = scaleSqrt()
   .domain([1, maxLines])
   .range([5, 30]);
-
-const svg = select(chartNode)
-  .append("svg")
-  .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
 
 const simulation = forceSimulation()
   .force(
@@ -111,6 +108,14 @@ nodes.forEach(d => {
   d.x += xCenterDiff;
 });
 
+const chartNode = document.querySelector("main");
+
+const tooltip = new Tooltip(select(chartNode));
+
+const svg = select(chartNode)
+  .append("svg")
+  .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
+
 svg
   .append("g")
   .attr("stroke", "#999")
@@ -133,7 +138,7 @@ svg
   .data(nodes)
   .join("circle")
   .attr("r", d => size(d.size))
-  .attr("fill", d => (d.size === 0 ? "#ccc" : color(d)))
+  .attr("fill", d => color(d))
   .attr("cx", d => d.x)
   .attr("cy", d => d.y)
   .on("mouseover", tooltip.onMouseOver)

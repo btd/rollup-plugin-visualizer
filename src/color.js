@@ -2,21 +2,27 @@ import { scaleSequential, scaleLinear } from "d3-scale";
 import { interpolateSpectral as colorRainbow } from "d3-scale-chromatic";
 import { hsl } from "d3-color";
 
-const COLOR_DEFAULT_FILE = "#db7100";
-const COLOR_DEFAULT_OWN_SOURCE = "#487ea4";
-const COLOR_DEFAULT_VENDOR_SOURCE = "#599e59";
+export const COLOR_DEFAULT_FILE = "#db7100";
+export const COLOR_DEFAULT_OWN_SOURCE = "#487ea4";
+export const COLOR_DEFAULT_VENDOR_SOURCE = "#599e59";
+
+export const COLOR_BASE = "#cecece";
 
 const colorDefault = node => {
   if (node.children && node.children.length) {
     const parents = node.ancestors();
-    const hasNodeModules = parents.some(({ data: { name } }) => name === "node_modules");
-    return hasNodeModules ? COLOR_DEFAULT_VENDOR_SOURCE : COLOR_DEFAULT_OWN_SOURCE;
+    const hasNodeModules = parents.some(
+      ({ data: { name } }) => name === "node_modules"
+    );
+    return hasNodeModules
+      ? COLOR_DEFAULT_VENDOR_SOURCE
+      : COLOR_DEFAULT_OWN_SOURCE;
   } else {
     return COLOR_DEFAULT_FILE;
   }
 };
 
-const COLOR_RAINBOW_BASE = "#cecece";
+export default colorDefault;
 
 // https://www.w3.org/TR/WCAG20/#relativeluminancedef
 const rc = 0.2126;
@@ -42,14 +48,17 @@ function relativeLuminance(o) {
 }
 
 export const createRainbowColor = root => {
-  const colorScale = scaleSequential([0, root.children.length - 1], colorRainbow);
+  const colorScale = scaleSequential(
+    [0, root.children.length - 1],
+    colorRainbow
+  );
 
   const colorParentMap = new Map(
     root.children.map((c, id) => {
       return [c.data.name, colorScale(id)];
     })
   );
-  colorParentMap.set(root.data.name, COLOR_RAINBOW_BASE);
+  colorParentMap.set(root.data.name, COLOR_BASE);
 
   const colorMap = new Map();
 
@@ -81,5 +90,3 @@ export const createRainbowColor = root => {
     return colorMap.get(node);
   };
 };
-
-export default colorDefault;
