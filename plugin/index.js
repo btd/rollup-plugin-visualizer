@@ -93,7 +93,7 @@ module.exports = function(opts) {
       const tree = mergeTrees(roots);
 
       const { nodes, nodeIds } = mapper;
-      removeCommonPrefix(nodeIds);
+      removeCommonPrefix(nodes, nodeIds);
 
       for (const [id, uid] of Object.entries(nodeIds)) {
         if (nodes[uid]) {

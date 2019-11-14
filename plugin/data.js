@@ -133,14 +133,20 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
   }
 };
 
-const removeCommonPrefix = nodeIds => {
-  const moduleIds = Object.keys(nodeIds);
-  let commonPrefix = moduleIds[0];
+const skipModule = (id, node) => id.startsWith(PLUGIN_PREFIX) || node.isExternal;
 
-  for (const moduleId of moduleIds) {
-    if (!moduleId.startsWith(PLUGIN_PREFIX)) {
-      for (let i = 0; i < commonPrefix.length && i < moduleId.length; i++) {
-        if (commonPrefix[i] !== moduleId[i]) {
+const removeCommonPrefix = (nodes, nodeIds) => {
+  let commonPrefix = null;
+
+  for (const [id, uid] of Object.entries(nodeIds)) {
+    const node = nodes[uid];
+    if (commonPrefix == null) {
+      commonPrefix = id;
+    }
+
+    if (!skipModule(id, node)) {
+      for (let i = 0; i < commonPrefix.length && i < id.length; i++) {
+        if (commonPrefix[i] !== id[i]) {
           commonPrefix = commonPrefix.slice(0, i);
           break;
         }
@@ -149,12 +155,13 @@ const removeCommonPrefix = nodeIds => {
   }
 
   const commonPrefixLength = commonPrefix.length;
-  for (const moduleId of moduleIds) {
-    if (!moduleId.startsWith(PLUGIN_PREFIX)) {
-      const newModuleId = moduleId.slice(commonPrefixLength);
-      const value = nodeIds[moduleId];
-      delete nodeIds[moduleId];
-      nodeIds[newModuleId] = value;
+  for (const [id, uid] of Object.entries(nodeIds)) {
+    const node = nodes[uid];
+    if (!skipModule(id, node)) {
+      const newId = id.slice(commonPrefixLength);
+      const value = nodeIds[id];
+      delete nodeIds[id];
+      nodeIds[newId] = value;
     }
   }
 };
