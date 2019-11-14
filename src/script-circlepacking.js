@@ -13,19 +13,14 @@ import "./style/style-circlepacking.scss";
 const WIDTH = window.chartParameters.width || 1000;
 const HEIGHT = window.chartParameters.height || 1000;
 
-const { tree: data, nodes, links } = window.nodesData;
-
 const chartNode = document.querySelector("main");
 
-const root = d3hierarchy(data)
-  .sum(d => {
-    if (d.children && d.children.length) {
-      return 0;
-    } else {
-      return nodes[d.uid].size;
-    }
-  })
-  .sort();
+const { tree, nodes, links } = window.nodesData;
+
+// prepare data
+const root = d3hierarchy(tree)
+  .sum(d => (d.children && d.children.length > 0 ? 0 : nodes[d.uid].size))
+  .sort((a, b) => b.value - a.value);
 
 const layout = d3pack()
   .size([WIDTH - 2, HEIGHT - 2])
@@ -33,11 +28,12 @@ const layout = d3pack()
 
 layout(root);
 
-const tooltip = new Tooltip(select(chartNode), {
-  totalSize: root.value,
-  nodes,
-  links
-});
+const nestedData = d3nest()
+  .key(d => d.height)
+  .sortKeys(descending)
+  .entries(root.descendants());
+
+const tooltip = new Tooltip(select(chartNode));
 
 const svg = select(chartNode)
   .append("svg")
@@ -53,11 +49,6 @@ svg
   .attr("flood-opacity", 0.3)
   .attr("dx", 0)
   .attr("dy", 1);
-
-const nestedData = d3nest()
-  .key(d => d.height)
-  .sortKeys(descending)
-  .entries(root.descendants());
 
 const node = svg
   .selectAll("g")
@@ -100,4 +91,8 @@ leaf
   .style("font-size", "0.7em")
   .text(d => d);
 
-tooltip.buildCache(node.selectAll("circle"));
+tooltip.buildCache(node.selectAll("circle"), {
+  totalSize: root.value,
+  nodes,
+  links
+});

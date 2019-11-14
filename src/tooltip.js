@@ -13,34 +13,13 @@ const getNodeSizeTree = d => d.value;
 const getNodeUidTree = d => d.data.uid;
 
 export class Tooltip {
-  constructor(
-    container,
-    {
-      totalSize,
-      getNodeSize = getNodeSizeTree,
-      getNodePath = getNodePathTree,
-      getNodeUid = getNodeUidTree,
-      nodes,
-      links
-    }
-  ) {
+  constructor(container) {
     this.tooltip = container
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip");
 
-    this.totalSize = totalSize;
-    this.getNodePath = getNodePath;
-    this.getNodeSize = getNodeSize;
-    this.getNodeUid = getNodeUid;
-
     this.tooltipContentCache = new Map();
-    this.importedByCache = new Map();
-    this.importedCache = new Map();
-
-    if (links != null && nodes != null) {
-      this.refillLinksCache({ nodes, links });
-    }
 
     this.container = container;
 
@@ -49,67 +28,12 @@ export class Tooltip {
     this.onMouseMove = this.onMouseMove.bind(this);
   }
 
-  refillLinksCache({ nodes, links }) {
-    for (const { source, target } of links) {
-      if (!this.importedByCache.has(target)) {
-        this.importedByCache.set(target, []);
-      }
-      if (!this.importedCache.has(source)) {
-        this.importedCache.set(source, []);
-      }
-
-      this.importedByCache.get(target).push({ uid: source, ...nodes[source] });
-      this.importedCache.get(source).push({ uid: target, ...nodes[target] });
-    }
-  }
-
   onMouseOver() {
     this.tooltip.style("opacity", 1);
   }
 
-  getTooltipContent(data) {
-    if (this.tooltipContentCache.has(data)) {
-      return this.tooltipContentCache.get(data);
-    }
-
-    const contentCache = {};
-
-    const str = [];
-    if (this.getNodePath != null) {
-      str.push(this.getNodePath(data));
-    }
-
-    const size = this.getNodeSize(data);
-    if (size !== 0) {
-      let sizeStr = `<b>Size: ${formatBytes(size)}</b>`;
-
-      if (this.totalSize != null) {
-        const percentageNum = (100 * data.value) / this.totalSize;
-        const percentage = percentageNum.toFixed(2);
-        const percentageString = percentage + "%";
-
-        sizeStr += ` (${percentageString})`;
-      }
-      str.push(sizeStr);
-    }
-
-    const uid = this.getNodeUid(data);
-    if (uid && this.importedByCache.has(uid)) {
-      const importedBy = this.importedByCache.get(uid);
-      str.push(
-        `<b>Imported By</b>: <br/>${[...new Set(importedBy.map(({ id }) => id))].join("<br/>")}`
-      );
-    }
-
-    contentCache.html = str.join("<br/>");
-
-    this.tooltipContentCache.set(data, contentCache);
-
-    return this.tooltipContentCache.get(data);
-  }
-
   onMouseMove(data) {
-    const { html } = this.getTooltipContent(data);
+    const { html } = this.tooltipContentCache.get(data);
 
     this.tooltip.html(html);
 
@@ -127,16 +51,25 @@ export class Tooltip {
     if (availableHeightBottom >= tooltipBox.height + offsetY) {
       positionStyles.push(["top", y + offsetY], ["bottom", null]);
     } else {
-      positionStyles.push(["top", null], ["bottom", availableHeightBottom + offsetY]);
+      positionStyles.push(
+        ["top", null],
+        ["bottom", availableHeightBottom + offsetY]
+      );
     }
     if (availableWidthRight >= tooltipBox.width + offsetX) {
       positionStyles.push(["left", x + offsetX], ["right", null]);
     } else {
-      positionStyles.push(["left", null], ["right", availableWidthRight + offsetX]);
+      positionStyles.push(
+        ["left", null],
+        ["right", availableWidthRight + offsetX]
+      );
     }
 
     for (const [pos, offset] of positionStyles) {
-      this.tooltip.style(pos, typeof offset === "number" ? offset + "px" : offset);
+      this.tooltip.style(
+        pos,
+        typeof offset === "number" ? offset + "px" : offset
+      );
     }
   }
 
@@ -144,9 +77,67 @@ export class Tooltip {
     this.tooltip.style("opacity", 0);
   }
 
-  buildCache(nodes) {
-    nodes.each(data => {
-      this.getTooltipContent(data);
+  buildCache(
+    contentNodes,
+    {
+      totalSize,
+      getNodeSize = getNodeSizeTree,
+      getNodePath = getNodePathTree,
+      getNodeUid = getNodeUidTree,
+      nodes,
+      links
+    }
+  ) {
+    const importedByCache = new Map();
+    const importedCache = new Map();
+
+    for (const { source, target } of links) {
+      if (!importedByCache.has(target)) {
+        importedByCache.set(target, []);
+      }
+      if (!importedCache.has(source)) {
+        importedCache.set(source, []);
+      }
+
+      importedByCache.get(target).push({ uid: source, ...nodes[source] });
+      importedCache.get(source).push({ uid: target, ...nodes[target] });
+    }
+
+    contentNodes.each(data => {
+      const contentCache = {};
+
+      const str = [];
+      if (getNodePath != null) {
+        str.push(getNodePath(data));
+      }
+
+      const size = getNodeSize(data);
+      if (size !== 0) {
+        let sizeStr = `<b>Size: ${formatBytes(size)}</b>`;
+
+        if (totalSize != null) {
+          const percentageNum = (100 * data.value) / totalSize;
+          const percentage = percentageNum.toFixed(2);
+          const percentageString = percentage + "%";
+
+          sizeStr += ` (${percentageString})`;
+        }
+        str.push(sizeStr);
+      }
+
+      const uid = getNodeUid(data);
+      if (uid && importedByCache.has(uid)) {
+        const importedBy = importedByCache.get(uid);
+        str.push(
+          `<b>Imported By</b>: <br/>${[
+            ...new Set(importedBy.map(({ id }) => id))
+          ].join("<br/>")}`
+        );
+      }
+
+      contentCache.html = str.join("<br/>");
+
+      this.tooltipContentCache.set(data, contentCache);
     });
   }
 }

@@ -32,13 +32,7 @@ const HEIGHT = window.chartParameters.height || 1000;
 const chartNode = document.querySelector("main");
 const { nodes: origNodes, links: origLinks } = window.nodesData;
 
-const tooltip = new Tooltip(select(chartNode), {
-  getNodeUid: d => d.uid,
-  getNodePath: d => d.id,
-  getNodeSize: d => d.size,
-  nodes: origNodes,
-  links: origLinks
-});
+const tooltip = new Tooltip(select(chartNode));
 
 const nodes = Object.entries(origNodes).map(([uid, node]) => ({
   uid,
@@ -146,4 +140,10 @@ svg
   .on("mousemove", tooltip.onMouseMove)
   .on("mouseleave", tooltip.onMouseLeave);
 
-tooltip.buildCache(svg.selectAll("circle"));
+tooltip.buildCache(svg.selectAll("circle"), {
+  getNodeUid: d => d.uid,
+  getNodePath: d => d.id,
+  getNodeSize: d => d.size,
+  nodes: origNodes,
+  links: origLinks
+});

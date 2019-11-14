@@ -1,5 +1,8 @@
 import { select } from "d3-selection";
-import { partition as d3partition, hierarchy as d3hierarchy } from "d3-hierarchy";
+import {
+  partition as d3partition,
+  hierarchy as d3hierarchy
+} from "d3-hierarchy";
 import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { format as formatBytes } from "bytes";
@@ -26,8 +29,7 @@ const chartContainerMarkup = `
 const chartNode = document.querySelector("main");
 chartNode.innerHTML = chartContainerMarkup;
 
-const data = window.nodesData.tree;
-const nodes = window.nodesData.nodes;
+const { tree, nodes } = window.nodesData;
 
 const g = select(chartNode)
   .append("svg")
@@ -35,15 +37,9 @@ const g = select(chartNode)
   .append("g")
   .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
 
-const root = d3hierarchy(data)
-  .sum(d => {
-    if (d.children && d.children.length) {
-      return 0;
-    } else {
-      return nodes[d.uid].size;
-    }
-  })
-  .sort();
+const root = d3hierarchy(tree)
+  .sum(d => (d.children && d.children.length > 0 ? 0 : nodes[d.uid].size))
+  .sort((a, b) => b.value - a.value);
 
 const arc = d3arc()
   .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
@@ -51,12 +47,10 @@ const arc = d3arc()
   .innerRadius(d => y(d.y0))
   .outerRadius(d => y(d.y1));
 
-const partition = d3partition();
-
-partition(root);
+const layout = d3partition();
 
 const showDetails = d => {
-  const percentageNum = (100 * d.value) / totalSize;
+  const percentageNum = (100 * d.value) / root.value;
   const percentage = percentageNum.toFixed(2);
   const percentageString = percentage + "%";
 
@@ -78,7 +72,7 @@ const showDetails = d => {
 };
 
 g.selectAll("path")
-  .data(partition(root).descendants())
+  .data(layout(root).descendants())
   .enter()
   .append("path")
   .attr("d", arc)
@@ -98,8 +92,6 @@ g.selectAll("path")
       .filter(node => sequenceArray.includes(node))
       .style("opacity", 1);
   });
-
-const totalSize = root.value;
 
 select(chartNode).on("mouseleave", () => {
   g.selectAll("path").style("opacity", 1);

@@ -15,42 +15,34 @@ const HEIGHT = window.chartParameters.height || 900;
 
 const chartNode = document.querySelector("main");
 
-const { tree: data, nodes, links } = window.nodesData;
+const { tree, nodes, links } = window.nodesData;
 
-const root = d3hierarchy(data)
-  .sum(d => {
-    if (d.children && d.children.length) {
-      return 0;
-    } else {
-      return nodes[d.uid].size;
-    }
-  })
-  .sort();
+// prepare data
+const root = d3hierarchy(tree)
+  .sum(d => (d.children && d.children.length > 0 ? 0 : nodes[d.uid].size))
+  .sort((a, b) => b.value - a.value);
 
-const treemapLayout = d3treemap()
+const layout = d3treemap()
   .size([WIDTH, HEIGHT])
   .paddingOuter(8)
   .paddingTop(20)
   .paddingInner(5)
   .round(true);
 
-treemapLayout(root);
+layout(root);
 
 const nestedData = d3nest()
   .key(d => d.height)
   .sortKeys(descending)
   .entries(root.descendants());
 
+// SVG
 const svg = select(chartNode)
   .append("svg")
   .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
 
 const color = createRainbowColor(root);
-const tooltip = new Tooltip(select(chartNode), {
-  totalSize: root.value,
-  nodes,
-  links
-});
+const tooltip = new Tooltip(select(chartNode));
 
 const node = svg
   .selectAll("g")
@@ -100,6 +92,13 @@ node
   .filter(d => !d.children)
   .selectAll("tspan")
   .attr("x", 3)
-  .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`);
+  .attr(
+    "y",
+    (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
+  );
 
-tooltip.buildCache(node.selectAll("rect"));
+tooltip.buildCache(node.selectAll("rect"), {
+  totalSize: root.value,
+  nodes,
+  links
+});
