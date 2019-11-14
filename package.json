@@ -23,7 +23,7 @@
     "build": "node build.js",
     "clean": "del-cli lib",
     "prepare": "yarn run build",
-    "test": "node build.js --all"
+    "test": "node build.js --all --e2e"
   },
   "dependencies": {
     "mkdirp": "^0.5.1",

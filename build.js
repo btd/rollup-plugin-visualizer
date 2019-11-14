@@ -17,7 +17,8 @@ let args = require("yargs")
     boolean: true
   })
   .option("open", { describe: "Open browser with stat files", boolean: true })
-  .option("json", { describe: "Generate json", boolean: true });
+  .option("json", { describe: "Generate json", boolean: true })
+  .option("e2e", { describe: "Exec e2e test", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -114,9 +115,41 @@ const runBuildDev = async template => {
 
   await bundle.write(outputOptions);
 };
+
+const runBuildDev2 = async () => {
+  const input = { input: "./test/input.js", input2: "./test/input2.js" };
+
+  const inputOptions = {
+    external: ["jquery"],
+    input,
+    plugins: [
+      ...COMMON_PLUGINS(),
+      require("./")({
+        open,
+        title: "test e2e",
+        filename: `stats.e2e${fileExt}`,
+        json: argv.json,
+        template: "treemap"
+      })
+    ],
+    onwarn
+  };
+  const outputOptions = {
+    format: "es",
+    dir: "./temp/"
+  };
+
+  const bundle = await rollup(inputOptions);
+
+  await bundle.write(outputOptions);
+};
+
 const run = async () => {
   await Promise.all(TEMPLATE.map(t => runBuild(t)));
   await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+  if (argv.e2e) {
+    await runBuildDev2();
+  }
 };
 
 run();
