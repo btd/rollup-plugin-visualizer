@@ -45,7 +45,7 @@ if (argv.all) {
 
 const open = argv.open;
 
-const COMMON_PLUGINS = [
+const COMMON_PLUGINS = () => [
   resolve(),
   commonJs({
     ignoreGlobal: true,
@@ -63,11 +63,7 @@ const COMMON_PLUGINS = [
 
 const onwarn = warning => {
   const { code } = warning;
-  if (
-    code === "CIRCULAR_DEPENDENCY" ||
-    code === "CIRCULAR" ||
-    code === "THIS_IS_UNDEFINED"
-  ) {
+  if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
     return;
   }
   // eslint-disable-next-line no-console
@@ -77,7 +73,7 @@ const onwarn = warning => {
 const runBuild = async template => {
   const inputOptions = {
     input: `./src/script-${template}.js`,
-    plugins: [...COMMON_PLUGINS],
+    plugins: [...COMMON_PLUGINS()],
     onwarn
   };
   const outputOptions = {
@@ -98,7 +94,7 @@ const runBuildDev = async template => {
   const inputOptions = {
     input,
     plugins: [
-      ...COMMON_PLUGINS,
+      ...COMMON_PLUGINS(),
       require("./")({
         open,
         title: `test ${template}`,
@@ -120,7 +116,7 @@ const runBuildDev = async template => {
 };
 const run = async () => {
   await Promise.all(TEMPLATE.map(t => runBuild(t)));
-  await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+  //await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
 };
 
 run();
