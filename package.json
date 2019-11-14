@@ -4,7 +4,9 @@
   "main": "plugin/index.js",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
+  "bin": "./bin/cli.js",
   "files": [
+    "bin/*",
     "lib/*",
     "plugin/*"
   ],
