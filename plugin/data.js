@@ -38,8 +38,26 @@ const buildTree = (name, ids, getInitialModuleData, mapper) => {
 // if root children have only on child we can flatten this
 const flattenTree = root => {
   let newRoot = root;
-  while (newRoot.children && newRoot.children.length === 1) {
-    newRoot = newRoot.children[0];
+  while (newRoot.children) {
+    if (newRoot.children.length === 1) {
+      newRoot = newRoot.children[0];
+    } else {
+      const pluginChildren = [];
+      const otherChildren = [];
+      for (const child of newRoot.children) {
+        if (child.name.startsWith(PLUGIN_PREFIX)) {
+          pluginChildren.push(child);
+        } else {
+          otherChildren.push(child);
+        }
+      }
+      if (otherChildren.length === 1) {
+        newRoot = otherChildren[0];
+        newRoot.children = newRoot.children.concat(pluginChildren);
+      } else {
+        break;
+      }
+    }
   }
   return newRoot;
 };
@@ -68,6 +86,9 @@ function addToPath(tree, p, value) {
 }
 
 const mergeTrees = trees => {
+  if (trees.length === 1) {
+    return trees[0];
+  }
   const newTree = {
     name: "root",
     children: trees
@@ -117,20 +138,24 @@ const removeCommonPrefix = nodeIds => {
   let commonPrefix = moduleIds[0];
 
   for (const moduleId of moduleIds) {
-    for (let i = 0; i < commonPrefix.length && i < moduleId.length; i++) {
-      if (commonPrefix[i] !== moduleId[i]) {
-        commonPrefix = commonPrefix.slice(0, i);
-        break;
+    if (!moduleId.startsWith(PLUGIN_PREFIX)) {
+      for (let i = 0; i < commonPrefix.length && i < moduleId.length; i++) {
+        if (commonPrefix[i] !== moduleId[i]) {
+          commonPrefix = commonPrefix.slice(0, i);
+          break;
+        }
       }
     }
   }
 
   const commonPrefixLength = commonPrefix.length;
   for (const moduleId of moduleIds) {
-    const newModuleId = moduleId.slice(commonPrefixLength);
-    const value = nodeIds[moduleId];
-    delete nodeIds[moduleId];
-    nodeIds[newModuleId] = value;
+    if (!moduleId.startsWith(PLUGIN_PREFIX)) {
+      const newModuleId = moduleId.slice(commonPrefixLength);
+      const value = nodeIds[moduleId];
+      delete nodeIds[moduleId];
+      nodeIds[newModuleId] = value;
+    }
   }
 };
 

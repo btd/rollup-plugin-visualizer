@@ -25,7 +25,8 @@ const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
 
 module.exports = function(opts) {
   opts = opts || {};
-  const filename = opts.filename || "stats.html";
+  const json = !!opts.json;
+  const filename = opts.filename || (json ? "stats.json" : "stats.html");
   const title = opts.title || "RollUp Visualizer";
 
   const useSourceMap = !!opts.sourcemap;
@@ -42,8 +43,6 @@ module.exports = function(opts) {
     console.warn("[rollup-plugin-visualizer] `styleOverridePath` was renamed to `extraStylePath`");
     extraStylePath = opts.styleOverridePath;
   }
-
-  const json = !!opts.json;
 
   const chartParameters = opts.chartParameters || {};
 
@@ -97,7 +96,11 @@ module.exports = function(opts) {
       removeCommonPrefix(nodeIds);
 
       for (const [id, uid] of Object.entries(nodeIds)) {
-        nodes[uid].id = id;
+        if (nodes[uid]) {
+          nodes[uid].id = id;
+        } else {
+          this.warn(`Could not find mapping for node ${id} ${uid}`);
+        }
       }
 
       const data = { tree, nodes, links };
