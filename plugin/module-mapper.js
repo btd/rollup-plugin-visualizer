@@ -28,7 +28,10 @@ class ModuleMapper {
     return uid;
   }
 
-  getValue(uid) {
+  getValue(uid, defaultValue) {
+    if (!(uid in this.nodes)) {
+      this.nodes[uid] = defaultValue;
+    }
     return this.nodes[uid];
   }
 }
