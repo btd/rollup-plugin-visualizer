@@ -83,21 +83,39 @@ simulation.stop();
 
 for (let i = 0; i < 300; i++) simulation.tick();
 
-const xExtent = d3extent(nodes, d => d.x);
-const yExtent = d3extent(nodes, d => d.y);
+let xExtent = d3extent(nodes, d => d.x);
+let yExtent = d3extent(nodes, d => d.y);
 
 const xRange = xExtent[1] - xExtent[0];
 const yRange = yExtent[1] - yExtent[0];
 
+//rotate
 if (yRange > xRange) {
   nodes.forEach(d => {
     const y = parseFloat(d.y);
     d.y = parseFloat(d.x);
     d.x = y;
   });
+
+  const t = yExtent;
+  yExtent = xExtent;
+  xExtent = t;
 }
 
-//TODO by idea i can move it to the center if it is required
+//center
+const xCenter = (xExtent[1] - xExtent[0]) / 2 + xExtent[0];
+const yCenter = (yExtent[1] - yExtent[0]) / 2 + yExtent[0];
+
+const svgXCenter = WIDTH / 2;
+const svgYCenter = HEIGHT / 2;
+
+const xCenterDiff = svgXCenter - xCenter;
+const yCenterDiff = svgYCenter - yCenter;
+
+nodes.forEach(d => {
+  d.y += yCenterDiff;
+  d.x += xCenterDiff;
+});
 
 svg
   .append("g")
