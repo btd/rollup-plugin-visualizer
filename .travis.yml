@@ -9,3 +9,5 @@ script:
   - yarn run lint
   - yarn run build
   - yarn test
+  - yarn test --json
+  - node bin/cli.js stats.e2e.json
