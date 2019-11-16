@@ -47,7 +47,7 @@ const run = async (title, template, extraStylePath, filename, files) => {
 
   const fileContents = await Promise.all(
     files.map(async file => {
-      const textContent = readFile(file, { encoding: "utf-8" });
+      const textContent = await readFile(file, { encoding: "utf-8" });
       const jsonContent = JSON.parse(textContent);
       return [file, jsonContent];
     })
