@@ -6,7 +6,7 @@ Visualize and analyze your Rollup bundle to see which modules are taking up spac
 
 ## Screenshots
 
-![pic](https://github.com/btd/rollup-plugin-visualizer/blob/master/pics/collage.jpg?raw=true)
+![pic](https://github.com/btd/rollup-plugin-visualizer/blob/master/pics/collage.png?raw=true)
 
 ## Installation
 
