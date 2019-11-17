@@ -187,7 +187,7 @@ const updateChart = selectedNode => {
   tooltip.buildCache(nodeGroups, {
     getNodeSize: d => d.originalValue,
     totalSize: root.originalValue,
-    nodes: nodeGroups,
+    nodes,
     links
   });
 };
