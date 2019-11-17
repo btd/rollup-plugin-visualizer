@@ -1,7 +1,20 @@
-import { select, event } from "d3-selection";
+import { select } from "d3-selection";
 import { nest as d3nest } from "d3-collection";
 import { descending } from "d3-array";
-import { hierarchy as d3hierarchy, treemap as d3treemap } from "d3-hierarchy";
+import {
+  hierarchy as d3hierarchy,
+  treemap as d3treemap,
+  treemapResquarify
+} from "d3-hierarchy";
+import { transition as d3transition } from "d3-transition";
+
+import { selection } from "d3-selection";
+import selection_interrupt from "d3-transition/src/selection/interrupt";
+import selection_transition from "d3-transition/src/selection/transition";
+
+selection.prototype.interrupt = selection_interrupt;
+selection.prototype.transition = selection_transition;
+
 import { format } from "bytes";
 
 import uid from "./uid";
@@ -22,7 +35,8 @@ const layout = d3treemap()
   .paddingOuter(8)
   .paddingTop(20)
   .paddingInner(5)
-  .round(true);
+  .round(true)
+  .tile(treemapResquarify);
 
 const svg = select(chartNode)
   .append("svg")
@@ -48,6 +62,8 @@ let root = d3hierarchy(tree)
   .sort((a, b) => b.originalValue - a.originalValue);
 
 const color = createRainbowColor(root);
+
+const t = d3transition().duration(2000);
 
 const updateChart = selectedNode => {
   const selectedNodeMultiplier = 10;
@@ -98,7 +114,6 @@ const updateChart = selectedNode => {
     )
     .join("g")
     .attr("class", "node")
-    .attr("transform", d => `translate(${d.x0},${d.y0})`)
     .on("mouseover", tooltip.onMouseOver)
     .on("mousemove", tooltip.onMouseMove)
     .on("mouseleave", tooltip.onMouseLeave)
@@ -110,16 +125,21 @@ const updateChart = selectedNode => {
       }
     });
 
-  nodeGroups
+  nodeGroups.transition(t).attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+  const rect = nodeGroups
     .selectAll("rect")
     .data(d => [d])
     .join("rect")
     .attr("id", d => (d.nodeUid = uid("node")).id)
     .attr("fill", d => color(d).backgroundColor)
-    .attr("width", d => d.x1 - d.x0)
-    .attr("height", d => d.y1 - d.y0)
     .attr("rx", 2)
     .attr("ry", 2);
+
+  rect
+    .transition(t)
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0);
 
   nodeGroups
     .selectAll("clipPath")
@@ -162,6 +182,7 @@ const updateChart = selectedNode => {
     );
 
   tooltip.buildCache(nodeGroups, {
+    getNodeSize: d => d.originalValue,
     totalSize: root.originalValue,
     nodes: nodeGroups,
     links
