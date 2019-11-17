@@ -55,8 +55,15 @@ let root = d3hierarchy(tree)
 
 const color = createRainbowColor(root);
 
+const desiredValue = root.originalValue * 0.2;
+
 const updateChart = selectedNode => {
-  const selectedNodeMultiplier = 10;
+  const selectedNodeMultiplier =
+    selectedNode != null
+      ? desiredValue > selectedNode.originalValue
+        ? desiredValue / selectedNode.originalValue
+        : 3
+      : 1;
 
   const nodesToIncrease =
     selectedNode != null
@@ -68,6 +75,7 @@ const updateChart = selectedNode => {
   const nodesToIncreaseSet = new Set(nodesToIncrease);
 
   //TODO i do not need to traverse all nodes - limit to selection
+  //but in this case i need previous selection
   root = root.eachAfter(node => {
     let sum = 0;
     const children = node.children;
@@ -104,6 +112,7 @@ const updateChart = selectedNode => {
     )
     .join("g")
     .attr("class", "node")
+    .attr("transform", d => `translate(${d.x0},${d.y0})`)
     .on("mouseover", tooltip.onMouseOver)
     .on("mousemove", tooltip.onMouseMove)
     .on("mouseleave", tooltip.onMouseLeave)
@@ -115,8 +124,6 @@ const updateChart = selectedNode => {
       }
     });
 
-  nodeGroups.attr("transform", d => `translate(${d.x0},${d.y0})`);
-
   const rect = nodeGroups
     .selectAll("rect")
     .data(d => [d])
@@ -124,9 +131,18 @@ const updateChart = selectedNode => {
     .attr("id", d => (d.nodeUid = uid("node")).id)
     .attr("fill", d => color(d).backgroundColor)
     .attr("rx", 2)
-    .attr("ry", 2);
+    .attr("ry", 2)
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0)
+    .style("stroke", null)
+    .attr("stroke-width", null);
 
-  rect.attr("width", d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0);
+  if (selectedNode != null) {
+    rect
+      .filter(d => d === selectedNode)
+      .style("stroke", "#fff")
+      .attr("stroke-width", 2);
+  }
 
   nodeGroups
     .selectAll("clipPath")
