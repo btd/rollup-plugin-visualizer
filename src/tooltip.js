@@ -19,8 +19,6 @@ export class Tooltip {
       .style("opacity", 0)
       .attr("class", "tooltip");
 
-    this.tooltipContentCache = new Map();
-
     this.container = container;
 
     this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -88,6 +86,8 @@ export class Tooltip {
       links
     }
   ) {
+    this.tooltipContentCache = new Map();
+
     const importedByCache = new Map();
     const importedCache = new Map();
 
