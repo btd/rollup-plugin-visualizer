@@ -6,14 +6,6 @@ import {
   treemap as d3treemap,
   treemapResquarify
 } from "d3-hierarchy";
-import { transition as d3transition } from "d3-transition";
-
-import { selection } from "d3-selection";
-import selection_interrupt from "d3-transition/src/selection/interrupt";
-import selection_transition from "d3-transition/src/selection/transition";
-
-selection.prototype.interrupt = selection_interrupt;
-selection.prototype.transition = selection_transition;
 
 import { format } from "bytes";
 
@@ -62,8 +54,6 @@ let root = d3hierarchy(tree)
   .sort((a, b) => b.originalValue - a.originalValue);
 
 const color = createRainbowColor(root);
-
-const t = d3transition().duration(2000);
 
 const updateChart = selectedNode => {
   const selectedNodeMultiplier = 10;
@@ -125,7 +115,7 @@ const updateChart = selectedNode => {
       }
     });
 
-  nodeGroups.transition(t).attr("transform", d => `translate(${d.x0},${d.y0})`);
+  nodeGroups.attr("transform", d => `translate(${d.x0},${d.y0})`);
 
   const rect = nodeGroups
     .selectAll("rect")
@@ -136,10 +126,7 @@ const updateChart = selectedNode => {
     .attr("rx", 2)
     .attr("ry", 2);
 
-  rect
-    .transition(t)
-    .attr("width", d => d.x1 - d.x0)
-    .attr("height", d => d.y1 - d.y0);
+  rect.attr("width", d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0);
 
   nodeGroups
     .selectAll("clipPath")
