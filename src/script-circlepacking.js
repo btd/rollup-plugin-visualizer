@@ -1,6 +1,5 @@
 import { select } from "d3-selection";
-import { nest as d3nest } from "d3-collection";
-import { descending } from "d3-array";
+import { group } from "d3-array";
 import { hierarchy as d3hierarchy, pack as d3pack } from "d3-hierarchy";
 
 import uid from "./uid";
@@ -28,10 +27,12 @@ const layout = d3pack()
 
 layout(root);
 
-const nestedData = d3nest()
-  .key(d => d.height)
-  .sortKeys(descending)
-  .entries(root.descendants());
+const nestedDataMap = group(root.descendants(), d => d.height);
+const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+  key,
+  values
+}));
+nestedData.sort((a, b) => b.key - a.key);
 
 const color = createRainbowColor(root);
 const tooltip = new Tooltip(select(chartNode));
@@ -40,8 +41,6 @@ const svg = select(chartNode)
   .append("svg")
   .attr("viewBox", [0, 0, WIDTH, HEIGHT])
   .attr("text-anchor", "middle");
-
-
 
 const node = svg
   .selectAll("g")

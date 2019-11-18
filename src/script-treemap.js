@@ -1,6 +1,5 @@
 import { select } from "d3-selection";
-import { nest as d3nest } from "d3-collection";
-import { descending } from "d3-array";
+import { group } from "d3-array";
 import {
   hierarchy as d3hierarchy,
   treemap as d3treemap,
@@ -97,10 +96,12 @@ const updateChart = selectedNode => {
   layout(root);
 
   // this will make groups by height
-  const nestedData = d3nest()
-    .key(d => d.height)
-    .sortKeys(descending)
-    .entries(root.descendants());
+  const nestedDataMap = group(root.descendants(), d => d.height);
+  const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+    key,
+    values
+  }));
+  nestedData.sort((a, b) => b.key - a.key);
 
   const layers = svg
     .selectAll(".layer")
@@ -132,7 +133,7 @@ const updateChart = selectedNode => {
     .selectAll("rect")
     .data(d => [d])
     .join("rect")
-    .attr("id", d => (d.nodeUid = uid("node")).id)//TODO i do not need this to be recomputed
+    .attr("id", d => (d.nodeUid = uid("node")).id) //TODO i do not need this to be recomputed
     .attr("fill", d => color(d).backgroundColor)
     .attr("rx", 2)
     .attr("ry", 2)
@@ -152,7 +153,7 @@ const updateChart = selectedNode => {
     .selectAll("clipPath")
     .data(d => [d])
     .join("clipPath")
-    .attr("id", d => (d.clipUid = uid("clip")).id)//TODO This one also
+    .attr("id", d => (d.clipUid = uid("clip")).id) //TODO This one also
     .selectAll("use")
     .data(d => [d])
     .join("use")
