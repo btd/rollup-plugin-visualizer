@@ -49,14 +49,14 @@ const arc = d3arc()
 
 const layout = d3partition();
 
-const showDetails = d => {
-  const percentageNum = (100 * d.value) / root.value;
+const showDetails = ({ data, value }) => {
+  const percentageNum = (100 * value) / root.value;
   const percentage = percentageNum.toFixed(2);
   const percentageString = percentage + "%";
 
   select(chartNode)
     .select(".details-name")
-    .text(d.data.name);
+    .text(data.name);
 
   select(chartNode)
     .select(".details-percentage")
@@ -64,7 +64,7 @@ const showDetails = d => {
 
   select(chartNode)
     .select(".details-size")
-    .text(formatBytes(d.value));
+    .text(formatBytes(value));
 
   select(chartNode)
     .select(".details")
@@ -79,10 +79,10 @@ g.selectAll("path")
   .attr("fill-rule", "evenodd")
   .style("stroke", "#fff")
   .style("fill", d => color(d))
-  .on("mouseover", d => {
-    showDetails(d);
+  .on("mouseover", (event, data) => {
+    showDetails(data);
 
-    const sequenceArray = d.ancestors();
+    const sequenceArray = data.ancestors();
 
     // Fade all the segments.
     g.selectAll("path").style("opacity", 0.3);

@@ -1,4 +1,4 @@
-import { mouse as d3mouse } from "d3-selection";
+import { pointer } from "d3-selection";
 import { format as formatBytes } from "bytes";
 
 const getNodePathTree = d =>
@@ -30,12 +30,12 @@ export class Tooltip {
     this.tooltip.style("opacity", 1);
   }
 
-  onMouseMove(data) {
+  onMouseMove(event, data) {
     const { html } = this.tooltipContentCache.get(data);
 
     this.tooltip.html(html);
 
-    const [x, y] = d3mouse(this.container.node());
+    const [x, y] = pointer(event, this.container.node());
 
     const tooltipBox = this.tooltip.node().getBoundingClientRect();
     const containerBox = this.container.node().getBoundingClientRect();
