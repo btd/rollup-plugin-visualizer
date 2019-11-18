@@ -58,6 +58,7 @@ const color = createRainbowColor(root);
 const desiredValue = root.originalValue * 0.2;
 
 const updateChart = selectedNode => {
+  //handle zoom of selected node
   const selectedNodeMultiplier =
     selectedNode != null
       ? desiredValue > selectedNode.originalValue
@@ -65,6 +66,8 @@ const updateChart = selectedNode => {
         : 3
       : 1;
 
+  // i only need to increase value of leaf nodes
+  // as folders will sum they up
   const nodesToIncrease =
     selectedNode != null
       ? selectedNode.children != null
@@ -93,6 +96,7 @@ const updateChart = selectedNode => {
 
   layout(root);
 
+  // this will make groups by height
   const nestedData = d3nest()
     .key(d => d.height)
     .sortKeys(descending)
@@ -128,7 +132,7 @@ const updateChart = selectedNode => {
     .selectAll("rect")
     .data(d => [d])
     .join("rect")
-    .attr("id", d => (d.nodeUid = uid("node")).id)
+    .attr("id", d => (d.nodeUid = uid("node")).id)//TODO i do not need this to be recomputed
     .attr("fill", d => color(d).backgroundColor)
     .attr("rx", 2)
     .attr("ry", 2)
@@ -148,7 +152,7 @@ const updateChart = selectedNode => {
     .selectAll("clipPath")
     .data(d => [d])
     .join("clipPath")
-    .attr("id", d => (d.clipUid = uid("clip")).id)
+    .attr("id", d => (d.clipUid = uid("clip")).id)//TODO This one also
     .selectAll("use")
     .data(d => [d])
     .join("use")
