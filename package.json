@@ -31,7 +31,7 @@
     "open": "^6.0.0",
     "pupa": "^2.0.0",
     "source-map": "^0.7.3",
-    "yargs": "15"
+    "yargs": "^15.0.0"
   },
   "peerDependencies": {
     "rollup": ">=0.60.0"
