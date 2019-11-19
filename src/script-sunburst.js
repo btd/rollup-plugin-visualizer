@@ -18,6 +18,12 @@ const RADIUS = Math.min(WIDTH, HEIGHT) / 2 - 10;
 const x = scaleLinear().range([0, 2 * Math.PI]);
 const y = scaleSqrt().range([0, RADIUS]);
 
+const arc = d3arc()
+  .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
+  .endAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
+  .innerRadius(d => y(d.y0))
+  .outerRadius(d => y(d.y1));
+
 const chartContainerMarkup = `
 <div class="details" style="display: none;">
   <div class="details-name" ></div>
@@ -31,26 +37,34 @@ chartNode.innerHTML = chartContainerMarkup;
 
 const { tree, nodes } = window.nodesData;
 
-const g = select(chartNode)
+const svg = select(chartNode)
   .append("svg")
-  .attr("viewBox", [0, 0, WIDTH, HEIGHT])
+  .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
+const g = svg
   .append("g")
   .attr("transform", `translate(${WIDTH / 2},${HEIGHT / 2})`);
 
-const root = d3hierarchy(tree)
-  .sum(d => (d.children && d.children.length > 0 ? 0 : nodes[d.uid].size))
-  .sort((a, b) => b.value - a.value);
+let root = d3hierarchy(tree)
+  .eachAfter(node => {
+    let sum = 0;
+    const children = node.children;
+    if (children != null) {
+      let i = children.length;
+      while (--i >= 0) sum += children[i].value;
+    } else {
+      const { size } = nodes[node.data.uid];
+      sum = size;
+    }
 
-const arc = d3arc()
-  .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
-  .endAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
-  .innerRadius(d => y(d.y0))
-  .outerRadius(d => y(d.y1));
+    node.value = sum;
+    node.originalValue = sum;
+  })
+  .sort((a, b) => b.originalValue - a.originalValue);
 
 const layout = d3partition();
 
-const showDetails = ({ data, value }) => {
-  const percentageNum = (100 * value) / root.value;
+const showDetails = ({ data, originalValue }) => {
+  const percentageNum = (100 * originalValue) / root.originalValue;
   const percentage = percentageNum.toFixed(2);
   const percentageString = percentage + "%";
 
@@ -64,39 +78,95 @@ const showDetails = ({ data, value }) => {
 
   select(chartNode)
     .select(".details-size")
-    .text(formatBytes(value));
+    .text(formatBytes(originalValue));
 
   select(chartNode)
     .select(".details")
     .style("display", "block");
 };
 
-g.selectAll("path")
-  .data(layout(root).descendants())
-  .enter()
-  .append("path")
-  .attr("d", arc)
-  .attr("fill-rule", "evenodd")
-  .style("stroke", "#fff")
-  .style("fill", d => color(d))
-  .on("mouseover", (event, data) => {
-    showDetails(data);
+const desiredValue = root.originalValue * 0.2;
 
-    const sequenceArray = data.ancestors();
+const updateChart = selectedNode => {
+  //handle zoom of selected node
+  const selectedNodeMultiplier =
+    selectedNode != null
+      ? desiredValue > selectedNode.originalValue
+        ? desiredValue / selectedNode.originalValue
+        : 3
+      : 1;
+  //TODO need to add selectedNodex.height somehow
 
-    // Fade all the segments.
-    g.selectAll("path").style("opacity", 0.3);
+  // i only need to increase value of leaf nodes
+  // as folders will sum they up
+  const nodesToIncrease =
+    selectedNode != null
+      ? selectedNode.children != null
+        ? selectedNode.leaves()
+        : [selectedNode]
+      : [];
 
-    // Then highlight only those that are an ancestor of the current segment.
-    g.selectAll("path")
-      .filter(node => sequenceArray.includes(node))
-      .style("opacity", 1);
+  const nodesToIncreaseSet = new Set(nodesToIncrease);
+
+  //TODO i do not need to traverse all nodes - limit to selection
+  //but in this case i need previous selection
+  root = root.eachAfter(node => {
+    let sum = 0;
+    const children = node.children;
+    if (children != null) {
+      let i = children.length;
+      while (--i >= 0) sum += children[i].value;
+    } else {
+      sum = nodesToIncreaseSet.has(node)
+        ? node.originalValue * selectedNodeMultiplier
+        : node.originalValue;
+    }
+
+    node.value = sum;
   });
+
+  layout(root);
+
+  const path = g
+    .selectAll("path")
+    .data(root.descendants(), d => d)
+    .join("path")
+    .attr("d", arc)
+    .attr("fill-rule", "evenodd")
+    .style("stroke", "#fff")
+    .style("fill", d => color(d))
+    .on("mouseover", (event, data) => {
+      showDetails(data);
+
+      const sequenceArray = data.ancestors();
+
+      // Fade all the segments.
+      path.style("opacity", 0.3);
+
+      // Then highlight only those that are an ancestor of the current segment.
+      path.filter(node => sequenceArray.includes(node)).style("opacity", 1);
+    })
+    .on("click", (event, d) => {
+      if (d === selectedNode) {
+        updateChart();
+      } else {
+        updateChart(d);
+      }
+    });
+
+  if (selectedNode != null) {
+    path
+      .filter(d => d === selectedNode)
+      .style("stroke", "#fff")
+      .attr("stroke-width", 3);
+  }
+};
 
 select(chartNode).on("mouseleave", () => {
   g.selectAll("path").style("opacity", 1);
 
-  select(".details").style("display", "none");
+  showDetails(root);
 });
 
+updateChart();
 showDetails(root);
