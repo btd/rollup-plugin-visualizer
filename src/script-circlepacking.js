@@ -16,73 +16,156 @@ const chartNode = document.querySelector("main");
 
 const { tree, nodes, links } = window.nodesData;
 
-// prepare data
-const root = d3hierarchy(tree)
-  .sum(d => (d.children && d.children.length > 0 ? 0 : nodes[d.uid].size))
-  .sort((a, b) => b.value - a.value);
-
 const layout = d3pack()
   .size([WIDTH - 2, HEIGHT - 2])
   .padding(3);
-
-layout(root);
-
-const nestedDataMap = group(root.descendants(), d => d.height);
-const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
-  key,
-  values
-}));
-nestedData.sort((a, b) => b.key - a.key);
-
-const color = createRainbowColor(root);
-const tooltip = new Tooltip(select(chartNode));
 
 const svg = select(chartNode)
   .append("svg")
   .attr("viewBox", [0, 0, WIDTH, HEIGHT])
   .attr("text-anchor", "middle");
 
-const node = svg
-  .selectAll("g")
-  .data(nestedData)
-  .join("g")
-  .selectAll("g")
-  .data(d => d.values)
-  .join("g")
-  .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
-  .on("mouseover", tooltip.onMouseOver)
-  .on("mousemove", tooltip.onMouseMove)
-  .on("mouseleave", tooltip.onMouseLeave);
+const tooltip = new Tooltip(select(chartNode));
 
-node
-  .append("circle")
-  .attr("r", d => d.r)
-  .attr("fill", d => color(d).backgroundColor);
+let root = d3hierarchy(tree)
+  .eachAfter(node => {
+    let sum = 0;
+    const children = node.children;
+    if (children != null) {
+      let i = children.length;
+      while (--i >= 0) sum += children[i].value;
+    } else {
+      const { size } = nodes[node.data.uid];
+      sum = size;
+    }
 
-const leaf = node.filter(d => !d.children);
+    node.value = sum;
+    node.originalValue = sum;
+  })
+  .sort((a, b) => b.originalValue - a.originalValue);
 
-leaf.select("circle").attr("id", d => (d.leafUid = uid("leaf")).id);
+const color = createRainbowColor(root);
+const desiredValue = root.originalValue * 0.2;
 
-leaf
-  .append("clipPath")
-  .attr("id", d => (d.clipUid = uid("clip")).id)
-  .append("use")
-  .attr("xlink:href", d => d.leafUid.href);
+const updateChart = selectedNode => {
+  //handle zoom of selected node
+  const selectedNodeMultiplier =
+    selectedNode != null
+      ? desiredValue > selectedNode.originalValue
+        ? desiredValue / selectedNode.originalValue
+        : 3
+      : 1;
 
-leaf
-  .append("text")
-  .attr("clip-path", d => d.clipUid)
-  .style("fill", d => color(d).fontColor)
-  .selectAll("tspan")
-  .data(d => [d.data.name])
-  .join("tspan")
-  .attr("x", 0)
-  .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
-  .style("font-size", "0.7em")
-  .text(d => d);
+  // i only need to increase value of leaf nodes
+  // as folders will sum they up
+  const nodesToIncrease =
+    selectedNode != null
+      ? selectedNode.children != null
+        ? selectedNode.leaves()
+        : [selectedNode]
+      : [];
 
-tooltip.buildCache(node.selectAll("circle"), {
-  totalSize: root.value,
-  nodes,
-  links
-});
+  const nodesToIncreaseSet = new Set(nodesToIncrease);
+
+  //TODO i do not need to traverse all nodes - limit to selection
+  //but in this case i need previous selection
+  root = root.eachAfter(node => {
+    let sum = 0;
+    const children = node.children;
+    if (children != null) {
+      let i = children.length;
+      while (--i >= 0) sum += children[i].value;
+    } else {
+      sum = nodesToIncreaseSet.has(node)
+        ? node.originalValue * selectedNodeMultiplier
+        : node.originalValue;
+    }
+
+    node.value = sum;
+  });
+
+  layout(root);
+
+  // this will make groups by height
+  const nestedDataMap = group(root.descendants(), d => d.height);
+  const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+    key,
+    values
+  }));
+  nestedData.sort((a, b) => b.key - a.key);
+
+  const layers = svg
+    .selectAll(".layer")
+    .data(nestedData, d => d.key)
+    .join("g")
+    .attr("class", "layer");
+
+  const nodeGroups = layers
+    .selectAll(".node")
+    .data(
+      d => d.values,
+      d => d
+    )
+    .join("g")
+    .attr("class", "node")
+    .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
+    .on("mouseover", tooltip.onMouseOver)
+    .on("mousemove", tooltip.onMouseMove)
+    .on("mouseleave", tooltip.onMouseLeave)
+    .on("click", (event, d) => {
+      if (d === selectedNode) {
+        updateChart();
+      } else {
+        updateChart(d);
+      }
+    });
+
+  const circle = nodeGroups
+    .selectAll("circle")
+    .data(d => [d])
+    .join("circle")
+    .attr("r", d => d.r)
+    .attr("fill", d => color(d).backgroundColor);
+
+  if (selectedNode != null) {
+    circle
+      .filter(d => d === selectedNode)
+      .style("stroke", "#fff")
+      .attr("stroke-width", 2);
+  }
+
+  const leaf = nodeGroups.filter(d => !d.children);
+
+  leaf.select("circle").attr("id", d => (d.leafUid = uid("leaf")).id);
+
+  leaf
+    .selectAll("clipPath")
+    .data(d => [d])
+    .join("clipPath")
+    .attr("id", d => (d.clipUid = uid("clip")).id) //TODO This one also
+    .selectAll("use")
+    .data(d => [d])
+    .join("use")
+    .attr("xlink:href", d => d.leafUid.href);
+
+  leaf
+    .append("text")
+    .attr("clip-path", d => d.clipUid)
+    .style("fill", d => color(d).fontColor)
+    .selectAll("tspan")
+    .data(d => [d.data.name])
+    .join("tspan")
+    .attr("x", 0)
+    .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
+    .style("font-size", "0.7em")
+    .text(d => d);
+
+  tooltip.buildCache(nodeGroups, {
+    getNodeSize: d => d.originalValue,
+    totalSize: root.originalValue,
+    nodes,
+    links
+  });
+};
+
+updateChart();
