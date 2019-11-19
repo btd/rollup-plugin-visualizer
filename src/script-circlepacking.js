@@ -125,7 +125,9 @@ const updateChart = selectedNode => {
     .data(d => [d])
     .join("circle")
     .attr("r", d => d.r)
-    .attr("fill", d => color(d).backgroundColor);
+    .attr("fill", d => color(d).backgroundColor)
+    .style("stroke", null)
+    .attr("stroke-width", null);
 
   if (selectedNode != null) {
     circle
