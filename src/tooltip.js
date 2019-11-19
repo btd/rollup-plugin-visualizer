@@ -116,7 +116,7 @@ export class Tooltip {
         let sizeStr = `<b>Size: ${formatBytes(size)}</b>`;
 
         if (totalSize != null) {
-          const percentageNum = (100 * data.value) / totalSize;
+          const percentageNum = (100 * size) / totalSize;
           const percentage = percentageNum.toFixed(2);
           const percentageString = percentage + "%";
 
