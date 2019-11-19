@@ -121,7 +121,7 @@ const updateChart = selectedNode => {
     .on("mouseover", tooltip.onMouseOver)
     .on("mousemove", tooltip.onMouseMove)
     .on("mouseleave", tooltip.onMouseLeave)
-    .on("click", d => {
+    .on("click", (event, d) => {
       if (d === selectedNode) {
         updateChart();
       } else {
