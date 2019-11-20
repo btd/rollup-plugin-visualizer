@@ -79,8 +79,6 @@ const updateChart = selectedNode => {
 
   const nodesToIncreaseSet = new Set(nodesToIncrease);
 
-  //TODO i do not need to traverse all nodes - limit to selection
-  //but in this case i need previous selection
   root = root.eachAfter(node => {
     let sum = 0;
     const children = node.children;

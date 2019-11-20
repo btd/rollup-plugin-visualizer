@@ -91,11 +91,10 @@ const updateChart = selectedNode => {
   //handle zoom of selected node
   const selectedNodeMultiplier =
     selectedNode != null
-      ? desiredValue > selectedNode.originalValue
-        ? desiredValue / selectedNode.originalValue
-        : 3
+      ? (desiredValue > selectedNode.originalValue
+          ? desiredValue / selectedNode.originalValue
+          : 3) * selectedNode.height
       : 1;
-  //TODO need to add selectedNodex.height somehow
 
   // i only need to increase value of leaf nodes
   // as folders will sum they up
@@ -108,8 +107,6 @@ const updateChart = selectedNode => {
 
   const nodesToIncreaseSet = new Set(nodesToIncrease);
 
-  //TODO i do not need to traverse all nodes - limit to selection
-  //but in this case i need previous selection
   root = root.eachAfter(node => {
     let sum = 0;
     const children = node.children;

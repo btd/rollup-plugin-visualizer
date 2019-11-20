@@ -39,6 +39,9 @@ let root = d3hierarchy(tree)
       sum = size;
     }
 
+    node.clipUid = uid("clip");
+    node.leafUid = uid("leaf");
+
     node.value = sum;
     node.originalValue = sum;
   })
@@ -67,8 +70,6 @@ const updateChart = selectedNode => {
 
   const nodesToIncreaseSet = new Set(nodesToIncrease);
 
-  //TODO i do not need to traverse all nodes - limit to selection
-  //but in this case i need previous selection
   root = root.eachAfter(node => {
     let sum = 0;
     const children = node.children;
@@ -138,13 +139,13 @@ const updateChart = selectedNode => {
 
   const leaf = nodeGroups.filter(d => !d.children);
 
-  leaf.select("circle").attr("id", d => (d.leafUid = uid("leaf")).id);
+  leaf.select("circle").attr("id", d => d.leafUid.id);
 
   leaf
     .selectAll("clipPath")
     .data(d => [d])
     .join("clipPath")
-    .attr("id", d => (d.clipUid = uid("clip")).id) //TODO This one also
+    .attr("id", d => d.clipUid.id)
     .selectAll("use")
     .data(d => [d])
     .join("use")
