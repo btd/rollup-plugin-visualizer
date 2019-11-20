@@ -47,6 +47,9 @@ let root = d3hierarchy(tree)
       sum = size;
     }
 
+    node.clipUid = uid("clip");
+    node.nodeUid = uid("node");
+
     node.value = sum;
     node.originalValue = sum;
   })
@@ -133,7 +136,7 @@ const updateChart = selectedNode => {
     .selectAll("rect")
     .data(d => [d])
     .join("rect")
-    .attr("id", d => (d.nodeUid = uid("node")).id) //TODO i do not need this to be recomputed
+    .attr("id", d => d.nodeUid.id)
     .attr("fill", d => color(d).backgroundColor)
     .attr("rx", 2)
     .attr("ry", 2)
@@ -153,7 +156,7 @@ const updateChart = selectedNode => {
     .selectAll("clipPath")
     .data(d => [d])
     .join("clipPath")
-    .attr("id", d => (d.clipUid = uid("clip")).id) //TODO This one also
+    .attr("id", d => d.clipUid.id)
     .selectAll("use")
     .data(d => [d])
     .join("use")
