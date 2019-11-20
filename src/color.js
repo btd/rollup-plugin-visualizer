@@ -47,18 +47,20 @@ function relativeLuminance(o) {
   return r * rc + g * gc + b * bc;
 }
 
+//TODO use nodes instead of strings
 export const createRainbowColor = root => {
-  const colorScale = scaleSequential(
-    [0, root.children.length - 1],
-    colorRainbow
-  );
-
-  const colorParentMap = new Map(
-    root.children.map((c, id) => {
-      return [c.data.name, colorScale(id)];
-    })
-  );
+  const colorParentMap = new Map();
   colorParentMap.set(root.data.name, COLOR_BASE);
+
+  if (root.children != null) {
+    const colorScale = scaleSequential(
+      [0, root.children.length - 1],
+      colorRainbow
+    );
+    root.children.forEach((c, id) => {
+      colorParentMap.set(c.data.name, colorScale(id));
+    });
+  }
 
   const colorMap = new Map();
 
