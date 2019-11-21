@@ -12,6 +12,13 @@ const getNodeSizeTree = d => d.value;
 
 const getNodeUidTree = d => d.data.uid;
 
+const SIZE_LABELS = {
+  originalLength: "OL",
+  renderedLength: "RL",
+  gzipLength: "GL",
+  sourcemapLength: "SL"
+};
+
 export class Tooltip {
   constructor(container) {
     this.tooltip = container
@@ -83,7 +90,8 @@ export class Tooltip {
       getNodePath = getNodePathTree,
       getNodeUid = getNodeUidTree,
       nodes,
-      links
+      links,
+      sizes
     }
   ) {
     this.tooltipContentCache = new Map();
@@ -111,18 +119,24 @@ export class Tooltip {
         str.push(getNodePath(data));
       }
 
-      const size = getNodeSize(data);
-      if (size !== 0) {
-        let sizeStr = `<b>Size: ${formatBytes(size)}</b>`;
+      const values = getNodeSize(data);
+      const [defaultSize, ...otherSizes] = sizes;
+      if (values[defaultSize] !== 0) {
+        let sizeStr = `<b>${SIZE_LABELS[defaultSize]}: ${formatBytes(
+          values[defaultSize]
+        )}</b>`;
 
         if (totalSize != null) {
-          const percentageNum = (100 * size) / totalSize;
+          const percentageNum = (100 * values[defaultSize]) / totalSize;
           const percentage = percentageNum.toFixed(2);
           const percentageString = percentage + "%";
 
           sizeStr += ` (${percentageString})`;
         }
         str.push(sizeStr);
+      }
+      for (const size of otherSizes) {
+        str.push(`${SIZE_LABELS[size]}: ${formatBytes(values[size])}`);
       }
 
       const uid = getNodeUid(data);

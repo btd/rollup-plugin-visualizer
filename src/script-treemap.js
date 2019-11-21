@@ -19,7 +19,9 @@ const HEIGHT = window.chartParameters.height || 900;
 
 const chartNode = document.querySelector("main");
 
-const { tree, nodes, links } = window.nodesData;
+const { tree, nodes, links, sizes } = window.nodesData;
+
+const defaultSize = sizes[0];
 
 const layout = d3treemap()
   .size([WIDTH, HEIGHT])
@@ -37,34 +39,40 @@ const tooltip = new Tooltip(select(chartNode));
 
 let root = d3hierarchy(tree)
   .eachAfter(node => {
-    let sum = 0;
     const children = node.children;
+    const sum = Object.fromEntries(sizes.map(s => [s, 0]));
+
     if (children != null) {
-      let i = children.length;
-      while (--i >= 0) sum += children[i].value;
+      for (const { values } of children) {
+        for (const s of sizes) {
+          sum[s] += values[s] || 0;
+        }
+      }
     } else {
-      const { size } = nodes[node.data.uid];
-      sum = size;
+      const nodeData = nodes[node.data.uid];
+      for (const s of sizes) {
+        sum[s] += nodeData[s] || 0;
+      }
     }
 
     node.clipUid = uid("clip");
     node.nodeUid = uid("node");
 
-    node.value = sum;
-    node.originalValue = sum;
+    node.values = sum;
+    node.value = node.values[defaultSize];
   })
-  .sort((a, b) => b.originalValue - a.originalValue);
+  .sort((a, b) => b.values[defaultSize] - a.values[defaultSize]);
 
 const color = createRainbowColor(root);
 
-const desiredValue = root.originalValue * 0.2;
+const desiredValue = root.values[defaultSize] * 0.2;
 
 const updateChart = selectedNode => {
   //handle zoom of selected node
   const selectedNodeMultiplier =
     selectedNode != null
-      ? desiredValue > selectedNode.originalValue
-        ? desiredValue / selectedNode.originalValue
+      ? desiredValue > selectedNode.values[defaultSize]
+        ? desiredValue / selectedNode.values[defaultSize]
         : 3
       : 1;
 
@@ -87,8 +95,8 @@ const updateChart = selectedNode => {
       while (--i >= 0) sum += children[i].value;
     } else {
       sum = nodesToIncreaseSet.has(node)
-        ? node.originalValue * selectedNodeMultiplier
-        : node.originalValue;
+        ? node.values[defaultSize] * selectedNodeMultiplier
+        : node.values[defaultSize];
     }
 
     node.value = sum;
@@ -167,7 +175,7 @@ const updateChart = selectedNode => {
     .attr("clip-path", d => d.clipUid)
     .style("fill", d => color(d).fontColor)
     .selectAll("tspan")
-    .data(d => [d.data.name, format(d.originalValue)])
+    .data(d => [d.data.name, format(d.values[defaultSize])])
     .join("tspan")
     .attr("fill-opacity", (d, i, nodes) =>
       i === nodes.length - 1 ? 0.7 : null
@@ -191,10 +199,11 @@ const updateChart = selectedNode => {
     );
 
   tooltip.buildCache(nodeGroups, {
-    getNodeSize: d => d.originalValue,
-    totalSize: root.originalValue,
+    getNodeSize: d => d.values,
+    totalSize: root.values[defaultSize],
     nodes,
-    links
+    links,
+    sizes
   });
 };
 
