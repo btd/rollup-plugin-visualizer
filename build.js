@@ -18,7 +18,8 @@ let args = require("yargs")
   })
   .option("open", { describe: "Open browser with stat files", boolean: true })
   .option("json", { describe: "Generate json", boolean: true })
-  .option("e2e", { describe: "Exec e2e test", boolean: true });
+  .option("e2e", { describe: "Exec e2e test", boolean: true })
+  .option("sourcemap", { describe: "Enable sourcemap option", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -64,7 +65,11 @@ const COMMON_PLUGINS = () => [
 
 const onwarn = warning => {
   const { code } = warning;
-  if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
+  if (
+    code === "CIRCULAR_DEPENDENCY" ||
+    code === "CIRCULAR" ||
+    code === "THIS_IS_UNDEFINED"
+  ) {
     return;
   }
   // eslint-disable-next-line no-console
@@ -101,6 +106,11 @@ const runBuildDev = async template => {
         title: `test ${template}`,
         filename: `stats.${template}${fileExt}`,
         json: argv.json,
+        sizes: [
+          "renderedLength",
+          "originalLength",
+          argv.sourcemap ? "sourcemapLength" : null
+        ].filter(Boolean),
         template
       })
     ],
@@ -108,7 +118,8 @@ const runBuildDev = async template => {
   };
   const outputOptions = {
     format: "es",
-    dir: "./temp/"
+    dir: "./temp/",
+    sourcemap: argv.sourcemap
   };
 
   const bundle = await rollup(inputOptions);
@@ -129,6 +140,12 @@ const runBuildDev2 = async () => {
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
         json: argv.json,
+        sizes: [
+          "renderedLength",
+          "originalLength",
+          argv.sourcemap ? "sourcemapLength" : null
+        ].filter(Boolean),
+
         template: "treemap"
       })
     ],
@@ -136,7 +153,8 @@ const runBuildDev2 = async () => {
   };
   const outputOptions = {
     format: "es",
-    dir: "./temp/"
+    dir: "./temp/",
+    sourcemap: argv.sourcemap
   };
 
   const bundle = await rollup(inputOptions);

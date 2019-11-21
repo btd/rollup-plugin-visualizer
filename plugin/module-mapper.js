@@ -1,6 +1,7 @@
 "use strict";
 
 const generate = require("nanoid/non-secure/generate");
+const warn = require("./warn");
 
 class ModuleMapper {
   constructor() {
@@ -22,7 +23,13 @@ class ModuleMapper {
   setValueByModuleId(moduleId, value) {
     const uid = this.getUid(moduleId);
     if (uid in this.nodes) {
-      console.warn("Override (probably this is a bug)", moduleId, uid, value, this.nodes[uid]);
+      warn(
+        "Override (probably this is a bug)",
+        moduleId,
+        uid,
+        value,
+        this.nodes[uid]
+      );
     }
     this.nodes[uid] = value;
     return uid;

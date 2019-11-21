@@ -13,6 +13,8 @@ const readFile = promisify(fs.readFile);
 
 const buildStats = require("../plugin/build-stats");
 const TEMPLATE = require("../plugin/template-types");
+const warn = require("../plugin/warn");
+const JSON_VERSION = require("./version");
 
 const argv = require("yargs")
   .strict()
@@ -60,7 +62,16 @@ const run = async (title, template, extraStylePath, filename, files) => {
   const nodes = Object.create(null);
   let links = [];
 
-  for (const [, fileContent] of fileContents) {
+  let sizes = null;
+
+  for (const [file, fileContent] of fileContents) {
+    if (fileContent.version !== JSON_VERSION) {
+      warn(
+        `Version in ${file} is not supported (${fileContent.version}). Current version ${JSON_VERSION}. Skipping...`
+      );
+      continue;
+    }
+
     if (fileContent.tree.name === "root") {
       tree.children = tree.children.concat(fileContent.tree.children);
     } else {
@@ -70,9 +81,13 @@ const run = async (title, template, extraStylePath, filename, files) => {
     Object.assign(nodes, fileContent.nodes);
 
     links = links.concat(fileContent.links);
+
+    if (sizes == null || sizes.length > fileContent.sizes.length) {
+      sizes = fileContent.sizes;
+    }
   }
 
-  const data = { tree, links, nodes };
+  const data = { version: JSON_VERSION, tree, links, nodes, sizes };
 
   const fileContent = await buildStats(
     title,
@@ -93,6 +108,6 @@ run(
   argv.filename,
   listOfFiles
 ).catch(err => {
-  console.error(err.message);
+  warn(err.message);
   process.exit(1);
 });

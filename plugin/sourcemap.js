@@ -41,42 +41,45 @@ const segments = filepath => {
     .reverse();
 };
 
+const findBestMatchingModule = (filename, entries) => {
+  const filenameSegments = segments(filename);
+
+  for (let i = 1; i <= filenameSegments.length; i++) {
+    const leftVals = filenameSegments.slice(0, i);
+
+    const match = entries.find(([id]) => {
+      const moduleSegments = segments(id);
+      const rightVals = moduleSegments.slice(0, i);
+      if (rightVals.length !== leftVals.length) {
+        return false;
+      }
+      return rightVals.every((rightVal, i) => rightVal === leftVals[i]);
+    });
+
+    if (match != null) {
+      return match[0];
+    }
+  }
+
+  return null;
+};
+
 // Adds a .minifiedSize property to each module in the bundle (using sourcemap data)
 // If the minified size could not be computed, no property is added.
 // Module id are mapped to sources by finding the best match.
 // Matching is done by removing the file extensions and comparing path segments
-const addMinifiedSizesToModules = bundle => {
-  const findBestMatchingModule = filename => {
-    const filenameSegments = segments(filename);
-
-    for (let i = 1; i <= filenameSegments.length; i++) {
-      const leftVals = filenameSegments.slice(0, i);
-
-      const matches = Object.keys(bundle.modules).filter(id => {
-        const moduleSegments = segments(id);
-        const rightVals = moduleSegments.slice(0, i);
-        if (rightVals.length !== leftVals.length) {
-          return false;
-        }
-        return rightVals.every((rightVal, i) => rightVal === leftVals[i]);
-      });
-
-      if (matches.length === 1) {
-        return bundle.modules[matches[0]];
-      }
-    }
-
-    return null;
-  };
+const addMinifiedSizesToModules = (bundle, computedLengths) => {
+  const modulesEntries = Object.entries(bundle.modules);
 
   return SourceMapConsumer.with(bundle.map, null, map => {
-    const fileSizes = getBytesPerFileUsingSourceMap(bundle.code, map);
-    fileSizes.forEach(tuple => {
-      const module = findBestMatchingModule(tuple.file);
-      if (module) {
-        module.minifiedSize = tuple.bytes;
+    const sourcemapEntries = getBytesPerFileUsingSourceMap(bundle.code, map);
+    for (const { file, bytes } of sourcemapEntries) {
+      const id = findBestMatchingModule(file, modulesEntries);
+      if (id) {
+        computedLengths[id] = computedLengths[id] || {};
+        computedLengths[id].sourcemapLength = bytes;
       }
-    });
+    }
   });
 };
 
