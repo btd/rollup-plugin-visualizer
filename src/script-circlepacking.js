@@ -11,6 +11,7 @@ import "./style/style-circlepacking.scss";
 
 const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
   const size = Math.min(width, height);
+
   const layout = d3pack()
     .size([size, size])
     .padding(3);
