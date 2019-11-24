@@ -16,7 +16,7 @@ const buildTree = (name, ids, getInitialModuleData, mapper) => {
 
     const uid = mapper.setValueByModuleId(id, mod);
 
-    if (mod.size === 0) {
+    if (mod.renderedLength === 0) {
       continue;
     }
 
@@ -133,7 +133,8 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
   }
 };
 
-const skipModule = (id, node) => id.startsWith(PLUGIN_PREFIX) || node.isExternal;
+const skipModule = (id, node) =>
+  id.startsWith(PLUGIN_PREFIX) || node.isExternal;
 
 const removeCommonPrefix = (nodes, nodeIds) => {
   let commonPrefix = null;
