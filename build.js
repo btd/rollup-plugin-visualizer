@@ -6,6 +6,7 @@ const { rollup } = require("rollup");
 const commonJs = require("rollup-plugin-commonjs");
 const postcss = require("rollup-plugin-postcss");
 const resolve = require("rollup-plugin-node-resolve");
+const { terser } = require("rollup-plugin-terser");
 const postcssUrl = require("postcss-url");
 
 const TEMPLATE = require("./plugin/template-types");
@@ -18,7 +19,9 @@ let args = require("yargs")
   })
   .option("open", { describe: "Open browser with stat files", boolean: true })
   .option("json", { describe: "Generate json", boolean: true })
-  .option("e2e", { describe: "Exec e2e test", boolean: true });
+  .option("e2e", { describe: "Exec e2e test", boolean: true })
+  .option("sourcemap", { describe: "Enable sourcemap", boolean: true })
+  .option("terser", { describe: "Enable terser", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -46,23 +49,25 @@ if (argv.all) {
 
 const open = argv.open;
 
-const COMMON_PLUGINS = () => [
-  resolve(),
-  commonJs({
-    ignoreGlobal: true,
-    include: "node_modules/**"
-  }),
-  postcss({
-    extract: true,
-    plugins: [
-      postcssUrl({
-        url: "inline"
-      })
-    ]
-  })
-];
+const COMMON_PLUGINS = () =>
+  [
+    resolve(),
+    commonJs({
+      ignoreGlobal: true,
+      include: "node_modules/**"
+    }),
+    postcss({
+      extract: true,
+      plugins: [
+        postcssUrl({
+          url: "inline"
+        })
+      ]
+    }),
+    argv.terser ? terser() : null
+  ].filter(Boolean);
 
-const onwarn = warning => {
+const onwarn = (warning, warn) => {
   const { code } = warning;
   if (
     code === "CIRCULAR_DEPENDENCY" ||
@@ -71,8 +76,7 @@ const onwarn = warning => {
   ) {
     return;
   }
-  // eslint-disable-next-line no-console
-  console.warn("WARNING: ", warning.toString());
+  warn(warning);
 };
 
 const runBuild = async template => {
@@ -84,7 +88,8 @@ const runBuild = async template => {
   const outputOptions = {
     format: "iife",
     dir: "./lib/",
-    name: "drawChart"
+    name: "drawChart",
+    sourcemap: argv.sourcemap
   };
 
   const bundle = await rollup(inputOptions);
@@ -106,14 +111,16 @@ const runBuildDev = async template => {
         title: `test ${template}`,
         filename: `stats.${template}${fileExt}`,
         json: argv.json,
-        template
+        template,
+        sourcemap: argv.sourcemap
       })
     ],
     onwarn
   };
   const outputOptions = {
     format: "es",
-    dir: "./temp/"
+    dir: "./temp/",
+    sourcemap: argv.sourcemap
   };
 
   const bundle = await rollup(inputOptions);
@@ -134,14 +141,16 @@ const runBuildDev2 = async () => {
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
         json: argv.json,
-        template: "treemap"
+        template: "treemap",
+        sourcemap: argv.sourcemap
       })
     ],
     onwarn
   };
   const outputOptions = {
     format: "es",
-    dir: "./temp/"
+    dir: "./temp/",
+    sourcemap: argv.sourcemap
   };
 
   const bundle = await rollup(inputOptions);

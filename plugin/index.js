@@ -34,10 +34,6 @@ module.exports = function(opts) {
   const filename = opts.filename || (json ? "stats.json" : "stats.html");
   const title = opts.title || "RollUp Visualizer";
 
-  if ("sourcemap" in opts) {
-    warn("`sourcemap` is deprecated, it produce very inaccurate results");
-  }
-
   const open = !!opts.open;
   const openOptions = opts.openOptions || {};
 
