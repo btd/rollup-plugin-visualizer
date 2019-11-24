@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>{{title}}</title>
-  <style>{style}</style>
-  <style>{styleOverride}</style>
-</head>
-<body>
-  <main></main>
-  <script>window.nodesData = {nodesData};</script>
-  <script>window.chartParameters = {chartParameters};</script>
-  <script>{script}</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{{title}}</title>
+    <style>
+    {style}
+    </style>
+    <style>
+    {styleOverride}
+    </style>
+  </head>
+  <body>
+    <main></main>
+    <script>
+    {script}
+    </script>
+    <script>
+      const chartParameters = {chartParameters};
+      const data = {nodesData};
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const width = chartParameters.width || window.innerWidth;
+        const height = chartParameters.height || window.innerHeight;
+
+        const chartNode = document.querySelector("main");
+        drawChart(chartNode, data, width, height);
+      });
+    </script>
+  </body>
 </html>

@@ -14,197 +14,189 @@ import { Tooltip } from "./tooltip";
 
 import "./style/style-treemap.scss";
 
-const WIDTH = window.chartParameters.width || 1600;
-const HEIGHT = window.chartParameters.height || 900;
+const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
+  const layout = d3treemap()
+    .size([width, height])
+    .paddingOuter(8)
+    .paddingTop(20)
+    .paddingInner(5)
+    .round(true)
+    .tile(treemapResquarify);
 
-const chartNode = document.querySelector("main");
+  const charNode = select(parentNode);
 
-const { tree, nodes, links, sizes } = window.nodesData;
+  const svg = charNode.append("svg").attr("viewBox", [0, 0, width, height]);
 
-const defaultSize = sizes[0];
+  const tooltip = new Tooltip(charNode);
 
-const layout = d3treemap()
-  .size([WIDTH, HEIGHT])
-  .paddingOuter(8)
-  .paddingTop(20)
-  .paddingInner(5)
-  .round(true)
-  .tile(treemapResquarify);
-
-const svg = select(chartNode)
-  .append("svg")
-  .attr("viewBox", [0, 0, WIDTH, HEIGHT]);
-
-const tooltip = new Tooltip(select(chartNode));
-
-let root = d3hierarchy(tree)
-  .eachAfter(node => {
-    const children = node.children;
-    const sum = Object.fromEntries(sizes.map(s => [s, 0]));
-
-    if (children != null) {
-      for (const { values } of children) {
-        for (const s of sizes) {
-          sum[s] += values[s] || 0;
-        }
-      }
-    } else {
-      const nodeData = nodes[node.data.uid];
-      for (const s of sizes) {
-        sum[s] += nodeData[s] || 0;
-      }
-    }
-
-    node.clipUid = uid("clip");
-    node.nodeUid = uid("node");
-
-    node.values = sum;
-    node.value = node.values[defaultSize];
-  })
-  .sort((a, b) => b.values[defaultSize] - a.values[defaultSize]);
-
-const color = createRainbowColor(root);
-
-const desiredValue = root.values[defaultSize] * 0.2;
-
-const updateChart = selectedNode => {
-  //handle zoom of selected node
-  const selectedNodeMultiplier =
-    selectedNode != null
-      ? desiredValue > selectedNode.values[defaultSize]
-        ? desiredValue / selectedNode.values[defaultSize]
-        : 3
-      : 1;
-
-  // i only need to increase value of leaf nodes
-  // as folders will sum they up
-  const nodesToIncrease =
-    selectedNode != null
-      ? selectedNode.children != null
-        ? selectedNode.leaves()
-        : [selectedNode]
-      : [];
-
-  const nodesToIncreaseSet = new Set(nodesToIncrease);
-
-  root = root.eachAfter(node => {
-    let sum = 0;
-    const children = node.children;
-    if (children != null) {
-      let i = children.length;
-      while (--i >= 0) sum += children[i].value;
-    } else {
-      sum = nodesToIncreaseSet.has(node)
-        ? node.values[defaultSize] * selectedNodeMultiplier
-        : node.values[defaultSize];
-    }
-
-    node.value = sum;
-  });
-
-  layout(root);
-
-  // this will make groups by height
-  const nestedDataMap = group(root.descendants(), d => d.height);
-  const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
-    key,
-    values
-  }));
-  nestedData.sort((a, b) => b.key - a.key);
-
-  const layers = svg
-    .selectAll(".layer")
-    .data(nestedData, d => d.key)
-    .join("g")
-    .attr("class", "layer");
-
-  const nodeGroups = layers
-    .selectAll(".node")
-    .data(
-      d => d.values,
-      d => d
-    )
-    .join("g")
-    .attr("class", "node")
-    .attr("transform", d => `translate(${d.x0},${d.y0})`)
-    .on("mouseover", tooltip.onMouseOver)
-    .on("mousemove", tooltip.onMouseMove)
-    .on("mouseleave", tooltip.onMouseLeave)
-    .on("click", (event, d) => {
-      if (d === selectedNode) {
-        updateChart();
+  let root = d3hierarchy(tree)
+    .eachAfter(node => {
+      let sum = 0;
+      const children = node.children;
+      if (children != null) {
+        let i = children.length;
+        while (--i >= 0) sum += children[i].value;
       } else {
-        updateChart(d);
+        sum = nodes[node.data.uid].renderedLength;
       }
+
+      node.clipUid = uid("clip");
+      node.nodeUid = uid("node");
+
+      node.originalValue = sum;
+      node.value = sum;
+    })
+    .sort((a, b) => b.originalValue - a.originalValue);
+
+  const color = createRainbowColor(root);
+
+  const desiredValue = root.originalValue * 0.2;
+
+  const updateChart = selectedNode => {
+    //handle zoom of selected node
+    const selectedNodeMultiplier =
+      selectedNode != null
+        ? desiredValue > selectedNode.originalValue
+          ? desiredValue / selectedNode.originalValue
+          : 3
+        : 1;
+
+    // i only need to increase value of leaf nodes
+    // as folders will sum they up
+    const nodesToIncrease =
+      selectedNode != null
+        ? selectedNode.children != null
+          ? selectedNode.leaves()
+          : [selectedNode]
+        : [];
+
+    const nodesToIncreaseSet = new Set(nodesToIncrease);
+
+    // update value for nodes
+    root = root.eachAfter(node => {
+      let sum = 0;
+      const children = node.children;
+      if (children != null) {
+        let i = children.length;
+        while (--i >= 0) sum += children[i].value;
+      } else {
+        sum = nodesToIncreaseSet.has(node)
+          ? node.originalValue * selectedNodeMultiplier
+          : node.originalValue;
+      }
+
+      node.value = sum;
     });
 
-  const rect = nodeGroups
-    .selectAll("rect")
-    .data(d => [d])
-    .join("rect")
-    .attr("id", d => d.nodeUid.id)
-    .attr("fill", d => color(d).backgroundColor)
-    .attr("rx", 2)
-    .attr("ry", 2)
-    .attr("width", d => d.x1 - d.x0)
-    .attr("height", d => d.y1 - d.y0)
-    .style("stroke", null)
-    .attr("stroke-width", null);
+    layout(root);
 
-  if (selectedNode != null) {
-    rect
-      .filter(d => d === selectedNode)
-      .style("stroke", "#fff")
-      .attr("stroke-width", 2);
-  }
+    // this will make groups by height
+    const nestedDataMap = group(root.descendants(), d => d.height);
+    const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+      key,
+      values
+    }));
+    nestedData.sort((a, b) => b.key - a.key);
 
-  nodeGroups
-    .selectAll("clipPath")
-    .data(d => [d])
-    .join("clipPath")
-    .attr("id", d => d.clipUid.id)
-    .selectAll("use")
-    .data(d => [d])
-    .join("use")
-    .attr("xlink:href", d => d.nodeUid.href);
+    const layers = svg
+      .selectAll(".layer")
+      .data(nestedData, d => d.key)
+      .join("g")
+      .attr("class", "layer");
 
-  nodeGroups
-    .selectAll("text")
-    .data(d => [d])
-    .join("text")
-    .attr("clip-path", d => d.clipUid)
-    .style("fill", d => color(d).fontColor)
-    .selectAll("tspan")
-    .data(d => [d.data.name, format(d.values[defaultSize])])
-    .join("tspan")
-    .attr("fill-opacity", (d, i, nodes) =>
-      i === nodes.length - 1 ? 0.7 : null
-    )
-    .style("font-size", "0.7em")
-    .text(d => d);
+    const nodeGroups = layers
+      .selectAll(".node")
+      .data(
+        d => d.values,
+        d => d
+      )
+      .join("g")
+      .attr("class", "node")
+      .attr("transform", d => `translate(${d.x0},${d.y0})`)
+      .on("mouseover", tooltip.onMouseOver)
+      .on("mousemove", tooltip.onMouseMove)
+      .on("mouseleave", tooltip.onMouseLeave)
+      .on("click", (event, d) => {
+        if (d === selectedNode) {
+          updateChart();
+        } else {
+          updateChart(d);
+        }
+      });
+    //fill node groups
+    const rect = nodeGroups
+      .selectAll("rect")
+      .data(d => [d])
+      .join("rect")
+      .attr("id", d => d.nodeUid.id)
+      .attr("fill", d => color(d).backgroundColor)
+      .attr("rx", 2)
+      .attr("ry", 2)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .style("stroke", null)
+      .attr("stroke-width", null);
 
-  nodeGroups
-    .filter(d => d.children)
-    .selectAll("tspan")
-    .attr("dx", 3)
-    .attr("y", 13);
+    if (selectedNode != null) {
+      rect
+        .filter(d => d === selectedNode)
+        .style("stroke", "#fff")
+        .attr("stroke-width", 2);
+    }
 
-  nodeGroups
-    .filter(d => !d.children)
-    .selectAll("tspan")
-    .attr("x", 3)
-    .attr(
-      "y",
-      (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
-    );
+    // add clipPath so text do not go out of node
+    nodeGroups
+      .selectAll("clipPath")
+      .data(d => [d])
+      .join("clipPath")
+      .attr("id", d => d.clipUid.id)
+      .selectAll("use")
+      .data(d => [d])
+      .join("use")
+      .attr("xlink:href", d => d.nodeUid.href);
 
-  tooltip.buildCache(nodeGroups, {
-    getNodeSize: d => d.values,
-    totalSize: root.values[defaultSize],
-    nodes,
-    links,
-    sizes
-  });
+    // add text with clipping
+    const text = nodeGroups
+      .selectAll("text")
+      .data(d => [d])
+      .join("text")
+      .attr("clip-path", d => d.clipUid)
+      .style("fill", d => color(d).fontColor);
+
+    text
+      .selectAll("tspan")
+      .data(d => [d.data.name, format(d.originalValue)])
+      .join("tspan")
+      .attr("fill-opacity", (d, i, nodes) =>
+        i === nodes.length - 1 ? 0.7 : null
+      )
+      .style("font-size", "0.7em")
+      .text(d => d);
+
+    nodeGroups
+      .filter(d => d.children)
+      .selectAll("tspan")
+      .attr("dx", 3)
+      .attr("y", 13);
+
+    nodeGroups
+      .filter(d => !d.children)
+      .selectAll("tspan")
+      .attr("x", 3)
+      .attr(
+        "y",
+        (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
+      );
+
+    tooltip.buildCache(nodeGroups, {
+      getNodeSize: d => d.originalValue,
+      totalSize: root.originalValue,
+      nodes,
+      links
+    });
+  };
+
+  updateChart();
 };
 
-updateChart();
+export default drawChart;

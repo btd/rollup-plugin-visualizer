@@ -43,6 +43,9 @@ const argv = require("yargs")
 const listOfFiles = argv._;
 
 const run = async (title, template, extraStylePath, filename, files) => {
+  if (extraStylePath) {
+    warn("`--extra-style-path` will be removed in next major version");
+  }
   if (files.length === 0) {
     throw new Error("Empty file list");
   }
@@ -62,8 +65,6 @@ const run = async (title, template, extraStylePath, filename, files) => {
   const nodes = Object.create(null);
   let links = [];
 
-  let sizes = null;
-
   for (const [file, fileContent] of fileContents) {
     if (fileContent.version !== JSON_VERSION) {
       warn(
@@ -81,13 +82,9 @@ const run = async (title, template, extraStylePath, filename, files) => {
     Object.assign(nodes, fileContent.nodes);
 
     links = links.concat(fileContent.links);
-
-    if (sizes == null || sizes.length > fileContent.sizes.length) {
-      sizes = fileContent.sizes;
-    }
   }
 
-  const data = { version: JSON_VERSION, tree, links, nodes, sizes };
+  const data = { version: JSON_VERSION, tree, links, nodes };
 
   const fileContent = await buildStats(
     title,

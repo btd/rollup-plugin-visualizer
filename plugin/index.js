@@ -28,35 +28,16 @@ const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
 
-const KNOWN_SIZES = {
-  renderedLength: "renderedLength",
-  originalLength: "originalLength",
-  sourcemapLength: "sourcemapLength",
-  gzipLength: "gzipLength"
-};
-
 module.exports = function(opts) {
   opts = opts || {};
   const json = !!opts.json;
   const filename = opts.filename || (json ? "stats.json" : "stats.html");
   const title = opts.title || "RollUp Visualizer";
 
-  const defaultSizes = [KNOWN_SIZES.renderedLength, KNOWN_SIZES.originalLength];
-
   if ("sourcemap" in opts) {
-    warn("`sourcemap` is deprecated, use `sizes` option");
-    if (opts.sourcemap) {
-      defaultSizes.push(KNOWN_SIZES.sourcemapLength);
-    }
+    warn("`sourcemap` is deprecated, it produce very inaccurate results");
   }
 
-  const sizes = opts.sizes || defaultSizes;
-  const unknownSize = sizes.find(s => !(s in KNOWN_SIZES));
-  if (unknownSize != null) {
-    throw new Error(
-      `Unknown size type ${unknownSize}. Known: ${Object.keys(KNOWN_SIZES)}`
-    );
-  }
   const open = !!opts.open;
   const openOptions = opts.openOptions || {};
 
@@ -79,7 +60,7 @@ module.exports = function(opts) {
     name: "visualizer",
 
     async generateBundle(outputOptions, outputBundle) {
-      const computedSourcemapSize = sizes.includes(KNOWN_SIZES.sourcemapLength);
+      const computedSourcemapSize = !!opts.sourcemap;
       if (computedSourcemapSize && !outputOptions.sourcemap) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
@@ -105,8 +86,9 @@ module.exports = function(opts) {
           const mod = bundle.modules[id];
 
           return {
-            ...(computedLengths[id] || {}),
-            renderedLength: mod.renderedLength,
+            renderedLength: opts.sourcemap
+              ? (computedLengths[id] || {}).sourcemapLength || 0
+              : mod.renderedLength,
             originalLength: mod.originalLength
           };
         };
@@ -146,7 +128,7 @@ module.exports = function(opts) {
         }
       }
 
-      const data = { version: JSON_VERSION, tree, nodes, links, sizes };
+      const data = { version: JSON_VERSION, tree, nodes, links };
 
       const fileContent = json
         ? JSON.stringify(data, null, 2)
