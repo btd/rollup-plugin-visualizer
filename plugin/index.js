@@ -56,8 +56,7 @@ module.exports = function(opts) {
     name: "visualizer",
 
     async generateBundle(outputOptions, outputBundle) {
-      const computedSourcemapSize = !!opts.sourcemap;
-      if (computedSourcemapSize && !outputOptions.sourcemap) {
+      if (opts.sourcemap && !outputOptions.sourcemap) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
 
@@ -71,7 +70,7 @@ module.exports = function(opts) {
 
         const computedLengths = Object.create(null);
 
-        if (computedSourcemapSize) {
+        if (opts.sourcemap) {
           if (!bundle.map) {
             this.warn(WARN_SOURCEMAP_MISSING(id));
           }
