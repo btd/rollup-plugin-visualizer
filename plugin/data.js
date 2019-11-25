@@ -4,15 +4,15 @@ const path = require("path");
 
 const PLUGIN_PREFIX = "\u0000";
 
-const buildTree = (name, ids, getInitialModuleData, mapper) => {
+const buildTree = (name, modules, mapper) => {
   let tree = {
     name: "root",
     children: []
   };
 
-  for (const id of ids) {
+  for (const [id, { renderedLength }] of modules) {
+    const mod = { renderedLength };
     const name = id;
-    const mod = getInitialModuleData(id);
 
     const uid = mapper.setValueByModuleId(id, mod);
 
@@ -38,27 +38,27 @@ const buildTree = (name, ids, getInitialModuleData, mapper) => {
 // if root children have only on child we can flatten this
 const flattenTree = root => {
   let newRoot = root;
-  while (newRoot.children) {
-    if (newRoot.children.length === 1) {
-      newRoot = newRoot.children[0];
+  const pluginChildren = [];
+  const otherChildren = [];
+  for (const child of root.children || []) {
+    if (child.name.startsWith(PLUGIN_PREFIX)) {
+      pluginChildren.push(child);
     } else {
-      const pluginChildren = [];
-      const otherChildren = [];
-      for (const child of newRoot.children) {
-        if (child.name.startsWith(PLUGIN_PREFIX)) {
-          pluginChildren.push(child);
-        } else {
-          otherChildren.push(child);
-        }
-      }
-      if (otherChildren.length === 1) {
-        newRoot = otherChildren[0];
-        newRoot.children = newRoot.children.concat(pluginChildren);
-      } else {
-        break;
-      }
+      otherChildren.push(child);
     }
   }
+
+  if (otherChildren.length === 1 && otherChildren[0].children) {
+    newRoot = otherChildren[0];
+  }
+  while (
+    newRoot.children &&
+    newRoot.children.length === 1 &&
+    newRoot.children[0].children
+  ) {
+    newRoot = newRoot.children[0];
+  }
+  newRoot.children = newRoot.children.concat(pluginChildren);
   return newRoot;
 };
 

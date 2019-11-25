@@ -38,11 +38,18 @@ const argv = require("yargs")
     choices: TEMPLATE,
     default: "treemap"
   })
+  .option("sourcemap", {
+    describe: "Provided files is sourcemaps",
+    boolean: true
+  })
   .help().argv;
 
 const listOfFiles = argv._;
 
-const run = async (title, template, extraStylePath, filename, files) => {
+const runForPluginJson = async (
+  { title, template, extraStylePath, filename },
+  files
+) => {
   if (extraStylePath) {
     warn("`--extra-style-path` will be removed in next major version");
   }
@@ -98,13 +105,7 @@ const run = async (title, template, extraStylePath, filename, files) => {
   await writeFile(filename, fileContent);
 };
 
-run(
-  argv.title,
-  argv.template,
-  argv.extraStylePath,
-  argv.filename,
-  listOfFiles
-).catch(err => {
+runForPluginJson(argv, listOfFiles).catch(err => {
   warn(err.message);
   process.exit(1);
 });

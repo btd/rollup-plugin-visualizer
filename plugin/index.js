@@ -21,7 +21,7 @@ const {
   addLinks,
   removeCommonPrefix
 } = require("./data");
-const addMinifiedSizesToModules = require("./sourcemap");
+const getSourcemapModules = require("./sourcemap");
 const warn = require("./warn");
 
 const WARN_SOURCEMAP_DISABLED =
@@ -68,32 +68,23 @@ module.exports = function(opts) {
       for (const [id, bundle] of Object.entries(outputBundle)) {
         if (bundle.isAsset) continue; //only chunks
 
-        const computedLengths = Object.create(null);
+        let tree;
 
         if (opts.sourcemap) {
           if (!bundle.map) {
             this.warn(WARN_SOURCEMAP_MISSING(id));
           }
-          await addMinifiedSizesToModules(bundle, computedLengths);
+
+          const modules = await getSourcemapModules(
+            id,
+            bundle,
+            outputOptions.dir || path.dirname(outputOptions.file)
+          );
+
+          tree = buildTree(id, Object.entries(modules), mapper);
+        } else {
+          tree = buildTree(id, Object.entries(bundle.modules), mapper);
         }
-
-        const getInitialModuleData = id => {
-          const mod = bundle.modules[id];
-
-          return {
-            renderedLength: opts.sourcemap
-              ? (computedLengths[id] || {}).sourcemapLength || 0
-              : mod.renderedLength,
-            originalLength: mod.originalLength
-          };
-        };
-
-        const tree = buildTree(
-          id,
-          Object.keys(bundle.modules),
-          getInitialModuleData,
-          mapper
-        );
 
         roots.push(tree);
       }

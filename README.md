@@ -38,13 +38,13 @@ plugins: [
 
 `title` (string, default `Rollup Visualizer`) - title tag value
 
-`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs) 
+`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser) 
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
 `template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
 
-`extraStylePath` (string, default `undefined`) - Link your own css file to override or enhance the current templates
+~~`extraStylePath` (string, default `undefined`) - Link your own css file to override or enhance the current templates~~ **deprecated**
 
 `chartParameters.width` (number, default `undefined`) - Set svg viewBox width to this number
 

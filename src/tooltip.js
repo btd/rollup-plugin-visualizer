@@ -91,7 +91,7 @@ export class Tooltip {
     const importedByCache = new Map();
     const importedCache = new Map();
 
-    for (const { source, target } of links) {
+    for (const { source, target } of links || []) {
       if (!importedByCache.has(target)) {
         importedByCache.set(target, []);
       }
