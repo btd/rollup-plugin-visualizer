@@ -14,7 +14,7 @@ const readFile = promisify(fs.readFile);
 const buildStats = require("../plugin/build-stats");
 const TEMPLATE = require("../plugin/template-types");
 const warn = require("../plugin/warn");
-const JSON_VERSION = require("./version");
+const JSON_VERSION = require("../plugin/version");
 
 const argv = require("yargs")
   .strict()
