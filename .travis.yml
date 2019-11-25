@@ -10,4 +10,5 @@ script:
   - yarn run build
   - yarn test
   - yarn test --json
+  - yarn test --json --sourcemap
   - node bin/cli.js stats.e2e.json
