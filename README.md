@@ -81,9 +81,7 @@ This statistical information can contain:
 
 ## Upgrades
 
-v1 -> v2: For v2 was a lot of internal changes, but external interface has not changed.
-
-V2 -> V3: `template` now by default `treemap`, `bundlesRelative` was removed as it is always default behaviour.
+See CHANGELOG.md.
 
 ## Acknowledgements
 
