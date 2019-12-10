@@ -113,7 +113,7 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
       processedNodes[moduleUid] = true;
     }
 
-    const mod = mapper.getValue(moduleUid, { size: 0 });
+    const mod = mapper.getValue(moduleUid, { renderedLength: 0 });
 
     const info = getModuleInfo(moduleId);
     const { importedIds, isEntry, isExternal } = info;
