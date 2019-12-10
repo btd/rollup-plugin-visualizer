@@ -23,6 +23,7 @@ const {
 } = require("./data");
 const getSourcemapModules = require("./sourcemap");
 const warn = require("./warn");
+const { createGzipSizeGetter } = require("./compress");
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -52,8 +53,23 @@ module.exports = function(opts) {
 
   const chartParameters = opts.chartParameters || {};
 
+  const gzipSize = !!opts.gzipSize;
+  const additionalFilesInfo = new Map();
+  const gzipSizeGetter = gzipSize
+    ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? gzipSize : {})
+    : null;
+
   return {
     name: "visualizer",
+
+    async transform(code, id) {
+      const info = {};
+      if (gzipSize) {
+        info.gzipLength = await gzipSizeGetter(code);
+      }
+      additionalFilesInfo.set(id, info);
+      return null;
+    },
 
     async generateBundle(outputOptions, outputBundle) {
       if (opts.sourcemap && !outputOptions.sourcemap) {
@@ -101,9 +117,18 @@ module.exports = function(opts) {
         );
       }
 
-      const tree = mergeTrees(roots);
-
       const { nodes, nodeIds } = mapper;
+      for (const [id, uid] of Object.entries(nodeIds)) {
+        if (nodes[uid]) {
+          nodes[uid] = {
+            ...nodes[uid],
+            ...(additionalFilesInfo.get(id) || {})
+          };
+        } else {
+          this.warn(`Could not find mapping for node ${id} ${uid}`);
+        }
+      }
+
       removeCommonPrefix(nodes, nodeIds);
 
       for (const [id, uid] of Object.entries(nodeIds)) {
@@ -113,6 +138,8 @@ module.exports = function(opts) {
           this.warn(`Could not find mapping for node ${id} ${uid}`);
         }
       }
+
+      const tree = mergeTrees(roots);
 
       const data = { version: JSON_VERSION, tree, nodes, links };
 

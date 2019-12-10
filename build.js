@@ -21,7 +21,8 @@ let args = require("yargs")
   .option("json", { describe: "Generate json", boolean: true })
   .option("e2e", { describe: "Exec e2e test", boolean: true })
   .option("sourcemap", { describe: "Enable sourcemap", boolean: true })
-  .option("terser", { describe: "Enable terser", boolean: true });
+  .option("terser", { describe: "Enable terser", boolean: true })
+  .option("gzip", { describe: "Enable gzip", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -112,7 +113,8 @@ const runBuildDev = async template => {
         filename: `stats.${template}${fileExt}`,
         json: argv.json,
         template,
-        sourcemap: argv.sourcemap
+        sourcemap: argv.sourcemap,
+        gzipSize: argv.gzip
       })
     ],
     onwarn
@@ -142,7 +144,8 @@ const runBuildDev2 = async () => {
         filename: `stats.e2e${fileExt}`,
         json: argv.json,
         template: "treemap",
-        sourcemap: argv.sourcemap
+        sourcemap: argv.sourcemap,
+        gzipSize: argv.gzip
       })
     ],
     onwarn
