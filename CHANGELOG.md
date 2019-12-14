@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.1
+
+* Fix #59
+
 ## 3.3.0
 
 * Refine sourcemap option and add test for it
