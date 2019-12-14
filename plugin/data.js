@@ -16,10 +16,6 @@ const buildTree = (name, modules, mapper) => {
 
     const uid = mapper.setValueByModuleId(id, mod);
 
-    if (mod.renderedLength === 0) {
-      continue;
-    }
-
     const nodeData = { uid };
 
     if (name.startsWith(PLUGIN_PREFIX)) {
