@@ -22,7 +22,8 @@ let args = require("yargs")
   .option("e2e", { describe: "Exec e2e test", boolean: true })
   .option("sourcemap", { describe: "Enable sourcemap", boolean: true })
   .option("terser", { describe: "Enable terser", boolean: true })
-  .option("gzip", { describe: "Enable gzip", boolean: true });
+  .option("gzip", { describe: "Enable gzip", boolean: true })
+  .option("test", { describe: "Run tests", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -130,8 +131,11 @@ const runBuildDev = async template => {
   await bundle.write(outputOptions);
 };
 
-const runBuildDev2 = async () => {
-  const input = { input: "./test/input.js", input2: "./test/input2.js" };
+const runBuildTest_e2e = async () => {
+  const input = {
+    input: "./test/e2e/input.js",
+    input2: "./test/e2e/input2.js"
+  };
 
   const inputOptions = {
     external: ["jquery"],
@@ -161,11 +165,48 @@ const runBuildDev2 = async () => {
   await bundle.write(outputOptions);
 };
 
+const runBuildTest_gh59 = async () => {
+  const input = {
+    index: "test/gh59/src/index",
+    "components/index": "test/gh59/src/components/index",
+    "components/A": "test/gh59/src/components/A",
+    "components/B": "test/gh59/src/components/B"
+  };
+
+  const inputOptions = {
+    input,
+    plugins: [
+      require("./")({
+        open,
+        title: "test gh59",
+        filename: `stats.gh59${fileExt}`,
+        json: argv.json,
+        template: "treemap",
+        sourcemap: argv.sourcemap,
+        gzipSize: argv.gzip
+      })
+    ],
+    onwarn
+  };
+  const outputOptions = {
+    format: "es",
+    dir: "./temp/",
+    sourcemap: argv.sourcemap
+  };
+
+  const bundle = await rollup(inputOptions);
+
+  await bundle.write(outputOptions);
+};
+
 const run = async () => {
   await Promise.all(TEMPLATE.map(t => runBuild(t)));
   await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
   if (argv.e2e) {
-    await runBuildDev2();
+    await runBuildTest_e2e();
+  }
+  if (argv.test) {
+    await runBuildTest_gh59();
   }
 };
 
