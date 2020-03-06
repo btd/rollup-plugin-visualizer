@@ -1,4 +1,3 @@
-import { pointer } from "d3-selection";
 import { format as formatBytes } from "bytes";
 
 const getNodePathTree = d =>
@@ -35,10 +34,13 @@ export class Tooltip {
 
     this.tooltip.html(html);
 
-    const [x, y] = pointer(event, this.container.node());
+    const containerNode = this.container.node();
+    const containerBox = containerNode.getBoundingClientRect();
+
+    const x = event.clientX - containerBox.left - containerNode.clientLeft;
+    const y = event.clientY - containerBox.top - containerNode.clientTop;
 
     const tooltipBox = this.tooltip.node().getBoundingClientRect();
-    const containerBox = this.container.node().getBoundingClientRect();
 
     const availableWidthRight = containerBox.width - x;
     const availableHeightBottom = containerBox.height - y;
