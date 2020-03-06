@@ -1,15 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
-const { promisify } = require("util");
-
-const mkdirp = require("mkdirp");
-
-const mkdir = promisify(mkdirp);
-const writeFile = promisify(fs.writeFile);
-const readFile = promisify(fs.readFile);
 
 const buildStats = require("../plugin/build-stats");
 const TEMPLATE = require("../plugin/template-types");
@@ -59,7 +52,7 @@ const runForPluginJson = async (
 
   const fileContents = await Promise.all(
     files.map(async file => {
-      const textContent = await readFile(file, { encoding: "utf-8" });
+      const textContent = await fs.readFile(file, { encoding: "utf-8" });
       const jsonContent = JSON.parse(textContent);
       return [file, jsonContent];
     })
@@ -101,8 +94,8 @@ const runForPluginJson = async (
     {}
   );
 
-  await mkdir(path.dirname(filename));
-  await writeFile(filename, fileContent);
+  await fs.mkdir(path.dirname(filename), { recursive: true });
+  await fs.writeFile(filename, fileContent);
 };
 
 runForPluginJson(argv, listOfFiles).catch(err => {

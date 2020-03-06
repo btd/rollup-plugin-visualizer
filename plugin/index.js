@@ -1,13 +1,7 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
-const { promisify } = require("util");
-
-const mkdirp = require("mkdirp");
-
-const mkdir = promisify(mkdirp);
-const writeFile = promisify(fs.writeFile);
 
 const opn = require("open");
 
@@ -27,6 +21,7 @@ const { createGzipSizeGetter } = require("./compress");
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
+  
 const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
 
 module.exports = function(opts) {
@@ -153,8 +148,8 @@ module.exports = function(opts) {
             chartParameters
           );
 
-      await mkdir(path.dirname(filename));
-      await writeFile(filename, fileContent);
+      await fs.mkdir(path.dirname(filename), { recursive: true });
+      await fs.writeFile(filename, fileContent);
 
       if (open) {
         return opn(filename, openOptions);
