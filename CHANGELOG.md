@@ -1,5 +1,10 @@
 # Changelog
 
+## Not release
+
+* replace `mkdirp` with plain `fs` and use `fs.promises`
+* remove `extraStylePath` and `styleOverridePath`
+
 ## 3.3.1
 
 * Fix #59

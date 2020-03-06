@@ -44,8 +44,6 @@ plugins: [
 
 `template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
 
-~~`extraStylePath` (string, default `undefined`) - Link your own css file to override or enhance the current templates~~ **deprecated**
-
 `chartParameters.width` (number, default `undefined`) - Set svg viewBox width to this number
 
 `chartParameters.height` (number, default `undefined`) - Set svg viewBox height to this number

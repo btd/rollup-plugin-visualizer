@@ -16,12 +16,12 @@ const {
   removeCommonPrefix
 } = require("./data");
 const getSourcemapModules = require("./sourcemap");
-const warn = require("./warn");
+
 const { createGzipSizeGetter } = require("./compress");
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
-  
+
 const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
 
 module.exports = function(opts) {
@@ -36,14 +36,6 @@ module.exports = function(opts) {
   const template = opts.template || "treemap";
   if (!TEMPLATE.includes(template)) {
     throw new Error(`Unknown template type ${template}. Known: ${TEMPLATE}`);
-  }
-
-  let extraStylePath = opts.extraStylePath;
-  if ("styleOverridePath" in opts) {
-    warn(
-      "`styleOverridePath` was renamed to `extraStylePath`, but will be removed in next major version"
-    );
-    extraStylePath = opts.styleOverridePath;
   }
 
   const chartParameters = opts.chartParameters || {};
@@ -140,13 +132,12 @@ module.exports = function(opts) {
 
       const fileContent = json
         ? JSON.stringify(data, null, 2)
-        : await buildStats(
+        : await buildStats({
             title,
             data,
             template,
-            extraStylePath,
             chartParameters
-          );
+          });
 
       await fs.mkdir(path.dirname(filename), { recursive: true });
       await fs.writeFile(filename, fileContent);

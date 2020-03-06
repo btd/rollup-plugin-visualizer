@@ -26,7 +26,6 @@
     "test": "node build.js --all --e2e"
   },
   "dependencies": {
-    "mkdirp": "^0.5.1",
     "nanoid": "^2.1.6",
     "open": "^6.0.0",
     "pupa": "^2.0.0",
@@ -58,6 +57,6 @@
     "sass": "^1.22.7"
   },
   "engines": {
-    "node": ">=8.10"
+    "node": ">=10"
   }
 }
