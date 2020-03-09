@@ -1,3 +1,3 @@
 "use strict";
 
-module.exports = ["sunburst", "treemap", "circlepacking", "network"];
+module.exports = ["sunburst", "treemap", "network"];
