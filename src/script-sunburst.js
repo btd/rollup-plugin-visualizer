@@ -48,7 +48,7 @@ const drawChart = (parentNode, { tree, nodes }, width, height) => {
       if (children != null) {
         let i = children.length;
         while (--i >= 0) sum += children[i].value;
-      } else {
+      } else if (node.data.uid != null) {
         sum = nodes[node.data.uid].renderedLength;
       }
 
