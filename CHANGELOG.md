@@ -3,7 +3,13 @@
 ## Not release
 
 * replace `mkdirp` with plain `fs` and use `fs.promises`
-* remove `extraStylePath` and `styleOverridePath`
+* **Breaking change** remove `extraStylePath` and `styleOverridePath`
+* **Breaking change** drop node 8
+* **Breaking change** drop circlepacking diagram
+
+## 3.3.2
+
+* Fix #63
 
 ## 3.3.1
 
