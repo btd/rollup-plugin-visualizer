@@ -6,27 +6,27 @@ const pupa = require("pupa");
 
 module.exports = async function buildHtml({
   title,
-  nodesData,
-  graphType,
+  data,
+  template,
   chartParameters
 }) {
-  const [template, script, style] = await Promise.all([
+  const [templateString, script, style] = await Promise.all([
     fs.readFile(path.join(__dirname, "stats.template"), "utf-8"),
     fs.readFile(
-      path.join(__dirname, "..", "lib", `script-${graphType}.js`),
+      path.join(__dirname, "..", "lib", `script-${template}.js`),
       "utf8"
     ),
     fs.readFile(
-      path.join(__dirname, "..", "lib", `script-${graphType}.css`),
+      path.join(__dirname, "..", "lib", `script-${template}.css`),
       "utf8"
     )
   ]);
 
-  return pupa(template, {
+  return pupa(templateString, {
     title,
     style,
     script,
-    nodesData: JSON.stringify(nodesData),
+    nodesData: JSON.stringify(data),
     chartParameters: JSON.stringify(chartParameters)
   });
 };
