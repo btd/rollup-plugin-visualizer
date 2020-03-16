@@ -6,6 +6,7 @@
 * **Breaking change** remove `extraStylePath` and `styleOverridePath`
 * **Breaking change** drop node 8
 * **Breaking change** drop circlepacking diagram
+* add `gzip` output and `brotli` if supported by node version (WIP)
 
 ## 3.3.2
 
