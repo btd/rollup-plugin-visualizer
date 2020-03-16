@@ -19,6 +19,8 @@ const getSourcemapModules = require("./sourcemap");
 
 const { createGzipSizeGetter } = require("./compress");
 
+const pkg = require("../package.json");
+
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 
@@ -128,7 +130,16 @@ module.exports = function(opts) {
 
       const tree = mergeTrees(roots);
 
-      const data = { version: JSON_VERSION, tree, nodes, links };
+      const data = {
+        version: JSON_VERSION,
+        tree,
+        nodes,
+        links,
+        env: {
+          rollup: this.meta.rollupVersion,
+          [pkg.name]: pkg.version
+        }
+      };
 
       const fileContent = json
         ? JSON.stringify(data, null, 2)
