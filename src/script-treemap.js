@@ -1,5 +1,5 @@
 import { render } from "preact";
-import { useState, useRef, useEffect } from "preact/hooks";
+import { useState, useRef, useEffect, useMemo } from "preact/hooks";
 import { html } from "htm/preact";
 import { group } from "d3-array";
 import {
@@ -8,17 +8,70 @@ import {
   treemapResquarify
 } from "d3-hierarchy";
 
-import { format } from "bytes";
+import { format as formatBytes } from "bytes";
 
 import uid from "./uid";
 import { createRainbowColor } from "./color";
-// import { Tooltip } from "./tooltip";
 
 import "./style/style-treemap.scss";
 
-const Tooltip = ({ node, visible }) => {
+const getNodePathTree = d =>
+  d
+    .ancestors()
+    .reverse()
+    .map(d => d.data.name)
+    .join("/");
+
+const getNodeSizeTree = d => d.value;
+
+const getNodeUidTree = d => d.data.uid;
+
+const Tooltip = ({
+  node,
+  visible,
+  getNodePath = getNodePathTree,
+  getNodeSize = getNodeSizeTree,
+  getNodeUid = getNodeUidTree,
+  root = null,
+  importedByCache
+}) => {
   const ref = useRef();
   const [style, setStyle] = useState({});
+  const content = useMemo(() => {
+    if (!node) return null;
+
+    const size = getNodeSize(node);
+    const totalSize = root != null ? getNodeSize(root) : null;
+
+    const uid = getNodeUid(node);
+
+    return html`
+      <div>${getNodePath && getNodePath(node)}</div>
+      ${size !== 0 &&
+        html`
+          <div>
+            <b>Size: ${formatBytes(size)}</b>
+            ${totalSize != null &&
+              html`
+                ${" "}(${((100 * size) / totalSize).toFixed(2)}%)
+              `}
+          </div>
+        `}
+      ${uid &&
+        importedByCache.has(uid) &&
+        html`
+          <div>
+            <div><b>Imported By</b>:</div>
+            ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
+              id =>
+                html`
+                  <div>${id}</div>
+                `
+            )}
+          </div>
+        `}
+    `;
+  }, [node]);
 
   const updatePosition = mouseCoords => {
     const pos = {
@@ -55,7 +108,7 @@ const Tooltip = ({ node, visible }) => {
     };
   }, []);
 
-  const { data } = node || { data: "" };
+  if (!node) return null;
 
   return html`
     <div
@@ -63,7 +116,7 @@ const Tooltip = ({ node, visible }) => {
       ref=${ref}
       style=${style}
     >
-      ${data.name}
+      ${content}
     </div>
   `;
 };
@@ -132,7 +185,7 @@ const Node = ({
       <text clip-path=${clipUid} fill=${fontColor}>
         <tspan ...${tspan1Props} font-size="0.7em">${data.name}</tspan>
         <tspan ...${tspan2Props} fill-opacity=${0.7} font-size="0.7em"
-          >${format(originalValue)}</tspan
+          >${formatBytes(originalValue)}</tspan
         >
       </text>
     </g>
@@ -215,7 +268,15 @@ const TreeMap = ({ root, layout, color, width, height, onNodeHover }) => {
   `;
 };
 
-const Chart = ({ layout, root, color, scaleMultiplier, width, height }) => {
+const Chart = ({
+  layout,
+  root,
+  color,
+  width,
+  height,
+  importedCache,
+  importedByCache
+}) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipNode, setTooltipNode] = useState(null);
 
@@ -235,7 +296,6 @@ const Chart = ({ layout, root, color, scaleMultiplier, width, height }) => {
       layout=${layout}
       root=${root}
       color=${color}
-      scaleMultiplier=${scaleMultiplier}
       width=${width}
       height=${height}
       onNodeHover=${node => {
@@ -243,7 +303,13 @@ const Chart = ({ layout, root, color, scaleMultiplier, width, height }) => {
         setShowTooltip(true);
       }}
     />
-    <${Tooltip} visible=${showTooltip} node=${tooltipNode} />
+    <${Tooltip}
+      visible=${showTooltip}
+      node=${tooltipNode}
+      root=${root}
+      importedByCache=${importedByCache}
+      importedCache=${importedCache}
+    />
   `;
 };
 
@@ -277,7 +343,20 @@ const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
 
   const color = createRainbowColor(root);
 
-  const scaleMultiplier = root.originalValue * 0.2;
+  const importedByCache = new Map();
+  const importedCache = new Map();
+
+  for (const { source, target } of links || []) {
+    if (!importedByCache.has(target)) {
+      importedByCache.set(target, []);
+    }
+    if (!importedCache.has(source)) {
+      importedCache.set(source, []);
+    }
+
+    importedByCache.get(target).push({ uid: source, ...nodes[source] });
+    importedCache.get(source).push({ uid: target, ...nodes[target] });
+  }
 
   render(
     html`
@@ -285,9 +364,10 @@ const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
         layout=${layout}
         root=${root}
         color=${color}
-        scaleMultiplier=${scaleMultiplier}
         width=${width}
         height=${height}
+        importedByCache=${importedByCache}
+        importedCache=${importedCache}
       />
     `,
     parentNode
