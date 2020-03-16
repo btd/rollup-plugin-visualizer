@@ -42,7 +42,7 @@ plugins: [
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `circlepacking`, `network` (very early stage, feedback welcomed)
+`template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
 
 `chartParameters.width` (number, default `undefined`) - Set svg viewBox width to this number
 
