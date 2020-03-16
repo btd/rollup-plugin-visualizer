@@ -1,7 +1,7 @@
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #f7eedf;
   --text-color: #333;
 }
@@ -38,6 +38,7 @@ html,
 body {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -51,7 +52,6 @@ svg {
 }
 
 main {
-  position: relative;
   margin: 0 auto;
   flex: 1;
   height: 100%;
@@ -61,38 +61,21 @@ main {
 .tooltip {
   position: absolute;
   z-index: 1070;
-  display: block;
 
-  border: solid;
-  border-width: 2px;
+  border: 2px solid;
   border-radius: 5px;
 
-  margin: 0;
   padding: 5px;
 
-  font-style: normal;
-  font-weight: 400;
-
-  line-height: 1.5;
-
-  text-align: left;
-  text-decoration: none;
-  text-shadow: none;
-  text-transform: none;
-
-  letter-spacing: normal;
-  word-break: normal;
-  word-spacing: normal;
-  word-wrap: break-word;
-
-  white-space: normal;
-
-  line-break: auto;
+  white-space: nowrap;
 
   font-size: 0.875rem;
 
-  opacity: 0;
-
   background-color: var(--background-color);
   color: var(--text-color);
+}
+
+.tooltip-hidden {
+  visibility: hidden;
+  opacity: 0;
 }
