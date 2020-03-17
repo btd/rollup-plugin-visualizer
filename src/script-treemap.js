@@ -15,47 +15,31 @@ import { createRainbowColor } from "./color";
 
 import "./style/style-treemap.scss";
 
-const getNodePathTree = d =>
-  d
-    .ancestors()
-    .reverse()
-    .map(d => d.data.name)
-    .join("/");
-
-const getNodeSizeTree = d => d.value;
-
-const getNodeUidTree = d => d.data.uid;
-
-const Tooltip = ({
-  node,
-  visible,
-  getNodePath = getNodePathTree,
-  getNodeSize = getNodeSizeTree,
-  getNodeUid = getNodeUidTree,
-  root = null,
-  importedByCache
-}) => {
+const Tooltip = ({ node, visible, root, importedByCache }) => {
   const ref = useRef();
   const [style, setStyle] = useState({});
   const content = useMemo(() => {
     if (!node) return null;
 
-    const size = getNodeSize(node);
-    const totalSize = root != null ? getNodeSize(root) : null;
+    const size = node.originalValue;
 
-    const uid = getNodeUid(node);
+    const percentageNum = (100 * size) / root.originalValue;
+    const percentage = percentageNum.toFixed(2);
+    const percentageString = percentage + "%";
+
+    const uid = node.data.uid;
+
+    const path = node
+      .ancestors()
+      .reverse()
+      .map(d => d.data.name)
+      .join("/");
 
     return html`
-      <div>${getNodePath && getNodePath(node)}</div>
+      <div>${path}</div>
       ${size !== 0 &&
         html`
-          <div>
-            <b>Size: ${formatBytes(size)}</b>
-            ${totalSize != null &&
-              html`
-                ${" "}(${((100 * size) / totalSize).toFixed(2)}%)
-              `}
-          </div>
+          <div><b>Size: ${formatBytes(size)}</b> (${percentageString})</div>
         `}
       ${uid &&
         importedByCache.has(uid) &&
@@ -107,8 +91,6 @@ const Tooltip = ({
       document.removeEventListener("mousemove", handleMouseMove, true);
     };
   }, []);
-
-  if (!node) return null;
 
   return html`
     <div

@@ -33,8 +33,6 @@ const Tooltip = ({ node, root }) => {
     `;
   }, [node]);
 
-  if (!node) return null;
-
   return html`
     <div class="details">
       ${content}
