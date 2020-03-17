@@ -1,18 +1,158 @@
-import { select } from "d3-selection";
+import { render } from "preact";
+import { useState, useEffect, useMemo } from "preact/hooks";
+import { html } from "htm/preact";
+
+import { format as formatBytes } from "bytes";
+
 import {
   partition as d3partition,
   hierarchy as d3hierarchy
 } from "d3-hierarchy";
 import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
-import { format as formatBytes } from "bytes";
 
 import color from "./color";
 
 import "./style/style-sunburst.scss";
 
-const drawChart = (parentNode, { tree, nodes }, width, height) => {
-  const size = Math.min(width, height);
+const Tooltip = ({ node, root }) => {
+  const content = useMemo(() => {
+    if (!node) return null;
+
+    const { data, originalValue } = node;
+
+    const percentageNum = (100 * originalValue) / root.originalValue;
+    const percentage = percentageNum.toFixed(2);
+    const percentageString = percentage + "%";
+
+    return html`
+      <div class="details-name">${data.name}</div>
+      <div class="details-percentage">${percentageString}</div>
+      of bundle size
+      <div class="details-size">${formatBytes(originalValue)}</div>
+    `;
+  }, [node]);
+
+  if (!node) return null;
+
+  return html`
+    <div class="details">
+      ${content}
+    </div>
+  `;
+};
+
+const Node = ({
+  node,
+  onClick,
+  isSelected,
+  onNodeHover,
+  path,
+  highlighted
+}) => {
+  return html`
+    <path
+      d=${path}
+      fill-rule="evenodd"
+      stroke="#fff"
+      fill=${color(node)}
+      stroke-width=${isSelected ? 3 : null}
+      onClick=${onClick}
+      onMouseOver=${evt => {
+        evt.stopPropagation();
+        onNodeHover(node);
+      }}
+      opacity=${highlighted ? 1 : 0.3}
+    />
+  `;
+};
+
+const SunBurst = ({
+  root,
+  layout,
+  size,
+  onNodeHover,
+  arc,
+  radius,
+  highlightedNodes
+}) => {
+  const [selectedNode, setSelectedNode] = useState(null);
+
+  const desiredValue = root.originalValue * 0.2;
+
+  //handle zoom of selected node
+  const selectedNodeMultiplier =
+    selectedNode != null
+      ? (desiredValue > selectedNode.originalValue
+          ? desiredValue / selectedNode.originalValue
+          : 3) * selectedNode.height
+      : 1;
+
+  // i only need to increase value of leaf nodes
+  // as folders will sum they up
+  const nodesToIncrease =
+    selectedNode != null
+      ? selectedNode.children != null
+        ? selectedNode.leaves()
+        : [selectedNode]
+      : [];
+
+  const nodesToIncreaseSet = new Set(nodesToIncrease);
+
+  // update value for nodes
+  root = root.eachAfter(node => {
+    let sum = 0;
+    const children = node.children;
+    if (children != null) {
+      let i = children.length;
+      while (--i >= 0) sum += children[i].value;
+    } else {
+      sum = nodesToIncreaseSet.has(node)
+        ? node.originalValue * selectedNodeMultiplier
+        : node.originalValue;
+    }
+
+    node.value = sum;
+  });
+
+  layout(root);
+
+  return html`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox=${`0 0 ${size} ${size}`}>
+      <g transform=${`translate(${radius},${radius})`}>
+        ${root.descendants().map(node => {
+          return html`
+            <${Node}
+              node=${node}
+              onClick=${() =>
+                setSelectedNode(selectedNode === node ? null : node)}
+              isSelected=${selectedNode === node}
+              onNodeHover=${onNodeHover}
+              path=${arc(node)}
+              highlighted=${highlightedNodes.includes(node)}
+            />
+          `;
+        })}
+      </g>
+    </svg>
+  `;
+};
+
+const Chart = ({ layout, root, size }) => {
+  const [tooltipNode, setTooltipNode] = useState(root);
+  const [highlightedNodes, setHighlightedNodes] = useState(root.descendants());
+
+  const handleMouseOut = () => {
+    setTooltipNode(root);
+    setHighlightedNodes(root.descendants());
+  };
+
+  useEffect(() => {
+    document.addEventListener("mouseover", handleMouseOut);
+    return () => {
+      document.removeEventListener("mouseover", handleMouseOut);
+    };
+  }, []);
 
   const radius = size / 2;
 
@@ -25,136 +165,50 @@ const drawChart = (parentNode, { tree, nodes }, width, height) => {
     .innerRadius(d => y(d.y0))
     .outerRadius(d => y(d.y1));
 
-  const chartContainerMarkup = `
-<div class="details" style="display: none;">
-  <div class="details-name" ></div>
-  <div class="details-percentage" ></div>
-  of bundle size
-  <div class="details-size" ></div>
-</div>
-`;
+  return html`
+    <${SunBurst}
+      layout=${layout}
+      root=${root}
+      size=${size}
+      radius=${radius}
+      arc=${arc}
+      onNodeHover=${node => {
+        setTooltipNode(node);
+        setHighlightedNodes(node.ancestors());
+      }}
+      highlightedNodes=${highlightedNodes}
+    />
+    <${Tooltip} node=${tooltipNode} root=${root} />
+  `;
+};
 
-  parentNode.innerHTML = chartContainerMarkup;
+const drawChart = (parentNode, { tree, nodes }, width, height) => {
+  const size = Math.min(width, height);
 
-  const chartNode = select(parentNode);
-
-  const svg = chartNode.append("svg").attr("viewBox", [0, 0, size, size]);
-  const g = svg.append("g").attr("transform", `translate(${radius},${radius})`);
-
-  let root = d3hierarchy(tree)
+  const root = d3hierarchy(tree)
     .eachAfter(node => {
       let sum = 0;
       const children = node.children;
       if (children != null) {
         let i = children.length;
         while (--i >= 0) sum += children[i].value;
-      } else if (node.data.uid != null) {
+      } else {
         sum = nodes[node.data.uid].renderedLength;
       }
 
-      node.value = sum;
       node.originalValue = sum;
+      node.value = sum;
     })
     .sort((a, b) => b.originalValue - a.originalValue);
 
   const layout = d3partition();
 
-  const showDetails = ({ data, originalValue }) => {
-    const percentageNum = (100 * originalValue) / root.originalValue;
-    const percentage = percentageNum.toFixed(2);
-    const percentageString = percentage + "%";
-
-    chartNode.select(".details-name").text(data.name);
-
-    chartNode.select(".details-percentage").text(percentageString);
-
-    chartNode.select(".details-size").text(formatBytes(originalValue));
-
-    chartNode.select(".details").style("display", "block");
-  };
-
-  const desiredValue = root.originalValue * 0.2;
-
-  const updateChart = selectedNode => {
-    //handle zoom of selected node
-    const selectedNodeMultiplier =
-      selectedNode != null
-        ? (desiredValue > selectedNode.originalValue
-            ? desiredValue / selectedNode.originalValue
-            : 3) * selectedNode.height
-        : 1;
-
-    // i only need to increase value of leaf nodes
-    // as folders will sum they up
-    const nodesToIncrease =
-      selectedNode != null
-        ? selectedNode.children != null
-          ? selectedNode.leaves()
-          : [selectedNode]
-        : [];
-
-    const nodesToIncreaseSet = new Set(nodesToIncrease);
-
-    root = root.eachAfter(node => {
-      let sum = 0;
-      const children = node.children;
-      if (children != null) {
-        let i = children.length;
-        while (--i >= 0) sum += children[i].value;
-      } else {
-        sum = nodesToIncreaseSet.has(node)
-          ? node.originalValue * selectedNodeMultiplier
-          : node.originalValue;
-      }
-
-      node.value = sum;
-    });
-
-    layout(root);
-
-    const path = g
-      .selectAll("path")
-      .data(root.descendants(), d => d)
-      .join("path")
-      .attr("d", arc)
-      .attr("fill-rule", "evenodd")
-      .style("stroke", "#fff")
-      .style("fill", d => color(d))
-      .on("mouseover", (event, data) => {
-        showDetails(data);
-
-        const sequenceArray = data.ancestors();
-
-        // Fade all the segments.
-        path.style("opacity", 0.3);
-
-        // Then highlight only those that are an ancestor of the current segment.
-        path.filter(node => sequenceArray.includes(node)).style("opacity", 1);
-      })
-      .on("click", (event, d) => {
-        if (d === selectedNode) {
-          updateChart();
-        } else {
-          updateChart(d);
-        }
-      });
-
-    if (selectedNode != null) {
-      path
-        .filter(d => d === selectedNode)
-        .style("stroke", "#fff")
-        .attr("stroke-width", 3);
-    }
-  };
-
-  chartNode.on("mouseleave", () => {
-    g.selectAll("path").style("opacity", 1);
-
-    showDetails(root);
-  });
-
-  updateChart();
-  showDetails(root);
+  render(
+    html`
+      <${Chart} root=${root} size=${size} layout=${layout} />
+    `,
+    parentNode
+  );
 };
 
 export default drawChart;
