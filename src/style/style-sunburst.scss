@@ -2,12 +2,16 @@
 
 .details {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  top: calc(50% - 55px);
+  top: calc(50% - 85px);
   left: calc(50% - 85px);
 
   width: 170px;
-  height: 110px;
+  height: 170px;
 
   font-size: 14px;
   text-align: center;
@@ -19,22 +23,14 @@
 
 .details-size {
   font-size: 0.8em;
-  margin-top: 1em;
 }
 
 .details-name {
   font-weight: bold;
 }
 
-.details-size::before {
-  content: "(";
-}
-.details-size::after {
-  content: ")";
-}
-
 .details-percentage {
-  margin: 0.4em 0 0em;
+  margin: 0.4em 0em;
   font-size: 2.4em;
   line-height: 1em;
 }

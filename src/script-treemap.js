@@ -386,8 +386,6 @@ const Main = ({ width, height, data: { tree, nodes, links, options } }) => {
     .round(true)
     .tile(treemapResquarify);
 
-  console.log(availableSizeProperties);
-
   const root = d3hierarchy(tree)
     .eachAfter(node => {
       const value = {};
@@ -410,11 +408,6 @@ const Main = ({ width, height, data: { tree, nodes, links, options } }) => {
 
       node.clipUid = uid("clip");
       node.nodeUid = uid("node");
-
-      console.log(value);
-      if (isNaN(value.renderedLength)) {
-        console.log(node);
-      }
 
       node.originalValue = value;
       node.value = value[sizeProperty];

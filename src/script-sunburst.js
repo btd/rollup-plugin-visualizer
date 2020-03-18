@@ -15,21 +15,44 @@ import color from "./color";
 
 import "./style/style-sunburst.scss";
 
-const Tooltip = ({ node, root }) => {
+const SIZE_LABELS = {
+  renderedLength: "Size",
+  gzipLength: "Gzip"
+};
+
+const Tooltip = ({ node, root, sizeProperty, availableSizeProperties }) => {
   const content = useMemo(() => {
     if (!node) return null;
 
-    const { data, originalValue } = node;
+    const mainSize = node.originalValue[sizeProperty];
 
-    const percentageNum = (100 * originalValue) / root.originalValue;
+    const percentageNum = (100 * mainSize) / root.originalValue[sizeProperty];
     const percentage = percentageNum.toFixed(2);
     const percentageString = percentage + "%";
 
     return html`
-      <div class="details-name">${data.name}</div>
+      <div class="details-name">${node.data.name}</div>
       <div class="details-percentage">${percentageString}</div>
-      of bundle size
-      <div class="details-size">${formatBytes(originalValue)}</div>
+      ${availableSizeProperties.map(sizeProp => {
+        if (sizeProp === sizeProperty) {
+          return html`
+            <div class="details-size">
+              <b
+                >${SIZE_LABELS[sizeProp]}:${" "}${formatBytes(
+                  node.originalValue[sizeProp]
+                )}</b
+              >
+            </div>
+          `;
+        } else {
+          return html`
+            <div class="details-size">
+              ${SIZE_LABELS[sizeProp]}:${" "}
+              ${formatBytes(node.originalValue[sizeProp])}
+            </div>
+          `;
+        }
+      })}
     `;
   }, [node]);
 
@@ -72,17 +95,18 @@ const SunBurst = ({
   onNodeHover,
   arc,
   radius,
+  sizeProperty,
   highlightedNodes
 }) => {
   const [selectedNode, setSelectedNode] = useState(null);
 
-  const desiredValue = root.originalValue * 0.2;
+  const desiredValue = root.originalValue[sizeProperty] * 0.2;
 
   //handle zoom of selected node
   const selectedNodeMultiplier =
     selectedNode != null
-      ? (desiredValue > selectedNode.originalValue
-          ? desiredValue / selectedNode.originalValue
+      ? (desiredValue > selectedNode.originalValue[sizeProperty]
+          ? desiredValue / selectedNode.originalValue[sizeProperty]
           : 3) * selectedNode.height
       : 1;
 
@@ -106,8 +130,8 @@ const SunBurst = ({
       while (--i >= 0) sum += children[i].value;
     } else {
       sum = nodesToIncreaseSet.has(node)
-        ? node.originalValue * selectedNodeMultiplier
-        : node.originalValue;
+        ? node.originalValue[sizeProperty] * selectedNodeMultiplier
+        : node.originalValue[sizeProperty];
     }
 
     node.value = sum;
@@ -136,7 +160,13 @@ const SunBurst = ({
   `;
 };
 
-const Chart = ({ layout, root, size }) => {
+const Chart = ({
+  layout,
+  root,
+  size,
+  sizeProperty,
+  availableSizeProperties
+}) => {
   const [tooltipNode, setTooltipNode] = useState(root);
   const [highlightedNodes, setHighlightedNodes] = useState(root.descendants());
 
@@ -146,11 +176,12 @@ const Chart = ({ layout, root, size }) => {
   };
 
   useEffect(() => {
+    handleMouseOut();
     document.addEventListener("mouseover", handleMouseOut);
     return () => {
       document.removeEventListener("mouseover", handleMouseOut);
     };
-  }, []);
+  }, [root]);
 
   const radius = size / 2;
 
@@ -170,40 +201,116 @@ const Chart = ({ layout, root, size }) => {
       size=${size}
       radius=${radius}
       arc=${arc}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
       onNodeHover=${node => {
         setTooltipNode(node);
         setHighlightedNodes(node.ancestors());
       }}
       highlightedNodes=${highlightedNodes}
     />
-    <${Tooltip} node=${tooltipNode} root=${root} />
+    <${Tooltip}
+      node=${tooltipNode}
+      root=${root}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+    />
   `;
 };
 
-const drawChart = (parentNode, { tree, nodes }, width, height) => {
+const SideBar = ({
+  availableSizeProperties,
+  sizeProperty,
+  setSizeProperty
+}) => {
+  const handleChange = sizeProp => () => {
+    if (sizeProp !== sizeProperty) {
+      setSizeProperty(sizeProp);
+    }
+  };
+  return html`
+    <aside class="sidebar">
+      <div class="size-selectors">
+        ${availableSizeProperties.map(sizeProp => {
+          const id = `selector-${sizeProp}`;
+          return html`
+            <div class="size-selector">
+              <input
+                type="radio"
+                id=${id}
+                checked=${sizeProp === sizeProperty}
+                onChange=${handleChange(sizeProp)}
+              />
+              <label for=${id}>
+                ${SIZE_LABELS[sizeProp]}
+              </label>
+            </div>
+          `;
+        })}
+      </div>
+    </aside>
+  `;
+};
+
+const Main = ({ width, height, data: { tree, nodes, options } }) => {
+  const availableSizeProperties = ["renderedLength"];
+  if (options.gzip) {
+    availableSizeProperties.push("gzipLength");
+  }
+
+  const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
+
   const size = Math.min(width, height);
 
   const root = d3hierarchy(tree)
     .eachAfter(node => {
-      let sum = 0;
+      const value = {};
+      for (const prop of availableSizeProperties) {
+        value[prop] = 0;
+      }
       const children = node.children;
       if (children != null) {
         let i = children.length;
-        while (--i >= 0) sum += children[i].value;
+        while (--i >= 0) {
+          for (const prop of availableSizeProperties) {
+            value[prop] += children[i].originalValue[prop];
+          }
+        }
       } else {
-        sum = nodes[node.data.uid].renderedLength;
+        for (const prop of availableSizeProperties) {
+          value[prop] = nodes[node.data.uid][prop];
+        }
       }
 
-      node.originalValue = sum;
-      node.value = sum;
+      node.originalValue = value;
+      node.value = value[sizeProperty];
     })
-    .sort((a, b) => b.originalValue - a.originalValue);
+    .sort(
+      (a, b) => b.originalValue[sizeProperty] - a.originalValue[sizeProperty]
+    );
 
   const layout = d3partition();
 
+  return html`
+    <${SideBar}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+      setSizeProperty=${setSizeProperty}
+    />
+    <${Chart}
+      layout=${layout}
+      root=${root}
+      size=${size}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+    />
+  `;
+};
+
+const drawChart = (parentNode, data, width, height) => {
   render(
     html`
-      <${Chart} root=${root} size=${size} layout=${layout} />
+      <${Main} data=${data} width=${width} height=${height} />
     `,
     parentNode
   );
