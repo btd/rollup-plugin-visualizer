@@ -79,3 +79,27 @@ main {
   visibility: hidden;
   opacity: 0;
 }
+
+.sidebar {
+  position: fixed;
+  top: 0;
+}
+
+.size-selectors {
+  display: flex;
+  flex-direction: row;
+  font-size: 0.7rem;
+  padding-top: 0.2rem;
+}
+
+.size-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+
+  input {
+    margin: 0 0.3rem 0 0;
+  }
+}

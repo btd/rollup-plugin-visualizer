@@ -15,15 +15,27 @@ import { createRainbowColor } from "./color";
 
 import "./style/style-treemap.scss";
 
-const Tooltip = ({ node, visible, root, importedByCache }) => {
+const SIZE_LABELS = {
+  renderedLength: "Size",
+  gzipLength: "Gzip"
+};
+
+const Tooltip = ({
+  node,
+  visible,
+  root,
+  sizeProperty,
+  availableSizeProperties,
+  importedByCache
+}) => {
   const ref = useRef();
   const [style, setStyle] = useState({});
   const content = useMemo(() => {
     if (!node) return null;
 
-    const size = node.originalValue;
+    const mainSize = node.originalValue[sizeProperty];
 
-    const percentageNum = (100 * size) / root.originalValue;
+    const percentageNum = (100 * mainSize) / root.originalValue[sizeProperty];
     const percentage = percentageNum.toFixed(2);
     const percentageString = percentage + "%";
 
@@ -37,10 +49,23 @@ const Tooltip = ({ node, visible, root, importedByCache }) => {
 
     return html`
       <div>${path}</div>
-      ${size !== 0 &&
-        html`
-          <div><b>Size: ${formatBytes(size)}</b> (${percentageString})</div>
-        `}
+      ${availableSizeProperties.map(sizeProp => {
+        if (sizeProp === sizeProperty) {
+          return html`
+            <div>
+              <b>${SIZE_LABELS[sizeProp]}:${" "}${formatBytes(mainSize)}</b
+              >${" "}(${percentageString})
+            </div>
+          `;
+        } else {
+          return html`
+            <div>
+              ${SIZE_LABELS[sizeProp]}:${" "}
+              ${formatBytes(node.originalValue[sizeProp])}
+            </div>
+          `;
+        }
+      })}
       ${uid &&
         importedByCache.has(uid) &&
         html`
@@ -112,7 +137,8 @@ const Node = ({
   fontColor,
   onClick,
   isSelected,
-  onNodeHover
+  onNodeHover,
+  sizeProperty
 }) => {
   const {
     nodeUid,
@@ -167,23 +193,31 @@ const Node = ({
       <text clip-path=${clipUid} fill=${fontColor}>
         <tspan ...${tspan1Props} font-size="0.7em">${data.name}</tspan>
         <tspan ...${tspan2Props} fill-opacity=${0.7} font-size="0.7em"
-          >${formatBytes(originalValue)}</tspan
+          >${formatBytes(originalValue[sizeProperty])}</tspan
         >
       </text>
     </g>
   `;
 };
 
-const TreeMap = ({ root, layout, color, width, height, onNodeHover }) => {
+const TreeMap = ({
+  root,
+  layout,
+  color,
+  width,
+  height,
+  onNodeHover,
+  sizeProperty
+}) => {
   const [selectedNode, setSelectedNode] = useState(null);
 
-  const desiredValue = root.originalValue * 0.2;
+  const desiredValue = root.originalValue[sizeProperty] * 0.2;
 
   //handle zoom of selected node
   const selectedNodeMultiplier =
     selectedNode != null
-      ? desiredValue > selectedNode.originalValue
-        ? desiredValue / selectedNode.originalValue
+      ? desiredValue > selectedNode.originalValue[sizeProperty]
+        ? desiredValue / selectedNode.originalValue[sizeProperty]
         : 3
       : 1;
 
@@ -207,8 +241,8 @@ const TreeMap = ({ root, layout, color, width, height, onNodeHover }) => {
       while (--i >= 0) sum += children[i].value;
     } else {
       sum = nodesToIncreaseSet.has(node)
-        ? node.originalValue * selectedNodeMultiplier
-        : node.originalValue;
+        ? node.originalValue[sizeProperty] * selectedNodeMultiplier
+        : node.originalValue[sizeProperty];
     }
 
     node.value = sum;
@@ -240,6 +274,7 @@ const TreeMap = ({ root, layout, color, width, height, onNodeHover }) => {
                     setSelectedNode(selectedNode === node ? null : node)}
                   isSelected=${selectedNode === node}
                   onNodeHover=${onNodeHover}
+                  sizeProperty=${sizeProperty}
                 />
               `;
             })}
@@ -256,6 +291,8 @@ const Chart = ({
   color,
   width,
   height,
+  sizeProperty,
+  availableSizeProperties,
   importedCache,
   importedByCache
 }) => {
@@ -280,6 +317,8 @@ const Chart = ({
       color=${color}
       width=${width}
       height=${height}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
       onNodeHover=${node => {
         setTooltipNode(node);
         setShowTooltip(true);
@@ -289,13 +328,56 @@ const Chart = ({
       visible=${showTooltip}
       node=${tooltipNode}
       root=${root}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
       importedByCache=${importedByCache}
       importedCache=${importedCache}
     />
   `;
 };
 
-const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
+const SideBar = ({
+  availableSizeProperties,
+  sizeProperty,
+  setSizeProperty
+}) => {
+  const handleChange = sizeProp => () => {
+    if (sizeProp !== sizeProperty) {
+      setSizeProperty(sizeProp);
+    }
+  };
+  return html`
+    <aside class="sidebar">
+      <div class="size-selectors">
+        ${availableSizeProperties.map(sizeProp => {
+          const id = `selector-${sizeProp}`;
+          return html`
+            <div class="size-selector">
+              <input
+                type="radio"
+                id=${id}
+                checked=${sizeProp === sizeProperty}
+                onChange=${handleChange(sizeProp)}
+              />
+              <label for=${id}>
+                ${SIZE_LABELS[sizeProp]}
+              </label>
+            </div>
+          `;
+        })}
+      </div>
+    </aside>
+  `;
+};
+
+const Main = ({ width, height, data: { tree, nodes, links, options } }) => {
+  const availableSizeProperties = ["renderedLength"];
+  if (options.gzip) {
+    availableSizeProperties.push("gzipLength");
+  }
+
+  const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
+
   const layout = d3treemap()
     .size([width, height])
     .paddingOuter(8)
@@ -304,24 +386,42 @@ const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
     .round(true)
     .tile(treemapResquarify);
 
+  console.log(availableSizeProperties);
+
   const root = d3hierarchy(tree)
     .eachAfter(node => {
-      let sum = 0;
+      const value = {};
+      for (const prop of availableSizeProperties) {
+        value[prop] = 0;
+      }
       const children = node.children;
       if (children != null) {
         let i = children.length;
-        while (--i >= 0) sum += children[i].value;
+        while (--i >= 0) {
+          for (const prop of availableSizeProperties) {
+            value[prop] += children[i].originalValue[prop];
+          }
+        }
       } else {
-        sum = nodes[node.data.uid].renderedLength;
+        for (const prop of availableSizeProperties) {
+          value[prop] = nodes[node.data.uid][prop];
+        }
       }
 
       node.clipUid = uid("clip");
       node.nodeUid = uid("node");
 
-      node.originalValue = sum;
-      node.value = sum;
+      console.log(value);
+      if (isNaN(value.renderedLength)) {
+        console.log(node);
+      }
+
+      node.originalValue = value;
+      node.value = value[sizeProperty];
     })
-    .sort((a, b) => b.originalValue - a.originalValue);
+    .sort(
+      (a, b) => b.originalValue[sizeProperty] - a.originalValue[sizeProperty]
+    );
 
   const color = createRainbowColor(root);
 
@@ -340,17 +440,30 @@ const drawChart = (parentNode, { tree, nodes, links }, width, height) => {
     importedCache.get(source).push({ uid: target, ...nodes[target] });
   }
 
+  return html`
+    <${SideBar}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+      setSizeProperty=${setSizeProperty}
+    />
+    <${Chart}
+      layout=${layout}
+      root=${root}
+      color=${color}
+      width=${width}
+      height=${height}
+      sizeProperty=${sizeProperty}
+      availableSizeProperties=${availableSizeProperties}
+      importedByCache=${importedByCache}
+      importedCache=${importedCache}
+    />
+  `;
+};
+
+const drawChart = (parentNode, data, width, height) => {
   render(
     html`
-      <${Chart}
-        layout=${layout}
-        root=${root}
-        color=${color}
-        width=${width}
-        height=${height}
-        importedByCache=${importedByCache}
-        importedCache=${importedCache}
-      />
+      <${Main} data=${data} width=${width} height=${height} />
     `,
     parentNode
   );

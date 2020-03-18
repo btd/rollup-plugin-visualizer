@@ -2,6 +2,7 @@
 
 ## Not release
 
+* use `preact` and `htm` for rendering
 * replace `mkdirp` with plain `fs` and use `fs.promises`
 * **Breaking change** remove `extraStylePath` and `styleOverridePath`
 * **Breaking change** drop node 8

@@ -11,10 +11,7 @@ const JSON_VERSION = require("../plugin/version");
 
 const argv = require("yargs")
   .strict()
-  .option("extra-style-path", {
-    describe: "Extra override css file path",
-    string: true
-  })
+
   .option("filename", {
     describe: "Output file name",
     string: true,
@@ -39,13 +36,7 @@ const argv = require("yargs")
 
 const listOfFiles = argv._;
 
-const runForPluginJson = async (
-  { title, template, extraStylePath, filename },
-  files
-) => {
-  if (extraStylePath) {
-    warn("`--extra-style-path` will be removed in next major version");
-  }
+const runForPluginJson = async ({ title, template, filename }, files) => {
   if (files.length === 0) {
     throw new Error("Empty file list");
   }
@@ -86,13 +77,12 @@ const runForPluginJson = async (
 
   const data = { version: JSON_VERSION, tree, links, nodes };
 
-  const fileContent = await buildStats(
+  const fileContent = await buildStats({
     title,
     data,
     template,
-    extraStylePath,
-    {}
-  );
+    chartParameters: {}
+  });
 
   await fs.mkdir(path.dirname(filename), { recursive: true });
   await fs.writeFile(filename, fileContent);

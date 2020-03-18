@@ -138,6 +138,9 @@ module.exports = function(opts) {
         env: {
           rollup: this.meta.rollupVersion,
           [pkg.name]: pkg.version
+        },
+        options: {
+          gzip: gzipSize
         }
       };
 
