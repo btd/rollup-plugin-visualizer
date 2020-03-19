@@ -244,22 +244,23 @@ const SideBar = ({
   return html`
     <aside class="sidebar">
       <div class="size-selectors">
-        ${availableSizeProperties.map(sizeProp => {
-          const id = `selector-${sizeProp}`;
-          return html`
-            <div class="size-selector">
-              <input
-                type="radio"
-                id=${id}
-                checked=${sizeProp === sizeProperty}
-                onChange=${handleChange(sizeProp)}
-              />
-              <label for=${id}>
-                ${SIZE_LABELS[sizeProp]}
-              </label>
-            </div>
-          `;
-        })}
+        ${availableSizeProperties.length > 1 &&
+          availableSizeProperties.map(sizeProp => {
+            const id = `selector-${sizeProp}`;
+            return html`
+              <div class="size-selector">
+                <input
+                  type="radio"
+                  id=${id}
+                  checked=${sizeProp === sizeProperty}
+                  onChange=${handleChange(sizeProp)}
+                />
+                <label for=${id}>
+                  ${SIZE_LABELS[sizeProp]}
+                </label>
+              </div>
+            `;
+          })}
       </div>
     </aside>
   `;
