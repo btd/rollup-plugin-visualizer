@@ -23,6 +23,7 @@ let args = require("yargs")
   .option("sourcemap", { describe: "Enable sourcemap", boolean: true })
   .option("terser", { describe: "Enable terser", boolean: true })
   .option("gzip", { describe: "Enable gzip", boolean: true })
+  .option("brotli", { describe: "Enable brotli", boolean: true })
   .option("test", { describe: "Run tests", boolean: true });
 
 for (const t of TEMPLATE) {
@@ -49,7 +50,13 @@ if (argv.all) {
   }
 }
 
-const open = argv.open;
+const simpleOptions = {
+  open: argv.open,
+  json: argv.json,
+  sourcemap: argv.sourcemap,
+  gzipSize: argv.gzip,
+  brotliSize: argv.brotli
+};
 
 const COMMON_PLUGINS = () =>
   [
@@ -109,13 +116,10 @@ const runBuildDev = async template => {
     plugins: [
       ...COMMON_PLUGINS(),
       require("./")({
-        open,
         title: `test ${template}`,
         filename: `stats.${template}${fileExt}`,
-        json: argv.json,
         template,
-        sourcemap: argv.sourcemap,
-        gzipSize: argv.gzip
+        ...simpleOptions
       })
     ],
     onwarn
@@ -143,13 +147,10 @@ const runBuildTest_e2e = async () => {
     plugins: [
       ...COMMON_PLUGINS(),
       require("./")({
-        open,
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
-        json: argv.json,
         template: "treemap",
-        sourcemap: argv.sourcemap,
-        gzipSize: argv.gzip
+        ...simpleOptions
       })
     ],
     onwarn
@@ -177,13 +178,10 @@ const runBuildTest_gh59 = async () => {
     input,
     plugins: [
       require("./")({
-        open,
         title: "test gh59",
         filename: `stats.gh59${fileExt}`,
-        json: argv.json,
         template: "treemap",
-        sourcemap: argv.sourcemap,
-        gzipSize: argv.gzip
+        ...simpleOptions
       })
     ],
     onwarn

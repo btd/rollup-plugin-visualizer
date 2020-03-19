@@ -13,12 +13,9 @@ import { format as formatBytes } from "bytes";
 import uid from "./uid";
 import { createRainbowColor } from "./color";
 
-import "./style/style-treemap.scss";
+import { LABELS, getAvailableSizeOptions } from "./sizes";
 
-const SIZE_LABELS = {
-  renderedLength: "Size",
-  gzipLength: "Gzip"
-};
+import "./style/style-treemap.scss";
 
 const Tooltip = ({
   node,
@@ -53,14 +50,14 @@ const Tooltip = ({
         if (sizeProp === sizeProperty) {
           return html`
             <div>
-              <b>${SIZE_LABELS[sizeProp]}:${" "}${formatBytes(mainSize)}</b
+              <b>${LABELS[sizeProp]}:${" "}${formatBytes(mainSize)}</b
               >${" "}(${percentageString})
             </div>
           `;
         } else {
           return html`
             <div>
-              ${SIZE_LABELS[sizeProp]}:${" "}
+              ${LABELS[sizeProp]}:${" "}
               ${formatBytes(node.originalValue[sizeProp])}
             </div>
           `;
@@ -361,7 +358,7 @@ const SideBar = ({
                   onChange=${handleChange(sizeProp)}
                 />
                 <label for=${id}>
-                  ${SIZE_LABELS[sizeProp]}
+                  ${LABELS[sizeProp]}
                 </label>
               </div>
             `;
@@ -372,10 +369,7 @@ const SideBar = ({
 };
 
 const Main = ({ width, height, data: { tree, nodes, links, options } }) => {
-  const availableSizeProperties = ["renderedLength"];
-  if (options.gzip) {
-    availableSizeProperties.push("gzipLength");
-  }
+  const availableSizeProperties = getAvailableSizeOptions(options);
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
 

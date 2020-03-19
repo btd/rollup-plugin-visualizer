@@ -21,12 +21,9 @@ import {
   COLOR_BASE
 } from "./color";
 
-import "./style/style-network.scss";
+import { LABELS, getAvailableSizeOptions } from "./sizes";
 
-const SIZE_LABELS = {
-  renderedLength: "Size",
-  gzipLength: "Gzip"
-};
+import "./style/style-network.scss";
 
 const NODE_MODULES = /.*(?:\/|\\\\)?node_modules(?:\/|\\\\)([^/\\]+)(?:\/|\\\\).+/;
 
@@ -57,17 +54,13 @@ const Tooltip = ({
         if (sizeProp === sizeProperty) {
           return html`
             <div>
-              <b
-                >${SIZE_LABELS[sizeProp]}:${" "}${formatBytes(
-                  node[sizeProp]
-                )}</b
-              >
+              <b>${LABELS[sizeProp]}:${" "}${formatBytes(node[sizeProp])}</b>
             </div>
           `;
         } else {
           return html`
             <div>
-              ${SIZE_LABELS[sizeProp]}:${" "} ${formatBytes(node[sizeProp])}
+              ${LABELS[sizeProp]}:${" "} ${formatBytes(node[sizeProp])}
             </div>
           `;
         }
@@ -256,7 +249,7 @@ const SideBar = ({
                   onChange=${handleChange(sizeProp)}
                 />
                 <label for=${id}>
-                  ${SIZE_LABELS[sizeProp]}
+                  ${LABELS[sizeProp]}
                 </label>
               </div>
             `;
@@ -271,10 +264,7 @@ const Main = ({
   height,
   data: { nodes: origNodes, links: origLinks, options }
 }) => {
-  const availableSizeProperties = ["renderedLength"];
-  if (options.gzip) {
-    availableSizeProperties.push("gzipLength");
-  }
+  const availableSizeProperties = getAvailableSizeOptions(options);
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
 

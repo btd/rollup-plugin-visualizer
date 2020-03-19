@@ -38,7 +38,7 @@ plugins: [
 
 `title` (string, default `Rollup Visualizer`) - title tag value
 
-`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser) 
+`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser)
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
@@ -49,6 +49,10 @@ plugins: [
 `chartParameters.height` (number, default `undefined`) - Set svg viewBox height to this number
 
 `json` (boolean, default `false`) - Product portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
+
+`gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart
+
+`brotliSize` (boolean, default `false`) - Collect brolti size from source code and display it at chart. Only if current node version supports it
 
 ## CLI
 
@@ -63,6 +67,7 @@ This can be usefull in case you have different config files in the same project 
 ## Build plugin
 
 For development if you need to build plugin, just exec:
+
 ```js
 yarn run build
 ```
@@ -72,10 +77,11 @@ yarn run build
 Generated html files do not and never will contain your source code (contents of files). They can contain only js/html/css code required to build chart (plugin code) and statistical information about your source code.
 
 This statistical information can contain:
-* size of files included in bundle
-* size of files included in source map
-* file's path
-* files hierarchy (fs tree for your files)
+
+- size of files included in bundle
+- size of files included in source map
+- file's path
+- files hierarchy (fs tree for your files)
 
 ## Upgrades
 

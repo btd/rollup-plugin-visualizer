@@ -13,12 +13,9 @@ import { scaleLinear, scaleSqrt } from "d3-scale";
 
 import color from "./color";
 
-import "./style/style-sunburst.scss";
+import { LABELS, getAvailableSizeOptions } from "./sizes";
 
-const SIZE_LABELS = {
-  renderedLength: "Size",
-  gzipLength: "Gzip"
-};
+import "./style/style-sunburst.scss";
 
 const Tooltip = ({ node, root, sizeProperty, availableSizeProperties }) => {
   const content = useMemo(() => {
@@ -38,7 +35,7 @@ const Tooltip = ({ node, root, sizeProperty, availableSizeProperties }) => {
           return html`
             <div class="details-size">
               <b
-                >${SIZE_LABELS[sizeProp]}:${" "}${formatBytes(
+                >${LABELS[sizeProp]}:${" "}${formatBytes(
                   node.originalValue[sizeProp]
                 )}</b
               >
@@ -47,7 +44,7 @@ const Tooltip = ({ node, root, sizeProperty, availableSizeProperties }) => {
         } else {
           return html`
             <div class="details-size">
-              ${SIZE_LABELS[sizeProp]}:${" "}
+              ${LABELS[sizeProp]}:${" "}
               ${formatBytes(node.originalValue[sizeProp])}
             </div>
           `;
@@ -243,7 +240,7 @@ const SideBar = ({
                   onChange=${handleChange(sizeProp)}
                 />
                 <label for=${id}>
-                  ${SIZE_LABELS[sizeProp]}
+                  ${LABELS[sizeProp]}
                 </label>
               </div>
             `;
@@ -254,10 +251,7 @@ const SideBar = ({
 };
 
 const Main = ({ width, height, data: { tree, nodes, options } }) => {
-  const availableSizeProperties = ["renderedLength"];
-  if (options.gzip) {
-    availableSizeProperties.push("gzipLength");
-  }
+  const availableSizeProperties = getAvailableSizeOptions(options);
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
 

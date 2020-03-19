@@ -17,7 +17,7 @@ const {
 } = require("./data");
 const getSourcemapModules = require("./sourcemap");
 
-const { createGzipSizeGetter } = require("./compress");
+const { createGzipSizeGetter, createBrotliSizeGetter } = require("./compress");
 
 const pkg = require("../package.json");
 
@@ -43,9 +43,17 @@ module.exports = function(opts) {
   const chartParameters = opts.chartParameters || {};
 
   const gzipSize = !!opts.gzipSize;
+  const brotliSize = !!opts.brotliSize;
   const additionalFilesInfo = new Map();
   const gzipSizeGetter = gzipSize
-    ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? gzipSize : {})
+    ? createGzipSizeGetter(
+        typeof opts.gzipSize === "object" ? opts.gzipSize : {}
+      )
+    : null;
+  const brotliSizeGetter = brotliSize
+    ? createBrotliSizeGetter(
+        typeof opts.brotliSize === "object" ? opts.brotliSize : {}
+      )
     : null;
 
   return {
@@ -55,6 +63,9 @@ module.exports = function(opts) {
       const info = {};
       if (gzipSize) {
         info.gzipLength = await gzipSizeGetter(code);
+      }
+      if (brotliSize) {
+        info.brotliLength = await brotliSizeGetter(code);
       }
       additionalFilesInfo.set(id, info);
       return null;
@@ -110,8 +121,13 @@ module.exports = function(opts) {
       for (const [id, uid] of Object.entries(nodeIds)) {
         if (nodes[uid]) {
           const newInfo = additionalFilesInfo.get(id) || {};
-          if (gzipSize && nodes[uid].renderedLength === 0) {
-            newInfo.gzipLength = 0;
+          if (nodes[uid].renderedLength === 0) {
+            if (gzipSize) {
+              newInfo.gzipLength = 0;
+            }
+            if (brotliSize) {
+              newInfo.brotliLength = 0;
+            }
           }
           nodes[uid] = {
             ...nodes[uid],
@@ -144,7 +160,9 @@ module.exports = function(opts) {
           [pkg.name]: pkg.version
         },
         options: {
-          gzip: gzipSize
+          gzip: gzipSize,
+          brotli: brotliSize,
+          sourcemap: opts.sourcemap
         }
       };
 
