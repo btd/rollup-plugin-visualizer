@@ -109,9 +109,13 @@ module.exports = function(opts) {
       const { nodes, nodeIds } = mapper;
       for (const [id, uid] of Object.entries(nodeIds)) {
         if (nodes[uid]) {
+          const newInfo = additionalFilesInfo.get(id) || {};
+          if (gzipSize && nodes[uid].renderedLength === 0) {
+            newInfo.gzipLength = 0;
+          }
           nodes[uid] = {
             ...nodes[uid],
-            ...(additionalFilesInfo.get(id) || {})
+            ...newInfo
           };
         } else {
           this.warn(`Could not find mapping for node ${id} ${uid}`);
