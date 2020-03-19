@@ -1,19 +1,15 @@
 import { render } from "preact";
 import { useState, useRef, useEffect, useMemo } from "preact/hooks";
 import { html } from "htm/preact";
-import { max as d3max, extent as d3extent } from "d3-array";
+import { max as d3max } from "d3-array";
 import { scaleSqrt } from "d3-scale";
+
+import { dispatch } from "d3-dispatch";
+import { timer } from "d3-timer";
 
 import { format as formatBytes } from "bytes";
 
-import {
-  forceSimulation,
-  forceLink,
-  forceManyBody,
-  forceCenter,
-  forceCollide,
-  forceX
-} from "d3-force";
+import webcola from "webcola";
 
 import {
   COLOR_DEFAULT_OWN_SOURCE,
@@ -268,10 +264,21 @@ const Main = ({
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
 
-  const nodes = Object.entries(origNodes).map(([uid, node]) => ({
-    uid,
-    ...node
-  }));
+  const maxLines = d3max(Object.values(origNodes), d => d[sizeProperty]);
+  const size = scaleSqrt()
+    .domain([1, maxLines])
+    .range([5, 30]);
+
+  const nodes = Object.entries(origNodes).map(([uid, node]) => {
+    const radius = size(node[sizeProperty]) + 1;
+    return {
+      uid,
+      ...node,
+      width: radius * 2,
+      height: radius * 2,
+      radius
+    };
+  });
   const nodesCache = new Map(nodes.map(d => [d.uid, d]));
   const links = origLinks.map(({ source, target }) => ({
     source: nodesCache.get(source),
@@ -279,67 +286,69 @@ const Main = ({
     value: 1
   }));
 
-  const maxLines = d3max(nodes, d => d[sizeProperty]);
-  const size = scaleSqrt()
-    .domain([1, maxLines])
-    .range([5, 30]);
+  const cola = webcola
+    .d3adaptor({ version: "6", dispatch, timer })
+    .size([width, height]);
 
-  const simulation = forceSimulation()
-    .force(
-      "link",
-      forceLink()
-        .id(d => d.id)
-        .strength(1)
-        .distance(50)
-        .iterations(10)
-    )
-    .force(
-      "collide",
-      forceCollide().radius(d => size(d[sizeProperty]) + 1)
-    )
-    .force("forceX", forceX(height / 2).strength(0.05))
-    .force("charge", forceManyBody().strength(-100))
-    .force("center", forceCenter(width / 2, height / 2));
+  const paddingX = 20;
+  const paddingY = 20;
 
-  simulation.nodes(nodes);
-  simulation.force("link").links(links);
-  simulation.stop();
+  const pageBounds = {
+    x: paddingX,
+    y: paddingY,
+    width: width - paddingX,
+    height: height - paddingY
+  };
 
-  for (let i = 0; i < 300; i++) simulation.tick();
-
-  let xExtent = d3extent(nodes, d => d.x);
-  let yExtent = d3extent(nodes, d => d.y);
-
-  const xRange = xExtent[1] - xExtent[0];
-  const yRange = yExtent[1] - yExtent[0];
-
-  //rotate
-  if (yRange > xRange) {
-    nodes.forEach(d => {
-      const y = parseFloat(d.y);
-      d.y = parseFloat(d.x);
-      d.x = y;
+  const realGraphNodes = nodes.slice(0);
+  const topLeft = { x: pageBounds.x, y: pageBounds.y, fixed: true };
+  const tlIndex = nodes.push(topLeft) - 1;
+  const bottomRight = {
+    x: pageBounds.x + pageBounds.width,
+    y: pageBounds.y + pageBounds.height,
+    fixed: true
+  };
+  const brIndex = nodes.push(bottomRight) - 1;
+  const constraints = [];
+  for (let i = 0; i < realGraphNodes.length; i++) {
+    const node = realGraphNodes[i];
+    constraints.push({
+      axis: "x",
+      type: "separation",
+      left: tlIndex,
+      right: i,
+      gap: node.radius
     });
-
-    const t = yExtent;
-    yExtent = xExtent;
-    xExtent = t;
+    constraints.push({
+      axis: "y",
+      type: "separation",
+      left: tlIndex,
+      right: i,
+      gap: node.radius
+    });
+    constraints.push({
+      axis: "x",
+      type: "separation",
+      left: i,
+      right: brIndex,
+      gap: node.radius
+    });
+    constraints.push({
+      axis: "y",
+      type: "separation",
+      left: i,
+      right: brIndex,
+      gap: node.radius
+    });
   }
-
-  //center
-  const xCenter = (xExtent[1] - xExtent[0]) / 2 + xExtent[0];
-  const yCenter = (yExtent[1] - yExtent[0]) / 2 + yExtent[0];
-
-  const svgXCenter = width / 2;
-  const svgYCenter = height / 2;
-
-  const xCenterDiff = svgXCenter - xCenter;
-  const yCenterDiff = svgYCenter - yCenter;
-
-  nodes.forEach(d => {
-    d.y += yCenterDiff;
-    d.x += xCenterDiff;
-  });
+  cola
+    .nodes(nodes)
+    .links(links)
+    .constraints(constraints)
+    .jaccardLinkLengths(50, 0.7)
+    .avoidOverlaps(true)
+    .start(50, 50, 50)
+    .stop();
 
   const importedByCache = new Map();
   const importedCache = new Map();
@@ -363,7 +372,7 @@ const Main = ({
       setSizeProperty=${setSizeProperty}
     />
     <${Chart}
-      nodes=${nodes}
+      nodes=${realGraphNodes}
       links=${links}
       size=${size}
       color=${color}

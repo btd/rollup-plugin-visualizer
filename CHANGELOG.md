@@ -8,6 +8,7 @@
 * **Breaking change** drop node 8
 * **Breaking change** drop circlepacking diagram
 * add `gzip` output and `brotli` if supported by node version
+* use `WebCola` with constraints for network diagram instead of `d3-force`
 
 ## 3.3.2
 

@@ -36,14 +36,17 @@
     "rollup": ">=0.60.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "bytes": "^3.1.0",
     "d3-array": "^2.2.0",
     "d3-color": "^1.4.0",
-    "d3-force": "^2.0.1",
+    "d3-dispatch": "^1.0.6",
     "d3-hierarchy": "^1.1.8",
     "d3-scale": "^3.0.0",
     "d3-scale-chromatic": "^1.5.0",
     "d3-shape": "^1.3.4",
+    "d3-timer": "^1.0.10",
     "del-cli": "^3.0.0",
     "eslint": "^6.0.1",
     "htm": "^3.0.3",
@@ -51,11 +54,10 @@
     "preact": "^10.3.3",
     "prettier": "^1.16.4",
     "rollup": "^2.0.6",
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-terser": "^5.1.2",
-    "sass": "^1.22.7"
+    "sass": "^1.22.7",
+    "webcola": "^3.4.0"
   },
   "engines": {
     "node": ">=10"
