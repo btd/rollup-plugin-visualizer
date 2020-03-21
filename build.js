@@ -24,7 +24,8 @@ let args = require("yargs")
   .option("terser", { describe: "Enable terser", boolean: true })
   .option("gzip", { describe: "Enable gzip", boolean: true })
   .option("brotli", { describe: "Enable brotli", boolean: true })
-  .option("test", { describe: "Run tests", boolean: true });
+  .option("test", { describe: "Run tests", boolean: true })
+  .option("dev", { describe: "Run dev build", boolean: true });
 
 for (const t of TEMPLATE) {
   args = args.option(t, {
@@ -199,7 +200,9 @@ const runBuildTest_gh59 = async () => {
 
 const run = async () => {
   await Promise.all(TEMPLATE.map(t => runBuild(t)));
-  //await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+  if (argv.dev) {
+    await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+  }
   if (argv.e2e) {
     await Promise.all(templatesToBuild.map(t => runBuildTest_e2e(t)));
   }
