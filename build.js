@@ -135,7 +135,7 @@ const runBuildDev = async template => {
   await bundle.write(outputOptions);
 };
 
-const runBuildTest_e2e = async () => {
+const runBuildTest_e2e = async (template = "treemap") => {
   const input = {
     input: "./test/e2e/input.js",
     input2: "./test/e2e/input2.js"
@@ -149,7 +149,7 @@ const runBuildTest_e2e = async () => {
       require("./")({
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
-        template: "treemap",
+        template,
         ...simpleOptions
       })
     ],
@@ -199,9 +199,9 @@ const runBuildTest_gh59 = async () => {
 
 const run = async () => {
   await Promise.all(TEMPLATE.map(t => runBuild(t)));
-  await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+  //await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
   if (argv.e2e) {
-    await runBuildTest_e2e();
+    await Promise.all(templatesToBuild.map(t => runBuildTest_e2e(t)));
   }
   if (argv.test) {
     await runBuildTest_gh59();
