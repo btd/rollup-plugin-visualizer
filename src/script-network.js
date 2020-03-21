@@ -4,9 +4,6 @@ import { html } from "htm/preact";
 import { max as d3max } from "d3-array";
 import { scaleSqrt } from "d3-scale";
 
-import { dispatch } from "d3-dispatch";
-import { timer } from "d3-timer";
-
 import { format as formatBytes } from "bytes";
 
 import webcola from "webcola";
@@ -286,12 +283,10 @@ const Main = ({
     value: 1
   }));
 
-  const cola = webcola
-    .d3adaptor({ version: "6", dispatch, timer })
-    .size([width, height]);
+  const cola = webcola.adaptor({}).size([width, height]);
 
-  const paddingX = 20;
-  const paddingY = 20;
+  const paddingX = 50;
+  const paddingY = 50;
 
   const pageBounds = {
     x: paddingX,
