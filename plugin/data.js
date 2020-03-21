@@ -112,7 +112,12 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
     const mod = mapper.getValue(moduleUid, { renderedLength: 0 });
 
     const info = getModuleInfo(moduleId);
-    const { importedIds, isEntry, isExternal } = info;
+    const {
+      importedIds,
+      isEntry,
+      isExternal,
+      dynamicallyImportedIds = []
+    } = info;
 
     if (isEntry) {
       mod.isEntry = true;
@@ -124,6 +129,11 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
     for (const importedId of importedIds) {
       const importedUid = mapper.getUid(importedId);
       links.push({ source: moduleUid, target: importedUid });
+      moduleIds.push(importedId);
+    }
+    for (const importedId of dynamicallyImportedIds) {
+      const importedUid = mapper.getUid(importedId);
+      links.push({ source: moduleUid, target: importedUid, dynamic: true });
       moduleIds.push(importedId);
     }
   }
