@@ -1,6 +1,6 @@
 # Changelog
 
-## Not release
+## 4.0.0
 
 * use `preact` and `htm` for rendering
 * replace `mkdirp` with plain `fs` and use `fs.promises`
