@@ -11,7 +11,7 @@ import webcola from "webcola";
 import {
   COLOR_DEFAULT_OWN_SOURCE,
   COLOR_DEFAULT_VENDOR_SOURCE,
-  COLOR_BASE
+  COLOR_BASE,
 } from "./color";
 
 import { LABELS, getAvailableSizeOptions } from "./sizes";
@@ -32,7 +32,7 @@ const Tooltip = ({
   visible,
   importedByCache,
   sizeProperty,
-  availableSizeProperties
+  availableSizeProperties,
 }) => {
   const ref = useRef();
   const [style, setStyle] = useState({});
@@ -43,7 +43,7 @@ const Tooltip = ({
 
     return html`
       <div>${node.id}</div>
-      ${availableSizeProperties.map(sizeProp => {
+      ${availableSizeProperties.map((sizeProp) => {
         if (sizeProp === sizeProperty) {
           return html`
             <div>
@@ -59,25 +59,22 @@ const Tooltip = ({
         }
       })}
       ${uid &&
-        importedByCache.has(uid) &&
-        html`
-          <div>
-            <div><b>Imported By</b>:</div>
-            ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
-              id =>
-                html`
-                  <div>${id}</div>
-                `
-            )}
-          </div>
-        `}
+      importedByCache.has(uid) &&
+      html`
+        <div>
+          <div><b>Imported By</b>:</div>
+          ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
+            (id) => html` <div>${id}</div> `
+          )}
+        </div>
+      `}
     `;
   }, [node]);
 
-  const updatePosition = mouseCoords => {
+  const updatePosition = (mouseCoords) => {
     const pos = {
       left: mouseCoords.x + Tooltip.marginX,
-      top: mouseCoords.y + Tooltip.marginY
+      top: mouseCoords.y + Tooltip.marginY,
     };
 
     const boundingRect = ref.current.getBoundingClientRect();
@@ -95,10 +92,10 @@ const Tooltip = ({
     setStyle(pos);
   };
 
-  const handleMouseMove = event => {
+  const handleMouseMove = (event) => {
     updatePosition({
       x: event.pageX,
-      y: event.pageY
+      y: event.pageY,
     });
   };
 
@@ -130,12 +127,12 @@ const Network = ({
   nodes,
   size,
   onNodeHover,
-  sizeProperty
+  sizeProperty,
 }) => {
   return html`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox=${`0 0 ${width} ${height}`}>
       <g stroke="#999" stroke-opacity="0.6">
-        ${links.map(link => {
+        ${links.map((link) => {
           return html`
             <line
               stroke-width="1"
@@ -148,14 +145,14 @@ const Network = ({
         })}
       </g>
       <g stroke="#fff" stroke-width="1.5">
-        ${nodes.map(node => {
+        ${nodes.map((node) => {
           return html`
             <circle
               r=${size(node[sizeProperty])}
               fill=${color(node)}
               cx=${node.x}
               cy=${node.y}
-              onMouseOver=${evt => {
+              onMouseOver=${(evt) => {
                 evt.stopPropagation();
                 onNodeHover(node);
               }}
@@ -176,7 +173,7 @@ const Chart = ({
   sizeProperty,
   availableSizeProperties,
   importedCache,
-  importedByCache
+  importedByCache,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipNode, setTooltipNode] = useState(null);
@@ -199,7 +196,7 @@ const Chart = ({
       links=${links}
       nodes=${nodes}
       size=${size}
-      onNodeHover=${node => {
+      onNodeHover=${(node) => {
         setTooltipNode(node);
         setShowTooltip(true);
       }}
@@ -220,9 +217,9 @@ const Chart = ({
 const SideBar = ({
   availableSizeProperties,
   sizeProperty,
-  setSizeProperty
+  setSizeProperty,
 }) => {
-  const handleChange = sizeProp => () => {
+  const handleChange = (sizeProp) => () => {
     if (sizeProp !== sizeProperty) {
       setSizeProperty(sizeProp);
     }
@@ -231,22 +228,22 @@ const SideBar = ({
     <aside class="sidebar">
       <div class="size-selectors">
         ${availableSizeProperties.length > 1 &&
-          availableSizeProperties.map(sizeProp => {
-            const id = `selector-${sizeProp}`;
-            return html`
-              <div class="size-selector">
-                <input
-                  type="radio"
-                  id=${id}
-                  checked=${sizeProp === sizeProperty}
-                  onChange=${handleChange(sizeProp)}
-                />
-                <label for=${id}>
-                  ${LABELS[sizeProp]}
-                </label>
-              </div>
-            `;
-          })}
+        availableSizeProperties.map((sizeProp) => {
+          const id = `selector-${sizeProp}`;
+          return html`
+            <div class="size-selector">
+              <input
+                type="radio"
+                id=${id}
+                checked=${sizeProp === sizeProperty}
+                onChange=${handleChange(sizeProp)}
+              />
+              <label for=${id}>
+                ${LABELS[sizeProp]}
+              </label>
+            </div>
+          `;
+        })}
       </div>
     </aside>
   `;
@@ -255,17 +252,15 @@ const SideBar = ({
 const Main = ({
   width,
   height,
-  data: { nodes: origNodes, links: origLinks, options }
+  data: { nodes: origNodes, links: origLinks, options },
 }) => {
   const availableSizeProperties = getAvailableSizeOptions(options);
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
 
   console.time("size scale");
-  const maxLines = d3max(Object.values(origNodes), d => d[sizeProperty]);
-  const size = scaleSqrt()
-    .domain([1, maxLines])
-    .range([5, 30]);
+  const maxLines = d3max(Object.values(origNodes), (d) => d[sizeProperty]);
+  const size = scaleSqrt().domain([1, maxLines]).range([5, 30]);
   console.timeEnd("size scale");
 
   console.time("nodes & links");
@@ -276,14 +271,14 @@ const Main = ({
       ...node,
       width: radius * 2,
       height: radius * 2,
-      radius
+      radius,
     };
   });
-  const nodesCache = new Map(nodes.map(d => [d.uid, d]));
+  const nodesCache = new Map(nodes.map((d) => [d.uid, d]));
   const links = origLinks.map(({ source, target }) => ({
     source: nodesCache.get(source),
     target: nodesCache.get(target),
-    value: 1
+    value: 1,
   }));
   console.timeEnd("nodes & links");
 
@@ -297,7 +292,7 @@ const Main = ({
     x: paddingX,
     y: paddingY,
     width: width - paddingX,
-    height: height - paddingY
+    height: height - paddingY,
   };
 
   const realGraphNodes = nodes.slice(0);
@@ -306,7 +301,7 @@ const Main = ({
   const bottomRight = {
     x: pageBounds.x + pageBounds.width,
     y: pageBounds.y + pageBounds.height,
-    fixed: true
+    fixed: true,
   };
   const brIndex = nodes.push(bottomRight) - 1;
   const constraints = [];
@@ -317,28 +312,28 @@ const Main = ({
       type: "separation",
       left: tlIndex,
       right: i,
-      gap: node.radius
+      gap: node.radius,
     });
     constraints.push({
       axis: "y",
       type: "separation",
       left: tlIndex,
       right: i,
-      gap: node.radius
+      gap: node.radius,
     });
     constraints.push({
       axis: "x",
       type: "separation",
       left: i,
       right: brIndex,
-      gap: node.radius
+      gap: node.radius,
     });
     constraints.push({
       axis: "y",
       type: "separation",
       left: i,
       right: brIndex,
-      gap: node.radius
+      gap: node.radius,
     });
   }
   console.timeEnd("constraints");
@@ -392,9 +387,7 @@ const Main = ({
 
 const drawChart = (parentNode, data, width, height) => {
   render(
-    html`
-      <${Main} data=${data} width=${width} height=${height} />
-    `,
+    html` <${Main} data=${data} width=${width} height=${height} /> `,
     parentNode
   );
 };

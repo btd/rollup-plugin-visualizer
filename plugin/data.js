@@ -7,7 +7,7 @@ const PLUGIN_PREFIX = "\u0000";
 const buildTree = (name, modules, mapper) => {
   let tree = {
     name: "root",
-    children: []
+    children: [],
   };
 
   for (const [id, { renderedLength }] of modules) {
@@ -32,7 +32,7 @@ const buildTree = (name, modules, mapper) => {
 };
 
 // if root children have only on child we can flatten this
-const flattenTree = root => {
+const flattenTree = (root) => {
   let newRoot = root;
   const pluginChildren = [];
   const otherChildren = [];
@@ -64,11 +64,11 @@ function addToPath(tree, p, value) {
     p.shift();
   }
 
-  let child = tree.children.find(c => c.name === p[0]);
+  let child = tree.children.find((c) => c.name === p[0]);
   if (child == null) {
     child = {
       name: p[0],
-      children: []
+      children: [],
     };
     tree.children.push(child);
   }
@@ -81,13 +81,13 @@ function addToPath(tree, p, value) {
   addToPath(child, p, value);
 }
 
-const mergeTrees = trees => {
+const mergeTrees = (trees) => {
   if (trees.length === 1) {
     return trees[0];
   }
   const newTree = {
     name: "root",
-    children: trees
+    children: trees,
   };
 
   return newTree;
@@ -116,7 +116,7 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
       importedIds,
       isEntry,
       isExternal,
-      dynamicallyImportedIds = []
+      dynamicallyImportedIds = [],
     } = info;
 
     if (isEntry) {

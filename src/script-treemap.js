@@ -5,7 +5,7 @@ import { group } from "d3-array";
 import {
   hierarchy as d3hierarchy,
   treemap as d3treemap,
-  treemapResquarify
+  treemapResquarify,
 } from "d3-hierarchy";
 
 import { format as formatBytes } from "bytes";
@@ -23,7 +23,7 @@ const Tooltip = ({
   root,
   sizeProperty,
   availableSizeProperties,
-  importedByCache
+  importedByCache,
 }) => {
   const ref = useRef();
   const [style, setStyle] = useState({});
@@ -41,12 +41,12 @@ const Tooltip = ({
     const path = node
       .ancestors()
       .reverse()
-      .map(d => d.data.name)
+      .map((d) => d.data.name)
       .join("/");
 
     return html`
       <div>${path}</div>
-      ${availableSizeProperties.map(sizeProp => {
+      ${availableSizeProperties.map((sizeProp) => {
         if (sizeProp === sizeProperty) {
           return html`
             <div>
@@ -64,25 +64,22 @@ const Tooltip = ({
         }
       })}
       ${uid &&
-        importedByCache.has(uid) &&
-        html`
-          <div>
-            <div><b>Imported By</b>:</div>
-            ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
-              id =>
-                html`
-                  <div>${id}</div>
-                `
-            )}
-          </div>
-        `}
+      importedByCache.has(uid) &&
+      html`
+        <div>
+          <div><b>Imported By</b>:</div>
+          ${[...new Set(importedByCache.get(uid).map(({ id }) => id))].map(
+            (id) => html` <div>${id}</div> `
+          )}
+        </div>
+      `}
     `;
   }, [node]);
 
-  const updatePosition = mouseCoords => {
+  const updatePosition = (mouseCoords) => {
     const pos = {
       left: mouseCoords.x + Tooltip.marginX,
-      top: mouseCoords.y + Tooltip.marginY
+      top: mouseCoords.y + Tooltip.marginY,
     };
 
     const boundingRect = ref.current.getBoundingClientRect();
@@ -100,10 +97,10 @@ const Tooltip = ({
     setStyle(pos);
   };
 
-  const handleMouseMove = event => {
+  const handleMouseMove = (event) => {
     updatePosition({
       x: event.pageX,
-      y: event.pageY
+      y: event.pageY,
     });
   };
 
@@ -135,7 +132,7 @@ const Node = ({
   onClick,
   isSelected,
   onNodeHover,
-  sizeProperty
+  sizeProperty,
 }) => {
   const {
     nodeUid,
@@ -146,7 +143,7 @@ const Node = ({
     clipUid,
     data,
     originalValue,
-    children = null
+    children = null,
   } = node;
 
   const tspan1Props = {};
@@ -168,7 +165,7 @@ const Node = ({
       class="node"
       transform="translate(${x0},${y0})"
       onClick=${onClick}
-      onMouseOver=${evt => {
+      onMouseOver=${(evt) => {
         evt.stopPropagation();
         onNodeHover(node);
       }}
@@ -204,7 +201,7 @@ const TreeMap = ({
   width,
   height,
   onNodeHover,
-  sizeProperty
+  sizeProperty,
 }) => {
   const [selectedNode, setSelectedNode] = useState(null);
 
@@ -230,7 +227,7 @@ const TreeMap = ({
   const nodesToIncreaseSet = new Set(nodesToIncrease);
 
   // update value for nodes
-  root = root.eachAfter(node => {
+  root = root.eachAfter((node) => {
     let sum = 0;
     const children = node.children;
     if (children != null) {
@@ -248,10 +245,10 @@ const TreeMap = ({
   layout(root);
 
   // this will make groups by height
-  const nestedDataMap = group(root.descendants(), d => d.height);
+  const nestedDataMap = group(root.descendants(), (d) => d.height);
   const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
     key,
-    values
+    values,
   }));
   nestedData.sort((a, b) => b.key - a.key);
 
@@ -260,7 +257,7 @@ const TreeMap = ({
       ${nestedData.map(({ key, values }) => {
         return html`
           <g class="layer" key=${key}>
-            ${values.map(node => {
+            ${values.map((node) => {
               const { backgroundColor, fontColor } = color(node);
               return html`
                 <${Node}
@@ -291,7 +288,7 @@ const Chart = ({
   sizeProperty,
   availableSizeProperties,
   importedCache,
-  importedByCache
+  importedByCache,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipNode, setTooltipNode] = useState(null);
@@ -316,7 +313,7 @@ const Chart = ({
       height=${height}
       sizeProperty=${sizeProperty}
       availableSizeProperties=${availableSizeProperties}
-      onNodeHover=${node => {
+      onNodeHover=${(node) => {
         setTooltipNode(node);
         setShowTooltip(true);
       }}
@@ -336,9 +333,9 @@ const Chart = ({
 const SideBar = ({
   availableSizeProperties,
   sizeProperty,
-  setSizeProperty
+  setSizeProperty,
 }) => {
-  const handleChange = sizeProp => () => {
+  const handleChange = (sizeProp) => () => {
     if (sizeProp !== sizeProperty) {
       setSizeProperty(sizeProp);
     }
@@ -347,22 +344,22 @@ const SideBar = ({
     <aside class="sidebar">
       <div class="size-selectors">
         ${availableSizeProperties.length > 1 &&
-          availableSizeProperties.map(sizeProp => {
-            const id = `selector-${sizeProp}`;
-            return html`
-              <div class="size-selector">
-                <input
-                  type="radio"
-                  id=${id}
-                  checked=${sizeProp === sizeProperty}
-                  onChange=${handleChange(sizeProp)}
-                />
-                <label for=${id}>
-                  ${LABELS[sizeProp]}
-                </label>
-              </div>
-            `;
-          })}
+        availableSizeProperties.map((sizeProp) => {
+          const id = `selector-${sizeProp}`;
+          return html`
+            <div class="size-selector">
+              <input
+                type="radio"
+                id=${id}
+                checked=${sizeProp === sizeProperty}
+                onChange=${handleChange(sizeProp)}
+              />
+              <label for=${id}>
+                ${LABELS[sizeProp]}
+              </label>
+            </div>
+          `;
+        })}
       </div>
     </aside>
   `;
@@ -382,7 +379,7 @@ const Main = ({ width, height, data: { tree, nodes, links, options } }) => {
     .tile(treemapResquarify);
 
   const root = d3hierarchy(tree)
-    .eachAfter(node => {
+    .eachAfter((node) => {
       const value = {};
       for (const prop of availableSizeProperties) {
         value[prop] = 0;
@@ -450,9 +447,7 @@ const Main = ({ width, height, data: { tree, nodes, links, options } }) => {
 
 const drawChart = (parentNode, data, width, height) => {
   render(
-    html`
-      <${Main} data=${data} width=${width} height=${height} />
-    `,
+    html` <${Main} data=${data} width=${width} height=${height} /> `,
     parentNode
   );
 };

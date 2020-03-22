@@ -19,7 +19,7 @@ class Id {
   }
 }
 
-export default function(name) {
+export default function (name) {
   count += 1;
   const id = ["O", name, count].filter(Boolean).join("-");
   return new Id(id);

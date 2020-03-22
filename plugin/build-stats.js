@@ -8,7 +8,7 @@ module.exports = async function buildHtml({
   title,
   data,
   template,
-  chartParameters
+  chartParameters,
 }) {
   const [templateString, script, style] = await Promise.all([
     fs.readFile(path.join(__dirname, "stats.template"), "utf-8"),
@@ -19,7 +19,7 @@ module.exports = async function buildHtml({
     fs.readFile(
       path.join(__dirname, "..", "lib", `script-${template}.css`),
       "utf8"
-    )
+    ),
   ]);
 
   return pupa(templateString, {
@@ -27,6 +27,6 @@ module.exports = async function buildHtml({
     style,
     script,
     nodesData: JSON.stringify(data),
-    chartParameters: JSON.stringify(chartParameters)
+    chartParameters: JSON.stringify(chartParameters),
   });
 };

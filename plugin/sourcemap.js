@@ -13,7 +13,7 @@ const getBytesPerFileUsingSourceMap = (bundleId, code, map, dir) => {
   for (let i = 0; i < code.length; i++, column++) {
     const { source } = map.originalPositionFor({
       line,
-      column
+      column,
     });
     const id =
       source == null
@@ -33,7 +33,7 @@ const getBytesPerFileUsingSourceMap = (bundleId, code, map, dir) => {
 };
 
 const getSourcemapModules = (id, { map, code }, dir) => {
-  return SourceMapConsumer.with(map, null, map => {
+  return SourceMapConsumer.with(map, null, (map) => {
     return getBytesPerFileUsingSourceMap(id, code, map, dir);
   });
 };

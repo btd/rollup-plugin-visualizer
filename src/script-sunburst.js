@@ -6,7 +6,7 @@ import { format as formatBytes } from "bytes";
 
 import {
   partition as d3partition,
-  hierarchy as d3hierarchy
+  hierarchy as d3hierarchy,
 } from "d3-hierarchy";
 import { arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
@@ -30,7 +30,7 @@ const Tooltip = ({ node, root, sizeProperty, availableSizeProperties }) => {
     return html`
       <div class="details-name">${node.data.name}</div>
       <div class="details-percentage">${percentageString}</div>
-      ${availableSizeProperties.map(sizeProp => {
+      ${availableSizeProperties.map((sizeProp) => {
         if (sizeProp === sizeProperty) {
           return html`
             <div class="details-size">
@@ -66,7 +66,7 @@ const Node = ({
   isSelected,
   onNodeHover,
   path,
-  highlighted
+  highlighted,
 }) => {
   return html`
     <path
@@ -76,7 +76,7 @@ const Node = ({
       fill=${color(node)}
       stroke-width=${isSelected ? 3 : null}
       onClick=${onClick}
-      onMouseOver=${evt => {
+      onMouseOver=${(evt) => {
         evt.stopPropagation();
         onNodeHover(node);
       }}
@@ -93,7 +93,7 @@ const SunBurst = ({
   arc,
   radius,
   sizeProperty,
-  highlightedNodes
+  highlightedNodes,
 }) => {
   const [selectedNode, setSelectedNode] = useState(null);
 
@@ -119,7 +119,7 @@ const SunBurst = ({
   const nodesToIncreaseSet = new Set(nodesToIncrease);
 
   // update value for nodes
-  root = root.eachAfter(node => {
+  root = root.eachAfter((node) => {
     let sum = 0;
     const children = node.children;
     if (children != null) {
@@ -139,7 +139,7 @@ const SunBurst = ({
   return html`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox=${`0 0 ${size} ${size}`}>
       <g transform=${`translate(${radius},${radius})`}>
-        ${root.descendants().map(node => {
+        ${root.descendants().map((node) => {
           return html`
             <${Node}
               node=${node}
@@ -162,7 +162,7 @@ const Chart = ({
   root,
   size,
   sizeProperty,
-  availableSizeProperties
+  availableSizeProperties,
 }) => {
   const [tooltipNode, setTooltipNode] = useState(root);
   const [highlightedNodes, setHighlightedNodes] = useState(root.descendants());
@@ -186,10 +186,10 @@ const Chart = ({
   const y = scaleSqrt().range([0, radius]);
 
   const arc = d3arc()
-    .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
-    .endAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
-    .innerRadius(d => y(d.y0))
-    .outerRadius(d => y(d.y1));
+    .startAngle((d) => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
+    .endAngle((d) => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
+    .innerRadius((d) => y(d.y0))
+    .outerRadius((d) => y(d.y1));
 
   return html`
     <${SunBurst}
@@ -200,7 +200,7 @@ const Chart = ({
       arc=${arc}
       sizeProperty=${sizeProperty}
       availableSizeProperties=${availableSizeProperties}
-      onNodeHover=${node => {
+      onNodeHover=${(node) => {
         setTooltipNode(node);
         setHighlightedNodes(node.ancestors());
       }}
@@ -218,9 +218,9 @@ const Chart = ({
 const SideBar = ({
   availableSizeProperties,
   sizeProperty,
-  setSizeProperty
+  setSizeProperty,
 }) => {
-  const handleChange = sizeProp => () => {
+  const handleChange = (sizeProp) => () => {
     if (sizeProp !== sizeProperty) {
       setSizeProperty(sizeProp);
     }
@@ -229,22 +229,22 @@ const SideBar = ({
     <aside class="sidebar">
       <div class="size-selectors">
         ${availableSizeProperties.length > 1 &&
-          availableSizeProperties.map(sizeProp => {
-            const id = `selector-${sizeProp}`;
-            return html`
-              <div class="size-selector">
-                <input
-                  type="radio"
-                  id=${id}
-                  checked=${sizeProp === sizeProperty}
-                  onChange=${handleChange(sizeProp)}
-                />
-                <label for=${id}>
-                  ${LABELS[sizeProp]}
-                </label>
-              </div>
-            `;
-          })}
+        availableSizeProperties.map((sizeProp) => {
+          const id = `selector-${sizeProp}`;
+          return html`
+            <div class="size-selector">
+              <input
+                type="radio"
+                id=${id}
+                checked=${sizeProp === sizeProperty}
+                onChange=${handleChange(sizeProp)}
+              />
+              <label for=${id}>
+                ${LABELS[sizeProp]}
+              </label>
+            </div>
+          `;
+        })}
       </div>
     </aside>
   `;
@@ -258,7 +258,7 @@ const Main = ({ width, height, data: { tree, nodes, options } }) => {
   const size = Math.min(width, height);
 
   const root = d3hierarchy(tree)
-    .eachAfter(node => {
+    .eachAfter((node) => {
       const value = {};
       for (const prop of availableSizeProperties) {
         value[prop] = 0;
@@ -304,9 +304,7 @@ const Main = ({ width, height, data: { tree, nodes, options } }) => {
 
 const drawChart = (parentNode, data, width, height) => {
   render(
-    html`
-      <${Main} data=${data} width=${width} height=${height} />
-    `,
+    html` <${Main} data=${data} width=${width} height=${height} /> `,
     parentNode
   );
 };

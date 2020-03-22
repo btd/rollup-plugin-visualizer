@@ -8,7 +8,7 @@ export const COLOR_DEFAULT_VENDOR_SOURCE = "#599e59";
 
 export const COLOR_BASE = "#cecece";
 
-const colorDefault = node => {
+const colorDefault = (node) => {
   if (node.children && node.children.length) {
     const parents = node.ancestors();
     const hasNodeModules = parents.some(
@@ -47,7 +47,7 @@ function relativeLuminance(o) {
   return r * rc + g * gc + b * bc;
 }
 
-export const createRainbowColor = root => {
+export const createRainbowColor = (root) => {
   const colorParentMap = new Map();
   colorParentMap.set(root, COLOR_BASE);
 
@@ -63,11 +63,9 @@ export const createRainbowColor = root => {
 
   const colorMap = new Map();
 
-  const lightScale = scaleLinear()
-    .domain([0, root.height])
-    .range([0.8, 0.1]);
+  const lightScale = scaleLinear().domain([0, root.height]).range([0.8, 0.1]);
 
-  const getBackgroundColor = node => {
+  const getBackgroundColor = (node) => {
     const parents = node.ancestors();
     const colorStr =
       parents.length === 1
@@ -80,7 +78,7 @@ export const createRainbowColor = root => {
     return hslColor;
   };
 
-  return node => {
+  return (node) => {
     if (!colorMap.has(node)) {
       const backgroundColor = getBackgroundColor(node);
       const l = relativeLuminance(backgroundColor.rgb());

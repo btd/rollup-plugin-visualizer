@@ -50,7 +50,7 @@
     "htm": "^3.0.3",
     "postcss-url": "^8.0.0",
     "preact": "^10.3.3",
-    "prettier": "^1.16.4",
+    "prettier": "^2.0.1",
     "rollup": "^2.0.6",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-terser": "^5.1.2",

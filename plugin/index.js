@@ -13,7 +13,7 @@ const {
   buildTree,
   mergeTrees,
   addLinks,
-  removeCommonPrefix
+  removeCommonPrefix,
 } = require("./data");
 const getSourcemapModules = require("./sourcemap");
 
@@ -24,9 +24,9 @@ const pkg = require("../package.json");
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 
-const WARN_SOURCEMAP_MISSING = id => `${id} missing source map`;
+const WARN_SOURCEMAP_MISSING = (id) => `${id} missing source map`;
 
-module.exports = function(opts) {
+module.exports = function (opts) {
   opts = opts || {};
   const json = !!opts.json;
   const filename = opts.filename || (json ? "stats.json" : "stats.html");
@@ -131,7 +131,7 @@ module.exports = function(opts) {
           }
           nodes[uid] = {
             ...nodes[uid],
-            ...newInfo
+            ...newInfo,
           };
         } else {
           this.warn(`Could not find mapping for node ${id} ${uid}`);
@@ -157,13 +157,13 @@ module.exports = function(opts) {
         links,
         env: {
           rollup: this.meta.rollupVersion,
-          [pkg.name]: pkg.version
+          [pkg.name]: pkg.version,
         },
         options: {
           gzip: gzipSize,
           brotli: brotliSize,
-          sourcemap: opts.sourcemap
-        }
+          sourcemap: opts.sourcemap,
+        },
       };
 
       const fileContent = json
@@ -172,7 +172,7 @@ module.exports = function(opts) {
             title,
             data,
             template,
-            chartParameters
+            chartParameters,
           });
 
       await fs.mkdir(path.dirname(filename), { recursive: true });
@@ -181,6 +181,6 @@ module.exports = function(opts) {
       if (open) {
         return opn(filename, openOptions);
       }
-    }
+    },
   };
 };
