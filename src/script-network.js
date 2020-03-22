@@ -261,11 +261,14 @@ const Main = ({
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);
 
+  console.time("size scale");
   const maxLines = d3max(Object.values(origNodes), d => d[sizeProperty]);
   const size = scaleSqrt()
     .domain([1, maxLines])
     .range([5, 30]);
+  console.timeEnd("size scale");
 
+  console.time("nodes & links");
   const nodes = Object.entries(origNodes).map(([uid, node]) => {
     const radius = size(node[sizeProperty]) + 1;
     return {
@@ -282,7 +285,9 @@ const Main = ({
     target: nodesCache.get(target),
     value: 1
   }));
+  console.timeEnd("nodes & links");
 
+  console.time("constraints");
   const cola = webcola.adaptor({}).size([width, height]);
 
   const paddingX = 50;
@@ -336,6 +341,9 @@ const Main = ({
       gap: node.radius
     });
   }
+  console.timeEnd("constraints");
+
+  console.time("cola");
   cola
     .nodes(nodes)
     .links(links)
@@ -345,6 +353,7 @@ const Main = ({
     .start(50, 50, 50)
     .stop();
 
+  console.timeEnd("cola");
   const importedByCache = new Map();
   const importedCache = new Map();
 
