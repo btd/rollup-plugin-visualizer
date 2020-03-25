@@ -147,11 +147,12 @@ const removeCommonPrefix = (nodes, nodeIds) => {
 
   for (const [id, uid] of Object.entries(nodeIds)) {
     const node = nodes[uid];
-    if (commonPrefix == null) {
-      commonPrefix = id;
-    }
 
     if (!skipModule(id, node)) {
+      if (commonPrefix == null) {
+        commonPrefix = id;
+      }
+
       for (let i = 0; i < commonPrefix.length && i < id.length; i++) {
         if (commonPrefix[i] !== id[i]) {
           commonPrefix = commonPrefix.slice(0, i);
