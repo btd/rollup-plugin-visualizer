@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.1
+
+* Fix `bundle.isAsset` deprecation
+
 ## 4.0.0
 
 * use `preact` and `htm` for rendering
@@ -7,6 +11,7 @@
 * **Breaking change** remove `extraStylePath` and `styleOverridePath`
 * **Breaking change** drop node 8
 * **Breaking change** drop circlepacking diagram
+* **Breaking change** require rollup >= 1.20
 * add `gzip` output and `brotli` if supported by node version
 * use `WebCola` with constraints for network diagram instead of `d3-force`
 
