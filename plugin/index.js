@@ -26,6 +26,9 @@ const WARN_SOURCEMAP_DISABLED =
 
 const WARN_SOURCEMAP_MISSING = (id) => `${id} missing source map`;
 
+const isAsset = (bundle) =>
+  "type" in bundle ? bundle.type === "asset" : bundle.isAsset;
+
 module.exports = function (opts) {
   opts = opts || {};
   const json = !!opts.json;
@@ -82,7 +85,7 @@ module.exports = function (opts) {
 
       // collect trees
       for (const [id, bundle] of Object.entries(outputBundle)) {
-        if (bundle.isAsset) continue; //only chunks
+        if (isAsset(bundle)) continue; //only chunks
 
         let tree;
 
@@ -107,7 +110,7 @@ module.exports = function (opts) {
 
       // after trees we process links (this is mostly for uids)
       for (const bundle of Object.values(outputBundle)) {
-        if (bundle.isAsset || bundle.facadeModuleId == null) continue; //only chunks
+        if (isAsset(bundle) || bundle.facadeModuleId == null) continue; //only chunks
 
         addLinks(
           bundle.facadeModuleId,

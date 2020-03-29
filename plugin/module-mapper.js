@@ -1,12 +1,14 @@
 "use strict";
 
-const generate = require("nanoid/non-secure/generate");
+const { customAlphabet } = require("nanoid/non-secure");
 const warn = require("./warn");
+
+const nanoid = customAlphabet("1234567890abcdef", 4);
 
 class ModuleMapper {
   constructor() {
     this.id = 0;
-    this.prefix = generate("1234567890abcdef", 4);
+    this.prefix = nanoid();
     this.nodes = Object.create(null);
     this.nodeIds = Object.create(null);
   }
