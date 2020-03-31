@@ -250,7 +250,7 @@ const SideBar = ({
   `;
 };
 
-const Main = ({ width, height, data: { tree, nodes, options } }) => {
+const Main = ({ width, height, data: { tree, nodes, options = {} } }) => {
   const availableSizeProperties = getAvailableSizeOptions(options);
 
   const [sizeProperty, setSizeProperty] = useState(availableSizeProperties[0]);

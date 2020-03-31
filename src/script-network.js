@@ -252,7 +252,7 @@ const SideBar = ({
 const Main = ({
   width,
   height,
-  data: { nodes: origNodes, links: origLinks, options },
+  data: { nodes: origNodes, links: origLinks, options = {} },
 }) => {
   const availableSizeProperties = getAvailableSizeOptions(options);
 

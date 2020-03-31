@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.2
+
+* Fix #69
+
 ## 4.0.1
 
 * Fix `bundle.isAsset` deprecation

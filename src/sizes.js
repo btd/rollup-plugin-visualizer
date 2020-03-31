@@ -1,10 +1,10 @@
 export const LABELS = {
-  renderedLength: "Size",
+  renderedLength: "Rendered",
   gzipLength: "Gzip",
   brotliLength: "Brotli",
 };
 
-export const getAvailableSizeOptions = (options) => {
+export const getAvailableSizeOptions = (options = {}) => {
   const availableSizeProperties = ["renderedLength"];
   if (options.gzip) {
     availableSizeProperties.push("gzipLength");
