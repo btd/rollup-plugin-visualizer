@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3
+
+* Fix #69
+* Copy options and env with cli
+
 ## 4.0.2
 
 * Fix #69
