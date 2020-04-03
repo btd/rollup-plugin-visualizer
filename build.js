@@ -15,7 +15,7 @@ let args = require("yargs")
   .strict()
   .option("all", {
     describe: "Build all templates",
-    boolean: true
+    boolean: true,
   })
   .option("open", { describe: "Open browser with stat files", boolean: true })
   .option("json", { describe: "Generate json", boolean: true })
@@ -30,7 +30,7 @@ let args = require("yargs")
 for (const t of TEMPLATE) {
   args = args.option(t, {
     describe: `Build ${t} template`,
-    boolean: true
+    boolean: true,
   });
 }
 
@@ -56,7 +56,7 @@ const simpleOptions = {
   json: argv.json,
   sourcemap: argv.sourcemap,
   gzipSize: argv.gzip,
-  brotliSize: argv.brotli
+  brotliSize: argv.brotli,
 };
 
 const COMMON_PLUGINS = () =>
@@ -64,17 +64,17 @@ const COMMON_PLUGINS = () =>
     resolve(),
     commonJs({
       ignoreGlobal: true,
-      include: "node_modules/**"
+      include: "node_modules/**",
     }),
     postcss({
       extract: true,
       plugins: [
         postcssUrl({
-          url: "inline"
-        })
-      ]
+          url: "inline",
+        }),
+      ],
     }),
-    argv.terser ? terser() : null
+    argv.terser ? terser() : null,
   ].filter(Boolean);
 
 const onwarn = (warning, warn) => {
@@ -89,17 +89,17 @@ const onwarn = (warning, warn) => {
   warn(warning);
 };
 
-const runBuild = async template => {
+const runBuild = async (template) => {
   const inputOptions = {
     input: `./src/script-${template}.js`,
     plugins: [...COMMON_PLUGINS()],
-    onwarn
+    onwarn,
   };
   const outputOptions = {
     format: "iife",
     dir: "./lib/",
     name: "drawChart",
-    sourcemap: argv.sourcemap
+    sourcemap: argv.sourcemap,
   };
 
   const bundle = await rollup(inputOptions);
@@ -107,7 +107,7 @@ const runBuild = async template => {
   await bundle.write(outputOptions);
 };
 
-const runBuildDev = async template => {
+const runBuildDev = async (template) => {
   const input = {};
   for (const t of TEMPLATE) {
     input[t] = `./src/script-${t}.js`;
@@ -120,15 +120,15 @@ const runBuildDev = async template => {
         title: `test ${template}`,
         filename: `stats.${template}${fileExt}`,
         template,
-        ...simpleOptions
-      })
+        ...simpleOptions,
+      }),
     ],
-    onwarn
+    onwarn,
   };
   const outputOptions = {
     format: "es",
     dir: "./temp/",
-    sourcemap: argv.sourcemap
+    sourcemap: argv.sourcemap,
   };
 
   const bundle = await rollup(inputOptions);
@@ -139,7 +139,7 @@ const runBuildDev = async template => {
 const runBuildTest_e2e = async (template = "treemap") => {
   const input = {
     input: "./test/e2e/input.js",
-    input2: "./test/e2e/input2.js"
+    input2: "./test/e2e/input2.js",
   };
 
   const inputOptions = {
@@ -151,15 +151,15 @@ const runBuildTest_e2e = async (template = "treemap") => {
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
         template,
-        ...simpleOptions
-      })
+        ...simpleOptions,
+      }),
     ],
-    onwarn
+    onwarn,
   };
   const outputOptions = {
     format: "es",
     dir: "./temp/",
-    sourcemap: argv.sourcemap
+    sourcemap: argv.sourcemap,
   };
 
   const bundle = await rollup(inputOptions);
@@ -172,7 +172,7 @@ const runBuildTest_gh59 = async () => {
     index: "test/gh59/src/index",
     "components/index": "test/gh59/src/components/index",
     "components/A": "test/gh59/src/components/A",
-    "components/B": "test/gh59/src/components/B"
+    "components/B": "test/gh59/src/components/B",
   };
 
   const inputOptions = {
@@ -182,15 +182,41 @@ const runBuildTest_gh59 = async () => {
         title: "test gh59",
         filename: `stats.gh59${fileExt}`,
         template: "treemap",
-        ...simpleOptions
-      })
+        ...simpleOptions,
+      }),
     ],
-    onwarn
+    onwarn,
   };
   const outputOptions = {
     format: "es",
     dir: "./temp/",
-    sourcemap: argv.sourcemap
+    sourcemap: argv.sourcemap,
+  };
+
+  const bundle = await rollup(inputOptions);
+
+  await bundle.write(outputOptions);
+};
+
+const runBuildTest_gh69 = async () => {
+  const input = "test/gh69/main.js";
+
+  const inputOptions = {
+    input,
+    plugins: [
+      require("./")({
+        title: "test gh69",
+        filename: `stats.gh69${fileExt}`,
+        template: "treemap",
+        ...simpleOptions,
+      }),
+    ],
+    onwarn,
+  };
+  const outputOptions = {
+    format: "es",
+    dir: "./temp/",
+    sourcemap: argv.sourcemap,
   };
 
   const bundle = await rollup(inputOptions);
@@ -199,15 +225,16 @@ const runBuildTest_gh59 = async () => {
 };
 
 const run = async () => {
-  await Promise.all(TEMPLATE.map(t => runBuild(t)));
+  await Promise.all(TEMPLATE.map((t) => runBuild(t)));
   if (argv.dev) {
-    await Promise.all(templatesToBuild.map(t => runBuildDev(t)));
+    await Promise.all(templatesToBuild.map((t) => runBuildDev(t)));
   }
   if (argv.e2e) {
-    await Promise.all(templatesToBuild.map(t => runBuildTest_e2e(t)));
+    await Promise.all(templatesToBuild.map((t) => runBuildTest_e2e(t)));
   }
   if (argv.test) {
     await runBuildTest_gh59();
+    await runBuildTest_gh69();
   }
 };
 
