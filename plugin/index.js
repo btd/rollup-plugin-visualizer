@@ -102,7 +102,10 @@ module.exports = function (opts) {
 
           tree = buildTree(id, Object.entries(modules), mapper);
         } else {
-          tree = buildTree(id, Object.entries(bundle.modules), mapper);
+          const modules = Object.entries(bundle.modules);
+          if (modules.length === 0) continue;
+
+          tree = buildTree(id, modules, mapper);
         }
 
         roots.push(tree);
