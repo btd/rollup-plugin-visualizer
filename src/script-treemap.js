@@ -160,6 +160,12 @@ const Node = ({
     tspan2Props.y = "2.3em";
   }
 
+  const handleClickSelection = (event) => {
+    if (window.getSelection().toString() !== "") {
+      event.stopPropagation();
+    }
+  };
+
   return html`
     <g
       class="node"
@@ -184,7 +190,11 @@ const Node = ({
       <clipPath id=${clipUid.id}>
         <use xlink:href=${nodeUid.href} />
       </clipPath>
-      <text clip-path=${clipUid} fill=${fontColor}>
+      <text
+        clip-path=${clipUid}
+        fill=${fontColor}
+        onClick=${handleClickSelection}
+      >
         <tspan ...${tspan1Props} font-size="0.7em">${data.name}</tspan>
         <tspan ...${tspan2Props} fill-opacity=${0.7} font-size="0.7em"
           >${formatBytes(originalValue[sizeProperty])}</tspan
