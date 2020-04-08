@@ -23,7 +23,7 @@
     "build": "node build.js",
     "clean": "del-cli lib",
     "prepare": "yarn run build",
-    "test": "node build.js --all --e2e"
+    "test": "node build.js --all --e2e && node build.js --all --test"
   },
   "dependencies": {
     "nanoid": "^3.0.1",
