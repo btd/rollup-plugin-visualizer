@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.4
+
+* Fix #70
+* Fix #69 - this time more accurate way
+
 ## 4.0.3
 
 * Fix #69
