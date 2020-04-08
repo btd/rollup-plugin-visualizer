@@ -398,9 +398,13 @@ const Main = ({
       for (const prop of availableSizeProperties) {
         value[prop] = 0;
       }
-      const children = node.children;
-      if (children != null) {
-        let i = children.length;
+
+      // use node.data.children because if it is empty d3 will skip this node
+      // and it will look like it is actually a leaf - which technically it is but not exactly
+      // it is just a chunk without deps - usually just with imports
+      if (node.data.children != null) {
+        const children = node.children;
+        let i = node.data.children.length;
         while (--i >= 0) {
           for (const prop of availableSizeProperties) {
             value[prop] += children[i].originalValue[prop];

@@ -263,9 +263,9 @@ const Main = ({ width, height, data: { tree, nodes, options = {} } }) => {
       for (const prop of availableSizeProperties) {
         value[prop] = 0;
       }
-      const children = node.children;
-      if (children != null) {
-        let i = children.length;
+      if (node.data.children != null) {
+        const children = node.children;
+        let i = node.data.children.length;
         while (--i >= 0) {
           for (const prop of availableSizeProperties) {
             value[prop] += children[i].originalValue[prop];

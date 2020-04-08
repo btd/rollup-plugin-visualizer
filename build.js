@@ -167,7 +167,7 @@ const runBuildTest_e2e = async (template = "treemap") => {
   await bundle.write(outputOptions);
 };
 
-const runBuildTest_gh59 = async () => {
+const runBuildTest_gh59 = async (template) => {
   const input = {
     index: "test/gh59/src/index",
     "components/index": "test/gh59/src/components/index",
@@ -181,7 +181,7 @@ const runBuildTest_gh59 = async () => {
       require("./")({
         title: "test gh59",
         filename: `stats.gh59${fileExt}`,
-        template: "treemap",
+        template,
         ...simpleOptions,
       }),
     ],
@@ -198,7 +198,7 @@ const runBuildTest_gh59 = async () => {
   await bundle.write(outputOptions);
 };
 
-const runBuildTest_gh69 = async () => {
+const runBuildTest_gh69 = async (template) => {
   const input = "test/gh69/main.js";
 
   const inputOptions = {
@@ -207,7 +207,7 @@ const runBuildTest_gh69 = async () => {
       require("./")({
         title: "test gh69",
         filename: `stats.gh69${fileExt}`,
-        template: "treemap",
+        template,
         ...simpleOptions,
       }),
     ],
@@ -224,17 +224,20 @@ const runBuildTest_gh69 = async () => {
   await bundle.write(outputOptions);
 };
 
+const buildAll = (action) =>
+  Promise.all(templatesToBuild.map((t) => action(t)));
+
 const run = async () => {
   await Promise.all(TEMPLATE.map((t) => runBuild(t)));
   if (argv.dev) {
-    await Promise.all(templatesToBuild.map((t) => runBuildDev(t)));
+    await buildAll(runBuildDev);
   }
   if (argv.e2e) {
-    await Promise.all(templatesToBuild.map((t) => runBuildTest_e2e(t)));
+    await buildAll(runBuildTest_e2e);
   }
   if (argv.test) {
-    await runBuildTest_gh59();
-    await runBuildTest_gh69();
+    await buildAll(runBuildTest_gh59);
+    await buildAll(runBuildTest_gh69);
   }
 };
 
