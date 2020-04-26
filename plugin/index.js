@@ -57,18 +57,22 @@ module.exports = function (opts) {
       )
     : null;
 
+  const getAdditionalFilesInfo = async (id, code) => {
+    const info = {};
+    if (gzipSize) {
+      info.gzipLength = await gzipSizeGetter(code);
+    }
+    if (brotliSize) {
+      info.brotliLength = await brotliSizeGetter(code);
+    }
+    return info;
+  };
+
   return {
     name: "visualizer",
 
     async transform(code, id) {
-      const info = {};
-      if (gzipSize) {
-        info.gzipLength = await gzipSizeGetter(code);
-      }
-      if (brotliSize) {
-        info.brotliLength = await brotliSizeGetter(code);
-      }
-      additionalFilesInfo.set(id, info);
+      additionalFilesInfo.set(id, await getAdditionalFilesInfo(id, code));
       return null;
     },
 
@@ -98,12 +102,19 @@ module.exports = function (opts) {
             outputOptions.dir || path.dirname(outputOptions.file)
           );
 
-          tree = buildTree(id, Object.entries(modules), mapper);
+          tree = buildTree(Object.entries(modules), mapper);
         } else {
           const modules = Object.entries(bundle.modules);
 
-          tree = buildTree(id, modules, mapper);
+          tree = buildTree(modules, mapper);
         }
+
+        const bundleInfo = await getAdditionalFilesInfo(id, bundle.code);
+        Object.assign(tree, bundleInfo, {
+          renderedLength: bundle.code.length,
+          isRoot: true,
+          name: id,
+        });
 
         roots.push(tree);
       }

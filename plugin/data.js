@@ -4,7 +4,7 @@ const path = require("path");
 
 const PLUGIN_PREFIX = "\u0000";
 
-const buildTree = (name, modules, mapper) => {
+const buildTree = (modules, mapper) => {
   let tree = {
     name: "root",
     children: [],
@@ -26,7 +26,6 @@ const buildTree = (name, modules, mapper) => {
   }
 
   tree = flattenTree(tree);
-  tree.name = name;
 
   return tree;
 };
