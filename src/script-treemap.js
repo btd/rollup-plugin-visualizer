@@ -407,12 +407,12 @@ const Main = ({
         let i = node.data.children.length;
         while (--i >= 0) {
           for (const prop of availableSizeProperties) {
-            value[prop] += children[i].originalValue[prop];
+            value[prop] += children[i].originalValue[prop] || 0;
           }
         }
       } else {
         for (const prop of availableSizeProperties) {
-          value[prop] = nodes[node.data.uid][prop];
+          value[prop] = nodes[node.data.uid][prop] || 0;
         }
       }
 
