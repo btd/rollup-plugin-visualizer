@@ -18,7 +18,7 @@ const getBytesPerFileUsingSourceMap = (bundleId, code, map, dir) => {
     const id =
       source == null
         ? `${UNKNOWN_SOURCE}-${bundleId}`
-        : path.resolve(dir, source);
+        : path.resolve(path.dirname(path.join(dir, bundleId)), source);
 
     modules[id] = modules[id] || { renderedLength: 0 };
     modules[id].renderedLength += 1;
