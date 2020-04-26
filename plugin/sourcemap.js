@@ -3,8 +3,6 @@
 const path = require("path");
 const { SourceMapConsumer } = require("source-map");
 
-const UNKNOWN_SOURCE = "\u0000unknown";
-
 const getBytesPerFileUsingSourceMap = (bundleId, code, map, dir) => {
   const modules = Object.create(null);
 
@@ -15,13 +13,12 @@ const getBytesPerFileUsingSourceMap = (bundleId, code, map, dir) => {
       line,
       column,
     });
-    const id =
-      source == null
-        ? `${UNKNOWN_SOURCE}-${bundleId}`
-        : path.resolve(path.dirname(path.join(dir, bundleId)), source);
+    if (source != null) {
+      const id = path.resolve(path.dirname(path.join(dir, bundleId)), source);
 
-    modules[id] = modules[id] || { renderedLength: 0 };
-    modules[id].renderedLength += 1;
+      modules[id] = modules[id] || { renderedLength: 0 };
+      modules[id].renderedLength += 1;
+    }
 
     if (code[i] === "\n") {
       line += 1;
