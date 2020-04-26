@@ -4,12 +4,7 @@ const fs = require("fs").promises;
 const path = require("path");
 const pupa = require("pupa");
 
-module.exports = async function buildHtml({
-  title,
-  data,
-  template,
-  chartParameters,
-}) {
+module.exports = async function buildHtml({ title, data, template }) {
   const [templateString, script, style] = await Promise.all([
     fs.readFile(path.join(__dirname, "stats.template"), "utf-8"),
     fs.readFile(
@@ -27,6 +22,5 @@ module.exports = async function buildHtml({
     style,
     script,
     nodesData: JSON.stringify(data),
-    chartParameters: JSON.stringify(chartParameters),
   });
 };

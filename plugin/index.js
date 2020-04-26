@@ -43,8 +43,6 @@ module.exports = function (opts) {
     throw new Error(`Unknown template type ${template}. Known: ${TEMPLATE}`);
   }
 
-  const chartParameters = opts.chartParameters || {};
-
   const gzipSize = !!opts.gzipSize;
   const brotliSize = !!opts.brotliSize;
   const additionalFilesInfo = new Map();
@@ -177,7 +175,6 @@ module.exports = function (opts) {
             title,
             data,
             template,
-            chartParameters,
           });
 
       await fs.mkdir(path.dirname(filename), { recursive: true });

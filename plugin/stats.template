@@ -18,12 +18,11 @@
     {script}
     </script>
     <script>
-      const chartParameters = {chartParameters};
       const data = {nodesData};
 
       document.addEventListener('DOMContentLoaded', () => {
-        const width = chartParameters.width || window.innerWidth;
-        const height = chartParameters.height || window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
 
         const chartNode = document.querySelector("main");
         drawChart(chartNode, data, width, height);

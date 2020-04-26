@@ -44,10 +44,6 @@ plugins: [
 
 `template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
 
-`chartParameters.width` (number, default `undefined`) - Set svg viewBox width to this number
-
-`chartParameters.height` (number, default `undefined`) - Set svg viewBox height to this number
-
 `json` (boolean, default `false`) - Product portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart

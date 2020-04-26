@@ -88,7 +88,6 @@ const runForPluginJson = async ({ title, template, filename }, files) => {
     title,
     data,
     template,
-    chartParameters: {},
   });
 
   await fs.mkdir(path.dirname(filename), { recursive: true });
