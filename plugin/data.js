@@ -140,7 +140,7 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
 };
 
 const skipModule = (id, node) =>
-  id.startsWith(PLUGIN_PREFIX) || node.isExternal;
+  id.startsWith(PLUGIN_PREFIX) || node.isExternal || !path.isAbsolute(id);
 
 const removeCommonPrefix = (nodes, nodeIds) => {
   let commonPrefix = null;
