@@ -1,5 +1,14 @@
 # Changelog
 
+## Not released yet
+
+* Expose bundle actual sizes to root json (this fixes unknown nodes in network chart)
+* Drop `chartParameters` as it was not used starting 2.x
+* Fix dropping common path from absolute paths only (fix issue with alias plugin)
+* Fix resolve of sourcemap entries 
+* Fix if some node do not have lengths report it as 0
+
+
 ## 4.0.4
 
 * Fix #70
