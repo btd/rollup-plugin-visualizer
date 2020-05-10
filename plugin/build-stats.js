@@ -7,14 +7,8 @@ const pupa = require("pupa");
 module.exports = async function buildHtml({ title, data, template }) {
   const [templateString, script, style] = await Promise.all([
     fs.readFile(path.join(__dirname, "stats.template"), "utf-8"),
-    fs.readFile(
-      path.join(__dirname, "..", "lib", `script-${template}.js`),
-      "utf8"
-    ),
-    fs.readFile(
-      path.join(__dirname, "..", "lib", `script-${template}.css`),
-      "utf8"
-    ),
+    fs.readFile(path.join(__dirname, "..", "lib", `${template}.js`), "utf8"),
+    fs.readFile(path.join(__dirname, "..", "lib", `${template}.css`), "utf8"),
   ]);
 
   return pupa(templateString, {

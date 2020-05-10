@@ -102,7 +102,7 @@ const runBuild = async (template) => {
   };
   const outputOptions = {
     format: "iife",
-    dir: "./lib/",
+    file: `./lib/${template}.js`,
     name: "drawChart",
     sourcemap: argv.sourcemap,
   };
