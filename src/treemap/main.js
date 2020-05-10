@@ -6,7 +6,7 @@ import {
   treemapResquarify,
 } from "d3-hierarchy";
 
-import SideBar from "./sidebar.js";
+import SideBar from "../sidebar.js";
 import Chart from "./chart.js";
 
 import uid from "../uid";

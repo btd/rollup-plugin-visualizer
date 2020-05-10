@@ -2,6 +2,8 @@ import { useState } from "preact/hooks";
 import { html } from "htm/preact";
 import { group } from "d3-array";
 
+import Node from "./node.js";
+
 const TreeMap = ({
   root,
   layout,

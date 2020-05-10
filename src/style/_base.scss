@@ -83,13 +83,20 @@ main {
 .sidebar {
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.7rem;
+  align-items: center;
+  margin: 0 50px;
+  height: 20px;
 }
 
 .size-selectors {
   display: flex;
   flex-direction: row;
-  font-size: 0.7rem;
-  padding-top: 0.2rem;
+  align-items: center;
 }
 
 .size-selector {
@@ -101,5 +108,33 @@ main {
 
   input {
     margin: 0 0.3rem 0 0;
+  }
+}
+
+.filters {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  flex: 1;
+
+  input {
+    flex: 1;
+    height: 1rem;
+    padding: 0.1rem;
+    font-size: 0.7rem;
+    margin-left: 0.3rem;
+  }
+
+  & + & {
+    margin-left: 0.5rem;
   }
 }

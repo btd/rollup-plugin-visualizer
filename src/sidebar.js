@@ -1,6 +1,6 @@
 import { html } from "htm/preact";
 
-import { LABELS } from "../sizes";
+import { LABELS } from "./sizes";
 
 const SideBar = ({
   availableSizeProperties,
@@ -32,6 +32,16 @@ const SideBar = ({
             </div>
           `;
         })}
+      </div>
+      <div class="filters">
+        <div class="filter">
+          <label>include:</label>
+          <input type="text" />
+        </div>
+        <div class="filter">
+          <label>exclude:</label>
+          <input type="text" />
+        </div>
       </div>
     </aside>
   `;
