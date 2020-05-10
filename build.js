@@ -89,9 +89,14 @@ const onwarn = (warning, warn) => {
   warn(warning);
 };
 
+const inputPath = (template) =>
+  template === "treemap"
+    ? "./src/treemap/index.js"
+    : `./src/script-${template}.js`;
+
 const runBuild = async (template) => {
   const inputOptions = {
-    input: `./src/script-${template}.js`,
+    input: inputPath(template),
     plugins: [...COMMON_PLUGINS()],
     onwarn,
   };
@@ -110,7 +115,7 @@ const runBuild = async (template) => {
 const runBuildDev = async (template) => {
   const input = {};
   for (const t of TEMPLATE) {
-    input[t] = `./src/script-${t}.js`;
+    input[t] = inputPath(t);
   }
   const inputOptions = {
     input,
