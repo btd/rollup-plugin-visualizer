@@ -263,7 +263,16 @@ const Main = ({ width, height, data: { tree, nodes, options = {} } }) => {
       for (const prop of availableSizeProperties) {
         value[prop] = 0;
       }
-      if (node.data.children != null) {
+
+      // use node.data.children because if it is empty d3 will skip this node
+      // and it will look like it is actually a leaf - which technically it is but not exactly
+      // it is just a chunk without deps - usually just with imports
+      if (node.children == null && node.data.children != null) {
+        // this should be root withiout children
+        for (const prop of availableSizeProperties) {
+          value[prop] += node.data[prop] || 0;
+        }
+      } else if (node.data.children != null) {
         const children = node.children;
         let i = node.data.children.length;
         while (--i >= 0) {

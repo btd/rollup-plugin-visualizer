@@ -110,11 +110,16 @@ module.exports = function (opts) {
         }
 
         const bundleInfo = await getAdditionalFilesInfo(id, bundle.code);
-        Object.assign(tree, bundleInfo, {
-          renderedLength: bundle.code.length,
-          isRoot: true,
-          name: id,
-        });
+        Object.assign(
+          tree,
+          bundleInfo,
+          {
+            renderedLength: bundle.code.length,
+            isRoot: true,
+            name: id,
+          },
+          getAdditionalFilesInfo(id, bundle.code)
+        );
 
         roots.push(tree);
       }
