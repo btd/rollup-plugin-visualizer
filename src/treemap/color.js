@@ -1,5 +1,4 @@
 import { scaleSequential, scaleLinear } from "d3-scale";
-import { interpolateSpectral as colorRainbow } from "d3-scale-chromatic";
 import { hsl } from "d3-color";
 
 import { COLOR_BASE } from "../color";
@@ -32,9 +31,8 @@ const createRainbowColor = (root) => {
   colorParentMap.set(root, COLOR_BASE);
 
   if (root.children != null) {
-    const colorScale = scaleSequential(
-      [0, root.children.length - 1],
-      colorRainbow
+    const colorScale = scaleSequential([0, root.children.length - 1], (n) =>
+      hsl(360 * n, 0.6, 0.85)
     );
     root.children.forEach((c, id) => {
       colorParentMap.set(c, colorScale(id));
@@ -43,7 +41,7 @@ const createRainbowColor = (root) => {
 
   const colorMap = new Map();
 
-  const lightScale = scaleLinear().domain([0, root.height]).range([0.8, 0.1]);
+  const lightScale = scaleLinear().domain([0, root.height]).range([0.9, 0.3]);
 
   const getBackgroundColor = (node) => {
     const parents = node.ancestors();
