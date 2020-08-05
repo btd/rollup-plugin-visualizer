@@ -5,7 +5,7 @@ const { rollup } = require("rollup");
 
 const commonJs = require("@rollup/plugin-commonjs");
 const postcss = require("rollup-plugin-postcss");
-const resolve = require("@rollup/plugin-node-resolve");
+const resolve = require("@rollup/plugin-node-resolve").default;
 const { terser } = require("rollup-plugin-terser");
 const postcssUrl = require("postcss-url");
 
