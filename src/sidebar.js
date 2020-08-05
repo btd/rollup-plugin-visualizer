@@ -33,16 +33,6 @@ const SideBar = ({
           `;
         })}
       </div>
-      <div class="filters">
-        <div class="filter">
-          <label>include:</label>
-          <input type="text" />
-        </div>
-        <div class="filter">
-          <label>exclude:</label>
-          <input type="text" />
-        </div>
-      </div>
     </aside>
   `;
 };
