@@ -2,6 +2,7 @@
 
 ## Not released yet
 
+* Change color palette for treemap to be less bright
 * Expose bundle actual sizes to root json (this fixes unknown nodes in network chart)
 * Drop `chartParameters` as it was not used starting 2.x
 * Fix dropping common path from absolute paths only (fix issue with alias plugin)
