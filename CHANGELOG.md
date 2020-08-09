@@ -1,6 +1,6 @@
 # Changelog
 
-## Not released yet
+## 4.1.0
 
 * Change color palette for treemap to be less bright
 * Expose bundle actual sizes to root json (this fixes unknown nodes in network chart)
