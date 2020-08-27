@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.1
+
+* Update to d3 v6 and other deps
+
 ## 4.1.0
 
 * Change color palette for treemap to be less bright
