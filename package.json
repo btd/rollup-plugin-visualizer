@@ -36,7 +36,7 @@
     "rollup": ">=1.20.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "bytes": "^3.1.0",
     "d3-array": "^2.2.0",
@@ -51,9 +51,9 @@
     "preact": "^10.3.3",
     "prettier": "^2.0.1",
     "rollup": "^2.0.6",
-    "rollup-plugin-postcss": "^3.1.1",
-    "rollup-plugin-terser": "^7.0.0",
-    "sass": "^1.22.7",
+    "rollup-plugin-postcss": "^3.1.8",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.22.11",
     "webcola": "^3.4.0"
   },
   "engines": {
