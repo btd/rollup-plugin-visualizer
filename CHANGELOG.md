@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.2
+
+* Updat deps, drop pupa because it has not stated breaking change
+
 ## 4.1.1
 
 * Update to d3 v6 and other deps

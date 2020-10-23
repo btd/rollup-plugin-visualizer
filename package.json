@@ -28,7 +28,6 @@
   "dependencies": {
     "nanoid": "^3.0.1",
     "open": "^7.0.3",
-    "pupa": "^2.0.0",
     "source-map": "^0.7.3",
     "yargs": "^16.0.3"
   },
