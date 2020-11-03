@@ -22,7 +22,7 @@
     "lint": "eslint .",
     "build": "node build.js",
     "clean": "del-cli lib",
-    "prepare": "yarn run build",
+    "prepare": "npm run build",
     "test": "node build.js --all --e2e && node build.js --all --test"
   },
   "dependencies": {
