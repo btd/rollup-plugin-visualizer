@@ -1,8 +1,13 @@
 # Changelog
 
+## 4.2.0
+
+* Switch to npm
+* Add to html template window on resize handler
+
 ## 4.1.2
 
-* Updat deps, drop pupa because it has not stated breaking change
+* Update deps, drop pupa because it has not stated breaking change
 
 ## 4.1.1
 
