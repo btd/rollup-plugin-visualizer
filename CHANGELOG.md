@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.1
+
+* Update deps
+* Fix safari rendering
+
 ## 4.2.0
 
 * Switch to npm
