@@ -49,12 +49,14 @@ body {
 svg {
   vertical-align: middle;
   height: 100%;
+  min-height: 100%;
 }
 
 main {
   margin: 0 auto;
   flex: 1;
   height: 100%;
+  min-height: 100%;
   padding: 20px;
 }
 
