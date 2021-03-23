@@ -65,7 +65,7 @@ const Node = ({
       >
       </rect>
       <clipPath id=${clipUid.id}>
-        <use xlink:href=${nodeUid.href} />
+        <use href=${nodeUid.href} />
       </clipPath>
       <text
         clip-path=${clipUid}

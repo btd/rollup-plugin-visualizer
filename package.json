@@ -47,7 +47,7 @@
     "eslint": "^7.22.0",
     "htm": "^3.0.3",
     "postcss-url": "^8.0.0",
-    "preact": "^10.5.3",
+    "preact": "^10.5.13",
     "prettier": "^2.2.1",
     "rollup": "^2.42.3",
     "rollup-plugin-postcss": "^3.1.8",
