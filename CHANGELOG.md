@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.2
+
+* Rollback open to v7 because v8 requires node 12, but i still support 10
+* Add workaround for preact bug for xlink:href attribute - use just href
+* Rework safari bug fix to make it a little more clean
 ## 4.2.1
 
 * Update deps
