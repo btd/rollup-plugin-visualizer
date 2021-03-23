@@ -42,13 +42,13 @@ plugins: [
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
+`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
 
 `json` (boolean, default `false`) - Product portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart
 
-`brotliSize` (boolean, default `false`) - Collect brolti size from source code and display it at chart. Only if current node version supports it
+`brotliSize` (boolean, default `false`) - Collect brotli size from source code and display it at chart. Only if current node version supports it
 
 ## CLI
 
