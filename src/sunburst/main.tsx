@@ -45,7 +45,13 @@ export const Main: FunctionalComponent = () => {
   // root here always be the same as rawHierarchy even after layouting
   const root = useMemo(() => {
     const rootWithSizesAndSorted = rawHierarchy
-      .sum((node) => getModuleSize(node, sizeProperty) * getNodeSizeMultiplier(node))
+      .sum((node) => {
+        if (isModuleTree(node)) return 0;
+        const ownSize = getModuleSize(node, sizeProperty);
+        const zoomMultiplier = getNodeSizeMultiplier(node);
+
+        return ownSize * zoomMultiplier;
+      })
       .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
 
     return layout(rootWithSizesAndSorted);

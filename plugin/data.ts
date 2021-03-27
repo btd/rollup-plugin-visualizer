@@ -1,12 +1,6 @@
 import path from "path";
 import { GetModuleInfo } from "rollup";
-import {
-  isModuleTree,
-  ModuleLink,
-  ModuleRenderInfo,
-  ModuleTree,
-  ModuleUID,
-} from "../types/types";
+import { isModuleTree, ModuleLink, ModuleRenderInfo, ModuleTree, ModuleTreeLeaf, ModuleUID } from "../types/types";
 import { ModuleMapper } from "./module-mapper";
 
 const PLUGIN_PREFIX = "\u0000";
@@ -15,13 +9,9 @@ interface MappedNode {
   uid: string;
 }
 
-const addToPath = (
-  tree: ModuleTree,
-  modulePath: string[],
-  node: MappedNode
-): void => {
+const addToPath = (tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
   if (modulePath.length === 0) {
-    throw new Error(`Error adding node to path ${modulePath}`);
+    throw new Error(`Error adding node to path ${modulePath.join("/")}`);
   }
 
   const [head, ...rest] = modulePath;
@@ -30,10 +20,7 @@ const addToPath = (
     tree.children.push({ ...node, name: head });
     return;
   } else {
-    let newTree = tree.children.find(
-      (folder): folder is ModuleTree =>
-        folder.name === head && isModuleTree(folder)
-    );
+    let newTree = tree.children.find((folder): folder is ModuleTree => folder.name === head && isModuleTree(folder));
 
     if (!newTree) {
       newTree = { name: head, children: [] };
@@ -44,10 +31,7 @@ const addToPath = (
   }
 };
 
-export const buildTree = (
-  modules: Array<[string, ModuleRenderInfo]>,
-  mapper: ModuleMapper
-): ModuleTree => {
+export const buildTree = (modules: Array<[string, ModuleRenderInfo]>, mapper: ModuleMapper): ModuleTree => {
   let tree: ModuleTree = {
     name: "root",
     children: [],
@@ -99,10 +83,7 @@ export const flattenTree = (root: ModuleTree): ModuleTree => {
   return newRoot;
 };
 
-export const mergeTrees = (trees: ModuleTree[]): ModuleTree => {
-  if (trees.length === 1) {
-    return trees[0];
-  }
+export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTree => {
   const newTree = {
     name: "root",
     children: trees,
@@ -163,10 +144,7 @@ export const addLinks = (
 const skipModule = (id: string, node: ModuleRenderInfo): boolean =>
   id.startsWith(PLUGIN_PREFIX) || node.isExternal || !path.isAbsolute(id);
 
-export const removeCommonPrefix = (
-  nodes: ModuleMapper["nodes"],
-  nodeIds: ModuleMapper["nodeIds"]
-): void => {
+export const removeCommonPrefix = (nodes: ModuleMapper["nodes"], nodeIds: ModuleMapper["nodeIds"]): void => {
   let commonPrefix = null;
 
   for (const [id, uid] of Object.entries(nodeIds)) {

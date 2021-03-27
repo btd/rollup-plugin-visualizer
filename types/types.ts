@@ -12,7 +12,6 @@ export interface ModuleTreeLeaf {
 export interface ModuleTree {
   name: string;
   children: Array<ModuleTree | ModuleTreeLeaf>;
-  isRoot?: boolean;
 }
 
 export type ModuleUID = string;

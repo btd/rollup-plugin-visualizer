@@ -6,11 +6,7 @@ import opn from "open";
 
 import { version } from "./version";
 
-import {
-  createGzipSizeGetter,
-  createBrotliSizeGetter,
-  SizeGetter,
-} from "./compress";
+import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
 
 import pkg from "../package.json";
 import { TemplateType } from "./template-types";
@@ -18,7 +14,7 @@ import { ModuleMapper } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees, removeCommonPrefix } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { buildHtml } from "./build-stats";
-import { ModuleLink, ModuleTree, VisualizerData } from "../types/types";
+import { ModuleLink, ModuleRenderSizes, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../types/types";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -58,14 +54,10 @@ const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
   const brotliSize = !!opts.brotliSize;
   const additionalFilesInfo = new Map<string, AdditionalRenderInfo>();
   const gzipSizeGetter = gzipSize
-    ? createGzipSizeGetter(
-        typeof opts.gzipSize === "object" ? opts.gzipSize : {}
-      )
+    ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
     : defaultSizeGetter;
   const brotliSizeGetter = brotliSize
-    ? createBrotliSizeGetter(
-        typeof opts.brotliSize === "object" ? opts.brotliSize : {}
-      )
+    ? createBrotliSizeGetter(typeof opts.brotliSize === "object" ? opts.brotliSize : {})
     : defaultSizeGetter;
 
   const getAdditionalFilesInfo = async (id: string, code: string) => {
@@ -87,35 +79,30 @@ const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
       return null;
     },
 
-    async generateBundle(
-      outputOptions: NormalizedOutputOptions,
-      outputBundle: OutputBundle
-    ): Promise<void> {
+    async generateBundle(outputOptions: NormalizedOutputOptions, outputBundle: OutputBundle): Promise<void> {
       if (opts.sourcemap && !outputOptions.sourcemap) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
 
-      const roots: ModuleTree[] = [];
+      const roots: Array<ModuleTree | ModuleTreeLeaf> = [];
       const mapper = new ModuleMapper();
       const links: ModuleLink[] = [];
 
       // collect trees
-      for (const [id, bundle] of Object.entries(outputBundle)) {
+      for (const [bundleId, bundle] of Object.entries(outputBundle)) {
         if (bundle.type !== "chunk") continue; //only chunks
 
         let tree: ModuleTree;
 
         if (opts.sourcemap) {
           if (!bundle.map) {
-            this.warn(WARN_SOURCEMAP_MISSING(id));
+            this.warn(WARN_SOURCEMAP_MISSING(bundleId));
           }
 
           const modules = await getSourcemapModules(
-            id,
+            bundleId,
             bundle,
-            outputOptions.dir ??
-              (outputOptions.file && path.dirname(outputOptions.file)) ??
-              process.cwd()
+            outputOptions.dir ?? (outputOptions.file && path.dirname(outputOptions.file)) ?? process.cwd()
           );
 
           tree = buildTree(Object.entries(modules), mapper);
@@ -125,26 +112,26 @@ const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
           tree = buildTree(modules, mapper);
         }
 
-        const bundleInfo = await getAdditionalFilesInfo(id, bundle.code);
-        Object.assign(tree, bundleInfo, {
-          renderedLength: bundle.code.length,
-          isRoot: true,
-          name: id,
-        });
+        tree.name = bundleId;
 
-        roots.push(tree);
+        if (tree.children.length === 0) {
+          const bundleInfo = await getAdditionalFilesInfo(bundleId, bundle.code);
+          const bundleSizes: ModuleRenderSizes = { ...bundleInfo, renderedLength: bundle.code.length };
+          const facadeModuleId = bundle.facadeModuleId ?? "unknown";
+          const moduleId = bundle.isEntry ? `entry-${facadeModuleId}` : facadeModuleId;
+          const bundleUid = mapper.setValueByModuleId(moduleId, { isEntry: true, ...bundleSizes, id: moduleId });
+          const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid };
+          roots.push(leaf);
+        } else {
+          roots.push(tree);
+        }
       }
 
       // after trees we process links (this is mostly for uids)
       for (const bundle of Object.values(outputBundle)) {
         if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
 
-        addLinks(
-          bundle.facadeModuleId,
-          this.getModuleInfo.bind(this),
-          links,
-          mapper
-        );
+        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
       }
 
       const { nodes, nodeIds } = mapper;
