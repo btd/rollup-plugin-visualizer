@@ -3,15 +3,11 @@ import { OutputChunk } from "rollup";
 import { SourceMapConsumer } from "source-map";
 
 interface SourceMapModuleRenderInfo {
+  id: string;
   renderedLength: number;
-};
+}
 
-const getBytesPerFileUsingSourceMap = (
-  bundleId: string,
-  code: string,
-  map: SourceMapConsumer,
-  dir: string
-) => {
+const getBytesPerFileUsingSourceMap = (bundleId: string, code: string, map: SourceMapConsumer, dir: string) => {
   const modules: Record<string, SourceMapModuleRenderInfo> = {};
 
   let line = 1;
@@ -24,7 +20,7 @@ const getBytesPerFileUsingSourceMap = (
     if (source != null) {
       const id = path.resolve(path.dirname(path.join(dir, bundleId)), source);
 
-      modules[id] = modules[id] || { renderedLength: 0 };
+      modules[id] = modules[id] || { id, renderedLength: 0 };
       modules[id].renderedLength += 1;
     }
 

@@ -38,7 +38,7 @@ export const buildTree = (modules: Array<[string, ModuleRenderInfo]>, mapper: Mo
   };
 
   for (const [id, { renderedLength }] of modules) {
-    const mod = { renderedLength };
+    const mod = { id, renderedLength };
     const name = id;
 
     const uid = mapper.setValueByModuleId(id, mod);
@@ -113,7 +113,7 @@ export const addLinks = (
       processedNodes[moduleUid] = true;
     }
 
-    const mod = mapper.getValue(moduleUid, { renderedLength: 0 });
+    const mod = mapper.getValue(moduleUid, { id: moduleId, renderedLength: 0 });
 
     const moduleInfo = getModuleInfo(moduleId);
 

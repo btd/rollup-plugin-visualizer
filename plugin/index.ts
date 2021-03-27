@@ -14,7 +14,14 @@ import { ModuleMapper } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees, removeCommonPrefix } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { buildHtml } from "./build-stats";
-import { ModuleLink, ModuleRenderSizes, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../types/types";
+import {
+  ModuleLink,
+  ModuleRenderInfo,
+  ModuleRenderSizes,
+  ModuleTree,
+  ModuleTreeLeaf,
+  VisualizerData,
+} from "../types/types";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -107,7 +114,10 @@ const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
 
           tree = buildTree(Object.entries(modules), mapper);
         } else {
-          const modules = Object.entries(bundle.modules);
+          const modules: [string, ModuleRenderInfo][] = Object.entries(bundle.modules).map(([id, mod]) => [
+            id,
+            { id, ...mod },
+          ]);
 
           tree = buildTree(modules, mapper);
         }
