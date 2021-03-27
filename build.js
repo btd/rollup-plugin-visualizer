@@ -4,12 +4,13 @@
 const { rollup } = require("rollup");
 
 const commonJs = require("@rollup/plugin-commonjs");
-const postcss = require("rollup-plugin-postcss");
 const resolve = require("@rollup/plugin-node-resolve").default;
+const typescript = require("@rollup/plugin-typescript");
+const postcss = require("rollup-plugin-postcss");
 const { terser } = require("rollup-plugin-terser");
 const postcssUrl = require("postcss-url");
 
-const TEMPLATE = require("./plugin/template-types");
+const TEMPLATE = ["treemap", "sunburst"];
 
 let args = require("yargs")
   .strict()
@@ -61,6 +62,7 @@ const simpleOptions = {
 
 const COMMON_PLUGINS = () =>
   [
+    typescript({ tsconfig: "./src/tsconfig.json", noEmitOnError: true }),
     resolve(),
     commonJs({
       ignoreGlobal: true,
@@ -89,21 +91,19 @@ const onwarn = (warning, warn) => {
   warn(warning);
 };
 
-const inputPath = (template) =>
-  template === "treemap"
-    ? "./src/treemap/index.js"
-    : `./src/script-${template}.js`;
+const inputPath = (template) => `./src/${template}/index.tsx`;
 
 const runBuild = async (template) => {
   const inputOptions = {
     input: inputPath(template),
-    plugins: [...COMMON_PLUGINS()],
+    plugins: [...COMMON_PLUGINS(template)],
     onwarn,
   };
   const outputOptions = {
     format: "iife",
-    file: `./lib/${template}.js`,
+    file: `./dist/lib/${template}.js`,
     name: "drawChart",
+    exports: "named",
     sourcemap: argv.sourcemap,
   };
 
@@ -121,7 +121,7 @@ const runBuildDev = async (template) => {
     input,
     plugins: [
       ...COMMON_PLUGINS(),
-      require("./")({
+      require("./dist").default({
         title: `test ${template}`,
         filename: `stats.${template}${fileExt}`,
         template,
@@ -152,7 +152,7 @@ const runBuildTest_e2e = async (template = "treemap") => {
     input,
     plugins: [
       ...COMMON_PLUGINS(),
-      require("./")({
+      require("./dist").default({
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
         template,
@@ -183,7 +183,7 @@ const runBuildTest_gh59 = async (template) => {
   const inputOptions = {
     input,
     plugins: [
-      require("./")({
+      require("./dist").default({
         title: "test gh59",
         filename: `stats.gh59${fileExt}`,
         template,
@@ -209,7 +209,7 @@ const runBuildTest_gh69 = async (template) => {
   const inputOptions = {
     input,
     plugins: [
-      require("./")({
+      require("./dist").default({
         title: "test gh69",
         filename: `stats.gh69${fileExt}`,
         template,

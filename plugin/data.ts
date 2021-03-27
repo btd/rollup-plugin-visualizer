@@ -1,11 +1,54 @@
-"use strict";
-
-const path = require("path");
+import path from "path";
+import { GetModuleInfo } from "rollup";
+import {
+  isModuleTree,
+  ModuleLink,
+  ModuleRenderInfo,
+  ModuleTree,
+  ModuleUID,
+} from "../types/types";
+import { ModuleMapper } from "./module-mapper";
 
 const PLUGIN_PREFIX = "\u0000";
 
-const buildTree = (modules, mapper) => {
-  let tree = {
+interface MappedNode {
+  uid: string;
+}
+
+const addToPath = (
+  tree: ModuleTree,
+  modulePath: string[],
+  node: MappedNode
+): void => {
+  if (modulePath.length === 0) {
+    throw new Error(`Error adding node to path ${modulePath}`);
+  }
+
+  const [head, ...rest] = modulePath;
+
+  if (rest.length === 0) {
+    tree.children.push({ ...node, name: head });
+    return;
+  } else {
+    let newTree = tree.children.find(
+      (folder): folder is ModuleTree =>
+        folder.name === head && isModuleTree(folder)
+    );
+
+    if (!newTree) {
+      newTree = { name: head, children: [] };
+      tree.children.push(newTree);
+    }
+    addToPath(newTree, rest, node);
+    return;
+  }
+};
+
+export const buildTree = (
+  modules: Array<[string, ModuleRenderInfo]>,
+  mapper: ModuleMapper
+): ModuleTree => {
+  let tree: ModuleTree = {
     name: "root",
     children: [],
   };
@@ -21,7 +64,9 @@ const buildTree = (modules, mapper) => {
     if (name.startsWith(PLUGIN_PREFIX)) {
       addToPath(tree, [name], nodeData);
     } else {
-      addToPath(tree, name.split(path.sep), nodeData);
+      const pathParts = name.split(path.sep);
+      pathParts.shift(); // remove '' or C:
+      addToPath(tree, pathParts, nodeData);
     }
   }
 
@@ -31,56 +76,30 @@ const buildTree = (modules, mapper) => {
 };
 
 // if root children have only on child we can flatten this
-const flattenTree = (root) => {
-  let newRoot = root;
+export const flattenTree = (root: ModuleTree): ModuleTree => {
   const pluginChildren = [];
   const otherChildren = [];
-  for (const child of root.children || []) {
-    if (child.name.startsWith(PLUGIN_PREFIX)) {
+  for (const child of root.children) {
+    if (child?.name.startsWith(PLUGIN_PREFIX)) {
       pluginChildren.push(child);
     } else {
       otherChildren.push(child);
     }
   }
 
-  if (otherChildren.length === 1 && otherChildren[0].children) {
+  let newRoot = root;
+  if (otherChildren.length === 1 && isModuleTree(otherChildren[0])) {
     newRoot = otherChildren[0];
   }
-  while (
-    newRoot.children &&
-    newRoot.children.length === 1 &&
-    newRoot.children[0].children
-  ) {
+
+  while (newRoot.children.length === 1 && isModuleTree(newRoot.children[0])) {
     newRoot = newRoot.children[0];
   }
   newRoot.children = newRoot.children.concat(pluginChildren);
   return newRoot;
 };
 
-// ugly but works for now
-function addToPath(tree, p, value) {
-  if (p[0] === "") {
-    p.shift();
-  }
-
-  let child = tree.children.find((c) => c.name === p[0]);
-  if (child == null) {
-    child = {
-      name: p[0],
-      children: [],
-    };
-    tree.children.push(child);
-  }
-  if (p.length === 1) {
-    Object.assign(child, value);
-    delete child.children;
-    return;
-  }
-  p.shift();
-  addToPath(child, p, value);
-}
-
-const mergeTrees = (trees) => {
+export const mergeTrees = (trees: ModuleTree[]): ModuleTree => {
   if (trees.length === 1) {
     return trees[0];
   }
@@ -92,13 +111,18 @@ const mergeTrees = (trees) => {
   return newTree;
 };
 
-const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
-  const processedNodes = {};
+export const addLinks = (
+  startModuleId: string,
+  getModuleInfo: GetModuleInfo,
+  links: ModuleLink[],
+  mapper: ModuleMapper
+): void => {
+  const processedNodes: Record<ModuleUID, boolean> = {};
 
   const moduleIds = [startModuleId];
 
   while (moduleIds.length > 0) {
-    const moduleId = moduleIds.shift();
+    const moduleId = moduleIds.shift() as string;
 
     const moduleUid = mapper.getUid(moduleId);
 
@@ -110,27 +134,25 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
 
     const mod = mapper.getValue(moduleUid, { renderedLength: 0 });
 
-    const info = getModuleInfo(moduleId);
-    const {
-      importedIds,
-      isEntry,
-      isExternal,
-      dynamicallyImportedIds = [],
-    } = info;
+    const moduleInfo = getModuleInfo(moduleId);
 
-    if (isEntry) {
+    if (!moduleInfo) {
+      return;
+    }
+
+    if (moduleInfo.isEntry) {
       mod.isEntry = true;
     }
-    if (isExternal) {
+    if (moduleInfo.isExternal) {
       mod.isExternal = true;
     }
 
-    for (const importedId of importedIds) {
+    for (const importedId of moduleInfo.importedIds) {
       const importedUid = mapper.getUid(importedId);
       links.push({ source: moduleUid, target: importedUid });
       moduleIds.push(importedId);
     }
-    for (const importedId of dynamicallyImportedIds) {
+    for (const importedId of moduleInfo.dynamicallyImportedIds) {
       const importedUid = mapper.getUid(importedId);
       links.push({ source: moduleUid, target: importedUid, dynamic: true });
       moduleIds.push(importedId);
@@ -138,10 +160,13 @@ const addLinks = (startModuleId, getModuleInfo, links, mapper) => {
   }
 };
 
-const skipModule = (id, node) =>
+const skipModule = (id: string, node: ModuleRenderInfo): boolean =>
   id.startsWith(PLUGIN_PREFIX) || node.isExternal || !path.isAbsolute(id);
 
-const removeCommonPrefix = (nodes, nodeIds) => {
+export const removeCommonPrefix = (
+  nodes: ModuleMapper["nodes"],
+  nodeIds: ModuleMapper["nodeIds"]
+): void => {
   let commonPrefix = null;
 
   for (const [id, uid] of Object.entries(nodeIds)) {
@@ -161,6 +186,10 @@ const removeCommonPrefix = (nodes, nodeIds) => {
     }
   }
 
+  if (commonPrefix == null) {
+    return;
+  }
+
   const commonPrefixLength = commonPrefix.length;
   for (const [id, uid] of Object.entries(nodeIds)) {
     const node = nodes[uid];
@@ -172,5 +201,3 @@ const removeCommonPrefix = (nodes, nodeIds) => {
     }
   }
 };
-
-module.exports = { buildTree, mergeTrees, addLinks, removeCommonPrefix };

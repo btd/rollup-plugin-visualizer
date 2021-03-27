@@ -1,64 +1,75 @@
-"use strict";
+import { promises as fs } from "fs";
+import path from "path";
 
-const fs = require("fs").promises;
-const path = require("path");
+import { OutputBundle, Plugin, NormalizedOutputOptions } from "rollup";
+import opn from "open";
 
-const opn = require("open");
+import { version } from "./version";
 
-const TEMPLATE = require("./template-types");
-const ModuleMapper = require("./module-mapper");
-const buildStats = require("./build-stats");
-const JSON_VERSION = require("./version");
-const {
-  buildTree,
-  mergeTrees,
-  addLinks,
-  removeCommonPrefix,
-} = require("./data");
-const getSourcemapModules = require("./sourcemap");
+import {
+  createGzipSizeGetter,
+  createBrotliSizeGetter,
+  SizeGetter,
+} from "./compress";
 
-const { createGzipSizeGetter, createBrotliSizeGetter } = require("./compress");
-
-const pkg = require("../package.json");
+import pkg from "../package.json";
+import { TemplateType } from "./template-types";
+import { ModuleMapper } from "./module-mapper";
+import { addLinks, buildTree, mergeTrees, removeCommonPrefix } from "./data";
+import { getSourcemapModules } from "./sourcemap";
+import { buildHtml } from "./build-stats";
+import { ModuleLink, ModuleTree, VisualizerData } from "../types/types";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 
-const WARN_SOURCEMAP_MISSING = (id) => `${id} missing source map`;
+const WARN_SOURCEMAP_MISSING = (id: string) => `${id} missing source map`;
 
-const isAsset = (bundle) =>
-  "type" in bundle ? bundle.type === "asset" : bundle.isAsset;
+export interface PluginVisualizerOptions {
+  json?: boolean;
+  filename?: string;
+  title?: string;
+  open?: boolean;
+  openOptions?: opn.Options;
+  template?: TemplateType;
+  gzipSize?: boolean;
+  brotliSize?: boolean;
+  sourcemap?: boolean;
+}
 
-module.exports = function (opts) {
-  opts = opts || {};
+interface AdditionalRenderInfo {
+  gzipLength?: number;
+  brotliLength?: number;
+}
+
+const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
+
+const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
   const json = !!opts.json;
-  const filename = opts.filename || (json ? "stats.json" : "stats.html");
-  const title = opts.title || "RollUp Visualizer";
+  const filename = opts.filename ?? (json ? "stats.json" : "stats.html");
+  const title = opts.title ?? "RollUp Visualizer";
 
   const open = !!opts.open;
-  const openOptions = opts.openOptions || {};
+  const openOptions = opts.openOptions ?? {};
 
-  const template = opts.template || "treemap";
-  if (!TEMPLATE.includes(template)) {
-    throw new Error(`Unknown template type ${template}. Known: ${TEMPLATE}`);
-  }
+  const template = opts.template ?? "treemap";
 
   const gzipSize = !!opts.gzipSize;
   const brotliSize = !!opts.brotliSize;
-  const additionalFilesInfo = new Map();
+  const additionalFilesInfo = new Map<string, AdditionalRenderInfo>();
   const gzipSizeGetter = gzipSize
     ? createGzipSizeGetter(
         typeof opts.gzipSize === "object" ? opts.gzipSize : {}
       )
-    : null;
+    : defaultSizeGetter;
   const brotliSizeGetter = brotliSize
     ? createBrotliSizeGetter(
         typeof opts.brotliSize === "object" ? opts.brotliSize : {}
       )
-    : null;
+    : defaultSizeGetter;
 
-  const getAdditionalFilesInfo = async (id, code) => {
-    const info = {};
+  const getAdditionalFilesInfo = async (id: string, code: string) => {
+    const info: AdditionalRenderInfo = {};
     if (gzipSize) {
       info.gzipLength = await gzipSizeGetter(code);
     }
@@ -76,20 +87,23 @@ module.exports = function (opts) {
       return null;
     },
 
-    async generateBundle(outputOptions, outputBundle) {
+    async generateBundle(
+      outputOptions: NormalizedOutputOptions,
+      outputBundle: OutputBundle
+    ): Promise<void> {
       if (opts.sourcemap && !outputOptions.sourcemap) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
 
-      const roots = [];
+      const roots: ModuleTree[] = [];
       const mapper = new ModuleMapper();
-      const links = [];
+      const links: ModuleLink[] = [];
 
       // collect trees
       for (const [id, bundle] of Object.entries(outputBundle)) {
-        if (isAsset(bundle)) continue; //only chunks
+        if (bundle.type !== "chunk") continue; //only chunks
 
-        let tree;
+        let tree: ModuleTree;
 
         if (opts.sourcemap) {
           if (!bundle.map) {
@@ -99,7 +113,9 @@ module.exports = function (opts) {
           const modules = await getSourcemapModules(
             id,
             bundle,
-            outputOptions.dir || path.dirname(outputOptions.file)
+            outputOptions.dir ??
+              (outputOptions.file && path.dirname(outputOptions.file)) ??
+              process.cwd()
           );
 
           tree = buildTree(Object.entries(modules), mapper);
@@ -110,23 +126,18 @@ module.exports = function (opts) {
         }
 
         const bundleInfo = await getAdditionalFilesInfo(id, bundle.code);
-        Object.assign(
-          tree,
-          bundleInfo,
-          {
-            renderedLength: bundle.code.length,
-            isRoot: true,
-            name: id,
-          },
-          getAdditionalFilesInfo(id, bundle.code)
-        );
+        Object.assign(tree, bundleInfo, {
+          renderedLength: bundle.code.length,
+          isRoot: true,
+          name: id,
+        });
 
         roots.push(tree);
       }
 
       // after trees we process links (this is mostly for uids)
       for (const bundle of Object.values(outputBundle)) {
-        if (isAsset(bundle) || bundle.facadeModuleId == null) continue; //only chunks
+        if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
 
         addLinks(
           bundle.facadeModuleId,
@@ -169,25 +180,26 @@ module.exports = function (opts) {
 
       const tree = mergeTrees(roots);
 
-      const data = {
-        version: JSON_VERSION,
+      const data: VisualizerData = {
+        version,
         tree,
         nodes,
         links,
         env: {
           rollup: this.meta.rollupVersion,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           [pkg.name]: pkg.version,
         },
         options: {
           gzip: gzipSize,
           brotli: brotliSize,
-          sourcemap: opts.sourcemap,
+          sourcemap: !!opts.sourcemap,
         },
       };
 
-      const fileContent = json
+      const fileContent: string = json
         ? JSON.stringify(data, null, 2)
-        : await buildStats({
+        : await buildHtml({
             title,
             data,
             template,
@@ -197,8 +209,10 @@ module.exports = function (opts) {
       await fs.writeFile(filename, fileContent);
 
       if (open) {
-        return opn(filename, openOptions);
+        await opn(filename, openOptions);
       }
     },
   };
 };
+
+export default plugin;

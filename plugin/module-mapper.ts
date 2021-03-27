@@ -1,19 +1,16 @@
-"use strict";
-
-const { customAlphabet } = require("nanoid/non-secure");
-const warn = require("./warn");
+import { customAlphabet } from "nanoid/non-secure";
+import { ModuleRenderInfo, ModuleUID } from "../types/types";
+import { warn } from "./warn";
 
 const nanoid = customAlphabet("1234567890abcdef", 4);
 
-class ModuleMapper {
-  constructor() {
-    this.id = 0;
-    this.prefix = nanoid();
-    this.nodes = Object.create(null);
-    this.nodeIds = Object.create(null);
-  }
+export class ModuleMapper {
+  id = 0;
+  prefix = nanoid();
+  nodes: Record<ModuleUID, ModuleRenderInfo> = {};
+  nodeIds: Record<string, ModuleUID> = {};
 
-  getUid(moduleId) {
+  getUid(moduleId: string): string {
     if (!(moduleId in this.nodeIds)) {
       const id = this.id;
       this.nodeIds[moduleId] = `${this.prefix}-${id}`;
@@ -22,7 +19,7 @@ class ModuleMapper {
     return this.nodeIds[moduleId];
   }
 
-  setValueByModuleId(moduleId, value) {
+  setValueByModuleId(moduleId: string, value: ModuleRenderInfo): ModuleUID {
     const uid = this.getUid(moduleId);
     if (uid in this.nodes) {
       warn(
@@ -37,12 +34,10 @@ class ModuleMapper {
     return uid;
   }
 
-  getValue(uid, defaultValue) {
+  getValue(uid: ModuleUID, defaultValue: ModuleRenderInfo): ModuleRenderInfo {
     if (!(uid in this.nodes)) {
       this.nodes[uid] = defaultValue;
     }
     return this.nodes[uid];
   }
 }
-
-module.exports = ModuleMapper;
