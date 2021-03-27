@@ -17,7 +17,7 @@ export interface ModuleTree {
 export type ModuleUID = string;
 
 export type ModuleRenderInfo = {
-  id?: string;
+  id: string;
   isEntry?: boolean;
   isExternal?: boolean;
 } & ModuleRenderSizes;
