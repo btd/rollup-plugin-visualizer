@@ -15,22 +15,15 @@ export interface TooltipProps {
   sizeProperty: SizeKey;
 }
 
-export const Tooltip: FunctionalComponent<TooltipProps> = ({
-  node,
-  root,
-  sizeProperty,
-}) => {
-  const { availableSizeProperties, getModuleSize } = useContext(
-    StaticContext
-  );
+export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, root, sizeProperty }) => {
+  const { availableSizeProperties, getModuleSize } = useContext(StaticContext);
 
   const content = useMemo(() => {
     if (!node) return null;
 
     const mainSize = getModuleSize(node.data, sizeProperty);
 
-    const percentageNum =
-      (100 * mainSize) / getModuleSize(root.data, sizeProperty);
+    const percentageNum = (100 * mainSize) / getModuleSize(root.data, sizeProperty);
     const percentage = percentageNum.toFixed(2);
     const percentageString = percentage + "%";
 
@@ -43,16 +36,14 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({
             return (
               <div className="details-size">
                 <b>
-                  {LABELS[sizeProp]}:{" "}
-                  {formatBytes(getModuleSize(node.data, sizeProp))}
+                  {LABELS[sizeProp]}: {formatBytes(getModuleSize(node.data, sizeProp))}
                 </b>
               </div>
             );
           } else {
             return (
               <div className="details-size">
-                {LABELS[sizeProp]}:{" "}
-                {formatBytes(getModuleSize(node.data, sizeProp))}
+                {LABELS[sizeProp]}: {formatBytes(getModuleSize(node.data, sizeProp))}
               </div>
             );
           }

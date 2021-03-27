@@ -4,9 +4,7 @@ import { FunctionalComponent } from "preact";
 import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
 import color from "../color";
 
-type NodeEventHandler = (
-  event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>
-) => void;
+type NodeEventHandler = (event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
 
 export interface NodeProps {
   node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
@@ -17,14 +15,7 @@ export interface NodeProps {
   onClick: NodeEventHandler;
 }
 
-export const Node: FunctionalComponent<NodeProps> = ({
-  node,
-  onMouseOver,
-  onClick,
-  path,
-  highlighted,
-  selected,
-}) => {
+export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClick, path, highlighted, selected }) => {
   return (
     <path
       d={path}

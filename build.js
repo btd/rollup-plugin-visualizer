@@ -10,7 +10,7 @@ const postcss = require("rollup-plugin-postcss");
 const { terser } = require("rollup-plugin-terser");
 const postcssUrl = require("postcss-url");
 
-const TEMPLATE = ["treemap", "sunburst"];
+const TEMPLATE = ["treemap", "sunburst", "network"];
 
 let args = require("yargs")
   .strict()
@@ -81,11 +81,7 @@ const COMMON_PLUGINS = () =>
 
 const onwarn = (warning, warn) => {
   const { code } = warning;
-  if (
-    code === "CIRCULAR_DEPENDENCY" ||
-    code === "CIRCULAR" ||
-    code === "THIS_IS_UNDEFINED"
-  ) {
+  if (code === "CIRCULAR_DEPENDENCY" || code === "CIRCULAR" || code === "THIS_IS_UNDEFINED") {
     return;
   }
   warn(warning);
@@ -229,8 +225,7 @@ const runBuildTest_gh69 = async (template) => {
   await bundle.write(outputOptions);
 };
 
-const buildAll = (action) =>
-  Promise.all(templatesToBuild.map((t) => action(t)));
+const buildAll = (action) => Promise.all(templatesToBuild.map((t) => action(t)));
 
 const run = async () => {
   await Promise.all(TEMPLATE.map((t) => runBuild(t)));

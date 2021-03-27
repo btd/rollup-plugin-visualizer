@@ -22,13 +22,7 @@ export class ModuleMapper {
   setValueByModuleId(moduleId: string, value: ModuleRenderInfo): ModuleUID {
     const uid = this.getUid(moduleId);
     if (uid in this.nodes) {
-      warn(
-        "Override (probably this is a bug)",
-        moduleId,
-        uid,
-        value,
-        this.nodes[uid]
-      );
+      warn("Override (probably this is a bug)", moduleId, uid, value, this.nodes[uid]);
     }
     this.nodes[uid] = value;
     return uid;

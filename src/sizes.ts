@@ -6,9 +6,7 @@ export const LABELS: Record<SizeKey, string> = {
   brotliLength: "Brotli",
 };
 
-export const getAvailableSizeOptions = (
-  options: VisualizerData["options"]
-): SizeKey[] => {
+export const getAvailableSizeOptions = (options: VisualizerData["options"]): SizeKey[] => {
   const availableSizeProperties: SizeKey[] = ["renderedLength"];
   if (options.gzip) {
     availableSizeProperties.push("gzipLength");

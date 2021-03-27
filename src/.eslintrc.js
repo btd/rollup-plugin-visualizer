@@ -3,6 +3,7 @@ module.exports = {
     "../.eslintrc.js",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
+    "prettier",
   ],
   parserOptions: {
     jsx: true,
@@ -13,5 +14,10 @@ module.exports = {
   rules: {
     "react/react-in-jsx-scope": 0,
     "react/prop-types": 0,
+  },
+  settings: {
+    react: {
+      version: "16.0",
+    },
   },
 };

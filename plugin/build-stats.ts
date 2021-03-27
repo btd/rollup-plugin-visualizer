@@ -4,19 +4,9 @@ import { VisualizerData } from "../types/types";
 import { TemplateType } from "./template-types";
 
 const htmlEscape = (str: string) =>
-  str
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  str.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const buildHtmlTemplate = (
-  title: string,
-  script: string,
-  nodesData: string,
-  style: string
-) =>
+const buildHtmlTemplate = (title: string, script: string, nodesData: string, style: string) =>
   `
 <!DOCTYPE html>
 <html lang="en">
@@ -64,11 +54,7 @@ interface BuildHtmlOptions {
   template: TemplateType;
 }
 
-export async function buildHtml({
-  title,
-  data,
-  template,
-}: BuildHtmlOptions): Promise<string> {
+export async function buildHtml({ title, data, template }: BuildHtmlOptions): Promise<string> {
   const [script, style] = await Promise.all([
     fs.readFile(path.join(__dirname, "..", "lib", `${template}.js`), "utf8"),
     fs.readFile(path.join(__dirname, "..", "lib", `${template}.css`), "utf8"),

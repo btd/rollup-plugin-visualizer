@@ -1,11 +1,5 @@
 import { createContext, render } from "preact";
-import {
-  hierarchy,
-  HierarchyNode,
-  HierarchyRectangularNode,
-  partition,
-  PartitionLayout,
-} from "d3-hierarchy";
+import { hierarchy, HierarchyNode, HierarchyRectangularNode, partition, PartitionLayout } from "d3-hierarchy";
 import { Arc, arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 
@@ -39,10 +33,7 @@ export interface ModuleIds {
 export interface ChartData {
   layout: PartitionLayout<ModuleTree | ModuleTreeLeaf>;
   rawHierarchy: HierarchyNode<ModuleTree | ModuleTreeLeaf>;
-  getModuleSize: (
-    node: ModuleTree | ModuleTreeLeaf,
-    sizeKey: SizeKey
-  ) => number;
+  getModuleSize: (node: ModuleTree | ModuleTreeLeaf, sizeKey: SizeKey) => number;
   getModuleIds: (node: ModuleTree | ModuleTreeLeaf) => ModuleIds;
   size: number;
   radius: number;
@@ -55,22 +46,14 @@ export type Context = StaticData & ChartData;
 
 export const StaticContext = createContext<Context>(({} as unknown) as Context);
 
-const drawChart = (
-  parentNode: Element,
-  data: VisualizerData,
-  width: number,
-  height: number
-): void => {
+const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
   const layout = partition<ModuleTree | ModuleTreeLeaf>();
 
   const rawHierarchy = hierarchy<ModuleTree | ModuleTreeLeaf>(data.tree);
 
-  const nodeSizesCache = new Map<
-    ModuleTree | ModuleTreeLeaf,
-    ModuleRenderSizes
-  >();
+  const nodeSizesCache = new Map<ModuleTree | ModuleTreeLeaf, ModuleRenderSizes>();
 
   const nodeIdsCache = new Map<ModuleTree | ModuleTreeLeaf, ModuleIds>();
 
@@ -87,10 +70,7 @@ const drawChart = (
     const sizes: ModuleRenderSizes = { renderedLength: 0 };
     if (isModuleTree(nodeData)) {
       for (const sizeKey of availableSizeProperties) {
-        sizes[sizeKey] = nodeData.children.reduce(
-          (acc, child) => getModuleSize(child, sizeKey) + acc,
-          0
-        );
+        sizes[sizeKey] = nodeData.children.reduce((acc, child) => getModuleSize(child, sizeKey) + acc, 0);
       }
     } else {
       for (const sizeKey of availableSizeProperties) {
@@ -100,8 +80,7 @@ const drawChart = (
     nodeSizesCache.set(nodeData, sizes);
   });
 
-  const getModuleIds = (node: ModuleTree | ModuleTreeLeaf) =>
-    nodeIdsCache.get(node) as ModuleIds;
+  const getModuleIds = (node: ModuleTree | ModuleTreeLeaf) => nodeIdsCache.get(node) as ModuleIds;
 
   const size = Math.min(width, height);
   const radius = size / 2;

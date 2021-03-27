@@ -8,18 +8,10 @@ import { Node } from "./node";
 
 export interface SunBurstProps {
   root: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
-  onNodeHover: (
-    event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>
-  ) => void;
-  isNodeHighlighted: (
-    node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>
-  ) => boolean;
-  selectedNode:
-    | HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>
-    | undefined;
-  onNodeClick: (
-    node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>
-  ) => void;
+  onNodeHover: (event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
+  isNodeHighlighted: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => boolean;
+  selectedNode: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined;
+  onNodeClick: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
 }
 
 export const SunBurst: FunctionalComponent<SunBurstProps> = ({

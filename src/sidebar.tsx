@@ -27,12 +27,7 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             const id = `selector-${sizeProp}`;
             return (
               <div className="size-selector" key={sizeProp}>
-                <input
-                  type="radio"
-                  id={id}
-                  checked={sizeProp === sizeProperty}
-                  onChange={handleChange(sizeProp)}
-                />
+                <input type="radio" id={id} checked={sizeProp === sizeProperty} onChange={handleChange(sizeProp)} />
                 <label htmlFor={id}>{LABELS[sizeProp]}</label>
               </div>
             );

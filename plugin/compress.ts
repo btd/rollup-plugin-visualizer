@@ -8,10 +8,7 @@ const gzipOptions = (options: zlib.ZlibOptions): zlib.ZlibOptions => ({
   level: 9,
   ...options,
 });
-const brotliOptions = (
-  options: zlib.BrotliOptions,
-  buffer: Buffer
-): zlib.BrotliOptions => ({
+const brotliOptions = (options: zlib.BrotliOptions, buffer: Buffer): zlib.BrotliOptions => ({
   params: {
     [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
     [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
@@ -33,13 +30,10 @@ export const createGzipSizeGetter = (options: zlib.ZlibOptions): SizeGetter => {
   };
 };
 
-const createBrotliCompressor = (options: zlib.BrotliOptions) => (
-  buffer: Buffer
-) => brotliCompress(buffer, brotliOptions(options || {}, buffer));
+const createBrotliCompressor = (options: zlib.BrotliOptions) => (buffer: Buffer) =>
+  brotliCompress(buffer, brotliOptions(options || {}, buffer));
 
-export const createBrotliSizeGetter = (
-  options: zlib.BrotliOptions
-): SizeGetter => {
+export const createBrotliSizeGetter = (options: zlib.BrotliOptions): SizeGetter => {
   const compress = createBrotliCompressor(options);
   return async (code: string) => {
     const data = await compress(Buffer.from(code, "utf-8"));
