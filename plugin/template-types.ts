@@ -2,4 +2,6 @@
 
 export type TemplateType = "sunburst" | "treemap" | "network";
 
-export default ["sunburst", "treemap", "network"];
+const templates: ReadonlyArray<TemplateType> = ["sunburst", "treemap", "network"];
+
+export default templates;
