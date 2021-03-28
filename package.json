@@ -5,10 +5,6 @@
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
   "bin": "./bin/cli.js",
-  "files": [
-    "bin/*",
-    "dist/*"
-  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:btd/rollup-plugin-visualizer.git"
@@ -22,7 +18,8 @@
     "build": "tsc && node build.js",
     "clean": "del-cli dist",
     "prepare": "npm run build",
-    "test": "node build.js --all --e2e && node build.js --all --test"
+    "test": "node build.js --all --e2e && node build.js --all --test",
+    "publish": "npm publish dist"
   },
   "dependencies": {
     "nanoid": "^3.1.22",
@@ -44,6 +41,7 @@
     "@types/d3-scale": "^3.2.2",
     "@types/d3-shape": "^2.0.0",
     "@types/nanoid": "^2.1.0",
+    "@types/yargs": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "bytes": "^3.1.0",

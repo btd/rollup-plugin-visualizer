@@ -8,7 +8,6 @@ import { version } from "./version";
 
 import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
 
-import pkg from "../package.json";
 import { TemplateType } from "./template-types";
 import { ModuleMapper } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees, removeCommonPrefix } from "./data";
@@ -22,6 +21,7 @@ import {
   ModuleTreeLeaf,
   VisualizerData,
 } from "../types/types";
+import pkg from "../package.json";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -47,7 +47,7 @@ interface AdditionalRenderInfo {
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
 
-const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
+export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
   const json = !!opts.json;
   const filename = opts.filename ?? (json ? "stats.json" : "stats.html");
   const title = opts.title ?? "RollUp Visualizer";
@@ -212,4 +212,4 @@ const plugin = (opts: PluginVisualizerOptions = {}): Plugin => {
   };
 };
 
-export default plugin;
+export default visualizer;
