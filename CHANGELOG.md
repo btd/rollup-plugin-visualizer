@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.0
+
+* **Breaking change** Remove support node < 10.16
+* **Breaking change** Remove support rollup 1.x (actually some of 1.x will still work, but i officially stop checking)
+* Migrate plugin to TS, types now included
+
 ## 4.2.2
 
 * Rollback open to v7 because v8 requires node 12, but i still support 10

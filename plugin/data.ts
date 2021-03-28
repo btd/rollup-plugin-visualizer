@@ -84,6 +84,9 @@ export const flattenTree = (root: ModuleTree): ModuleTree => {
 };
 
 export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTree => {
+  if (trees.length === 1 && isModuleTree(trees[0])) {
+    return trees[0];
+  }
   const newTree = {
     name: "root",
     children: trees,
