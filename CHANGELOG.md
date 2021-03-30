@@ -4,6 +4,8 @@
 
 * **Breaking change** Remove support node < 10.16
 * **Breaking change** Remove support rollup 1.x (actually some of 1.x will still work, but i officially stop checking)
+* **Breaking change** Remove support for `gzipLength` and `brotliLength` for rollup < 2.44. Since 2.44 rollup report renderered module code, which is used to get correct sizes.
+* **Breaking change** Change default export
 * Migrate plugin to TS, types now included
 
 ## 4.2.2

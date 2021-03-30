@@ -59,7 +59,6 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
 
   const gzipSize = !!opts.gzipSize;
   const brotliSize = !!opts.brotliSize;
-  const additionalFilesInfo = new Map<string, AdditionalRenderInfo>();
   const gzipSizeGetter = gzipSize
     ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
     : defaultSizeGetter;
@@ -67,24 +66,28 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
     ? createBrotliSizeGetter(typeof opts.brotliSize === "object" ? opts.brotliSize : {})
     : defaultSizeGetter;
 
-  const getAdditionalFilesInfo = async (id: string, code: string) => {
+  const getAdditionalFilesInfo = async (code: string | null) => {
     const info: AdditionalRenderInfo = {};
     if (gzipSize) {
-      info.gzipLength = await gzipSizeGetter(code);
+      info.gzipLength = code == null || code == "" ? 0 : await gzipSizeGetter(code);
     }
     if (brotliSize) {
-      info.brotliLength = await brotliSizeGetter(code);
+      info.brotliLength = code == null || code == "" ? 0 : await brotliSizeGetter(code);
     }
     return info;
   };
 
+  const renderedModuleToInfo = async (
+    id: string,
+    mod: { renderedLength: number; code: string | null }
+  ): Promise<ModuleRenderInfo> => ({
+    id,
+    ...mod,
+    ...(await getAdditionalFilesInfo(mod.code)),
+  });
+
   return {
     name: "visualizer",
-
-    async transform(code, id) {
-      additionalFilesInfo.set(id, await getAdditionalFilesInfo(id, code));
-      return null;
-    },
 
     async generateBundle(outputOptions: NormalizedOutputOptions, outputBundle: OutputBundle): Promise<void> {
       if (opts.sourcemap && !outputOptions.sourcemap) {
@@ -112,12 +115,18 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
             outputOptions.dir ?? (outputOptions.file && path.dirname(outputOptions.file)) ?? process.cwd()
           );
 
-          tree = buildTree(Object.entries(modules), mapper);
+          const moduleRenderInfo = await Promise.all(
+            Object.values(modules).map(({ id, renderedLength }) => {
+              const code = bundle.modules[id]?.code;
+              return renderedModuleToInfo(id, { renderedLength, code });
+            })
+          );
+
+          tree = buildTree(moduleRenderInfo, mapper);
         } else {
-          const modules: [string, ModuleRenderInfo][] = Object.entries(bundle.modules).map(([id, mod]) => [
-            id,
-            { id, ...mod },
-          ]);
+          const modules = await Promise.all(
+            Object.entries(bundle.modules).map(([id, mod]) => renderedModuleToInfo(id, mod))
+          );
 
           tree = buildTree(modules, mapper);
         }
@@ -125,7 +134,7 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
         tree.name = bundleId;
 
         if (tree.children.length === 0) {
-          const bundleInfo = await getAdditionalFilesInfo(bundleId, bundle.code);
+          const bundleInfo = await getAdditionalFilesInfo(bundle.code);
           const bundleSizes: ModuleRenderSizes = { ...bundleInfo, renderedLength: bundle.code.length };
           const facadeModuleId = bundle.facadeModuleId ?? "unknown";
           const moduleId = bundle.isEntry ? `entry-${facadeModuleId}` : facadeModuleId;
@@ -145,25 +154,6 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       }
 
       const { nodes, nodeIds } = mapper;
-      for (const [id, uid] of Object.entries(nodeIds)) {
-        if (nodes[uid]) {
-          const newInfo = additionalFilesInfo.get(id) || {};
-          if (nodes[uid].renderedLength === 0) {
-            if (gzipSize) {
-              newInfo.gzipLength = 0;
-            }
-            if (brotliSize) {
-              newInfo.brotliLength = 0;
-            }
-          }
-          nodes[uid] = {
-            ...nodes[uid],
-            ...newInfo,
-          };
-        } else {
-          this.warn(`Could not find mapping for node ${id} ${uid}`);
-        }
-      }
 
       removeCommonPrefix(nodes, nodeIds);
 

@@ -31,14 +31,14 @@ const addToPath = (tree: ModuleTree, modulePath: string[], node: MappedNode): vo
   }
 };
 
-export const buildTree = (modules: Array<[string, ModuleRenderInfo]>, mapper: ModuleMapper): ModuleTree => {
+export const buildTree = (modules: Array<ModuleRenderInfo>, mapper: ModuleMapper): ModuleTree => {
   let tree: ModuleTree = {
     name: "root",
     children: [],
   };
 
-  for (const [id, { renderedLength }] of modules) {
-    const mod = { id, renderedLength };
+  for (const { id, renderedLength, gzipLength, brotliLength } of modules) {
+    const mod = { id, renderedLength, gzipLength, brotliLength };
     const name = id;
 
     const uid = mapper.setValueByModuleId(id, mod);
