@@ -18,25 +18,28 @@ export const Main: FunctionalComponent = () => {
   );
 
   const getNodeSizeMultiplier = useMemo(() => {
+    const rootSize = getModuleSize(rawHierarchy.data, sizeProperty);
+    const selectedSize = selectedNode ? getModuleSize(selectedNode.data, sizeProperty) : 1;
+    const multiplier = rootSize * 0.2 > selectedSize ? (rootSize * 0.2) / selectedSize : 3;
     if (selectedNode === undefined) {
       return (): number => 1;
     } else if (isModuleTree(selectedNode.data)) {
-      const descendants = new Set(selectedNode.descendants().map((d) => d.data));
+      const leaves = new Set(selectedNode.leaves().map((d) => d.data));
       return (node: ModuleTree | ModuleTreeLeaf): number => {
-        if (descendants.has(node)) {
-          return 3;
+        if (leaves.has(node)) {
+          return multiplier;
         }
         return 1;
       };
     } else {
       return (node: ModuleTree | ModuleTreeLeaf): number => {
         if (node === selectedNode.data) {
-          return 3;
+          return multiplier;
         }
         return 1;
       };
     }
-  }, [selectedNode]);
+  }, [getModuleSize, rawHierarchy.data, selectedNode, sizeProperty]);
 
   // root here always be the same as rawHierarchy even after layouting
   const root = useMemo(() => {
