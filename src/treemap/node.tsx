@@ -3,7 +3,7 @@ import { FunctionalComponent } from "preact";
 import { useContext } from "preact/hooks";
 import { format as formatBytes } from "bytes";
 import { HierarchyRectangularNode } from "d3-hierarchy";
-import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 import { StaticContext } from ".";
 
 type NodeEventHandler = (event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
@@ -13,6 +13,7 @@ export interface NodeProps {
   onMouseOver: NodeEventHandler;
   selected: boolean;
   onClick: NodeEventHandler;
+  sizeProperty: SizeKey;
 }
 
 interface tspanProps {
@@ -22,8 +23,8 @@ interface tspanProps {
   dy?: number;
 }
 
-export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClick, selected }) => {
-  const { getModuleColor, getModuleIds } = useContext(StaticContext);
+export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClick, selected, sizeProperty }) => {
+  const { getModuleColor, getModuleIds, getModuleSize } = useContext(StaticContext);
   const { backgroundColor, fontColor } = getModuleColor(node);
   const { clipUid, nodeUid } = getModuleIds(node.data);
   const { x0, x1, y1, y0, data, value, children = null } = node;
@@ -79,7 +80,7 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
           {data.name}
         </tspan>
         <tspan {...tspan2Props} fill-opacity={0.7} font-size="0.7em">
-          {formatBytes(value ?? 0)}
+          {formatBytes(getModuleSize(data, sizeProperty))}
         </tspan>
       </text>
     </g>

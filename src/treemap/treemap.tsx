@@ -5,16 +5,23 @@ import { HierarchyNode, HierarchyRectangularNode } from "d3-hierarchy";
 
 import { Node } from "./node";
 import { StaticContext } from "./index";
-import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 
 export interface TreeMapProps {
   root: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
   onNodeHover: (event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
   selectedNode: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined;
   onNodeClick: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
+  sizeProperty: SizeKey;
 }
 
-export const TreeMap: FunctionalComponent<TreeMapProps> = ({ root, onNodeHover, selectedNode, onNodeClick }) => {
+export const TreeMap: FunctionalComponent<TreeMapProps> = ({
+  root,
+  onNodeHover,
+  selectedNode,
+  onNodeClick,
+  sizeProperty,
+}) => {
   const { width, height, getModuleIds } = useContext(StaticContext);
 
   // this will make groups by height
@@ -41,6 +48,7 @@ export const TreeMap: FunctionalComponent<TreeMapProps> = ({ root, onNodeHover, 
                   onMouseOver={onNodeHover}
                   selected={selectedNode === node}
                   onClick={onNodeClick}
+                  sizeProperty={sizeProperty}
                 />
               );
             })}
