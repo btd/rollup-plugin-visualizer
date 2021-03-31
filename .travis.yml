@@ -6,11 +6,5 @@ node_js:
   - lts/*
 
 script:
-  - npm run build
-  - node build.js --all --e2e
-  - node build.js --all --test
-  - node build.js --all --e2e --json
-  - node build.js --all --test --json
-  - node build.js --all --e2e --json --sourcemap
-  - node build.js --all --test --json --sourcemap
-  - node dist/bin/cli.js stats.e2e.json
+  - npm run build --if-present
+  - npm test
