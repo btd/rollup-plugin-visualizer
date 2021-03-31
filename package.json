@@ -15,7 +15,9 @@
   },
   "scripts": {
     "lint": "eslint 'plugin/**/*.ts' 'src/**/*.{ts,tsx}'",
-    "build": "tsc && node build.js",
+    "build": "run-p build:*",
+    "build:plugin": "tsc",
+    "build:frontend": "node build.js",
     "clean": "del-cli dist",
     "prepare": "npm run build",
     "test": "run-s test:*",
