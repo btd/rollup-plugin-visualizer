@@ -1,10 +1,13 @@
 {
   "name": "rollup-plugin-visualizer",
   "version": "5.0.0",
-  "main": "plugin/index.js",
+  "main": "./dist/plugin/index.js",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
-  "bin": "./bin/cli.js",
+  "bin": "./dist/bin/cli.js",
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:btd/rollup-plugin-visualizer.git"
@@ -19,9 +22,7 @@
     "build:plugin": "tsc",
     "build:frontend": "node build.js",
     "clean": "del-cli dist",
-    "prepare": "npm run build",
     "test": "run-s test:*",
-    "publish": "npm publish dist",
     "test:e2e": "node build.js --all --e2e",
     "test:test": "node build.js --all --test",
     "test:e2e-json": "node build.js --all --e2e --json",
