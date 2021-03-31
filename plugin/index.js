@@ -32,7 +32,6 @@ const isAsset = (bundle) =>
 module.exports = function (opts) {
   opts = opts || {};
   const json = !!opts.json;
-  const filename = opts.filename || (json ? "stats.json" : "stats.html");
   const title = opts.title || "RollUp Visualizer";
 
   const open = !!opts.open;
@@ -84,6 +83,8 @@ module.exports = function (opts) {
       const roots = [];
       const mapper = new ModuleMapper();
       const links = [];
+      const filename = opts.filename ||
+        path.join(outputOptions.dir || "", `${outputOptions.file}.stats.${json ? "json" : "html"}`)
 
       // collect trees
       for (const [id, bundle] of Object.entries(outputBundle)) {
