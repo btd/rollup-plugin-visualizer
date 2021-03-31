@@ -1,6 +1,6 @@
 # Rollup Plugin Visualizer
 
-[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer) [![Travis CI build status](https://img.shields.io/travis/com/btd/rollup-plugin-visualizer.svg)](https://travis-ci.com/btd/rollup-plugin-visualizer)
+[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer) [![Node.js CI](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml/badge.svg)](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml)
 
 Visualize and analyze your Rollup bundle to see which modules are taking up space.
 
@@ -66,13 +66,13 @@ plugins: [
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
+`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`.
 
-`json` (boolean, default `false`) - Product portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
+`json` (boolean, default `false`) - Produce portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
 
-`gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart
+`gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart.
 
-`brotliSize` (boolean, default `false`) - Collect brotli size from source code and display it at chart. Only if current node version supports it
+`brotliSize` (boolean, default `false`) - Collect brotli size from source code and display it at chart.
 
 ## CLI
 
@@ -89,7 +89,7 @@ This can be usefull in case you have different config files in the same project 
 For development if you need to build plugin, just exec:
 
 ```js
-yarn run build
+npm run build
 ```
 
 ## Disclaimer about generated files
@@ -100,7 +100,7 @@ This statistical information can contain:
 
 - size of files included in bundle
 - size of files included in source map
-- file's path
+- file's paths
 - files hierarchy (fs tree for your files)
 
 ## Upgrades
