@@ -117,7 +117,7 @@ const runBuildDev = async (template) => {
     input,
     plugins: [
       ...COMMON_PLUGINS(),
-      require("./dist").default({
+      require(".").default({
         title: `test ${template}`,
         filename: `stats.${template}${fileExt}`,
         template,
@@ -148,7 +148,7 @@ const runBuildTest_e2e = async (template = "treemap") => {
     input,
     plugins: [
       ...COMMON_PLUGINS(),
-      require("./dist").default({
+      require(".").default({
         title: "test e2e",
         filename: `stats.e2e${fileExt}`,
         template,
@@ -179,7 +179,7 @@ const runBuildTest_gh59 = async (template) => {
   const inputOptions = {
     input,
     plugins: [
-      require("./dist").default({
+      require(".").default({
         title: "test gh59",
         filename: `stats.gh59${fileExt}`,
         template,
@@ -205,7 +205,7 @@ const runBuildTest_gh69 = async (template) => {
   const inputOptions = {
     input,
     plugins: [
-      require("./dist").default({
+      require(".").default({
         title: "test gh69",
         filename: `stats.gh69${fileExt}`,
         template,
