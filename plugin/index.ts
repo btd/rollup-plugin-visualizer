@@ -21,7 +21,6 @@ import {
   ModuleTreeLeaf,
   VisualizerData,
 } from "../types/types";
-import pkg from "../package.json";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -166,6 +165,9 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       }
 
       const tree = mergeTrees(roots);
+
+      const pkgStr = await fs.readFile(path.join(__dirname, "..", "..", "package.json"), { encoding: "utf-8" });
+      const pkg = JSON.parse(pkgStr) as { name: string; version: string };
 
       const data: VisualizerData = {
         version,
