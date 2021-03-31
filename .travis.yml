@@ -4,14 +4,13 @@ node_js:
   - '12'
   - '14'
   - lts/*
-  - node
 
 script:
-  - yarn run build
+  - npm run build
   - node build.js --all --e2e
   - node build.js --all --test
   - node build.js --all --e2e --json
   - node build.js --all --test --json
   - node build.js --all --e2e --json --sourcemap
   - node build.js --all --test --json --sourcemap
-  - node bin/cli.js stats.e2e.json
+  - node dist/bin/cli.js stats.e2e.json
