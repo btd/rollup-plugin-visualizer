@@ -4,3 +4,4 @@ lib/*
 node_modules/
 stats.*
 temp/
+dist/

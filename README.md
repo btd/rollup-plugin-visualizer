@@ -20,10 +20,34 @@ or via yarn:
 yarn add --dev rollup-plugin-visualizer
 ```
 
+## V5 Upgrade
+
+Version V5 contains seveal minor breaking changes, depending your current installation takes such steps for upgrade:
+
+* If you are using rollup v1.x, then you'd better to stay on v4 of plugin. I officially stopped support v1 of rolloup myself. Some versions of 1.x will work without issues, but i stop testing myself or add any changes in this direction. If somebody wants to contibute in this direction - welcome.
+* If you use rollup v2.x and use `gzipLength` or `brotliLength`upgrade to rollup 2.44 at least. In V5 i use provided by rollup api to get rendered module code for size estimations, instead of original sources as it was before.
+* In all other case just update the plugin.
+
+To upgrade plugin change import/require statement like it is shown in installation section.
+
 ## Usage
+
+Es imports:
 
 ```javascript
 import visualizer from 'rollup-plugin-visualizer';
+
+//...
+plugins: [
+  visualizer()
+],
+//...
+```
+
+Cjs require:
+
+```javascript
+const { visulizer } = require('rollup-plugin-visualizer');
 
 //...
 plugins: [
@@ -42,13 +66,13 @@ plugins: [
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `treemap`) - Which digram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
+`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network` (very early stage, feedback welcomed)
 
 `json` (boolean, default `false`) - Product portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart
 
-`brotliSize` (boolean, default `false`) - Collect brolti size from source code and display it at chart. Only if current node version supports it
+`brotliSize` (boolean, default `false`) - Collect brotli size from source code and display it at chart. Only if current node version supports it
 
 ## CLI
 
