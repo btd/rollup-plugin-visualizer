@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.3
+
+* It is just not possible to release major version without several patches
+
 ## 5.0.0
 
 * **Breaking change** Remove support node < 10.16
