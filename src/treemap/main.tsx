@@ -7,15 +7,18 @@ import { Chart } from "./chart";
 import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 import { FunctionalComponent } from "preact";
 import { StaticContext } from "./index";
+import { useFilter } from "../use-filter";
 
 export const Main: FunctionalComponent = () => {
-  const { availableSizeProperties, rawHierarchy, getModuleSize, layout } = useContext(StaticContext);
+  const { availableSizeProperties, rawHierarchy, getModuleSize, layout, data } = useContext(StaticContext);
 
   const [sizeProperty, setSizeProperty] = useState<SizeKey>(availableSizeProperties[0]);
 
   const [selectedNode, setSelectedNode] = useState<HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined>(
     undefined
   );
+
+  const { getModuleFilterMultiplier, includeFilter, setExcludeFilter, setIncludeFilter, excludeFilter } = useFilter();
 
   const getNodeSizeMultiplier = useMemo(() => {
     const rootSize = getModuleSize(rawHierarchy.data, sizeProperty);
@@ -48,13 +51,14 @@ export const Main: FunctionalComponent = () => {
         if (isModuleTree(node)) return 0;
         const ownSize = getModuleSize(node, sizeProperty);
         const zoomMultiplier = getNodeSizeMultiplier(node);
+        const filterMultiplier = getModuleFilterMultiplier(data.nodes[node.uid]);
 
-        return ownSize * zoomMultiplier;
+        return ownSize * zoomMultiplier * filterMultiplier;
       })
       .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
 
     return layout(rootWithSizesAndSorted);
-  }, [getModuleSize, getNodeSizeMultiplier, layout, rawHierarchy, sizeProperty]);
+  }, [data.nodes, getModuleFilterMultiplier, getModuleSize, getNodeSizeMultiplier, layout, rawHierarchy, sizeProperty]);
 
   return (
     <>
@@ -62,6 +66,10 @@ export const Main: FunctionalComponent = () => {
         sizeProperty={sizeProperty}
         availableSizeProperties={availableSizeProperties}
         setSizeProperty={setSizeProperty}
+        onExcludeChange={setExcludeFilter}
+        onIncludeChange={setIncludeFilter}
+        excludeValue={excludeFilter}
+        includeValue={includeFilter}
       />
       <Chart root={root} sizeProperty={sizeProperty} selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
     </>

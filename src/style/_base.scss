@@ -119,7 +119,11 @@ main {
   align-items: center;
 }
 
-.filter {
+.module-filters {
+  display: flex;
+}
+
+.module-filter {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -130,7 +134,7 @@ main {
   input {
     flex: 1;
     height: 1rem;
-    padding: 0.1rem;
+    padding: 0.01rem;
     font-size: 0.7rem;
     margin-left: 0.3rem;
   }
