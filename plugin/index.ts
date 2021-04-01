@@ -10,7 +10,7 @@ import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./comp
 
 import { TemplateType } from "./template-types";
 import { ModuleMapper } from "./module-mapper";
-import { addLinks, buildTree, mergeTrees, removeCommonPrefix } from "./data";
+import { addLinks, buildTree, getLocalId, mergeTrees } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { buildHtml } from "./build-stats";
 import {
@@ -37,6 +37,7 @@ export interface PluginVisualizerOptions {
   gzipSize?: boolean;
   brotliSize?: boolean;
   sourcemap?: boolean;
+  projectRoot?: string | RegExp;
 }
 
 interface AdditionalRenderInfo {
@@ -55,6 +56,7 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
   const openOptions = opts.openOptions ?? {};
 
   const template = opts.template ?? "treemap";
+  const projectRoot = opts.projectRoot ?? process.cwd();
 
   const gzipSize = !!opts.gzipSize;
   const brotliSize = !!opts.brotliSize;
@@ -121,13 +123,13 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
             })
           );
 
-          tree = buildTree(moduleRenderInfo, mapper);
+          tree = buildTree(projectRoot, moduleRenderInfo, mapper);
         } else {
           const modules = await Promise.all(
             Object.entries(bundle.modules).map(([id, mod]) => renderedModuleToInfo(id, mod))
           );
 
-          tree = buildTree(modules, mapper);
+          tree = buildTree(projectRoot, modules, mapper);
         }
 
         tree.name = bundleId;
@@ -137,7 +139,8 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
           const bundleSizes: ModuleRenderSizes = { ...bundleInfo, renderedLength: bundle.code.length };
           const facadeModuleId = bundle.facadeModuleId ?? "unknown";
           const moduleId = bundle.isEntry ? `entry-${facadeModuleId}` : facadeModuleId;
-          const bundleUid = mapper.setValueByModuleId(moduleId, { isEntry: true, ...bundleSizes, id: moduleId });
+          const localId = getLocalId(projectRoot, moduleId);
+          const bundleUid = mapper.setValueByModuleId(localId, { isEntry: true, ...bundleSizes, id: localId });
           const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid };
           roots.push(leaf);
         } else {
@@ -149,12 +152,10 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       for (const bundle of Object.values(outputBundle)) {
         if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
 
-        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
+        addLinks(projectRoot, bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
       }
 
       const { nodes, nodeIds } = mapper;
-
-      removeCommonPrefix(nodes, nodeIds);
 
       for (const [id, uid] of Object.entries(nodeIds)) {
         if (nodes[uid]) {

@@ -1,17 +1,14 @@
-import path from "path";
 import { GetModuleInfo } from "rollup";
 import { isModuleTree, ModuleLink, ModuleRenderInfo, ModuleTree, ModuleTreeLeaf, ModuleUID } from "../types/types";
 import { ModuleMapper } from "./module-mapper";
-
-const PLUGIN_PREFIX = "\u0000";
 
 interface MappedNode {
   uid: string;
 }
 
-const addToPath = (tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
+const addToPath = (id: string, tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
   if (modulePath.length === 0) {
-    throw new Error(`Error adding node to path ${modulePath.join("/")}`);
+    throw new Error(`Error adding node to path ${id}`);
   }
 
   const [head, ...rest] = modulePath;
@@ -26,77 +23,52 @@ const addToPath = (tree: ModuleTree, modulePath: string[], node: MappedNode): vo
       newTree = { name: head, children: [] };
       tree.children.push(newTree);
     }
-    addToPath(newTree, rest, node);
+    addToPath(id, newTree, rest, node);
     return;
   }
 };
 
-export const buildTree = (modules: Array<ModuleRenderInfo>, mapper: ModuleMapper): ModuleTree => {
-  let tree: ModuleTree = {
+export const getLocalId = (projectRoot: string | RegExp, moduleId: string): string => {
+  return moduleId.replace(projectRoot, "");
+};
+
+export const buildTree = (
+  projectRoot: string | RegExp,
+  modules: Array<ModuleRenderInfo>,
+  mapper: ModuleMapper
+): ModuleTree => {
+  const tree: ModuleTree = {
     name: "root",
     children: [],
   };
 
   for (const { id, renderedLength, gzipLength, brotliLength } of modules) {
-    const mod = { id, renderedLength, gzipLength, brotliLength };
+    const localId = getLocalId(projectRoot, id);
+    const mod = { id: localId, renderedLength, gzipLength, brotliLength };
 
-    const uid = mapper.setValueByModuleId(id, mod);
+    const uid = mapper.setValueByModuleId(localId, mod);
 
     const nodeData = { uid };
 
-    if (id.startsWith(PLUGIN_PREFIX)) {
-      addToPath(tree, [id], nodeData);
-    } else {
-      const pathParts = id.split(path.sep);
-      if (path.isAbsolute(id)) {
-        pathParts.shift(); // remove '' or C:
-      }
-      addToPath(tree, pathParts, nodeData);
-    }
+    const pathParts = localId.split(/\\|\//).filter((p) => p !== "");
+    addToPath(localId, tree, pathParts, nodeData);
   }
-
-  tree = flattenTree(tree);
 
   return tree;
 };
 
-// if root children have only on child we can flatten this
-export const flattenTree = (root: ModuleTree): ModuleTree => {
-  const pluginChildren = [];
-  const otherChildren = [];
-  for (const child of root.children) {
-    if (child?.name.startsWith(PLUGIN_PREFIX)) {
-      pluginChildren.push(child);
-    } else {
-      otherChildren.push(child);
-    }
-  }
-
-  let newRoot = root;
-  if (otherChildren.length === 1 && isModuleTree(otherChildren[0])) {
-    newRoot = otherChildren[0];
-  }
-
-  while (newRoot.children.length === 1 && isModuleTree(newRoot.children[0])) {
-    newRoot = newRoot.children[0];
-  }
-  newRoot.children = newRoot.children.concat(pluginChildren);
-  return newRoot;
-};
-
 export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTree => {
-  if (trees.length === 1 && isModuleTree(trees[0])) {
-    return trees[0];
-  }
   const newTree = {
     name: "root",
     children: trees,
+    isRoot: true,
   };
 
   return newTree;
 };
 
 export const addLinks = (
+  projectRoot: string | RegExp,
   startModuleId: string,
   getModuleInfo: GetModuleInfo,
   links: ModuleLink[],
@@ -108,8 +80,9 @@ export const addLinks = (
 
   while (moduleIds.length > 0) {
     const moduleId = moduleIds.shift() as string;
+    const localId = getLocalId(projectRoot, moduleId);
 
-    const moduleUid = mapper.getUid(moduleId);
+    const moduleUid = mapper.getUid(localId);
 
     if (processedNodes[moduleUid]) {
       continue;
@@ -117,7 +90,7 @@ export const addLinks = (
       processedNodes[moduleUid] = true;
     }
 
-    const mod = mapper.getValue(moduleUid, { id: moduleId, renderedLength: 0 });
+    const mod = mapper.getValue(moduleUid, { id: localId, renderedLength: 0 });
 
     const moduleInfo = getModuleInfo(moduleId);
 
@@ -133,53 +106,16 @@ export const addLinks = (
     }
 
     for (const importedId of moduleInfo.importedIds) {
-      const importedUid = mapper.getUid(importedId);
+      const localId = getLocalId(projectRoot, importedId);
+      const importedUid = mapper.getUid(localId);
       links.push({ source: moduleUid, target: importedUid });
       moduleIds.push(importedId);
     }
     for (const importedId of moduleInfo.dynamicallyImportedIds) {
-      const importedUid = mapper.getUid(importedId);
+      const localId = getLocalId(projectRoot, importedId);
+      const importedUid = mapper.getUid(localId);
       links.push({ source: moduleUid, target: importedUid, dynamic: true });
       moduleIds.push(importedId);
-    }
-  }
-};
-
-const skipModule = (id: string, node: ModuleRenderInfo): boolean =>
-  id.startsWith(PLUGIN_PREFIX) || node.isExternal || !path.isAbsolute(id);
-
-export const removeCommonPrefix = (nodes: ModuleMapper["nodes"], nodeIds: ModuleMapper["nodeIds"]): void => {
-  let commonPrefix = null;
-
-  for (const [id, uid] of Object.entries(nodeIds)) {
-    const node = nodes[uid];
-
-    if (!skipModule(id, node)) {
-      if (commonPrefix == null) {
-        commonPrefix = id;
-      }
-
-      for (let i = 0; i < commonPrefix.length && i < id.length; i++) {
-        if (commonPrefix[i] !== id[i]) {
-          commonPrefix = commonPrefix.slice(0, i);
-          break;
-        }
-      }
-    }
-  }
-
-  if (commonPrefix == null) {
-    return;
-  }
-
-  const commonPrefixLength = commonPrefix.length;
-  for (const [id, uid] of Object.entries(nodeIds)) {
-    const node = nodes[uid];
-    if (!skipModule(id, node)) {
-      const newId = id.slice(commonPrefixLength);
-      const value = nodeIds[id];
-      delete nodeIds[id];
-      nodeIds[newId] = value;
     }
   }
 };
