@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.2.0
+
+* Add include and exclude filters to UI, it is plain regexps.
+
 ## 5.1.0
 
 * Add `projectRoot` and stop doing right work, but just assume nobody follow good practice and naming convention.
