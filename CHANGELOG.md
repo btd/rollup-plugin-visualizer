@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.4
+
+* Fix trimming root of non absolute path, this could happen when plugin does not follow rollup naming convention for virtual modules
 ## 5.0.3
 
 * It is just not possible to release major version without several patches
