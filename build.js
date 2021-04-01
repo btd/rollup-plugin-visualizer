@@ -225,6 +225,54 @@ const runBuildTest_gh69 = async (template) => {
   await bundle.write(outputOptions);
 };
 
+const runBuildTest_gh93 = async (template) => {
+  const input = "test/gh93/main.js";
+
+  const inputOptions = {
+    input,
+    plugins: [
+      {
+        name: "pseudo-alias",
+        resolveId(source) {
+          if (source === "virtual-id") {
+            return source;
+          }
+          return null;
+        },
+        load(id) {
+          if (id === "virtual-id") {
+            return 'console.log("virtual-id")';
+          }
+          return null;
+        },
+        async transform(code, id) {
+          this.emitFile({
+            type: "chunk",
+            id: "virtual-id", // specifically id without \0000 as by rollup naming convention
+          });
+          return { code };
+        },
+      },
+      require(".").default({
+        title: "test gh93",
+        filename: `stats.gh93${fileExt}`,
+        template,
+        ...simpleOptions,
+      }),
+    ],
+    onwarn,
+  };
+  const outputOptions = {
+    format: "es",
+    dir: "./temp/",
+    sourcemap: argv.sourcemap,
+  };
+
+  const bundle = await rollup(inputOptions);
+
+  await bundle.write(outputOptions);
+};
+
 const buildAll = (action) => Promise.all(templatesToBuild.map((t) => action(t)));
 
 const run = async () => {
@@ -238,6 +286,7 @@ const run = async () => {
   if (argv.test) {
     await buildAll(runBuildTest_gh59);
     await buildAll(runBuildTest_gh69);
+    await buildAll(runBuildTest_gh93);
   }
 };
 

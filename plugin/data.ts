@@ -39,17 +39,18 @@ export const buildTree = (modules: Array<ModuleRenderInfo>, mapper: ModuleMapper
 
   for (const { id, renderedLength, gzipLength, brotliLength } of modules) {
     const mod = { id, renderedLength, gzipLength, brotliLength };
-    const name = id;
 
     const uid = mapper.setValueByModuleId(id, mod);
 
     const nodeData = { uid };
 
-    if (name.startsWith(PLUGIN_PREFIX)) {
-      addToPath(tree, [name], nodeData);
+    if (id.startsWith(PLUGIN_PREFIX)) {
+      addToPath(tree, [id], nodeData);
     } else {
-      const pathParts = name.split(path.sep);
-      pathParts.shift(); // remove '' or C:
+      const pathParts = id.split(path.sep);
+      if (path.isAbsolute(id)) {
+        pathParts.shift(); // remove '' or C:
+      }
       addToPath(tree, pathParts, nodeData);
     }
   }
