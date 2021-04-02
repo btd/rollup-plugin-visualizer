@@ -52,7 +52,7 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
 
   const layout = treemap<ModuleTree | ModuleTreeLeaf>()
     .size([width, height])
-    .paddingOuter(8)
+    .paddingOuter(5)
     .paddingTop(20)
     .paddingInner(5)
     .round(true)
