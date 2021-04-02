@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.0
+
+* Merge hierarchy nodes with single child togather, reducing visual noise by less deep structure
+
 ## 5.2.1
 
 * Improve filtering and make it less fragile
