@@ -32,6 +32,33 @@ export const getLocalId = (projectRoot: string | RegExp, moduleId: string): stri
   return moduleId.replace(projectRoot, "");
 };
 
+// TODO try to make it without recursion, but still typesafe
+const mergeSingleChildTrees = (tree: ModuleTree): ModuleTree | ModuleTreeLeaf => {
+  if (tree.children.length === 1) {
+    const child = tree.children[0];
+    const name = `${tree.name}/${child.name}`;
+    if (isModuleTree(child)) {
+      tree.name = name;
+      tree.children = child.children;
+      return mergeSingleChildTrees(tree);
+    } else {
+      return {
+        name,
+        uid: child.uid,
+      };
+    }
+  } else {
+    tree.children = tree.children.map((node) => {
+      if (isModuleTree(node)) {
+        return mergeSingleChildTrees(node);
+      } else {
+        return node;
+      }
+    });
+    return tree;
+  }
+};
+
 export const buildTree = (
   projectRoot: string | RegExp,
   modules: Array<ModuleRenderInfo>,
@@ -53,6 +80,14 @@ export const buildTree = (
     const pathParts = localId.split(/\\|\//).filter((p) => p !== "");
     addToPath(localId, tree, pathParts, nodeData);
   }
+
+  tree.children = tree.children.map((node) => {
+    if (isModuleTree(node)) {
+      return mergeSingleChildTrees(node);
+    } else {
+      return node;
+    }
+  });
 
   return tree;
 };
