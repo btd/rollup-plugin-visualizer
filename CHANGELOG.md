@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.2.1
+
+* Improve filtering and make it less fragile
+
 ## 5.2.0
 
 * Add include and exclude filters to UI, it is plain regexps.
