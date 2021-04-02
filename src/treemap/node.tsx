@@ -27,7 +27,7 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
   const { getModuleColor, getModuleIds, getModuleSize } = useContext(StaticContext);
   const { backgroundColor, fontColor } = getModuleColor(node);
   const { clipUid, nodeUid } = getModuleIds(node.data);
-  const { x0, x1, y1, y0, data, value, children = null } = node;
+  const { x0, x1, y1, y0, data, children = null } = node;
 
   const tspan1Props: tspanProps = {};
   const tspan2Props: tspanProps = {};
