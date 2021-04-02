@@ -21,7 +21,7 @@ export const Main: FunctionalComponent = () => {
 
   const [sizeProperty, setSizeProperty] = useState<SizeKey>(availableSizeProperties[0]);
 
-  const { getModuleFilterMultiplier, includeFilter, setExcludeFilter, setIncludeFilter, excludeFilter } = useFilter();
+  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
 
   const sizeScale = useMemo(() => {
     const maxLines = max(Object.values(data.nodes), (d) => d[sizeProperty]) as number;
@@ -128,8 +128,6 @@ export const Main: FunctionalComponent = () => {
         setSizeProperty={setSizeProperty}
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
-        excludeValue={excludeFilter}
-        includeValue={includeFilter}
       />
       <Chart nodes={realGraphNodes} links={links} sizeProperty={sizeProperty} />
     </>

@@ -35,16 +35,24 @@ export const useFilter = (): UseFilter => {
     if (includeFilter === "") {
       return () => true;
     }
-    const re = new RegExp(includeFilter);
-    return ({ id }: ModuleRenderInfo) => re.test(id);
+    try {
+      const re = new RegExp(includeFilter);
+      return ({ id }: ModuleRenderInfo) => re.test(id);
+    } catch (err) {
+      return () => false;
+    }
   }, [includeFilter]);
 
   const isModuleExcluded = useMemo(() => {
     if (excludeFilter === "") {
       return () => false;
     }
-    const re = new RegExp(excludeFilter);
-    return ({ id }: ModuleRenderInfo) => re.test(id);
+    try {
+      const re = new RegExp(excludeFilter);
+      return ({ id }: ModuleRenderInfo) => re.test(id);
+    } catch (err) {
+      return () => false;
+    }
   }, [excludeFilter]);
 
   const isDefaultInclude = includeFilter === "";

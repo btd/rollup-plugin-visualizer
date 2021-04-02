@@ -1,4 +1,5 @@
-import { FunctionalComponent } from "preact";
+import { FunctionalComponent, JSX } from "preact";
+import { useState } from "preact/hooks";
 import { SizeKey } from "../types/types";
 import { LABELS } from "./sizes";
 
@@ -7,24 +8,35 @@ export interface SideBarProps {
   sizeProperty: SizeKey;
   setSizeProperty: (key: SizeKey) => void;
   onExcludeChange: (value: string) => void;
-  excludeValue: string;
   onIncludeChange: (value: string) => void;
-  includeValue: string;
 }
 
 export const SideBar: FunctionalComponent<SideBarProps> = ({
   availableSizeProperties,
   sizeProperty,
   setSizeProperty,
-  includeValue,
-  excludeValue,
   onExcludeChange,
   onIncludeChange,
 }) => {
-  const handleChange = (sizeProp: SizeKey) => () => {
+  const [includeValue, setIncludeValue] = useState("");
+  const [excludeValue, setExcludeValue] = useState("");
+
+  const handleSizePropertyChange = (sizeProp: SizeKey) => () => {
     if (sizeProp !== sizeProperty) {
       setSizeProperty(sizeProp);
     }
+  };
+
+  const handleIncludeChange = (event: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    const value = event.currentTarget.value;
+    setIncludeValue(value);
+    onIncludeChange(value);
+  };
+
+  const handleExcludeChange = (event: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    const value = event.currentTarget.value;
+    setExcludeValue(value);
+    onExcludeChange(value);
   };
 
   return (
@@ -35,7 +47,12 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             const id = `selector-${sizeProp}`;
             return (
               <div className="size-selector" key={sizeProp}>
-                <input type="radio" id={id} checked={sizeProp === sizeProperty} onChange={handleChange(sizeProp)} />
+                <input
+                  type="radio"
+                  id={id}
+                  checked={sizeProp === sizeProperty}
+                  onChange={handleSizePropertyChange(sizeProp)}
+                />
                 <label htmlFor={id}>{LABELS[sizeProp]}</label>
               </div>
             );
@@ -44,25 +61,11 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
       <div className="module-filters">
         <div className="module-filter">
           <label htmlFor="module-filter-exclude">Exclude</label>
-          <input
-            type="text"
-            id="module-filter-exclude"
-            value={excludeValue ?? ""}
-            onInput={(event) => {
-              onExcludeChange(event.currentTarget.value);
-            }}
-          />
+          <input type="text" id="module-filter-exclude" value={excludeValue} onInput={handleExcludeChange} />
         </div>
         <div className="module-filter">
           <label htmlFor="module-filter-include">Include</label>
-          <input
-            type="text"
-            id="module-filter-include"
-            value={includeValue ?? ""}
-            onInput={(event) => {
-              onIncludeChange(event.currentTarget.value);
-            }}
-          />
+          <input type="text" id="module-filter-include" value={includeValue} onInput={handleIncludeChange} />
         </div>
       </div>
     </aside>

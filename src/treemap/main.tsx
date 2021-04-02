@@ -18,7 +18,7 @@ export const Main: FunctionalComponent = () => {
     undefined
   );
 
-  const { getModuleFilterMultiplier, includeFilter, setExcludeFilter, setIncludeFilter, excludeFilter } = useFilter();
+  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
 
   const getNodeSizeMultiplier = useMemo(() => {
     const rootSize = getModuleSize(rawHierarchy.data, sizeProperty);
@@ -68,8 +68,6 @@ export const Main: FunctionalComponent = () => {
         setSizeProperty={setSizeProperty}
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
-        excludeValue={excludeFilter}
-        includeValue={includeFilter}
       />
       <Chart root={root} sizeProperty={sizeProperty} selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
     </>
