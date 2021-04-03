@@ -47,7 +47,7 @@ plugins: [
 Cjs require:
 
 ```javascript
-const { visulizer } = require('rollup-plugin-visualizer');
+const { visualizer } = require('rollup-plugin-visualizer');
 
 //...
 plugins: [
