@@ -1,8 +1,14 @@
 # Changelog
 
+## 5.3.1
+
+* Fix issue that network nodes could override hierarhy data
+* Tried to implement groups in network chart, still some work to do
+* In rollup >= 2.44 use code for byte size estimation instead of renderedLength prop
+
 ## 5.3.0
 
-* Merge hierarchy nodes with single child togather, reducing visual noise by less deep structure
+* Merge hierarchy nodes with single child together, reducing visual noise by less deep structure
 
 ## 5.2.1
 
