@@ -8,6 +8,7 @@ import { ModuleRenderInfo, ModuleUID, SizeKey } from "../../types/types";
 
 import { SideBar } from "../sidebar";
 import { Chart } from "./chart";
+import { NODE_MODULES } from "./util";
 
 import { NetworkLink, NetworkNode, StaticContext } from "./index";
 import { getModuleColor } from "./color";
@@ -29,7 +30,7 @@ export const Main: FunctionalComponent = () => {
     return size;
   }, [nodes, sizeProperty]);
 
-  const processedNodes = nodes
+  const processedNodes = Object.values(nodes)
     .map((node) => {
       const radius = sizeScale(node[sizeProperty] as number) + 1;
       return {
@@ -42,7 +43,18 @@ export const Main: FunctionalComponent = () => {
     })
     .filter((networkNode) => getModuleFilterMultiplier(networkNode) === 1) as Array<NetworkNode>;
 
+  const groups: Record<string, webcola.Group> = {};
+  for (const node of processedNodes) {
+    const match = NODE_MODULES.exec(node.id);
+    if (match) {
+      const [, nodeModuleName] = match;
+      groups[nodeModuleName] = groups[nodeModuleName] ?? { leaves: [], padding: 1 };
+      groups[nodeModuleName].leaves?.push(node);
+    }
+  }
+
   const nodesCache = new Map(processedNodes.map((d) => [d.uid, d]));
+
   // webcola has weird types, layour require array of links to Node references, but Nodes are computed from later
   const links: NetworkLink[] = data.links
     .map(({ source, target }) => {
@@ -58,8 +70,8 @@ export const Main: FunctionalComponent = () => {
 
   const cola = webcola.adaptor({}).size([width, height]);
 
-  const paddingX = 50;
-  const paddingY = 50;
+  const paddingX = 20;
+  const paddingY = 20;
 
   const pageBounds = {
     x: paddingX,
@@ -113,10 +125,13 @@ export const Main: FunctionalComponent = () => {
   cola
     .nodes(processedNodes)
     .links(links)
+    //.groups(Object.values(groups))
+    .groupCompactness(1e-3)
     .constraints(constraints)
     .jaccardLinkLengths(50, 0.7)
     .avoidOverlaps(true)
-    .start(50, 50, 50)
+    .handleDisconnected(false)
+    .start(30, 30, 30, 30, false, true)
     .stop();
 
   return (
@@ -128,7 +143,7 @@ export const Main: FunctionalComponent = () => {
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
       />
-      <Chart nodes={realGraphNodes} links={links} sizeProperty={sizeProperty} />
+      <Chart nodes={realGraphNodes} groups={{}} links={links} sizeProperty={sizeProperty} />
     </>
   );
 };

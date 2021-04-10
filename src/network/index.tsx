@@ -26,7 +26,7 @@ export type ModuleNodeInfo = Map<ModuleUID, NodeInfo[]>;
 export interface ChartData {
   importedCache: ModuleNodeInfo;
   importedByCache: ModuleNodeInfo;
-  nodes: NodeInfo[];
+  nodes: Record<ModuleUID, NodeInfo>;
 }
 
 export type Context = StaticData & ChartData;
@@ -56,6 +56,11 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
   const importedByCache = new Map<ModuleUID, NodeInfo[]>();
   const importedCache = new Map<ModuleUID, NodeInfo[]>();
 
+  const nodes: Record<ModuleUID, NodeInfo> = {};
+  for (const uid of Object.keys(data.nodeParts)) {
+    nodes[uid] = createNodeInfo(data, availableSizeProperties, uid);
+  }
+
   for (const { source, target } of data.links) {
     if (!importedByCache.has(target)) {
       importedByCache.set(target, []);
@@ -64,13 +69,8 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
       importedCache.set(source, []);
     }
 
-    importedByCache.get(target)?.push(createNodeInfo(data, availableSizeProperties, source));
-    importedCache.get(source)?.push(createNodeInfo(data, availableSizeProperties, target));
-  }
-
-  const nodes: NodeInfo[] = [];
-  for (const uid of Object.keys(data.nodeParts)) {
-    nodes.push(createNodeInfo(data, availableSizeProperties, uid));
+    importedByCache.get(target)?.push(nodes[source]);
+    importedCache.get(source)?.push(nodes[target]);
   }
 
   render(
