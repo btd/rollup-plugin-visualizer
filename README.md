@@ -22,7 +22,7 @@ yarn add --dev rollup-plugin-visualizer
 
 ## V5 Upgrade
 
-Version V5 contains seveal minor breaking changes, depending your current installation takes such steps for upgrade:
+Version V5 contains seveal minor breaking changes, depending your current installation take such steps before upgrade:
 
 - If you are using rollup v1.x, then you'd better to stay on v4 of plugin. I officially stopped support v1 of rolloup myself. Some versions of 1.x will work without issues, but i stop testing myself or add any changes in this direction. If somebody wants to contibute in this direction - welcome.
 - If you use rollup v2.x and use `gzipLength` or `brotliLength`upgrade to rollup 2.44 at least. In V5 i use provided by rollup api to get rendered module code for size estimations, instead of original sources as it was before.
@@ -39,6 +39,9 @@ import { visualizer } from 'rollup-plugin-visualizer';
 
 //...
 plugins: [
+  // other plugins
+  // ....
+  // 
   visualizer()
 ],
 //...
@@ -51,6 +54,9 @@ const { visualizer } = require('rollup-plugin-visualizer');
 
 //...
 plugins: [
+  // other plugins
+  // ....
+  //
   visualizer()
 ],
 //...
@@ -62,7 +68,7 @@ plugins: [
 
 `title` (string, default `Rollup Visualizer`) - title tag value
 
-`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser)
+`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser). **Always add plugin as last option.**
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
@@ -108,7 +114,3 @@ This statistical information can contain:
 ## Upgrades
 
 See CHANGELOG.md.
-
-## Acknowledgements
-
-Initially this plugin was based on `webpack-visualizer`, but in the end used only styles and layout. Thanks to the tons of people around internet for great examples of d3 usage. Also i would like to thank you Mike Bostock for awesome D3, and tons of examples.
