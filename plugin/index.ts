@@ -81,11 +81,17 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
   const renderedModuleToInfo = async (
     id: string,
     mod: { renderedLength: number; code: string | null }
-  ): Promise<ModuleRenderInfo> => ({
-    id,
-    ...mod,
-    ...(await getAdditionalFilesInfo(mod.code)),
-  });
+  ): Promise<ModuleRenderInfo> => {
+    const result = {
+      id,
+      ...mod,
+      ...(await getAdditionalFilesInfo(mod.code)),
+    };
+    if (mod.code != null) {
+      result.renderedLength = Buffer.byteLength(mod.code, "utf-8");
+    }
+    return result;
+  };
 
   return {
     name: "visualizer",
