@@ -1,14 +1,14 @@
 import { GetModuleInfo } from "rollup";
-import { isModuleTree, ModuleLink, ModuleRenderInfo, ModuleTree, ModuleTreeLeaf, ModuleUID } from "../types/types";
+import { isModuleTree, ModuleLink, ModuleRenderInfo, ModuleTree, ModuleTreeLeaf } from "../types/types";
 import { ModuleMapper } from "./module-mapper";
 
 interface MappedNode {
   uid: string;
 }
 
-const addToPath = (id: string, tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
+const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
   if (modulePath.length === 0) {
-    throw new Error(`Error adding node to path ${id}`);
+    throw new Error(`Error adding node to path ${moduleId}`);
   }
 
   const [head, ...rest] = modulePath;
@@ -23,13 +23,9 @@ const addToPath = (id: string, tree: ModuleTree, modulePath: string[], node: Map
       newTree = { name: head, children: [] };
       tree.children.push(newTree);
     }
-    addToPath(id, newTree, rest, node);
+    addToPath(moduleId, newTree, rest, node);
     return;
   }
-};
-
-export const getLocalId = (projectRoot: string | RegExp, moduleId: string): string => {
-  return moduleId.replace(projectRoot, "");
 };
 
 // TODO try to make it without recursion, but still typesafe
@@ -59,26 +55,19 @@ const mergeSingleChildTrees = (tree: ModuleTree): ModuleTree | ModuleTreeLeaf =>
   }
 };
 
-export const buildTree = (
-  projectRoot: string | RegExp,
-  modules: Array<ModuleRenderInfo>,
-  mapper: ModuleMapper
-): ModuleTree => {
+export const buildTree = (bundleId: string, modules: Array<ModuleRenderInfo>, mapper: ModuleMapper): ModuleTree => {
   const tree: ModuleTree = {
-    name: "root",
+    name: bundleId,
     children: [],
   };
 
   for (const { id, renderedLength, gzipLength, brotliLength } of modules) {
-    const localId = getLocalId(projectRoot, id);
-    const mod = { id: localId, renderedLength, gzipLength, brotliLength };
+    const bundleModuleUid = mapper.setValue(bundleId, id, { renderedLength, gzipLength, brotliLength });
 
-    const uid = mapper.setValueByModuleId(localId, mod);
+    const trimmedModuleId = mapper.trimProjectRootId(id);
 
-    const nodeData = { uid };
-
-    const pathParts = localId.split(/\\|\//).filter((p) => p !== "");
-    addToPath(localId, tree, pathParts, nodeData);
+    const pathParts = trimmedModuleId.split(/\\|\//).filter((p) => p !== "");
+    addToPath(trimmedModuleId, tree, pathParts, { uid: bundleModuleUid });
   }
 
   tree.children = tree.children.map((node) => {
@@ -103,52 +92,51 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
 };
 
 export const addLinks = (
-  projectRoot: string | RegExp,
+  bundleId: string,
   startModuleId: string,
   getModuleInfo: GetModuleInfo,
   links: ModuleLink[],
   mapper: ModuleMapper
 ): void => {
-  const processedNodes: Record<ModuleUID, boolean> = {};
+  const processedNodes: Record<string, boolean> = {};
 
   const moduleIds = [startModuleId];
 
   while (moduleIds.length > 0) {
     const moduleId = moduleIds.shift() as string;
-    const localId = getLocalId(projectRoot, moduleId);
 
-    const moduleUid = mapper.getUid(localId);
-
-    if (processedNodes[moduleUid]) {
+    if (processedNodes[moduleId]) {
       continue;
     } else {
-      processedNodes[moduleUid] = true;
+      processedNodes[moduleId] = true;
     }
 
-    const mod = mapper.getValue(moduleUid, { id: localId, renderedLength: 0 });
-
     const moduleInfo = getModuleInfo(moduleId);
+
+    if (!mapper.hasValue(bundleId, moduleId)) {
+      mapper.setValue(bundleId, moduleId, { renderedLength: 0 });
+    }
 
     if (!moduleInfo) {
       return;
     }
 
     if (moduleInfo.isEntry) {
-      mod.isEntry = true;
+      mapper.appendValue(bundleId, moduleId, { isEntry: true });
     }
     if (moduleInfo.isExternal) {
-      mod.isExternal = true;
+      mapper.appendValue(bundleId, moduleId, { isExternal: true });
     }
 
+    const moduleUid = mapper.getModuleUid(moduleId);
+
     for (const importedId of moduleInfo.importedIds) {
-      const localId = getLocalId(projectRoot, importedId);
-      const importedUid = mapper.getUid(localId);
+      const importedUid = mapper.getModuleUid(importedId);
       links.push({ source: moduleUid, target: importedUid });
       moduleIds.push(importedId);
     }
     for (const importedId of moduleInfo.dynamicallyImportedIds) {
-      const localId = getLocalId(projectRoot, importedId);
-      const importedUid = mapper.getUid(localId);
+      const importedUid = mapper.getModuleUid(importedId);
       links.push({ source: moduleUid, target: importedUid, dynamic: true });
       moduleIds.push(importedId);
     }

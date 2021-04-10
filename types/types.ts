@@ -36,6 +36,7 @@ export interface VisualizerData {
   version: number;
   tree: ModuleTree;
   nodes: Record<ModuleUID, ModuleRenderInfo>;
+  nodeParts: Record<ModuleUID, Record<string, ModuleUID>>;
   links: ModuleLink[];
   env: {
     [key: string]: unknown;

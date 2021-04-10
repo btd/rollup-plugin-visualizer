@@ -64,6 +64,7 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
     children: [],
   };
   const nodes: Record<ModuleUID, ModuleRenderInfo> = {};
+  const nodeParts: Record<ModuleUID, Record<string, ModuleUID>> = {};
   let links: ModuleLink[] = [];
 
   for (const { file, data } of fileContents) {
@@ -79,6 +80,7 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
     }
 
     Object.assign(nodes, data.nodes);
+    Object.assign(nodeParts, data.nodeParts);
 
     links = links.concat(data.links);
   }
@@ -88,6 +90,7 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
     tree,
     links,
     nodes,
+    nodeParts,
     env: fileContents[0].data.env,
     options: fileContents[0].data.options,
   };

@@ -1,17 +1,16 @@
 import { createContext, render } from "preact";
 import webcola from "webcola";
 
-import { ModuleRenderInfo, ModuleUID, SizeKey, VisualizerData } from "../../types/types";
+import { ModuleRenderInfo, ModuleRenderSizes, ModuleUID, SizeKey, VisualizerData } from "../../types/types";
 
 import { Main } from "./main";
 
-import { Id } from "../uid";
 import { getAvailableSizeOptions } from "../sizes";
 import { CssColor } from "../color";
 
 import "../style/style-treemap.scss";
 
-export type NetworkNode = ModuleRenderInfo & { uid: string; color: CssColor; radius: number } & webcola.Node;
+export type NetworkNode = NodeInfo & { color: CssColor; radius: number } & webcola.Node;
 export type NetworkLink = webcola.Link<NetworkNode>;
 
 export interface StaticData {
@@ -21,28 +20,41 @@ export interface StaticData {
   height: number;
 }
 
-export interface ModuleIds {
-  nodeUid: Id;
-  clipUid: Id;
-}
-
-export type LinkInfo = ModuleRenderInfo & { uid: ModuleUID };
-export type ModuleLinkInfo = Map<ModuleUID, LinkInfo[]>;
+export type NodeInfo = { bundles: Record<string, ModuleRenderInfo>; uid: ModuleUID } & ModuleRenderInfo;
+export type ModuleNodeInfo = Map<ModuleUID, NodeInfo[]>;
 
 export interface ChartData {
-  importedCache: ModuleLinkInfo;
-  importedByCache: ModuleLinkInfo;
+  importedCache: ModuleNodeInfo;
+  importedByCache: ModuleNodeInfo;
+  nodes: NodeInfo[];
 }
 
 export type Context = StaticData & ChartData;
 
 export const StaticContext = createContext<Context>(({} as unknown) as Context);
 
+const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[], uid: ModuleUID): NodeInfo => {
+  const parts = data.nodeParts[uid];
+  const entries: [string, ModuleRenderInfo][] = Object.entries(parts).map(([bundleId, partUid]) => [
+    bundleId,
+    data.nodes[partUid],
+  ]);
+  const sizes = (Object.fromEntries(availableSizeProperties.map((key) => [key, 0])) as unknown) as ModuleRenderSizes;
+
+  for (const [, renderInfo] of entries) {
+    for (const sizeKey of availableSizeProperties) {
+      sizes[sizeKey] += renderInfo[sizeKey] ?? 0;
+    }
+  }
+  const bundles = Object.fromEntries(entries);
+  return { uid, bundles, ...sizes, id: entries[0][1].id };
+};
+
 const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
-  const importedByCache = new Map<ModuleUID, LinkInfo[]>();
-  const importedCache = new Map<ModuleUID, LinkInfo[]>();
+  const importedByCache = new Map<ModuleUID, NodeInfo[]>();
+  const importedCache = new Map<ModuleUID, NodeInfo[]>();
 
   for (const { source, target } of data.links) {
     if (!importedByCache.has(target)) {
@@ -52,8 +64,13 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
       importedCache.set(source, []);
     }
 
-    importedByCache.get(target)?.push({ uid: source, ...data.nodes[source] });
-    importedCache.get(source)?.push({ uid: target, ...data.nodes[target] });
+    importedByCache.get(target)?.push(createNodeInfo(data, availableSizeProperties, source));
+    importedCache.get(source)?.push(createNodeInfo(data, availableSizeProperties, target));
+  }
+
+  const nodes: NodeInfo[] = [];
+  for (const uid of Object.keys(data.nodeParts)) {
+    nodes.push(createNodeInfo(data, availableSizeProperties, uid));
   }
 
   render(
@@ -65,6 +82,7 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
         height,
         importedCache,
         importedByCache,
+        nodes,
       }}
     >
       <Main />

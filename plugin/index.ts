@@ -10,7 +10,7 @@ import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./comp
 
 import { TemplateType } from "./template-types";
 import { ModuleMapper } from "./module-mapper";
-import { addLinks, buildTree, getLocalId, mergeTrees } from "./data";
+import { addLinks, buildTree, mergeTrees } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { buildHtml } from "./build-stats";
 import {
@@ -96,7 +96,7 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       }
 
       const roots: Array<ModuleTree | ModuleTreeLeaf> = [];
-      const mapper = new ModuleMapper();
+      const mapper = new ModuleMapper(projectRoot);
       const links: ModuleLink[] = [];
 
       // collect trees
@@ -123,24 +123,23 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
             })
           );
 
-          tree = buildTree(projectRoot, moduleRenderInfo, mapper);
+          tree = buildTree(bundleId, moduleRenderInfo, mapper);
         } else {
           const modules = await Promise.all(
             Object.entries(bundle.modules).map(([id, mod]) => renderedModuleToInfo(id, mod))
           );
 
-          tree = buildTree(projectRoot, modules, mapper);
+          tree = buildTree(bundleId, modules, mapper);
         }
-
-        tree.name = bundleId;
 
         if (tree.children.length === 0) {
           const bundleInfo = await getAdditionalFilesInfo(bundle.code);
           const bundleSizes: ModuleRenderSizes = { ...bundleInfo, renderedLength: bundle.code.length };
-          const facadeModuleId = bundle.facadeModuleId ?? "unknown";
-          const moduleId = bundle.isEntry ? `entry-${facadeModuleId}` : facadeModuleId;
-          const localId = getLocalId(projectRoot, moduleId);
-          const bundleUid = mapper.setValueByModuleId(localId, { isEntry: true, ...bundleSizes, id: localId });
+          const facadeModuleId = bundle.facadeModuleId ?? `${bundleId}-unknown`;
+          const bundleUid = mapper.setValue(bundleId, facadeModuleId, {
+            isEntry: true,
+            ...bundleSizes,
+          });
           const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid };
           roots.push(leaf);
         } else {
@@ -149,36 +148,22 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       }
 
       // after trees we process links (this is mostly for uids)
-      for (const bundle of Object.values(outputBundle)) {
+      for (const [bundleId, bundle] of Object.entries(outputBundle)) {
         if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
 
-        addLinks(projectRoot, bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
-      }
-
-      const { nodes, nodeIds } = mapper;
-
-      for (const [id, uid] of Object.entries(nodeIds)) {
-        if (nodes[uid]) {
-          nodes[uid].id = id;
-        } else {
-          this.warn(`Could not find mapping for node ${id} ${uid}`);
-        }
+        addLinks(bundleId, bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
       }
 
       const tree = mergeTrees(roots);
 
-      const pkgStr = await fs.readFile(path.join(__dirname, "..", "..", "package.json"), { encoding: "utf-8" });
-      const pkg = JSON.parse(pkgStr) as { name: string; version: string };
-
       const data: VisualizerData = {
         version,
         tree,
-        nodes,
+        nodes: mapper.getNodes(),
+        nodeParts: mapper.getNodeParts(),
         links,
         env: {
           rollup: this.meta.rollupVersion,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          [pkg.name]: pkg.version,
         },
         options: {
           gzip: gzipSize,
