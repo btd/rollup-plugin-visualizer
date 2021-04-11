@@ -102,6 +102,11 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
   });
 
   await fs.mkdir(path.dirname(filename), { recursive: true });
+  try {
+    await fs.unlink(filename);
+  } catch (err) {
+    // ignore
+  }
   await fs.writeFile(filename, fileContent);
 };
 
