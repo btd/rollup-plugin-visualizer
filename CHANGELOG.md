@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.3
+
+* Fix node10 compatability
+
 ## 5.3.2
 
 * CLI now remove output file if exists before write

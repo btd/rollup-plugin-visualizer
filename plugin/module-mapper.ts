@@ -75,6 +75,10 @@ export class ModuleMapper {
   }
 
   getNodeParts(): Record<ModuleUID, Record<string, ModuleUID>> {
-    return Object.fromEntries(Object.values(this.nodeIds).map((val) => [val.uid, val.bundles]));
+    const nodeParts: Record<ModuleUID, Record<string, ModuleUID>> = {};
+    for (const nodeId of Object.values(this.nodeIds)) {
+      nodeParts[nodeId.uid] = nodeId.bundles;
+    }
+    return nodeParts;
   }
 }
