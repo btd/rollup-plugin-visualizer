@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.2
+
+* CLI now remove output file if exists before write
+
 ## 5.3.1
 
 * Fix issue that network nodes could override hierarhy data
