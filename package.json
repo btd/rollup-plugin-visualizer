@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-visualizer",
-  "version": "5.3.2",
+  "version": "5.3.3",
   "main": "./dist/plugin/index.js",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
