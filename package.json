@@ -29,7 +29,7 @@
     "test:test-json": "node build.js --all --test --json",
     "test:e2e-json-sourcemap": "node build.js --all --e2e --json --sourcemap",
     "test:test-json-sourcemap": "node build.js --all --test --json --sourcemap",
-    "test:cli": "node dist/bin/cli.js stats.e2e.json"
+    "test:cli": "node build.js --dev --all --gzip --brotli --sourcemap --json && node dist/bin/cli.js ./stats.sunburst.json"
   },
   "dependencies": {
     "nanoid": "^3.1.22",
