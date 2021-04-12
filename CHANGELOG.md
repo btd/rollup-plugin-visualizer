@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.4
+
+* Just rebuild
+
 ## 5.3.3
 
 * Fix node10 compatability
