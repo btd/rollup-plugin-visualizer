@@ -2,7 +2,7 @@ name: Node.js Package
 on:
   push:
     tags:
-      - 'v*'
+      - v*
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,9 +13,9 @@ jobs:
       with:
         node-version: '14.x'
         registry-url: 'https://registry.npmjs.org'
-    - run: npm ci
+    - run: npm ci --ignore-scripts
     - run: npm run build
     - run: npm test
-    - run: npm publish
+    - run: npm publish --ignore-scripts
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
