@@ -2,7 +2,6 @@ import { createContext, render } from "preact";
 import { hierarchy, HierarchyNode, treemap, TreemapLayout, treemapResquarify } from "d3-hierarchy";
 import {
   isModuleTree,
-  ModuleRenderInfo,
   ModuleRenderSizes,
   ModuleTree,
   ModuleTreeLeaf,
@@ -31,7 +30,9 @@ export interface ModuleIds {
   clipUid: Id;
 }
 
-export type LinkInfo = ModuleRenderInfo & { uid: ModuleUID };
+export type LinkInfo = {
+  id: string;
+};
 export type ModuleLinkInfo = Map<ModuleUID, LinkInfo[]>;
 export interface ChartData {
   layout: TreemapLayout<ModuleTree | ModuleTreeLeaf>;
@@ -52,9 +53,9 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
 
   const layout = treemap<ModuleTree | ModuleTreeLeaf>()
     .size([width, height])
-    .paddingOuter(5)
+    .paddingOuter(2)
     .paddingTop(20)
-    .paddingInner(5)
+    .paddingInner(2)
     .round(true)
     .tile(treemapResquarify);
 
@@ -96,15 +97,20 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
   const importedCache = new Map<ModuleUID, LinkInfo[]>();
 
   for (const { source, target } of data.links) {
-    if (!importedByCache.has(target)) {
-      importedByCache.set(target, []);
-    }
-    if (!importedCache.has(source)) {
-      importedCache.set(source, []);
-    }
+    for (const sourceUid of Object.values(data.nodeParts[source])) {
+      if (!importedCache.has(sourceUid)) {
+        importedCache.set(sourceUid, []);
+      }
 
-    importedByCache.get(target)?.push({ uid: source, ...data.nodes[source] });
-    importedCache.get(source)?.push({ uid: target, ...data.nodes[target] });
+      for (const targetUid of Object.values(data.nodeParts[target])) {
+        if (!importedByCache.has(targetUid)) {
+          importedByCache.set(targetUid, []);
+        }
+
+        importedByCache.get(targetUid)?.push(data.nodes[sourceUid]);
+        importedCache.get(sourceUid)?.push(data.nodes[targetUid]);
+      }
+    }
   }
 
   render(

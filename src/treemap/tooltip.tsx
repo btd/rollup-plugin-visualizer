@@ -23,6 +23,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
 
   const ref = useRef<HTMLDivElement>();
   const [style, setStyle] = useState({});
+
   const content = useMemo(() => {
     if (!node) return null;
 

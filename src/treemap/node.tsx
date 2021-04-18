@@ -57,8 +57,8 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
         event.stopPropagation();
         onClick(node);
       }}
-      onMouseOver={(evt: MouseEvent) => {
-        evt.stopPropagation();
+      onMouseOver={(event: MouseEvent) => {
+        event.stopPropagation();
         onMouseOver(node);
       }}
     >
