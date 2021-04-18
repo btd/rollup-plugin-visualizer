@@ -2,9 +2,9 @@ import { useState, useRef, useEffect, useMemo, useContext } from "preact/hooks";
 
 import { format as formatBytes } from "bytes";
 
-import { LABELS } from "../sizes";
 import { FunctionalComponent } from "preact";
 import { HierarchyRectangularNode } from "d3-hierarchy";
+import { LABELS } from "../sizes";
 import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 import { StaticContext } from ".";
 

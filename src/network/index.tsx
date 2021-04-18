@@ -3,10 +3,9 @@ import webcola from "webcola";
 
 import { ModuleRenderInfo, ModuleRenderSizes, ModuleUID, SizeKey, VisualizerData } from "../../types/types";
 
-import { Main } from "./main";
-
 import { getAvailableSizeOptions } from "../sizes";
 import { CssColor } from "../color";
+import { Main } from "./main";
 
 import "../style/style-treemap.scss";
 

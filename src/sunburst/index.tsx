@@ -12,10 +12,9 @@ import {
   VisualizerData,
 } from "../../types/types";
 
-import { Main } from "./main";
-
 import { getAvailableSizeOptions } from "../sizes";
 import { generateUniqueId, Id } from "../uid";
+import { Main } from "./main";
 
 import "../style/style-sunburst.scss";
 

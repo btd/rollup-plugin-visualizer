@@ -1,9 +1,9 @@
 import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { format as formatBytes } from "bytes";
-import { StaticContext, NetworkNode } from ".";
 import { LABELS } from "../sizes";
 import { SizeKey } from "../../types/types";
+import { StaticContext, NetworkNode } from ".";
 
 export interface TooltipProps {
   node?: NetworkNode;

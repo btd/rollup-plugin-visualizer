@@ -2,9 +2,9 @@ import { FunctionalComponent } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { HierarchyRectangularNode } from "d3-hierarchy";
 
+import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 import { TreeMap } from "./treemap";
 import { Tooltip } from "./tooltip";
-import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 
 export interface ChartProps {
   root: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
@@ -42,7 +42,6 @@ export const Chart: FunctionalComponent<ChartProps> = ({ root, sizeProperty, sel
         onNodeClick={(node) => {
           setSelectedNode(selectedNode === node ? undefined : node);
         }}
-        sizeProperty={sizeProperty}
       />
       <Tooltip visible={showTooltip} node={tooltipNode} root={root} sizeProperty={sizeProperty} />
     </>

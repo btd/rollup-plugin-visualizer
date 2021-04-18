@@ -3,25 +3,18 @@ import { useContext, useMemo } from "preact/hooks";
 import { group } from "d3-array";
 import { HierarchyNode, HierarchyRectangularNode } from "d3-hierarchy";
 
+import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
 import { Node } from "./node";
 import { StaticContext } from "./index";
-import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
 
 export interface TreeMapProps {
   root: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
   onNodeHover: (event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
   selectedNode: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined;
   onNodeClick: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
-  sizeProperty: SizeKey;
 }
 
-export const TreeMap: FunctionalComponent<TreeMapProps> = ({
-  root,
-  onNodeHover,
-  selectedNode,
-  onNodeClick,
-  sizeProperty,
-}) => {
+export const TreeMap: FunctionalComponent<TreeMapProps> = ({ root, onNodeHover, selectedNode, onNodeClick }) => {
   const { width, height, getModuleIds } = useContext(StaticContext);
 
   // this will make groups by height
@@ -48,7 +41,6 @@ export const TreeMap: FunctionalComponent<TreeMapProps> = ({
                   onMouseOver={onNodeHover}
                   selected={selectedNode === node}
                   onClick={onNodeClick}
-                  sizeProperty={sizeProperty}
                 />
               );
             })}

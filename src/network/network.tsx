@@ -2,8 +2,8 @@
 import { FunctionalComponent } from "preact";
 import { useContext } from "preact/hooks";
 import webcola from "webcola";
-import { NetworkLink, NetworkNode, StaticContext } from ".";
 import { COLOR_BASE } from "../color";
+import { NetworkLink, NetworkNode, StaticContext } from ".";
 
 export interface NetworkProps {
   onNodeHover: (event: NetworkNode) => void;

@@ -10,13 +10,13 @@ import {
   VisualizerData,
 } from "../../types/types";
 
-import { Main } from "./main";
-
 import { generateUniqueId, Id } from "../uid";
 import { getAvailableSizeOptions } from "../sizes";
+import { Main } from "./main";
 import createRainbowColor, { NodeColorGetter } from "./color";
 
 import "../style/style-treemap.scss";
+import { PADDING, TOP_PADDING } from "./const";
 
 export interface StaticData {
   data: VisualizerData;
@@ -53,9 +53,9 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
 
   const layout = treemap<ModuleTree | ModuleTreeLeaf>()
     .size([width, height])
-    .paddingOuter(2)
-    .paddingTop(20)
-    .paddingInner(2)
+    .paddingOuter(PADDING)
+    .paddingTop(TOP_PADDING)
+    .paddingInner(PADDING)
     .round(true)
     .tile(treemapResquarify);
 

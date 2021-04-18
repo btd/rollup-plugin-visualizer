@@ -1,13 +1,13 @@
 import { useContext, useMemo, useState } from "preact/hooks";
 import { HierarchyRectangularNode } from "d3-hierarchy";
 
+import { FunctionalComponent } from "preact";
 import { SideBar } from "../sidebar";
+import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { useFilter } from "../use-filter";
 import { Chart } from "./chart";
 
-import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
-import { FunctionalComponent } from "preact";
 import { StaticContext } from "./index";
-import { useFilter } from "../use-filter";
 
 export const Main: FunctionalComponent = () => {
   const { availableSizeProperties, rawHierarchy, getModuleSize, layout, data } = useContext(StaticContext);

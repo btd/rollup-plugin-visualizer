@@ -7,12 +7,12 @@ import webcola from "webcola";
 import { ModuleRenderInfo, ModuleUID, SizeKey } from "../../types/types";
 
 import { SideBar } from "../sidebar";
+import { useFilter } from "../use-filter";
 import { Chart } from "./chart";
 import { NODE_MODULES } from "./util";
 
-import { NetworkLink, NetworkNode, StaticContext } from "./index";
 import { getModuleColor } from "./color";
-import { useFilter } from "../use-filter";
+import { NetworkLink, NetworkNode, StaticContext } from "./index";
 
 export type LinkInfo = ModuleRenderInfo & { uid: ModuleUID };
 export type ModuleLinkInfo = Map<ModuleUID, LinkInfo[]>;

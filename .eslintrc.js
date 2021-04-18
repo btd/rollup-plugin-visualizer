@@ -15,6 +15,9 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: ["./tsconfig.json"],
   },
+  rules: {
+    "import/order": ["error"],
+  },
   overrides: [
     {
       files: ["src/**/*.js"],

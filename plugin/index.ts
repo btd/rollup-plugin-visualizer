@@ -4,6 +4,14 @@ import path from "path";
 import { OutputBundle, Plugin, NormalizedOutputOptions } from "rollup";
 import opn from "open";
 
+import {
+  ModuleLink,
+  ModuleRenderInfo,
+  ModuleRenderSizes,
+  ModuleTree,
+  ModuleTreeLeaf,
+  VisualizerData,
+} from "../types/types";
 import { version } from "./version";
 
 import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
@@ -13,14 +21,6 @@ import { ModuleMapper } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { buildHtml } from "./build-stats";
-import {
-  ModuleLink,
-  ModuleRenderInfo,
-  ModuleRenderSizes,
-  ModuleTree,
-  ModuleTreeLeaf,
-  VisualizerData,
-} from "../types/types";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
