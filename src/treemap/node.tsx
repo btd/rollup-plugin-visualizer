@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unknown-property */
 import { FunctionalComponent } from "preact";
-import { useContext } from "preact/hooks";
-import { format as formatBytes } from "bytes";
+import { useContext, useLayoutEffect, useRef } from "preact/hooks";
 import { HierarchyRectangularNode } from "d3-hierarchy";
-import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
+import { PADDING, TOP_PADDING } from "./const";
 import { StaticContext } from ".";
 
 type NodeEventHandler = (event: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
@@ -13,41 +13,62 @@ export interface NodeProps {
   onMouseOver: NodeEventHandler;
   selected: boolean;
   onClick: NodeEventHandler;
-  sizeProperty: SizeKey;
 }
 
-interface tspanProps {
-  x?: number | string;
-  y?: number | string;
-  dx?: number;
-  dy?: number;
-}
-
-export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClick, selected, sizeProperty }) => {
-  const { getModuleColor, getModuleIds, getModuleSize } = useContext(StaticContext);
+export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClick, selected }) => {
+  const { getModuleColor } = useContext(StaticContext);
   const { backgroundColor, fontColor } = getModuleColor(node);
-  const { clipUid, nodeUid } = getModuleIds(node.data);
   const { x0, x1, y1, y0, data, children = null } = node;
 
-  const tspan1Props: tspanProps = {};
-  const tspan2Props: tspanProps = {};
+  const textRef = useRef<SVGTextElement>();
+  const textRectRef = useRef<DOMRect>();
+
+  const width = x1 - x0;
+  const height = y1 - y0;
+
+  const textProps: Record<string, number | string | null | undefined> = {
+    "font-size": "0.7em",
+    "dominant-baseline": "middle",
+    "text-anchor": "middle",
+    x: width / 2,
+  };
   if (children != null) {
-    tspan1Props.dx = 3;
-    tspan2Props.dx = 3;
-    tspan1Props.y = 13;
-    tspan2Props.y = 13;
+    textProps.y = (TOP_PADDING + PADDING) / 2;
   } else {
-    tspan1Props.x = 3;
-    tspan2Props.x = 3;
-    tspan1Props.y = "1.1em";
-    tspan2Props.y = "2.3em";
+    textProps.y = height / 2;
   }
 
-  const handleClickSelection = (event: MouseEvent) => {
-    if (window.getSelection()?.toString() !== "") {
-      event.stopPropagation();
+  useLayoutEffect(() => {
+    if (width == 0 || height == 0) {
+      return;
     }
-  };
+
+    if (textRectRef.current == null) {
+      textRectRef.current = textRef.current.getBoundingClientRect();
+    }
+
+    let scale = 1;
+    if (children != null) {
+      scale = Math.min(
+        1,
+        Math.min(
+          (width * 0.9) / textRectRef.current.width,
+          Math.min(height, TOP_PADDING + PADDING) / textRectRef.current.height
+        )
+      );
+      textRef.current.setAttribute("y", String(Math.min(TOP_PADDING + PADDING, height) / 2 / scale));
+      textRef.current.setAttribute("x", String(width / 2 / scale));
+    } else {
+      scale = Math.min((width * 0.9) / textRectRef.current.width, (height * 0.9) / textRectRef.current.height);
+      textRef.current.setAttribute("y", String(height / 2 / scale));
+      textRef.current.setAttribute("x", String(width / 2 / scale));
+    }
+    textRef.current.setAttribute("transform", `scale(${scale.toFixed(2)})`);
+  }, [children, height, width]);
+
+  if (width == 0 || height == 0) {
+    return null;
+  }
 
   return (
     <g
@@ -63,7 +84,6 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
       }}
     >
       <rect
-        id={nodeUid.id}
         fill={backgroundColor}
         rx={2}
         ry={2}
@@ -72,16 +92,17 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
         stroke={selected ? "#fff" : undefined}
         stroke-width={selected ? 2 : undefined}
       ></rect>
-      <clipPath id={clipUid.id}>
-        <use href={nodeUid.href} />
-      </clipPath>
-      <text clip-path={clipUid} fill={fontColor} onClick={handleClickSelection}>
-        <tspan {...tspan1Props} font-size="0.7em">
-          {data.name}
-        </tspan>
-        <tspan {...tspan2Props} fill-opacity={0.7} font-size="0.7em">
-          {formatBytes(getModuleSize(data, sizeProperty))}
-        </tspan>
+      <text
+        ref={textRef}
+        fill={fontColor}
+        onClick={(event: MouseEvent) => {
+          if (window.getSelection()?.toString() !== "") {
+            event.stopPropagation();
+          }
+        }}
+        {...textProps}
+      >
+        {data.name}
       </text>
     </g>
   );
