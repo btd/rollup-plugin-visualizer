@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.4.0
+
+* Show small notice in tooltip for treemap about what we show as sizes
+* Hide sizes from UI as this creates confusion, because people starts to think about plugin as fs representation and that it is possible to get real size of small portion of bundle.
 
 ## 5.3.7
 
