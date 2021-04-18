@@ -18,8 +18,30 @@ export interface TooltipProps {
 const Tooltip_marginX = 10;
 const Tooltip_marginY = 30;
 
+const SOURCEMAP_RENDERED = (
+  <span>
+    {" "}
+    <b>{LABELS.renderedLength}</b> is a number of characters in the file after individual and <br /> whole bundle
+    transformations according to sourcemap.
+  </span>
+);
+
+const RENDRED = (
+  <span>
+    <b>{LABELS.renderedLength}</b> is a byte size of individual file after transformations and treeshake.
+  </span>
+);
+
+const COMPRESSED = (
+  <span>
+    <b>{LABELS.gzipLength}</b> and <b>{LABELS.brotliLength}</b> is a byte size of individual file after individual{" "}
+    transformations,
+    <br /> treeshake and compression.
+  </span>
+);
+
 export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root, sizeProperty }) => {
-  const { availableSizeProperties, getModuleSize, importedByCache } = useContext(StaticContext);
+  const { availableSizeProperties, getModuleSize, importedByCache, data } = useContext(StaticContext);
 
   const ref = useRef<HTMLDivElement>();
   const [style, setStyle] = useState({});
@@ -60,6 +82,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
             );
           }
         })}
+        <br />
         {!isModuleTree(node.data) && importedByCache.has(node.data.uid) && (
           <div>
             <div>
@@ -70,9 +93,17 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
             ))}
           </div>
         )}
+        <br />
+        <small>{data.options.sourcemap ? SOURCEMAP_RENDERED : RENDRED}</small>
+        {(data.options.gzip || data.options.brotli) && (
+          <>
+            <br />
+            <small>{COMPRESSED}</small>
+          </>
+        )}
       </>
     );
-  }, [availableSizeProperties, getModuleSize, importedByCache, node, root.data, sizeProperty]);
+  }, [availableSizeProperties, data.options, getModuleSize, importedByCache, node, root.data, sizeProperty]);
 
   const updatePosition = (mouseCoords: { x: number; y: number }) => {
     const pos = {
