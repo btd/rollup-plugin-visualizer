@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 5.3.7
+
+* Fix bug with new parts of bundle structure in treemap, that does not allow to show
+imported by paths
 ## 5.3.4
 
 * Just rebuild
