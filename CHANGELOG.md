@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.4.1
+
+* Remove unnecessary font size grow
+
 ## 5.4.0
 
 * Show small notice in tooltip for treemap about what we show as sizes
