@@ -63,10 +63,10 @@ const simpleOptions = {
 const COMMON_PLUGINS = () =>
   [
     typescript({ tsconfig: "./src/tsconfig.json", noEmitOnError: true }),
-    resolve(),
+    resolve({ mainFields: ["module", "main"] }),
     commonJs({
       ignoreGlobal: true,
-      include: "node_modules/**",
+      include: ["node_modules/**"],
     }),
     postcss({
       extract: true,

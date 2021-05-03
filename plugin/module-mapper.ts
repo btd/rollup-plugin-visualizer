@@ -1,5 +1,5 @@
 import { customAlphabet } from "nanoid/non-secure";
-import { ModuleRenderInfo, ModuleUID } from "../types/types";
+import { ModuleImport, ModuleMeta, ModulePart, ModuleLengths, ModuleUID } from "../types/types";
 
 const nanoid = customAlphabet("1234567890abcdef", 4);
 
@@ -9,13 +9,13 @@ let COUNTER = 0;
 const uniqueId = (): ModuleUID => `${UNIQUE_PREFIX}-${COUNTER++}`;
 
 type ModuleIdStorage = {
-  bundles: Record<string, ModuleUID>;
   uid: ModuleUID;
+  meta: Omit<ModuleMeta, "imported" | "importedBy"> & { imported: Set<string>; importedBy: Set<string> };
 };
 
 export class ModuleMapper {
-  private nodes: Record<ModuleUID, ModuleRenderInfo> = {};
-  private nodeIds: Record<string, ModuleIdStorage> = {};
+  private nodeParts: Record<ModuleUID, ModulePart> = {};
+  private nodeMetas: Record<string, ModuleIdStorage> = {};
 
   constructor(private projectRoot: string | RegExp) {}
 
@@ -24,61 +24,101 @@ export class ModuleMapper {
   }
 
   getModuleUid(moduleId: string): ModuleUID {
-    if (!(moduleId in this.nodeIds)) {
-      this.nodeIds[moduleId] = { bundles: {}, uid: uniqueId() };
+    if (!(moduleId in this.nodeMetas)) {
+      this.nodeMetas[moduleId] = {
+        uid: uniqueId(),
+        meta: { id: this.trimProjectRootId(moduleId), moduleParts: {}, imported: new Set(), importedBy: new Set() },
+      };
     }
 
-    return this.nodeIds[moduleId].uid;
+    return this.nodeMetas[moduleId].uid;
   }
 
   getBundleModuleUid(bundleId: string, moduleId: string): ModuleUID {
-    if (!(moduleId in this.nodeIds)) {
-      this.nodeIds[moduleId] = { bundles: {}, uid: uniqueId() };
+    if (!(moduleId in this.nodeMetas)) {
+      this.nodeMetas[moduleId] = {
+        uid: uniqueId(),
+        meta: { id: this.trimProjectRootId(moduleId), moduleParts: {}, imported: new Set(), importedBy: new Set() },
+      };
     }
-    if (!(bundleId in this.nodeIds[moduleId].bundles)) {
-      this.nodeIds[moduleId].bundles[bundleId] = uniqueId();
+    if (!(bundleId in this.nodeMetas[moduleId].meta.moduleParts)) {
+      this.nodeMetas[moduleId].meta.moduleParts[bundleId] = uniqueId();
     }
 
-    return this.nodeIds[moduleId].bundles[bundleId];
+    return this.nodeMetas[moduleId].meta.moduleParts[bundleId];
   }
 
-  setValue(bundleId: string, moduleId: string, value: Omit<ModuleRenderInfo, "id">): ModuleUID {
+  setNodePart(bundleId: string, moduleId: string, value: ModuleLengths): ModuleUID {
     const uid = this.getBundleModuleUid(bundleId, moduleId);
-    if (uid in this.nodes) {
+    if (uid in this.nodeParts) {
       throw new Error(
         `Override module: bundle id ${bundleId}, module id ${moduleId}, value ${JSON.stringify(
           value
-        )}, existing value: ${JSON.stringify(this.nodes[uid])}`
+        )}, existing value: ${JSON.stringify(this.nodeParts[uid])}`
       );
     }
-    const id = this.trimProjectRootId(moduleId);
-    this.nodes[uid] = { ...value, id };
+    this.nodeParts[uid] = { ...value, mainUid: this.getModuleUid(moduleId) };
     return uid;
   }
 
-  appendValue(bundleId: string, moduleId: string, value: Partial<Omit<ModuleRenderInfo, "id">>): ModuleUID {
-    const uid = this.getBundleModuleUid(bundleId, moduleId);
-    if (!(uid in this.nodes)) {
-      throw new Error(`Missing module: bundle id ${bundleId}, module id ${moduleId}, value ${JSON.stringify(value)}`);
+  setNodeMeta(moduleId: string, value: { isEntry?: boolean; isExternal?: boolean }): void {
+    this.getModuleUid(moduleId);
+    this.nodeMetas[moduleId].meta.isEntry = value.isEntry;
+    this.nodeMetas[moduleId].meta.isExternal = value.isExternal;
+  }
+
+  hasNodePart(bundleId: string, moduleId: string): boolean {
+    if (!(moduleId in this.nodeMetas)) {
+      return false;
     }
-    const id = this.trimProjectRootId(moduleId);
-    this.nodes[uid] = { ...this.nodes[uid], ...value, id };
-    return uid;
-  }
-
-  hasValue(bundleId: string, moduleId: string): boolean {
-    return !!this.nodeIds?.[moduleId]?.bundles?.[bundleId];
-  }
-
-  getNodes(): ModuleMapper["nodes"] {
-    return this.nodes;
-  }
-
-  getNodeParts(): Record<ModuleUID, Record<string, ModuleUID>> {
-    const nodeParts: Record<ModuleUID, Record<string, ModuleUID>> = {};
-    for (const nodeId of Object.values(this.nodeIds)) {
-      nodeParts[nodeId.uid] = nodeId.bundles;
+    if (!(bundleId in this.nodeMetas[moduleId].meta.moduleParts)) {
+      return false;
     }
-    return nodeParts;
+    if (!(this.nodeMetas[moduleId].meta.moduleParts[bundleId] in this.nodeParts)) {
+      return false;
+    }
+    return true;
+  }
+
+  getNodeParts(): ModuleMapper["nodeParts"] {
+    return this.nodeParts;
+  }
+
+  getNodeMetas(): Record<ModuleUID, ModuleMeta> {
+    const nodeMetas: Record<ModuleUID, ModuleMeta> = {};
+    for (const { uid, meta } of Object.values(this.nodeMetas)) {
+      nodeMetas[uid] = {
+        ...meta,
+        imported: [...meta.imported].map((rawImport) => {
+          const [uid, dynamic] = rawImport.split(",");
+          const importData: ModuleImport = { uid };
+          if (dynamic === "true") {
+            importData.dynamic = true;
+          }
+          return importData;
+        }),
+        importedBy: [...meta.importedBy].map((rawImport) => {
+          const [uid, dynamic] = rawImport.split(",");
+          const importData: ModuleImport = { uid };
+          if (dynamic === "true") {
+            importData.dynamic = true;
+          }
+          return importData;
+        }),
+      };
+    }
+    return nodeMetas;
+  }
+
+  addImportedByLink(targetId: string, sourceId: string): void {
+    const sourceUid = this.getModuleUid(sourceId);
+    this.getModuleUid(targetId);
+    this.nodeMetas[targetId].meta.importedBy.add(sourceUid);
+  }
+
+  addImportedLink(sourceId: string, targetId: string, dynamic = false): void {
+    const targetUid = this.getModuleUid(targetId);
+    this.getModuleUid(sourceId);
+    this.nodeMetas[sourceId].meta.imported.add(String([targetUid, dynamic]));
   }
 }

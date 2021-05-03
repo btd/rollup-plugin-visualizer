@@ -1,5 +1,5 @@
 import { GetModuleInfo } from "rollup";
-import { isModuleTree, ModuleLink, ModuleRenderInfo, ModuleTree, ModuleTreeLeaf } from "../types/types";
+import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf } from "../types/types";
 import { ModuleMapper } from "./module-mapper";
 
 interface MappedNode {
@@ -55,14 +55,18 @@ const mergeSingleChildTrees = (tree: ModuleTree): ModuleTree | ModuleTreeLeaf =>
   }
 };
 
-export const buildTree = (bundleId: string, modules: Array<ModuleRenderInfo>, mapper: ModuleMapper): ModuleTree => {
+export const buildTree = (
+  bundleId: string,
+  modules: Array<ModuleLengths & { id: string }>,
+  mapper: ModuleMapper
+): ModuleTree => {
   const tree: ModuleTree = {
     name: bundleId,
     children: [],
   };
 
   for (const { id, renderedLength, gzipLength, brotliLength } of modules) {
-    const bundleModuleUid = mapper.setValue(bundleId, id, { renderedLength, gzipLength, brotliLength });
+    const bundleModuleUid = mapper.setNodePart(bundleId, id, { renderedLength, gzipLength, brotliLength });
 
     const trimmedModuleId = mapper.trimProjectRootId(id);
 
@@ -91,13 +95,7 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
   return newTree;
 };
 
-export const addLinks = (
-  bundleId: string,
-  startModuleId: string,
-  getModuleInfo: GetModuleInfo,
-  links: ModuleLink[],
-  mapper: ModuleMapper
-): void => {
+export const addLinks = (startModuleId: string, getModuleInfo: GetModuleInfo, mapper: ModuleMapper): void => {
   const processedNodes: Record<string, boolean> = {};
 
   const moduleIds = [startModuleId];
@@ -113,31 +111,27 @@ export const addLinks = (
 
     const moduleInfo = getModuleInfo(moduleId);
 
-    if (!mapper.hasValue(bundleId, moduleId)) {
-      mapper.setValue(bundleId, moduleId, { renderedLength: 0 });
-    }
-
     if (!moduleInfo) {
       return;
     }
 
     if (moduleInfo.isEntry) {
-      mapper.appendValue(bundleId, moduleId, { isEntry: true });
+      mapper.setNodeMeta(moduleId, { isEntry: true });
     }
     if (moduleInfo.isExternal) {
-      mapper.appendValue(bundleId, moduleId, { isExternal: true });
+      mapper.setNodeMeta(moduleId, { isExternal: true });
     }
 
-    const moduleUid = mapper.getModuleUid(moduleId);
-
     for (const importedId of moduleInfo.importedIds) {
-      const importedUid = mapper.getModuleUid(importedId);
-      links.push({ source: moduleUid, target: importedUid });
+      mapper.addImportedByLink(importedId, moduleId);
+      mapper.addImportedLink(moduleId, importedId);
+
       moduleIds.push(importedId);
     }
     for (const importedId of moduleInfo.dynamicallyImportedIds) {
-      const importedUid = mapper.getModuleUid(importedId);
-      links.push({ source: moduleUid, target: importedUid, dynamic: true });
+      mapper.addImportedByLink(importedId, moduleId);
+      mapper.addImportedLink(moduleId, importedId, true);
+
       moduleIds.push(importedId);
     }
   }

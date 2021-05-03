@@ -41,7 +41,7 @@ const COMPRESSED = (
 );
 
 export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root, sizeProperty }) => {
-  const { availableSizeProperties, getModuleSize, importedByCache, data } = useContext(StaticContext);
+  const { availableSizeProperties, getModuleSize, data } = useContext(StaticContext);
 
   const ref = useRef<HTMLDivElement>();
   const [style, setStyle] = useState({});
@@ -60,6 +60,12 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
       .reverse()
       .map((d) => d.data.name)
       .join("/");
+
+    let dataNode = null;
+    if (!isModuleTree(node.data)) {
+      const mainUid = data.nodeParts[node.data.uid].mainUid;
+      dataNode = data.nodeMetas[mainUid];
+    }
 
     return (
       <>
@@ -83,14 +89,15 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
           }
         })}
         <br />
-        {!isModuleTree(node.data) && importedByCache.has(node.data.uid) && (
+        {dataNode && dataNode.importedBy.length > 0 && (
           <div>
             <div>
               <b>Imported By</b>:
             </div>
-            {[...new Set(importedByCache.get(node.data.uid)?.map(({ id }) => id))].map((id) => (
-              <div key={id}>{id}</div>
-            ))}
+            {dataNode.importedBy.map(({ uid }) => {
+              const id = data.nodeMetas[uid].id;
+              return <div key={id}>{id}</div>;
+            })}
           </div>
         )}
         <br />
@@ -103,7 +110,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
         )}
       </>
     );
-  }, [availableSizeProperties, data.options, getModuleSize, importedByCache, node, root.data, sizeProperty]);
+  }, [availableSizeProperties, data, getModuleSize, node, root.data, sizeProperty]);
 
   const updatePosition = (mouseCoords: { x: number; y: number }) => {
     const pos = {

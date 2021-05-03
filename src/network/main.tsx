@@ -4,7 +4,7 @@ import { scaleSqrt } from "d3-scale";
 import { max } from "d3-array";
 import webcola from "webcola";
 
-import { ModuleRenderInfo, ModuleUID, SizeKey } from "../../types/types";
+import { SizeKey } from "../../types/types";
 
 import { SideBar } from "../sidebar";
 import { useFilter } from "../use-filter";
@@ -13,9 +13,6 @@ import { NODE_MODULES } from "./util";
 
 import { getModuleColor } from "./color";
 import { NetworkLink, NetworkNode, StaticContext } from "./index";
-
-export type LinkInfo = ModuleRenderInfo & { uid: ModuleUID };
-export type ModuleLinkInfo = Map<ModuleUID, LinkInfo[]>;
 
 export const Main: FunctionalComponent = () => {
   const { availableSizeProperties, nodes, data, width, height } = useContext(StaticContext);
@@ -32,7 +29,7 @@ export const Main: FunctionalComponent = () => {
 
   const processedNodes = Object.values(nodes)
     .map((node) => {
-      const radius = sizeScale(node[sizeProperty] as number) + 1;
+      const radius = sizeScale(node[sizeProperty]) + 1;
       return {
         ...node,
         width: radius * 2,
@@ -56,13 +53,15 @@ export const Main: FunctionalComponent = () => {
   const nodesCache = new Map(processedNodes.map((d) => [d.uid, d]));
 
   // webcola has weird types, layour require array of links to Node references, but Nodes are computed from later
-  const links: NetworkLink[] = data.links
-    .map(({ source, target }) => {
-      return {
-        source: nodesCache.get(source) as NetworkNode,
-        target: nodesCache.get(target) as NetworkNode,
-        value: 1,
-      };
+  const links: NetworkLink[] = Object.entries(data.nodeMetas)
+    .flatMap(([sourceUid, { imported }]) => {
+      return imported.map(({ uid: targetUid }) => {
+        return {
+          source: nodesCache.get(sourceUid) as NetworkNode,
+          target: nodesCache.get(targetUid) as NetworkNode,
+          value: 1,
+        };
+      });
     })
     .filter(({ source, target }) => {
       return source && target;

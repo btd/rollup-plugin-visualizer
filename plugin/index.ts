@@ -4,14 +4,7 @@ import path from "path";
 import { OutputBundle, Plugin, NormalizedOutputOptions } from "rollup";
 import opn from "open";
 
-import {
-  ModuleLink,
-  ModuleRenderInfo,
-  ModuleRenderSizes,
-  ModuleTree,
-  ModuleTreeLeaf,
-  VisualizerData,
-} from "../types/types";
+import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../types/types";
 import { version } from "./version";
 
 import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
@@ -40,11 +33,6 @@ export interface PluginVisualizerOptions {
   projectRoot?: string | RegExp;
 }
 
-interface AdditionalRenderInfo {
-  gzipLength?: number;
-  brotliLength?: number;
-}
-
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
 
 export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
@@ -67,29 +55,21 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
     ? createBrotliSizeGetter(typeof opts.brotliSize === "object" ? opts.brotliSize : {})
     : defaultSizeGetter;
 
-  const getAdditionalFilesInfo = async (code: string | null) => {
-    const info: AdditionalRenderInfo = {};
-    if (gzipSize) {
-      info.gzipLength = code == null || code == "" ? 0 : await gzipSizeGetter(code);
-    }
-    if (brotliSize) {
-      info.brotliLength = code == null || code == "" ? 0 : await brotliSizeGetter(code);
-    }
-    return info;
-  };
-
-  const renderedModuleToInfo = async (
-    id: string,
-    mod: { renderedLength: number; code: string | null }
-  ): Promise<ModuleRenderInfo> => {
+  const ModuleLengths = async ({
+    id,
+    renderedLength,
+    code,
+  }: {
+    id: string;
+    renderedLength: number;
+    code: string | null;
+  }): Promise<ModuleLengths & { id: string }> => {
     const result = {
       id,
-      ...mod,
-      ...(await getAdditionalFilesInfo(mod.code)),
+      gzipLength: code == null || code == "" ? 0 : await gzipSizeGetter(code),
+      brotliLength: code == null || code == "" ? 0 : await brotliSizeGetter(code),
+      renderedLength: code == null || code == "" ? renderedLength : Buffer.byteLength(code, "utf-8"),
     };
-    if (mod.code != null) {
-      result.renderedLength = Buffer.byteLength(mod.code, "utf-8");
-    }
     return result;
   };
 
@@ -103,7 +83,6 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
 
       const roots: Array<ModuleTree | ModuleTreeLeaf> = [];
       const mapper = new ModuleMapper(projectRoot);
-      const links: ModuleLink[] = [];
 
       // collect trees
       for (const [bundleId, bundle] of Object.entries(outputBundle)) {
@@ -125,27 +104,31 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
           const moduleRenderInfo = await Promise.all(
             Object.values(modules).map(({ id, renderedLength }) => {
               const code = bundle.modules[id]?.code;
-              return renderedModuleToInfo(id, { renderedLength, code });
+              return ModuleLengths({ id, renderedLength, code });
             })
           );
 
           tree = buildTree(bundleId, moduleRenderInfo, mapper);
         } else {
           const modules = await Promise.all(
-            Object.entries(bundle.modules).map(([id, mod]) => renderedModuleToInfo(id, mod))
+            Object.entries(bundle.modules).map(([id, { renderedLength, code }]) =>
+              ModuleLengths({ id, renderedLength, code })
+            )
           );
 
           tree = buildTree(bundleId, modules, mapper);
         }
 
         if (tree.children.length === 0) {
-          const bundleInfo = await getAdditionalFilesInfo(bundle.code);
-          const bundleSizes: ModuleRenderSizes = { ...bundleInfo, renderedLength: bundle.code.length };
-          const facadeModuleId = bundle.facadeModuleId ?? `${bundleId}-unknown`;
-          const bundleUid = mapper.setValue(bundleId, facadeModuleId, {
-            isEntry: true,
-            ...bundleSizes,
+          const bundleSizes = await ModuleLengths({
+            id: bundleId,
+            renderedLength: bundle.code.length,
+            code: bundle.code,
           });
+
+          const facadeModuleId = bundle.facadeModuleId ?? `${bundleId}-unknown`;
+          const bundleUid = mapper.setNodePart(bundleId, facadeModuleId, bundleSizes);
+          mapper.setNodeMeta(facadeModuleId, { isEntry: true });
           const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid };
           roots.push(leaf);
         } else {
@@ -154,10 +137,10 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       }
 
       // after trees we process links (this is mostly for uids)
-      for (const [bundleId, bundle] of Object.entries(outputBundle)) {
+      for (const [, bundle] of Object.entries(outputBundle)) {
         if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
 
-        addLinks(bundleId, bundle.facadeModuleId, this.getModuleInfo.bind(this), links, mapper);
+        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), mapper);
       }
 
       const tree = mergeTrees(roots);
@@ -165,9 +148,8 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
       const data: VisualizerData = {
         version,
         tree,
-        nodes: mapper.getNodes(),
         nodeParts: mapper.getNodeParts(),
-        links,
+        nodeMetas: mapper.getNodeMetas(),
         env: {
           rollup: this.meta.rollupVersion,
         },

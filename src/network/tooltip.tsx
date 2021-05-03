@@ -15,7 +15,7 @@ const Tooltip_marginX = 10;
 const Tooltip_marginY = 30;
 
 export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, sizeProperty }) => {
-  const { availableSizeProperties, importedByCache } = useContext(StaticContext);
+  const { availableSizeProperties, data } = useContext(StaticContext);
 
   const ref = useRef<HTMLDivElement>();
   const [style, setStyle] = useState({});
@@ -42,19 +42,20 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, size
             );
           }
         })}
-        {node.uid && importedByCache.has(node.uid) && (
+        {node.uid && (
           <div>
             <div>
               <b>Imported By</b>:
             </div>
-            {[...new Set(importedByCache.get(node.uid)?.map(({ id }) => id))].map((id) => (
-              <div key={id}>{id}</div>
-            ))}
+            {data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
+              const { id } = data.nodeMetas[uid];
+              return <div key={id}>{id}</div>;
+            })}
           </div>
         )}
       </>
     );
-  }, [availableSizeProperties, importedByCache, node, sizeProperty]);
+  }, [availableSizeProperties, data, node, sizeProperty]);
 
   const updatePosition = (mouseCoords: { x: number; y: number }) => {
     const pos = {

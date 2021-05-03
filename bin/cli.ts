@@ -10,7 +10,7 @@ import { buildHtml } from "../plugin/build-stats";
 import TEMPLATE, { TemplateType } from "../plugin/template-types";
 import { warn } from "../plugin/warn";
 import { version } from "../plugin/version";
-import { ModuleLink, ModuleRenderInfo, ModuleTree, ModuleUID, VisualizerData } from "../types/types";
+import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../types/types";
 
 const argv = yargs(hideBin(process.argv))
   .option("filename", {
@@ -63,9 +63,8 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
     name: "root",
     children: [],
   };
-  const nodes: Record<ModuleUID, ModuleRenderInfo> = {};
-  const nodeParts: Record<ModuleUID, Record<string, ModuleUID>> = {};
-  let links: ModuleLink[] = [];
+  const nodeParts: Record<ModuleUID, ModulePart> = {};
+  const nodeMetas: Record<ModuleUID, ModuleMeta> = {};
 
   for (const { file, data } of fileContents) {
     if (data.version !== version) {
@@ -79,18 +78,15 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
       tree.children.push(data.tree);
     }
 
-    Object.assign(nodes, data.nodes);
     Object.assign(nodeParts, data.nodeParts);
-
-    links = links.concat(data.links);
+    Object.assign(nodeMetas, data.nodeMetas);
   }
 
   const data: VisualizerData = {
     version,
     tree,
-    links,
-    nodes,
     nodeParts,
+    nodeMetas,
     env: fileContents[0].data.env,
     options: fileContents[0].data.options,
   };
