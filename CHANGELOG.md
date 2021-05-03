@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.0
+
+* Refactor internal data structures to optimise perfomance
+
 ## 5.4.1
 
 * Remove unnecessary font size grow
