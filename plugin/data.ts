@@ -128,7 +128,7 @@ export const addLinks = (startModuleId: string, getModuleInfo: GetModuleInfo, ma
 
       moduleIds.push(importedId);
     }
-    for (const importedId of moduleInfo.dynamicallyImportedIds) {
+    for (const importedId of moduleInfo.dynamicallyImportedIds || []) {
       mapper.addImportedByLink(importedId, moduleId);
       mapper.addImportedLink(moduleId, importedId, true);
 
