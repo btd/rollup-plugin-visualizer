@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.1
+
+* Fix compatibility issue with rollup v1
+
 ## 5.5.0
 
 * Refactor internal data structures to optimise perfomance
