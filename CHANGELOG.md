@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.2
+
+* Fix coloring in case of 2 chunks
+
 ## 5.5.1
 
 * Fix compatibility issue with rollup v1
