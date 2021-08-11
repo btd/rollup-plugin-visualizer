@@ -20,8 +20,8 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
   const { backgroundColor, fontColor } = getModuleColor(node);
   const { x0, x1, y1, y0, data, children = null } = node;
 
-  const textRef = useRef<SVGTextElement>();
-  const textRectRef = useRef<DOMRect>();
+  const textRef = useRef<SVGTextElement>(null);
+  const textRectRef = useRef<DOMRect>(null);
 
   const width = x1 - x0;
   const height = y1 - y0;
@@ -39,7 +39,7 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
   }
 
   useLayoutEffect(() => {
-    if (width == 0 || height == 0) {
+    if (width == 0 || height == 0 || !textRef.current) {
       return;
     }
 

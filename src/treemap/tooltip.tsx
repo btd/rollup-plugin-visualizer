@@ -43,7 +43,7 @@ const COMPRESSED = (
 export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root, sizeProperty }) => {
   const { availableSizeProperties, getModuleSize, data } = useContext(StaticContext);
 
-  const ref = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState({});
 
   const content = useMemo(() => {
@@ -113,6 +113,8 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
   }, [availableSizeProperties, data, getModuleSize, node, root.data, sizeProperty]);
 
   const updatePosition = (mouseCoords: { x: number; y: number }) => {
+    if (!ref.current) return;
+
     const pos = {
       left: mouseCoords.x + Tooltip_marginX,
       top: mouseCoords.y + Tooltip_marginY,

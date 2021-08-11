@@ -36,7 +36,7 @@ export interface ChartData {
 
 export type Context = StaticData & ChartData;
 
-export const StaticContext = createContext<Context>(({} as unknown) as Context);
+export const StaticContext = createContext<Context>({} as unknown as Context);
 
 const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);

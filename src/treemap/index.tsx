@@ -1,13 +1,6 @@
 import { createContext, render } from "preact";
 import { hierarchy, HierarchyNode, treemap, TreemapLayout, treemapResquarify } from "d3-hierarchy";
-import {
-  isModuleTree,
-  ModuleLengths,
-  ModuleTree,
-  ModuleTreeLeaf,
-  SizeKey,
-  VisualizerData,
-} from "../../types/types";
+import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf, SizeKey, VisualizerData } from "../../types/types";
 
 import { generateUniqueId, Id } from "../uid";
 import { getAvailableSizeOptions } from "../sizes";
@@ -39,7 +32,7 @@ export interface ChartData {
 
 export type Context = StaticData & ChartData;
 
-export const StaticContext = createContext<Context>(({} as unknown) as Context);
+export const StaticContext = createContext<Context>({} as unknown as Context);
 
 const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);

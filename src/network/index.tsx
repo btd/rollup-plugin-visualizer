@@ -28,12 +28,12 @@ export interface ChartData {
 
 export type Context = StaticData & ChartData;
 
-export const StaticContext = createContext<Context>(({} as unknown) as Context);
+export const StaticContext = createContext<Context>({} as unknown as Context);
 
 const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[], uid: ModuleUID): NodeInfo => {
   const meta = data.nodeMetas[uid];
   const entries: ModuleLengths[] = Object.values(meta.moduleParts).map((partUid) => data.nodeParts[partUid]);
-  const sizes = (Object.fromEntries(availableSizeProperties.map((key) => [key, 0])) as unknown) as ModuleLengths;
+  const sizes = Object.fromEntries(availableSizeProperties.map((key) => [key, 0])) as unknown as ModuleLengths;
 
   for (const renderInfo of entries) {
     for (const sizeKey of availableSizeProperties) {

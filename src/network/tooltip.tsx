@@ -17,7 +17,7 @@ const Tooltip_marginY = 30;
 export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, sizeProperty }) => {
   const { availableSizeProperties, data } = useContext(StaticContext);
 
-  const ref = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState({});
   const content = useMemo(() => {
     if (!node) return null;
@@ -58,6 +58,8 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, size
   }, [availableSizeProperties, data, node, sizeProperty]);
 
   const updatePosition = (mouseCoords: { x: number; y: number }) => {
+    if (!ref.current) return;
+
     const pos = {
       left: mouseCoords.x + Tooltip_marginX,
       top: mouseCoords.y + Tooltip_marginY,
