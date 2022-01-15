@@ -40,7 +40,7 @@ const createRainbowColor = (root: HierarchyNode<ModuleTree | ModuleTreeLeaf>): N
   colorParentMap.set(root, COLOR_BASE);
 
   if (root.children != null) {
-    const colorScale = scaleSequential([0, root.children.length], (n) => hsl(360 * n, 0.6, 0.85));
+    const colorScale = scaleSequential([0, root.children.length], (n) => hsl(360 * n, 0.3, 0.85));
     root.children.forEach((c, id) => {
       colorParentMap.set(c, colorScale(id).toString());
     });
@@ -65,7 +65,7 @@ const createRainbowColor = (root: HierarchyNode<ModuleTree | ModuleTreeLeaf>): N
     if (!colorMap.has(node)) {
       const backgroundColor = getBackgroundColor(node);
       const l = relativeLuminance(backgroundColor.rgb());
-      const fontColor = l > 0.179 ? "#000" : "#fff";
+      const fontColor = l > 0.19 ? "#000" : "#fff";
       colorMap.set(node, {
         backgroundColor: backgroundColor.toString(),
         fontColor,
