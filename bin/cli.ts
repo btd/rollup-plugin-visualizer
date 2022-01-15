@@ -34,7 +34,8 @@ const argv = yargs(hideBin(process.argv))
     type: "boolean",
     default: false,
   })
-  .help().argv;
+  .help()
+  .parseSync();
 
 const listOfFiles = argv._;
 
