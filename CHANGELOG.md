@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.5.3
+
+* Update dependencies
+* Reduce saturation for colors of treemap
+
 ## 5.5.2
 
 * Fix coloring in case of 2 chunks
