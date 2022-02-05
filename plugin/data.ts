@@ -14,7 +14,7 @@ const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], nod
   const [head, ...rest] = modulePath;
 
   if (rest.length === 0) {
-    tree.children.push({ ...node, name: head });
+    tree.children.push({ ...node, name: head, bundle: moduleId });
     return;
   } else {
     let newTree = tree.children.find((folder): folder is ModuleTree => folder.name === head && isModuleTree(folder));
@@ -29,24 +29,25 @@ const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], nod
 };
 
 // TODO try to make it without recursion, but still typesafe
-const mergeSingleChildTrees = (tree: ModuleTree): ModuleTree | ModuleTreeLeaf => {
+const mergeSingleChildTrees = (tree: ModuleTree, bundleId: string): ModuleTree | ModuleTreeLeaf => {
   if (tree.children.length === 1) {
     const child = tree.children[0];
     const name = `${tree.name}/${child.name}`;
     if (isModuleTree(child)) {
       tree.name = name;
       tree.children = child.children;
-      return mergeSingleChildTrees(tree);
+      return mergeSingleChildTrees(tree, bundleId);
     } else {
       return {
         name,
         uid: child.uid,
+        bundle: bundleId,
       };
     }
   } else {
     tree.children = tree.children.map((node) => {
       if (isModuleTree(node)) {
-        return mergeSingleChildTrees(node);
+        return mergeSingleChildTrees(node, bundleId);
       } else {
         return node;
       }
@@ -76,7 +77,7 @@ export const buildTree = (
 
   tree.children = tree.children.map((node) => {
     if (isModuleTree(node)) {
-      return mergeSingleChildTrees(node);
+      return mergeSingleChildTrees(node, bundleId);
     } else {
       return node;
     }
@@ -92,7 +93,7 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
     isRoot: true,
   };
 
-  return newTree;
+  return { ...newTree };
 };
 
 export const addLinks = (startModuleId: string, getModuleInfo: GetModuleInfo, mapper: ModuleMapper): void => {

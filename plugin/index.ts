@@ -129,7 +129,7 @@ export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
           const facadeModuleId = bundle.facadeModuleId ?? `${bundleId}-unknown`;
           const bundleUid = mapper.setNodePart(bundleId, facadeModuleId, bundleSizes);
           mapper.setNodeMeta(facadeModuleId, { isEntry: true });
-          const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid };
+          const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid, bundle: bundleId };
           roots.push(leaf);
         } else {
           roots.push(tree);

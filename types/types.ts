@@ -8,6 +8,7 @@ export type BundleId = string;
 export interface ModuleTreeLeaf {
   name: string;
   uid: ModuleUID;
+  bundle: string;
 }
 
 export interface ModuleTree {
