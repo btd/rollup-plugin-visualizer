@@ -6,7 +6,13 @@ interface MappedNode {
   uid: string;
 }
 
-const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
+const addToPath = (
+  moduleId: string,
+  tree: ModuleTree,
+  modulePath: string[],
+  node: MappedNode,
+  bundleId: string
+): void => {
   if (modulePath.length === 0) {
     throw new Error(`Error adding node to path ${moduleId}`);
   }
@@ -14,7 +20,7 @@ const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], nod
   const [head, ...rest] = modulePath;
 
   if (rest.length === 0) {
-    tree.children.push({ ...node, name: head, bundle: moduleId });
+    tree.children.push({ ...node, name: head, bundle: bundleId });
     return;
   } else {
     let newTree = tree.children.find((folder): folder is ModuleTree => folder.name === head && isModuleTree(folder));
@@ -23,7 +29,7 @@ const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], nod
       newTree = { name: head, children: [] };
       tree.children.push(newTree);
     }
-    addToPath(moduleId, newTree, rest, node);
+    addToPath(moduleId, newTree, rest, node, bundleId);
     return;
   }
 };
@@ -72,7 +78,7 @@ export const buildTree = (
     const trimmedModuleId = mapper.trimProjectRootId(id);
 
     const pathParts = trimmedModuleId.split(/\\|\//).filter((p) => p !== "");
-    addToPath(trimmedModuleId, tree, pathParts, { uid: bundleModuleUid });
+    addToPath(trimmedModuleId, tree, pathParts, { uid: bundleModuleUid }, bundleId);
   }
 
   tree.children = tree.children.map((node) => {
