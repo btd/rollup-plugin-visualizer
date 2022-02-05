@@ -93,7 +93,7 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
     isRoot: true,
   };
 
-  return { ...newTree };
+  return newTree;
 };
 
 export const addLinks = (startModuleId: string, getModuleInfo: GetModuleInfo, mapper: ModuleMapper): void => {
