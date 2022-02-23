@@ -32,34 +32,49 @@ To upgrade plugin change import/require statement like it is shown in installati
 
 ## Usage
 
-Es imports:
+Import
+
 
 ```javascript
+// es
 import { visualizer } from 'rollup-plugin-visualizer';
-
-//...
-plugins: [
-  // other plugins
-  // ....
-  // 
-  visualizer()
-],
-//...
+// or
+// cjs
+const { visualizer } = require('rollup-plugin-visualizer');
 ```
 
-Cjs require:
+Usaget with rollup (rollup.config.js)
+```js
+module.exports = {
+  plugins: [
+    // put it the last one
+    visualizer()
+  ]
+}
+```
 
-```javascript
-const { visualizer } = require('rollup-plugin-visualizer');
+Usage with vite (vite.config.js)
+```js
+module.exports = {
+  plugins: [
+    visualizer()
+  ],
+};
+```
 
-//...
-plugins: [
-  // other plugins
-  // ....
-  //
-  visualizer()
-],
-//...
+Usage with SvelteKit (svelte.config.js)
+```js
+const config = {
+  kit: {
+    vite: {
+      plugins: [
+        visualizer(/* TODO add example there */)
+      ],
+    }
+  }
+};
+
+export default config;
 ```
 
 ## Options
