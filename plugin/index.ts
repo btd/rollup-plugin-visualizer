@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 
-import { OutputBundle, Plugin, NormalizedOutputOptions } from "rollup";
+import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
 import opn from "open";
 
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../types/types";
@@ -35,48 +35,52 @@ export interface PluginVisualizerOptions {
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
 
-export const visualizer = (opts: PluginVisualizerOptions = {}): Plugin => {
-  const json = !!opts.json;
-  const filename = opts.filename ?? (json ? "stats.json" : "stats.html");
-  const title = opts.title ?? "RollUp Visualizer";
-
-  const open = !!opts.open;
-  const openOptions = opts.openOptions ?? {};
-
-  const template = opts.template ?? "treemap";
-  const projectRoot = opts.projectRoot ?? process.cwd();
-
-  const gzipSize = !!opts.gzipSize;
-  const brotliSize = !!opts.brotliSize;
-  const gzipSizeGetter = gzipSize
-    ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
-    : defaultSizeGetter;
-  const brotliSizeGetter = brotliSize
-    ? createBrotliSizeGetter(typeof opts.brotliSize === "object" ? opts.brotliSize : {})
-    : defaultSizeGetter;
-
-  const ModuleLengths = async ({
-    id,
-    renderedLength,
-    code,
-  }: {
-    id: string;
-    renderedLength: number;
-    code: string | null;
-  }): Promise<ModuleLengths & { id: string }> => {
-    const result = {
-      id,
-      gzipLength: code == null || code == "" ? 0 : await gzipSizeGetter(code),
-      brotliLength: code == null || code == "" ? 0 : await brotliSizeGetter(code),
-      renderedLength: code == null || code == "" ? renderedLength : Buffer.byteLength(code, "utf-8"),
-    };
-    return result;
-  };
-
+export const visualizer = (
+  opts: PluginVisualizerOptions | ((outputOptions: OutputOptions) => PluginVisualizerOptions) = {}
+): Plugin => {
   return {
     name: "visualizer",
 
     async generateBundle(outputOptions: NormalizedOutputOptions, outputBundle: OutputBundle): Promise<void> {
+      opts = typeof opts === "function" ? opts(outputOptions) : opts;
+
+      const json = !!opts.json;
+      const filename = opts.filename ?? (json ? "stats.json" : "stats.html");
+      const title = opts.title ?? "RollUp Visualizer";
+
+      const open = !!opts.open;
+      const openOptions = opts.openOptions ?? {};
+
+      const template = opts.template ?? "treemap";
+      const projectRoot = opts.projectRoot ?? process.cwd();
+
+      const gzipSize = !!opts.gzipSize;
+      const brotliSize = !!opts.brotliSize;
+      const gzipSizeGetter = gzipSize
+        ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
+        : defaultSizeGetter;
+      const brotliSizeGetter = brotliSize
+        ? createBrotliSizeGetter(typeof opts.brotliSize === "object" ? opts.brotliSize : {})
+        : defaultSizeGetter;
+
+      const ModuleLengths = async ({
+        id,
+        renderedLength,
+        code,
+      }: {
+        id: string;
+        renderedLength: number;
+        code: string | null;
+      }): Promise<ModuleLengths & { id: string }> => {
+        const result = {
+          id,
+          gzipLength: code == null || code == "" ? 0 : await gzipSizeGetter(code),
+          brotliLength: code == null || code == "" ? 0 : await brotliSizeGetter(code),
+          renderedLength: code == null || code == "" ? renderedLength : Buffer.byteLength(code, "utf-8"),
+        };
+        return result;
+      };
+
       if (opts.sourcemap && !outputOptions.sourcemap) {
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
