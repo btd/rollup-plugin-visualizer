@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.5.0
+## 5.6.0
 
 * Allow to pass function that return options
 
