@@ -34,48 +34,55 @@ To upgrade plugin change import/require statement like it is shown in installati
 
 Import
 
-
 ```javascript
 // es
-import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from "rollup-plugin-visualizer";
 // or
 // cjs
-const { visualizer } = require('rollup-plugin-visualizer');
+const { visualizer } = require("rollup-plugin-visualizer");
 ```
 
 Usaget with rollup (rollup.config.js)
+
 ```js
 module.exports = {
   plugins: [
     // put it the last one
-    visualizer()
-  ]
-}
-```
-
-Usage with vite (vite.config.js)
-```js
-module.exports = {
-  plugins: [
-    visualizer()
+    visualizer(),
   ],
 };
 ```
 
-Usage with SvelteKit (svelte.config.js)
+Usage with vite (vite.config.js)
+
 ```js
+module.exports = {
+  plugins: [visualizer()],
+};
+```
+
+Usage with SvelteKit (svelte.config.js)
+
+```js
+import path from "path";
+
 const config = {
   kit: {
-    vite: {
+    vite: () => ({
       plugins: [
-        visualizer(/* TODO add example there */)
+        visualizer((opts) => {
+          return { filename: path.join(opts.dir, "stats.html") };
+        }),
       ],
-    }
-  }
+    }),
+  },
 };
 
 export default config;
 ```
+
+You will find 3 files in .svelte-kit/output dir. You can use this snippet as a starting point and change props/path.
+You can also generate 3 json files and combine them to one with cli util.
 
 ## Options
 
