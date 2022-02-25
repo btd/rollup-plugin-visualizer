@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.0
+
+* Allow to pass function that return options
+
 ## 5.5.3
 
 * Update dependencies
