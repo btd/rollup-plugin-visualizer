@@ -16,6 +16,9 @@ import { NetworkNode, StaticContext } from "./index";
 export const Main: FunctionalComponent = () => {
   const { availableSizeProperties, nodes, data, width, height, groups } = useContext(StaticContext);
 
+  const [viewportX, setViewportX] = useState(0);
+  const [viewportY, setViewportY] = useState(0);
+
   const [sizeProperty, setSizeProperty] = useState<SizeKey>(availableSizeProperties[0]);
 
   const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
@@ -104,7 +107,7 @@ export const Main: FunctionalComponent = () => {
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
       />
-      <Chart nodes={animatedNodes} links={links} sizeProperty={sizeProperty} />
+      <Chart nodes={animatedNodes} viewport={[viewportX, viewportY]} links={links} sizeProperty={sizeProperty} />
     </>
   );
 };
