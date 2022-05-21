@@ -104,7 +104,7 @@ export const Main: FunctionalComponent = () => {
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
       />
-      <Chart nodes={animatedNodes} groups={{}} links={links} sizeProperty={sizeProperty} />
+      <Chart nodes={animatedNodes} links={links} sizeProperty={sizeProperty} />
     </>
   );
 };

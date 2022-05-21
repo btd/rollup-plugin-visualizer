@@ -1,42 +1,18 @@
 /* eslint-disable react/no-unknown-property */
 import { FunctionalComponent } from "preact";
 import { useContext } from "preact/hooks";
-import webcola from "webcola";
-import { COLOR_BASE } from "../color";
 import { NetworkLink, NetworkNode, StaticContext } from ".";
 
 export interface NetworkProps {
   onNodeHover: (event: NetworkNode) => void;
   nodes: NetworkNode[];
   links: NetworkLink[];
-
-  groups: Record<string, webcola.Group>;
 }
 
-export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, groups, onNodeHover }) => {
+export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNodeHover }) => {
   const { width, height } = useContext(StaticContext);
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`}>
-      <g>
-        {Object.entries(groups).map(([name, group]) => {
-          const bounds = group.bounds;
-          return (
-            <rect
-              stroke="#999"
-              stroke-opacity="0.6"
-              opacity="0.6"
-              fill={COLOR_BASE}
-              key={name}
-              rx={5}
-              ry={5}
-              x={bounds?.x}
-              y={bounds?.y}
-              width={bounds?.width()}
-              height={bounds?.height()}
-            ></rect>
-          );
-        })}
-      </g>
       <g stroke="#fff" stroke-opacity="0.9">
         {links.map((link) => {
           return (
