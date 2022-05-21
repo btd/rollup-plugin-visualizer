@@ -1,16 +1,17 @@
 import { createContext, render } from "preact";
-import webcola from "webcola";
+import { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 
 import { ModuleMeta, ModuleLengths, ModuleUID, SizeKey, VisualizerData } from "../../types/types";
 
 import { getAvailableSizeOptions } from "../sizes";
 import { CssColor } from "../color";
 import { Main } from "./main";
+import { NODE_MODULES } from "./util";
 
 import "../style/style-treemap.scss";
 
-export type NetworkNode = NodeInfo & { color: CssColor; radius: number } & webcola.Node;
-export type NetworkLink = webcola.Link<NetworkNode>;
+export type NetworkNode = NodeInfo & { color: CssColor; radius: number } & SimulationNodeDatum;
+export type NetworkLink = SimulationLinkDatum<NetworkNode> & { source: NetworkNode; target: NetworkNode };
 
 export interface StaticData {
   data: VisualizerData;
@@ -24,6 +25,7 @@ export type ModuleNodeInfo = Map<ModuleUID, NodeInfo[]>;
 
 export interface ChartData {
   nodes: Record<ModuleUID, NodeInfo>;
+  groups: Record<ModuleUID, string>;
 }
 
 export type Context = StaticData & ChartData;
@@ -46,9 +48,19 @@ const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[]
 const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
+  const groups: Record<string, string> = {};
+
   const nodes: Record<ModuleUID, NodeInfo> = {};
   for (const uid of Object.keys(data.nodeMetas)) {
     nodes[uid] = createNodeInfo(data, availableSizeProperties, uid);
+
+    const match = NODE_MODULES.exec(nodes[uid].id);
+    if (match) {
+      const [, nodeModuleName] = match;
+      groups[uid] = nodeModuleName;
+    } else {
+      groups[uid] = "";
+    }
   }
 
   render(
@@ -59,6 +71,7 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
         width,
         height,
         nodes,
+        groups,
       }}
     >
       <Main />

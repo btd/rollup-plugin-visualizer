@@ -1,21 +1,20 @@
 import { FunctionalComponent } from "preact";
-import { useContext, useMemo, useState } from "preact/hooks";
+import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { scaleSqrt } from "d3-scale";
 import { max } from "d3-array";
-import webcola from "webcola";
+import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3-force";
 
-import { SizeKey } from "../../types/types";
+import { ModuleUID, SizeKey } from "../../types/types";
 
 import { SideBar } from "../sidebar";
 import { useFilter } from "../use-filter";
 import { Chart } from "./chart";
-import { NODE_MODULES } from "./util";
 
 import { getModuleColor } from "./color";
-import { NetworkLink, NetworkNode, StaticContext } from "./index";
+import { NetworkNode, StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
-  const { availableSizeProperties, nodes, data, width, height } = useContext(StaticContext);
+  const { availableSizeProperties, nodes, data, width, height, groups } = useContext(StaticContext);
 
   const [sizeProperty, setSizeProperty] = useState<SizeKey>(availableSizeProperties[0]);
 
@@ -27,111 +26,74 @@ export const Main: FunctionalComponent = () => {
     return size;
   }, [nodes, sizeProperty]);
 
-  const processedNodes = Object.values(nodes)
-    .map((node) => {
-      const radius = sizeScale(node[sizeProperty]) + 1;
-      return {
+  const processedNodes = useMemo(() => {
+    const newNodes: NetworkNode[] = [];
+
+    for (const node of Object.values(nodes)) {
+      if (getModuleFilterMultiplier(node) !== 1) {
+        continue;
+      }
+
+      newNodes.push({
         ...node,
-        width: radius * 2,
-        height: radius * 2,
-        radius,
+        radius: sizeScale(node[sizeProperty]),
         color: getModuleColor(node),
-      };
-    })
-    .filter((networkNode) => getModuleFilterMultiplier(networkNode) === 1) as Array<NetworkNode>;
-
-  const groups: Record<string, webcola.Group> = {};
-  for (const node of processedNodes) {
-    const match = NODE_MODULES.exec(node.id);
-    if (match) {
-      const [, nodeModuleName] = match;
-      groups[nodeModuleName] = groups[nodeModuleName] ?? { leaves: [], padding: 1 };
-      groups[nodeModuleName].leaves?.push(node);
-    }
-  }
-
-  const nodesCache = new Map(processedNodes.map((d) => [d.uid, d]));
-
-  // webcola has weird types, layour require array of links to Node references, but Nodes are computed from later
-  const links: NetworkLink[] = Object.entries(data.nodeMetas)
-    .flatMap(([sourceUid, { imported }]) => {
-      return imported.map(({ uid: targetUid }) => {
-        return {
-          source: nodesCache.get(sourceUid) as NetworkNode,
-          target: nodesCache.get(targetUid) as NetworkNode,
-          value: 1,
-        };
       });
-    })
-    .filter(({ source, target }) => {
-      return source && target;
-    });
+    }
+    return newNodes;
+  }, [getModuleFilterMultiplier, nodes, sizeProperty, sizeScale]);
 
-  const cola = webcola.adaptor({}).size([width, height]);
+  const links = useMemo(() => {
+    const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
 
-  const paddingX = 20;
-  const paddingY = 20;
+    return Object.entries(data.nodeMetas)
+      .flatMap(([sourceUid, { imported }]) => {
+        return imported.map(({ uid: targetUid }) => {
+          return {
+            source: nodesCache[sourceUid],
+            target: nodesCache[targetUid],
+            value: 1,
+          };
+        });
+      })
+      .filter(({ source, target }) => {
+        return source && target;
+      });
+  }, [data.nodeMetas, processedNodes]);
 
-  const pageBounds = {
-    x: paddingX,
-    y: paddingY,
-    width: width - paddingX,
-    height: height - paddingY,
-  };
+  const [animatedNodes, setAnimatedNodes] = useState<NetworkNode[]>([]);
 
-  const realGraphNodes = processedNodes.slice(0);
-  const topLeft = { x: pageBounds.x, y: pageBounds.y, fixed: 1 };
-  const tlIndex = (processedNodes as webcola.InputNode[]).push(topLeft) - 1;
-  const bottomRight = {
-    x: pageBounds.x + pageBounds.width,
-    y: pageBounds.y + pageBounds.height,
-    fixed: 1,
-  };
-  const brIndex = (processedNodes as webcola.InputNode[]).push(bottomRight) - 1;
-  const constraints = [];
-  for (let i = 0; i < realGraphNodes.length; i++) {
-    const node = realGraphNodes[i];
-    constraints.push({
-      axis: "x",
-      type: "separation",
-      left: tlIndex,
-      right: i,
-      gap: node.radius,
-    });
-    constraints.push({
-      axis: "y",
-      type: "separation",
-      left: tlIndex,
-      right: i,
-      gap: node.radius,
-    });
-    constraints.push({
-      axis: "x",
-      type: "separation",
-      left: i,
-      right: brIndex,
-      gap: node.radius,
-    });
-    constraints.push({
-      axis: "y",
-      type: "separation",
-      left: i,
-      right: brIndex,
-      gap: node.radius,
-    });
-  }
+  useEffect(() => {
+    const simulation = forceSimulation<NetworkNode>()
+      .force(
+        "collision",
+        forceCollide<NetworkNode>().radius((node) => node.radius)
+      )
+      .force("charge", forceManyBody().strength(-30))
+      .force(
+        "link",
+        forceLink(links)
+          .strength((link) => {
+            if (groups[link.source.uid] === groups[link.target.uid]) {
+              return 1;
+            } else {
+              return 0.1;
+            }
+          })
+          .iterations(2)
+      )
+      .force("x", forceX(width / 2))
+      .force("y", forceY(height / 2));
+    //.tick(500);
 
-  cola
-    .nodes(processedNodes)
-    .links(links)
-    //.groups(Object.values(groups))
-    .groupCompactness(1e-3)
-    .constraints(constraints)
-    .jaccardLinkLengths(50, 0.7)
-    .avoidOverlaps(true)
-    .handleDisconnected(false)
-    .start(30, 30, 30, 30, false, true)
-    .stop();
+    simulation.on("tick", () => {
+      setAnimatedNodes([...simulation.nodes()]);
+    });
+    simulation.nodes([...processedNodes]);
+    simulation.restart();
+
+    return () => simulation.stop();
+  }, [groups, height, links, processedNodes, width]);
 
   return (
     <>
@@ -142,7 +104,7 @@ export const Main: FunctionalComponent = () => {
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
       />
-      <Chart nodes={realGraphNodes} groups={{}} links={links} sizeProperty={sizeProperty} />
+      <Chart nodes={animatedNodes} groups={{}} links={links} sizeProperty={sizeProperty} />
     </>
   );
 };
