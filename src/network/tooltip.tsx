@@ -1,21 +1,18 @@
 import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { format as formatBytes } from "bytes";
-import { LABELS } from "../sizes";
-import { SizeKey } from "../../types/types";
+
 import { StaticContext, NetworkNode } from ".";
 
 export interface TooltipProps {
   node?: NetworkNode;
-  sizeProperty: SizeKey;
   visible: boolean;
 }
 
 const Tooltip_marginX = 10;
 const Tooltip_marginY = 30;
 
-export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, sizeProperty }) => {
-  const { availableSizeProperties, data } = useContext(StaticContext);
+export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible }) => {
+  const { data } = useContext(StaticContext);
 
   const ref = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState({});
@@ -25,23 +22,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, size
     return (
       <>
         <div>{node.id}</div>
-        {availableSizeProperties.map((sizeProp) => {
-          if (sizeProp === sizeProperty) {
-            return (
-              <div>
-                <b>
-                  {LABELS[sizeProp]}: {formatBytes(node[sizeProp] ?? 0)}
-                </b>
-              </div>
-            );
-          } else {
-            return (
-              <div>
-                {LABELS[sizeProp]}: {formatBytes(node[sizeProp] ?? 0)}
-              </div>
-            );
-          }
-        })}
+
         {node.uid && (
           <div>
             <div>
@@ -55,7 +36,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, size
         )}
       </>
     );
-  }, [availableSizeProperties, data, node, sizeProperty]);
+  }, [data, node]);
 
   const updatePosition = (mouseCoords: { x: number; y: number }) => {
     if (!ref.current) return;

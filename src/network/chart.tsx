@@ -1,19 +1,16 @@
 import { FunctionalComponent } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
-import { SizeKey } from "../../types/types";
 import { Tooltip } from "./tooltip";
 import { Network } from "./network";
 import { NetworkLink, NetworkNode } from ".";
 
 export interface ChartProps {
-  sizeProperty: SizeKey;
   links: NetworkLink[];
   nodes: NetworkNode[];
-  viewport: [number, number];
 }
 
-export const Chart: FunctionalComponent<ChartProps> = ({ sizeProperty, links, nodes, viewport }) => {
+export const Chart: FunctionalComponent<ChartProps> = ({ links, nodes }) => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [tooltipNode, setTooltipNode] = useState<NetworkNode | undefined>(undefined);
 
@@ -37,9 +34,8 @@ export const Chart: FunctionalComponent<ChartProps> = ({ sizeProperty, links, no
           setTooltipNode(node);
           setShowTooltip(true);
         }}
-        viewport={viewport}
       />
-      <Tooltip visible={showTooltip} node={tooltipNode} sizeProperty={sizeProperty} />
+      <Tooltip visible={showTooltip} node={tooltipNode} />
     </>
   );
 };

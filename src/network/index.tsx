@@ -15,7 +15,6 @@ export type NetworkLink = SimulationLinkDatum<NetworkNode> & { source: NetworkNo
 
 export interface StaticData {
   data: VisualizerData;
-  availableSizeProperties: SizeKey[];
   width: number;
   height: number;
 }
@@ -67,7 +66,6 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
     <StaticContext.Provider
       value={{
         data,
-        availableSizeProperties,
         width,
         height,
         nodes,

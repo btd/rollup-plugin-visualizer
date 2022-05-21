@@ -4,47 +4,34 @@ import { scaleSqrt } from "d3-scale";
 import { max } from "d3-array";
 import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3-force";
 
-import { ModuleUID, SizeKey } from "../../types/types";
+import { ModuleUID } from "../../types/types";
 
-import { SideBar } from "../sidebar";
-import { useFilter } from "../use-filter";
 import { Chart } from "./chart";
 
 import { getModuleColor } from "./color";
 import { NetworkNode, StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
-  const { availableSizeProperties, nodes, data, width, height, groups } = useContext(StaticContext);
-
-  const [viewportX, setViewportX] = useState(0);
-  const [viewportY, setViewportY] = useState(0);
-
-  const [sizeProperty, setSizeProperty] = useState<SizeKey>(availableSizeProperties[0]);
-
-  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
+  const { nodes, data, width, height, groups } = useContext(StaticContext);
 
   const sizeScale = useMemo(() => {
-    const maxLines = max(Object.values(nodes), (d) => d[sizeProperty]) as number;
+    const maxLines = max(Object.values(nodes), (d) => d.renderedLength) as number;
     const size = scaleSqrt().domain([1, maxLines]).range([5, 30]);
     return size;
-  }, [nodes, sizeProperty]);
+  }, [nodes]);
 
   const processedNodes = useMemo(() => {
     const newNodes: NetworkNode[] = [];
 
     for (const node of Object.values(nodes)) {
-      if (getModuleFilterMultiplier(node) !== 1) {
-        continue;
-      }
-
       newNodes.push({
         ...node,
-        radius: sizeScale(node[sizeProperty]),
+        radius: sizeScale(node.renderedLength),
         color: getModuleColor(node),
       });
     }
     return newNodes;
-  }, [getModuleFilterMultiplier, nodes, sizeProperty, sizeScale]);
+  }, [nodes, sizeScale]);
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
@@ -98,16 +85,5 @@ export const Main: FunctionalComponent = () => {
     return () => simulation.stop();
   }, [groups, height, links, processedNodes, width]);
 
-  return (
-    <>
-      <SideBar
-        sizeProperty={sizeProperty}
-        availableSizeProperties={availableSizeProperties}
-        setSizeProperty={setSizeProperty}
-        onExcludeChange={setExcludeFilter}
-        onIncludeChange={setIncludeFilter}
-      />
-      <Chart nodes={animatedNodes} viewport={[viewportX, viewportY]} links={links} sizeProperty={sizeProperty} />
-    </>
-  );
+  return <Chart nodes={animatedNodes} links={links} />;
 };
