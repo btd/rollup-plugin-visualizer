@@ -21,16 +21,73 @@ const WARN_SOURCEMAP_DISABLED =
 const WARN_SOURCEMAP_MISSING = (id: string) => `${id} missing source map`;
 
 export interface PluginVisualizerOptions {
-  json?: boolean;
+  /**
+   * The path to the template file to use. Or just a name of a file.
+   *
+   * @default "stats.html"
+   */
   filename?: string;
+
+  /**
+   * If plugin should emit json file with visualizer data. It can be used with plugin CLI
+   *
+   * @default false
+   */
+  json?: boolean;
+
+  /**
+   * HTML <title> value in generated file. Ignored when `json` is true.
+   *
+   * @default "Rollup Visualizer"
+   */
   title?: string;
+
+  /**
+   * If plugin should open browser with generated file. Ignored when `json` is true.
+   *
+   * @default false
+   */
   open?: boolean;
   openOptions?: opn.Options;
+
+  /**
+   * Which diagram to generate. 'sunburst' or 'treemap' can help find big dependencies or if they are repeated.
+   * 'network' can answer you why something was included
+   *
+   * @default 'treemap'
+   */
   template?: TemplateType;
+
+  /**
+   * If plugin should also calculate sizes of gzipped files.
+   *
+   * @default false
+   */
   gzipSize?: boolean;
+
+  /**
+   * If plugin should also calculate sizes of brotlied files.
+   *
+   * @default false
+   */
   brotliSize?: boolean;
+
+  /**
+   * If plugin should use sourcemap to calculate sizes of modules. By idea it will present more accurate results.
+   * `gzipSize` and `brotliSize` does not make much sense with this option.
+   *
+   * @default false
+   */
   sourcemap?: boolean;
+
+  /**
+   * Absolute path where project is located. It is used to cut prefix from file's paths.
+   *
+   * @default process.cwd()
+   */
   projectRoot?: string | RegExp;
+
+  emitFile?: boolean;
 }
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
@@ -54,8 +111,8 @@ export const visualizer = (
       const template = opts.template ?? "treemap";
       const projectRoot = opts.projectRoot ?? process.cwd();
 
-      const gzipSize = !!opts.gzipSize;
-      const brotliSize = !!opts.brotliSize;
+      const gzipSize = !!opts.gzipSize && !opts.sourcemap;
+      const brotliSize = !!opts.brotliSize && !opts.sourcemap;
       const gzipSizeGetter = gzipSize
         ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
         : defaultSizeGetter;
@@ -172,11 +229,19 @@ export const visualizer = (
             template,
           });
 
-      await fs.mkdir(path.dirname(filename), { recursive: true });
-      await fs.writeFile(filename, fileContent);
+      if (opts.emitFile) {
+        this.emitFile({
+          type: "asset",
+          fileName: filename,
+          source: fileContent,
+        });
+      } else {
+        await fs.mkdir(path.dirname(filename), { recursive: true });
+        await fs.writeFile(filename, fileContent);
 
-      if (open) {
-        await opn(filename, openOptions);
+        if (open) {
+          await opn(filename, openOptions);
+        }
       }
     },
   };
