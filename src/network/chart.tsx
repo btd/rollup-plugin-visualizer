@@ -8,9 +8,10 @@ import { NetworkLink, NetworkNode } from ".";
 export interface ChartProps {
   links: NetworkLink[];
   nodes: NetworkNode[];
+  onNodeExclude: (node: NetworkNode) => void;
 }
 
-export const Chart: FunctionalComponent<ChartProps> = ({ links, nodes }) => {
+export const Chart: FunctionalComponent<ChartProps> = ({ links, nodes, onNodeExclude }) => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [tooltipNode, setTooltipNode] = useState<NetworkNode | undefined>(undefined);
 
@@ -34,6 +35,7 @@ export const Chart: FunctionalComponent<ChartProps> = ({ links, nodes }) => {
           setTooltipNode(node);
           setShowTooltip(true);
         }}
+        onNodeDblClick={onNodeExclude}
       />
       <Tooltip visible={showTooltip} node={tooltipNode} />
     </>

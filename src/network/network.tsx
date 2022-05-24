@@ -5,7 +5,8 @@ import { identityTransform, Transform } from "./transform";
 import { NetworkLink, NetworkNode, StaticContext } from ".";
 
 export interface NetworkProps {
-  onNodeHover: (event: NetworkNode) => void;
+  onNodeHover: (node: NetworkNode) => void;
+  onNodeDblClick: (node: NetworkNode) => void;
   nodes: NetworkNode[];
   links: NetworkLink[];
 }
@@ -21,7 +22,7 @@ const translate = (transform: Transform, p0: [number, number], p1: [number, numb
   return x === transform.x && y === transform.y ? transform : new Transform(transform.k, x, y);
 };
 
-export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNodeHover }) => {
+export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNodeHover, onNodeDblClick }) => {
   const { width, height } = useContext(StaticContext);
 
   const [transform, setTransform] = useState<Transform>(identityTransform);
@@ -90,8 +91,12 @@ export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNod
                 cx={node.x}
                 cy={node.y}
                 onMouseOver={(evt) => {
-                  evt.stopPropagation();
+                  noEvent(evt);
                   onNodeHover(node);
+                }}
+                onDblClick={(evt) => {
+                  noEvent(evt);
+                  onNodeDblClick(node);
                 }}
               />
             );

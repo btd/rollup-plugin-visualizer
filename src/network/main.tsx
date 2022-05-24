@@ -12,7 +12,9 @@ import { getModuleColor } from "./color";
 import { NetworkNode, StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
-  const { nodes, data, width, height, groups } = useContext(StaticContext);
+  const { nodes, data, width, height, groups, nodeGroups } = useContext(StaticContext);
+
+  const groupsTotal = Object.entries(groups).length;
 
   const sizeScale = useMemo(() => {
     const maxLines = max(Object.values(nodes), (d) => d.renderedLength) as number;
@@ -20,18 +22,30 @@ export const Main: FunctionalComponent = () => {
     return size;
   }, [nodes]);
 
+  const [excludedNodes, setExcludedNodes] = useState<ModuleUID[]>([]);
+
   const processedNodes = useMemo(() => {
     const newNodes: NetworkNode[] = [];
 
     for (const node of Object.values(nodes)) {
+      //if (node.renderedLength === 0) continue;
+      if (excludedNodes.includes(node.uid)) continue;
+
+      const groupId = groups[nodeGroups[node.uid]];
+
       newNodes.push({
         ...node,
+        x: groupId == 0 ? width / 2 : Math.cos((groupId / groupsTotal) * 2 * Math.PI) * 200 + width / 2 + Math.random(),
+        y:
+          groupId == 0
+            ? height / 2
+            : Math.sin((groupId / groupsTotal) * 2 * Math.PI) * 200 + height / 2 + Math.random(),
         radius: sizeScale(node.renderedLength),
         color: getModuleColor(node),
       });
     }
     return newNodes;
-  }, [nodes, sizeScale]);
+  }, [excludedNodes, groups, groupsTotal, height, nodeGroups, nodes, sizeScale, width]);
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
@@ -64,7 +78,7 @@ export const Main: FunctionalComponent = () => {
         "link",
         forceLink(links)
           .strength((link) => {
-            if (groups[link.source.uid] === groups[link.target.uid]) {
+            if (nodeGroups[link.source.uid] === nodeGroups[link.target.uid]) {
               return 1;
             } else {
               return 0.1;
@@ -74,16 +88,21 @@ export const Main: FunctionalComponent = () => {
       )
       .force("x", forceX(width / 2))
       .force("y", forceY(height / 2));
-    //.tick(500);
 
     simulation.on("tick", () => {
       setAnimatedNodes([...simulation.nodes()]);
     });
     simulation.nodes([...processedNodes]);
-    simulation.restart();
+    simulation.alphaMin(0.03).restart();
 
     return () => simulation.stop();
-  }, [groups, height, links, processedNodes, width]);
+  }, [nodeGroups, height, links, processedNodes, width]);
 
-  return <Chart nodes={animatedNodes} links={links} />;
+  return (
+    <Chart
+      nodes={animatedNodes}
+      onNodeExclude={(node) => setExcludedNodes([...excludedNodes, node.uid])}
+      links={links}
+    />
+  );
 };

@@ -24,7 +24,8 @@ export type ModuleNodeInfo = Map<ModuleUID, NodeInfo[]>;
 
 export interface ChartData {
   nodes: Record<ModuleUID, NodeInfo>;
-  groups: Record<ModuleUID, string>;
+  nodeGroups: Record<ModuleUID, string>;
+  groups: Record<string, number>;
 }
 
 export type Context = StaticData & ChartData;
@@ -47,7 +48,9 @@ const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[]
 const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
-  const groups: Record<string, string> = {};
+  const nodeGroups: Record<ModuleUID, string> = {};
+  const groups: Record<string, number> = { "": 0 };
+  let groupId = 1;
 
   const nodes: Record<ModuleUID, NodeInfo> = {};
   for (const uid of Object.keys(data.nodeMetas)) {
@@ -56,9 +59,10 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
     const match = NODE_MODULES.exec(nodes[uid].id);
     if (match) {
       const [, nodeModuleName] = match;
-      groups[uid] = nodeModuleName;
+      nodeGroups[uid] = nodeModuleName;
+      groups[nodeModuleName] = groups[nodeModuleName] ?? groupId++;
     } else {
-      groups[uid] = "";
+      nodeGroups[uid] = "";
     }
   }
 
@@ -69,6 +73,7 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
         width,
         height,
         nodes,
+        nodeGroups,
         groups,
       }}
     >
