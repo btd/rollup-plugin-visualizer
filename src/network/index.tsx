@@ -23,9 +23,10 @@ export type NodeInfo = { uid: ModuleUID } & ModuleMeta & ModuleLengths;
 export type ModuleNodeInfo = Map<ModuleUID, NodeInfo[]>;
 
 export interface ChartData {
-  nodes: Record<ModuleUID, NodeInfo>;
+  nodes: NodeInfo[];
   nodeGroups: Record<ModuleUID, string>;
   groups: Record<string, number>;
+  groupLayers: string[][];
 }
 
 export type Context = StaticData & ChartData;
@@ -52,11 +53,12 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
   const groups: Record<string, number> = { "": 0 };
   let groupId = 1;
 
-  const nodes: Record<ModuleUID, NodeInfo> = {};
+  const nodes: NodeInfo[] = [];
   for (const uid of Object.keys(data.nodeMetas)) {
-    nodes[uid] = createNodeInfo(data, availableSizeProperties, uid);
+    const node = createNodeInfo(data, availableSizeProperties, uid);
+    nodes.push(node);
 
-    const match = NODE_MODULES.exec(nodes[uid].id);
+    const match = NODE_MODULES.exec(node.id);
     if (match) {
       const [, nodeModuleName] = match;
       nodeGroups[uid] = nodeModuleName;
@@ -64,6 +66,44 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
     } else {
       nodeGroups[uid] = "";
     }
+  }
+
+  const groupLinks: Record<string, Set<string>> = { "": new Set<string>() };
+
+  for (const [sourceUid, { imported }] of Object.entries(data.nodeMetas)) {
+    for (const { uid: targetUid } of imported) {
+      const sourceGroup = nodeGroups[sourceUid];
+      const targetGroup = nodeGroups[targetUid];
+
+      if (!(sourceGroup in groupLinks)) {
+        groupLinks[sourceGroup] = new Set<string>();
+      }
+      groupLinks[sourceGroup].add(targetGroup);
+    }
+  }
+
+  const groupLayers: string[][] = [[""]];
+  const seen = new Set([""]);
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const lastLayer = groupLayers[groupLayers.length - 1];
+    const newLayer = new Set<string>();
+
+    for (const currentGroup of lastLayer) {
+      for (const targetGroup of groupLinks[currentGroup] ?? []) {
+        if (seen.has(targetGroup)) {
+          continue;
+        }
+
+        seen.add(targetGroup);
+
+        newLayer.add(targetGroup);
+      }
+    }
+    if (newLayer.size === 0) {
+      break;
+    }
+    groupLayers.push([...newLayer]);
   }
 
   render(
@@ -75,6 +115,7 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
         nodes,
         nodeGroups,
         groups,
+        groupLayers,
       }}
     >
       <Main />

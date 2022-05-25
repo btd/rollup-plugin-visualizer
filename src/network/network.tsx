@@ -61,7 +61,7 @@ export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNod
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={`${-width / 2} ${-height / 2} ${width} ${height}`}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}

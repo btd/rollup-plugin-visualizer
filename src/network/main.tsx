@@ -12,12 +12,10 @@ import { getModuleColor } from "./color";
 import { NetworkNode, StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
-  const { nodes, data, width, height, groups, nodeGroups } = useContext(StaticContext);
-
-  const groupsTotal = Object.entries(groups).length;
+  const { nodes, data, width, height, nodeGroups, groupLayers } = useContext(StaticContext);
 
   const sizeScale = useMemo(() => {
-    const maxLines = max(Object.values(nodes), (d) => d.renderedLength) as number;
+    const maxLines = max(nodes, (d) => d.renderedLength) as number;
     const size = scaleSqrt().domain([1, maxLines]).range([5, 30]);
     return size;
   }, [nodes]);
@@ -27,25 +25,29 @@ export const Main: FunctionalComponent = () => {
   const processedNodes = useMemo(() => {
     const newNodes: NetworkNode[] = [];
 
-    for (const node of Object.values(nodes)) {
+    for (const node of nodes) {
       //if (node.renderedLength === 0) continue;
       if (excludedNodes.includes(node.uid)) continue;
 
-      const groupId = groups[nodeGroups[node.uid]];
+      const nodeGroup = nodeGroups[node.uid];
+
+      const layerIndex = groupLayers.findIndex((layer) => layer.includes(nodeGroup));
+
+      const groupId = groupLayers[layerIndex].indexOf(nodeGroup);
+      const groupsTotal = groupLayers[layerIndex].length;
+
+      console.log(node.id, nodeGroup, layerIndex, groupId, groupsTotal);
 
       newNodes.push({
         ...node,
-        x: groupId == 0 ? width / 2 : Math.cos((groupId / groupsTotal) * 2 * Math.PI) * 200 + width / 2 + Math.random(),
-        y:
-          groupId == 0
-            ? height / 2
-            : Math.sin((groupId / groupsTotal) * 2 * Math.PI) * 200 + height / 2 + Math.random(),
+        x: layerIndex * Math.cos((groupId / groupsTotal) * 2 * Math.PI) * 200,
+        y: layerIndex * Math.sin((groupId / groupsTotal) * 2 * Math.PI) * 200,
         radius: sizeScale(node.renderedLength),
         color: getModuleColor(node),
       });
     }
     return newNodes;
-  }, [excludedNodes, groups, groupsTotal, height, nodeGroups, nodes, sizeScale, width]);
+  }, [excludedNodes, groupLayers, nodeGroups, nodes, sizeScale]);
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
@@ -86,13 +88,14 @@ export const Main: FunctionalComponent = () => {
           })
           .iterations(2)
       )
-      .force("x", forceX(width / 2))
-      .force("y", forceY(height / 2));
+      .force("x", forceX(0))
+      .force("y", forceY(0));
 
     simulation.on("tick", () => {
       setAnimatedNodes([...simulation.nodes()]);
     });
     simulation.nodes([...processedNodes]);
+    // simulation.tick(1).stop();
     simulation.alphaMin(0.03).restart();
 
     return () => simulation.stop();
