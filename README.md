@@ -28,7 +28,7 @@ Version V5 contains seveal minor breaking changes, depending your current instal
 - If you use rollup v2.x and use `gzipLength` or `brotliLength`upgrade to rollup 2.44 at least. In V5 i use provided by rollup api to get rendered module code for size estimations, instead of original sources as it was before.
 - In all other case just update the plugin.
 
-To upgrade plugin change import/require statement like it is shown in installation section.
+To upgrade plugin change import/require statement like it is shown in installation/usage sections.
 
 ## Usage
 
@@ -42,7 +42,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 const { visualizer } = require("rollup-plugin-visualizer");
 ```
 
-Usaget with rollup (rollup.config.js)
+Usage with rollup (rollup.config.js)
 
 ```js
 module.exports = {
@@ -68,20 +68,21 @@ import path from "path";
 
 const config = {
   kit: {
-    vite: () => ({
-      plugins: [
-        visualizer((opts) => {
-          return { filename: path.join(opts.dir, "stats.html") };
-        }),
-      ],
-    }),
+    vite: {
+			plugins: [
+				visualizer({
+					emitFile: true,
+					file: 'stats.html'
+				})
+			]
+		}
   },
 };
 
 export default config;
 ```
 
-You will find 3 files in .svelte-kit/output dir. You can use this snippet as a starting point and change props/path.
+You will find 2/3 files in .svelte-kit/output dir named stats.html (see vite logs for file locations) . You can use this snippet as a starting point and change props/path.
 You can also generate 3 json files and combine them to one with cli util.
 
 ## How to use generated files
