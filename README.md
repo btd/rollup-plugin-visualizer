@@ -69,13 +69,13 @@ import path from "path";
 const config = {
   kit: {
     vite: {
-			plugins: [
-				visualizer({
-					emitFile: true,
-					file: 'stats.html'
-				})
-			]
-		}
+      plugins: [
+        visualizer({
+          emitFile: true,
+          file: 'stats.html'
+        })
+      ]
+    }
   },
 };
 
