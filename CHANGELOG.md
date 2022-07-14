@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.7.0
+
+* Add `emitFile` option
+* Allow to drag network diagram
+* Allow to exclude nodes from network diagram by double click
+* Allow to highligh file dependencies listed in toolip by click
+* Remove webcola and switch back to d3-force with defined node positions
+
 ## 5.6.0
 
 * Allow to pass function that return options
