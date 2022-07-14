@@ -4,13 +4,12 @@ import { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { ModuleMeta, ModuleLengths, ModuleUID, SizeKey, VisualizerData } from "../../types/types";
 
 import { getAvailableSizeOptions } from "../sizes";
-import { CssColor } from "../color";
 import { Main } from "./main";
 import { NODE_MODULES } from "./util";
 
 import "../style/style-treemap.scss";
 
-export type NetworkNode = NodeInfo & { color: CssColor; radius: number } & SimulationNodeDatum;
+export type NetworkNode = NodeInfo & { radius: number } & SimulationNodeDatum;
 export type NetworkLink = SimulationLinkDatum<NetworkNode> & { source: NetworkNode; target: NetworkNode };
 
 export interface StaticData {

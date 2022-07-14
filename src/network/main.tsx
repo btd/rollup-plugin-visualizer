@@ -6,10 +6,11 @@ import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY
 
 import { ModuleUID } from "../../types/types";
 
+import { COLOR_BASE } from "../color";
 import { Chart } from "./chart";
 
 import createRainbowColor from "./color";
-import { NetworkNode, StaticContext } from "./index";
+import { NetworkNode, NodeInfo, StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
   const { nodes, data, width, height, nodeGroups, groupLayers, groups } = useContext(StaticContext);
@@ -25,6 +26,18 @@ export const Main: FunctionalComponent = () => {
   }, [groups]);
 
   const [excludedNodes, setExcludedNodes] = useState<ModuleUID[]>([]);
+  const [selectedNode, setSelectedNode] = useState<string>();
+
+  const getColor = (node: NodeInfo) => {
+    if (selectedNode != null) {
+      if (node.uid === selectedNode || data.nodeMetas[selectedNode].importedBy.some(({ uid }) => node.uid === uid)) {
+        return getModuleColor(node);
+      }
+      return COLOR_BASE;
+    } else {
+      return getModuleColor(node);
+    }
+  };
 
   const processedNodes = useMemo(() => {
     const newNodes: NetworkNode[] = [];
@@ -45,11 +58,10 @@ export const Main: FunctionalComponent = () => {
         x: layerIndex * Math.cos((groupId / groupsTotal) * 2 * Math.PI) * 200,
         y: layerIndex * Math.sin((groupId / groupsTotal) * 2 * Math.PI) * 200,
         radius: sizeScale(node.renderedLength),
-        color: getModuleColor(node),
       });
     }
     return newNodes;
-  }, [excludedNodes, getModuleColor, groupLayers, nodeGroups, nodes, sizeScale]);
+  }, [excludedNodes, groupLayers, nodeGroups, nodes, sizeScale]);
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
@@ -108,6 +120,8 @@ export const Main: FunctionalComponent = () => {
       nodes={animatedNodes}
       onNodeExclude={(node) => setExcludedNodes([...excludedNodes, node.uid])}
       links={links}
+      getColor={getColor}
+      onNodeSelect={(uid) => setSelectedNode(uid === selectedNode ? undefined : uid)}
     />
   );
 };

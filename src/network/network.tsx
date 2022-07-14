@@ -2,6 +2,7 @@
 import { FunctionalComponent } from "preact";
 import { useContext, useRef, useState } from "preact/hooks";
 import { identityTransform, Transform } from "./transform";
+import { NodeColorGetter } from "./color";
 import { NetworkLink, NetworkNode, StaticContext } from ".";
 
 export interface NetworkProps {
@@ -9,6 +10,9 @@ export interface NetworkProps {
   onNodeDblClick: (node: NetworkNode) => void;
   nodes: NetworkNode[];
   links: NetworkLink[];
+  getColor: NodeColorGetter;
+  onNodeClick: (node: NetworkNode) => void;
+  onCanvasClick: () => void;
 }
 
 const noEvent = (event: UIEvent) => {
@@ -22,7 +26,15 @@ const translate = (transform: Transform, p0: [number, number], p1: [number, numb
   return x === transform.x && y === transform.y ? transform : new Transform(transform.k, x, y);
 };
 
-export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNodeHover, onNodeDblClick }) => {
+export const Network: FunctionalComponent<NetworkProps> = ({
+  links,
+  nodes,
+  onNodeHover,
+  onNodeDblClick,
+  getColor,
+  onCanvasClick,
+  onNodeClick,
+}) => {
   const { width, height } = useContext(StaticContext);
 
   const [transform, setTransform] = useState<Transform>(identityTransform);
@@ -65,6 +77,7 @@ export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNod
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
+      onClick={onCanvasClick}
     >
       <g transform={transform.toString()}>
         <g stroke="#fff" stroke-opacity="0.9">
@@ -87,12 +100,16 @@ export const Network: FunctionalComponent<NetworkProps> = ({ links, nodes, onNod
               <circle
                 key={node.uid}
                 r={node.radius}
-                fill={node.color}
+                fill={getColor(node)}
                 cx={node.x}
                 cy={node.y}
                 onMouseOver={(evt) => {
                   noEvent(evt);
                   onNodeHover(node);
+                }}
+                onClick={(evt) => {
+                  noEvent(evt);
+                  onNodeClick(node);
                 }}
                 onDblClick={(evt) => {
                   noEvent(evt);
