@@ -109,6 +109,8 @@ This digram should help you answer for the question 'why it is included?'. After
 
 In real life scenarious, sometimes you will see terribly connected diagrams. There is no 100% working solution for everyone, it is expected you topology will look 'terrible' and not hold on screen. To make it still visually ispectable, first remove all highly connected nodes that you see (typical examples: commonjsHelpers, tslib, react etc, basically if tooltip for the node is not hold on the screen - exclude this node), after layout stabilization you will see, your layout is not that terrible anymore and most of dependencies cluster together. Move layout to find peaces you looked for.
 
+When you click on node it will hightlight nodes that are listed in tooltip (the files that imports current node).
+
 ## Options
 
 `filename` (string, default `stats.html`) - name of the file with diagram to generate
