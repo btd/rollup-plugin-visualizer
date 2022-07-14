@@ -19,7 +19,7 @@ export interface StaticData {
   height: number;
 }
 
-export type NodeInfo = { uid: ModuleUID } & ModuleMeta & ModuleLengths;
+export type NodeInfo = { uid: ModuleUID; group: string } & ModuleMeta & ModuleLengths;
 export type ModuleNodeInfo = Map<ModuleUID, NodeInfo[]>;
 
 export interface ChartData {
@@ -43,7 +43,10 @@ const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[]
       sizes[sizeKey] += renderInfo[sizeKey] ?? 0;
     }
   }
-  return { uid, ...sizes, ...meta };
+
+  const match = NODE_MODULES.exec(meta.id);
+
+  return { uid, ...sizes, ...meta, group: match?.[1] ?? "" };
 };
 
 const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
@@ -58,14 +61,8 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
     const node = createNodeInfo(data, availableSizeProperties, uid);
     nodes.push(node);
 
-    const match = NODE_MODULES.exec(node.id);
-    if (match) {
-      const [, nodeModuleName] = match;
-      nodeGroups[uid] = nodeModuleName;
-      groups[nodeModuleName] = groups[nodeModuleName] ?? groupId++;
-    } else {
-      nodeGroups[uid] = "";
-    }
+    nodeGroups[uid] = node.group;
+    groups[node.group] = groups[node.group] ?? groupId++;
   }
 
   const groupLinks: Record<string, Set<string>> = { "": new Set<string>() };

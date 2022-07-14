@@ -8,17 +8,21 @@ import { ModuleUID } from "../../types/types";
 
 import { Chart } from "./chart";
 
-import { getModuleColor } from "./color";
+import createRainbowColor from "./color";
 import { NetworkNode, StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
-  const { nodes, data, width, height, nodeGroups, groupLayers } = useContext(StaticContext);
+  const { nodes, data, width, height, nodeGroups, groupLayers, groups } = useContext(StaticContext);
 
   const sizeScale = useMemo(() => {
     const maxLines = max(nodes, (d) => d.renderedLength) as number;
     const size = scaleSqrt().domain([1, maxLines]).range([5, 30]);
     return size;
   }, [nodes]);
+
+  const getModuleColor = useMemo(() => {
+    return createRainbowColor(groups);
+  }, [groups]);
 
   const [excludedNodes, setExcludedNodes] = useState<ModuleUID[]>([]);
 
@@ -36,8 +40,6 @@ export const Main: FunctionalComponent = () => {
       const groupId = groupLayers[layerIndex].indexOf(nodeGroup);
       const groupsTotal = groupLayers[layerIndex].length;
 
-      console.log(node.id, nodeGroup, layerIndex, groupId, groupsTotal);
-
       newNodes.push({
         ...node,
         x: layerIndex * Math.cos((groupId / groupsTotal) * 2 * Math.PI) * 200,
@@ -47,7 +49,7 @@ export const Main: FunctionalComponent = () => {
       });
     }
     return newNodes;
-  }, [excludedNodes, groupLayers, nodeGroups, nodes, sizeScale]);
+  }, [excludedNodes, getModuleColor, groupLayers, nodeGroups, nodes, sizeScale]);
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
