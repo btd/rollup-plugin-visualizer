@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { scaleSqrt } from "d3-scale";
@@ -7,6 +8,8 @@ import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY
 import { ModuleUID } from "../../types/types";
 
 import { COLOR_BASE } from "../color";
+import { useFilter } from "../use-filter";
+import { SideBar } from "../sidebar";
 import { Chart } from "./chart";
 
 import createRainbowColor from "./color";
@@ -28,6 +31,8 @@ export const Main: FunctionalComponent = () => {
   const [excludedNodes, setExcludedNodes] = useState<ModuleUID[]>([]);
   const [selectedNode, setSelectedNode] = useState<string>();
 
+  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
+
   const getColor = (node: NodeInfo) => {
     if (selectedNode != null) {
       if (node.uid === selectedNode || data.nodeMetas[selectedNode].importedBy.some(({ uid }) => node.uid === uid)) {
@@ -45,6 +50,8 @@ export const Main: FunctionalComponent = () => {
     for (const node of nodes) {
       //if (node.renderedLength === 0) continue;
       if (excludedNodes.includes(node.uid)) continue;
+      const filterMultiplier = getModuleFilterMultiplier(node);
+      if (filterMultiplier === 0) continue;
 
       const nodeGroup = nodeGroups[node.uid];
 
@@ -61,7 +68,7 @@ export const Main: FunctionalComponent = () => {
       });
     }
     return newNodes;
-  }, [excludedNodes, groupLayers, nodeGroups, nodes, sizeScale]);
+  }, [excludedNodes, getModuleFilterMultiplier, groupLayers, nodeGroups, nodes, sizeScale]);
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
@@ -116,12 +123,21 @@ export const Main: FunctionalComponent = () => {
   }, [nodeGroups, height, links, processedNodes, width]);
 
   return (
-    <Chart
-      nodes={animatedNodes}
-      onNodeExclude={(node) => setExcludedNodes([...excludedNodes, node.uid])}
-      links={links}
-      getColor={getColor}
-      onNodeSelect={(uid) => setSelectedNode(uid === selectedNode ? undefined : uid)}
-    />
+    <>
+      <SideBar
+        sizeProperty={"renderedLength"}
+        availableSizeProperties={["renderedLength"]}
+        setSizeProperty={() => {}}
+        onExcludeChange={setExcludeFilter}
+        onIncludeChange={setIncludeFilter}
+      />
+      <Chart
+        nodes={animatedNodes}
+        onNodeExclude={(node) => setExcludedNodes([...excludedNodes, node.uid])}
+        links={links}
+        getColor={getColor}
+        onNodeSelect={(uid) => setSelectedNode(uid === selectedNode ? undefined : uid)}
+      />
+    </>
   );
 };
