@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.7.1
+
+* Return back filter to network diagram
+
 ## 5.7.0
 
 * Add `emitFile` option
