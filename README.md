@@ -111,6 +111,8 @@ When you click on node it will hightlight nodes that are listed in tooltip (the 
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
+`emitFile` (boolean, default `false`) - Use rollup's `emitFile` to generate file
+
 `template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`.
 
 `json` (boolean, default `false`) - Produce portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
