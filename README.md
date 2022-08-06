@@ -51,22 +51,16 @@ module.exports = {
 };
 ```
 
-Usage with SvelteKit (svelte.config.js)
+Usage with SvelteKit (vite.config.js)
 
 ```js
-import path from "path";
-
 const config = {
-  kit: {
-    vite: {
-      plugins: [
-        visualizer({
-          emitFile: true,
-          file: 'stats.html'
-        })
-      ]
-    }
-  },
+  plugins: [
+    visualizer({
+      emitFile: true,
+      file: 'stats.html'
+    })
+  ],
 };
 
 export default config;
