@@ -13,12 +13,16 @@ import { TemplateType } from "./template-types";
 import { ModuleMapper } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees } from "./data";
 import { getSourcemapModules } from "./sourcemap";
-import { buildHtml } from "./build-stats";
+import { renderTemplate } from "./render-template";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 
 const WARN_SOURCEMAP_MISSING = (id: string) => `${id} missing source map`;
+
+const WARN_JSON_DEPRECATED = 'Option `json` deprecated, please use template: "raw-data"';
+
+const ERR_FILENAME_EMIT = "When using emitFile option, filename must not be path but a filename";
 
 export interface PluginVisualizerOptions {
   /**
@@ -87,10 +91,26 @@ export interface PluginVisualizerOptions {
    */
   projectRoot?: string | RegExp;
 
+  /**
+   * Use rollup .emitFile API to generate files. Could be usefull if you want to output to configured by rollup output dir.
+   * When this set to true, filename options must be filename and not a path.
+   *
+   * @default false
+   */
   emitFile?: boolean;
 }
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
+
+const chooseDefaultFileName = (opts: PluginVisualizerOptions) => {
+  if (opts.filename) return opts.filename;
+
+  if (opts.json || opts.template === "raw-data") return "stats.json";
+
+  if (opts.template === "list") return "stats.yml";
+
+  return "stats.html";
+};
 
 export const visualizer = (
   opts: PluginVisualizerOptions | ((outputOptions: OutputOptions) => PluginVisualizerOptions) = {}
@@ -98,11 +118,17 @@ export const visualizer = (
   return {
     name: "visualizer",
 
-    async generateBundle(outputOptions: NormalizedOutputOptions, outputBundle: OutputBundle): Promise<void> {
+    async generateBundle(
+      outputOptions: NormalizedOutputOptions,
+      outputBundle: OutputBundle
+    ): Promise<void> {
       opts = typeof opts === "function" ? opts(outputOptions) : opts;
 
-      const json = !!opts.json;
-      const filename = opts.filename ?? (json ? "stats.json" : "stats.html");
+      if ("json" in opts) {
+        this.warn(WARN_JSON_DEPRECATED);
+        if (opts.json) opts.template = "raw-data";
+      }
+      const filename = opts.filename ?? chooseDefaultFileName(opts);
       const title = opts.title ?? "RollUp Visualizer";
 
       const open = !!opts.open;
@@ -133,7 +159,8 @@ export const visualizer = (
           id,
           gzipLength: code == null || code == "" ? 0 : await gzipSizeGetter(code),
           brotliLength: code == null || code == "" ? 0 : await brotliSizeGetter(code),
-          renderedLength: code == null || code == "" ? renderedLength : Buffer.byteLength(code, "utf-8"),
+          renderedLength:
+            code == null || code == "" ? renderedLength : Buffer.byteLength(code, "utf-8"),
         };
         return result;
       };
@@ -159,7 +186,9 @@ export const visualizer = (
           const modules = await getSourcemapModules(
             bundleId,
             bundle,
-            outputOptions.dir ?? (outputOptions.file && path.dirname(outputOptions.file)) ?? process.cwd()
+            outputOptions.dir ??
+              (outputOptions.file && path.dirname(outputOptions.file)) ??
+              process.cwd()
           );
 
           const moduleRenderInfo = await Promise.all(
@@ -221,15 +250,15 @@ export const visualizer = (
         },
       };
 
-      const fileContent: string = json
-        ? JSON.stringify(data, null, 2)
-        : await buildHtml({
-            title,
-            data,
-            template,
-          });
+      const fileContent: string = await renderTemplate(template, {
+        title,
+        data,
+      });
 
       if (opts.emitFile) {
+        if (path.isAbsolute(filename) || filename.startsWith(".")) {
+          this.error(ERR_FILENAME_EMIT);
+        }
         this.emitFile({
           type: "asset",
           fileName: filename,

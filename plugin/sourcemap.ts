@@ -7,7 +7,12 @@ interface SourceMapModuleRenderInfo {
   renderedLength: number;
 }
 
-const getBytesPerFileUsingSourceMap = (bundleId: string, code: string, map: SourceMapConsumer, dir: string) => {
+const getBytesPerFileUsingSourceMap = (
+  bundleId: string,
+  code: string,
+  map: SourceMapConsumer,
+  dir: string
+) => {
   const modules: Record<string, SourceMapModuleRenderInfo> = {};
 
   let line = 1;

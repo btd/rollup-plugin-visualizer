@@ -6,7 +6,7 @@ import path from "path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-import { buildHtml } from "../plugin/build-stats";
+import { renderTemplate } from "../plugin/render-template";
 import TEMPLATE, { TemplateType } from "../plugin/template-types";
 import { warn } from "../plugin/warn";
 import { version } from "../plugin/version";
@@ -69,7 +69,9 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
 
   for (const { file, data } of fileContents) {
     if (data.version !== version) {
-      warn(`Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`);
+      warn(
+        `Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`
+      );
       continue;
     }
 
@@ -92,10 +94,9 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
     options: fileContents[0].data.options,
   };
 
-  const fileContent = await buildHtml({
+  const fileContent = await renderTemplate(template, {
     title,
     data,
-    template,
   });
 
   await fs.mkdir(path.dirname(filename), { recursive: true });

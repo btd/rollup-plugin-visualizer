@@ -25,11 +25,9 @@
     "test": "run-s test:*",
     "test:e2e": "node build.js --all --e2e",
     "test:test": "node build.js --all --test",
-    "test:e2e-json": "node build.js --all --e2e --json",
-    "test:test-json": "node build.js --all --test --json",
-    "test:e2e-json-sourcemap": "node build.js --all --e2e --json --sourcemap",
-    "test:test-json-sourcemap": "node build.js --all --test --json --sourcemap",
-    "test:cli": "node build.js --dev --all --gzip --brotli --sourcemap --json && node dist/bin/cli.js ./stats.sunburst.json"
+    "test:e2e-sourcemap": "node build.js --all --e2e --sourcemap",
+    "test:test-sourcemap": "node build.js --all --test --sourcemap",
+    "test:cli": "node build.js --dev --all --gzip --brotli --sourcemap --raw-data && node dist/bin/cli.js ./stats.raw-data.json"
   },
   "dependencies": {
     "nanoid": "^3.3.4",

@@ -1,6 +1,7 @@
 export type SizeKey = "renderedLength" | "gzipLength" | "brotliLength";
 
-export const isModuleTree = (mod: ModuleTree | ModuleTreeLeaf): mod is ModuleTree => "children" in mod;
+export const isModuleTree = (mod: ModuleTree | ModuleTreeLeaf): mod is ModuleTree =>
+  "children" in mod;
 
 export type ModuleUID = string;
 export type BundleId = string;

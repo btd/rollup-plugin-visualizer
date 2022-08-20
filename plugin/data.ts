@@ -6,7 +6,12 @@ interface MappedNode {
   uid: string;
 }
 
-const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], node: MappedNode): void => {
+const addToPath = (
+  moduleId: string,
+  tree: ModuleTree,
+  modulePath: string[],
+  node: MappedNode
+): void => {
   if (modulePath.length === 0) {
     throw new Error(`Error adding node to path ${moduleId}`);
   }
@@ -17,7 +22,9 @@ const addToPath = (moduleId: string, tree: ModuleTree, modulePath: string[], nod
     tree.children.push({ ...node, name: head });
     return;
   } else {
-    let newTree = tree.children.find((folder): folder is ModuleTree => folder.name === head && isModuleTree(folder));
+    let newTree = tree.children.find(
+      (folder): folder is ModuleTree => folder.name === head && isModuleTree(folder)
+    );
 
     if (!newTree) {
       newTree = { name: head, children: [] };
@@ -66,7 +73,11 @@ export const buildTree = (
   };
 
   for (const { id, renderedLength, gzipLength, brotliLength } of modules) {
-    const bundleModuleUid = mapper.setNodePart(bundleId, id, { renderedLength, gzipLength, brotliLength });
+    const bundleModuleUid = mapper.setNodePart(bundleId, id, {
+      renderedLength,
+      gzipLength,
+      brotliLength,
+    });
 
     const trimmedModuleId = mapper.trimProjectRootId(id);
 
@@ -95,7 +106,11 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
   return newTree;
 };
 
-export const addLinks = (startModuleId: string, getModuleInfo: GetModuleInfo, mapper: ModuleMapper): void => {
+export const addLinks = (
+  startModuleId: string,
+  getModuleInfo: GetModuleInfo,
+  mapper: ModuleMapper
+): void => {
   const processedNodes: Record<string, boolean> = {};
 
   const moduleIds = [startModuleId];

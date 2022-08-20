@@ -10,7 +10,9 @@ const postcss = require("rollup-plugin-postcss");
 const { terser } = require("rollup-plugin-terser");
 const postcssUrl = require("postcss-url");
 
-const TEMPLATE = ["treemap", "sunburst", "network"];
+const HTML_TEMPLATE = ["treemap", "sunburst", "network"];
+const PLAIN_TEMPLATE = ["raw-data", "list"];
+const ALL_TEMPLATE = [...HTML_TEMPLATE, ...PLAIN_TEMPLATE];
 
 let args = require("yargs")
   .strict()
@@ -19,7 +21,6 @@ let args = require("yargs")
     boolean: true,
   })
   .option("open", { describe: "Open browser with stat files", boolean: true })
-  .option("json", { describe: "Generate json", boolean: true })
   .option("e2e", { describe: "Exec e2e test", boolean: true })
   .option("sourcemap", { describe: "Enable sourcemap", boolean: true })
   .option("terser", { describe: "Enable terser", boolean: true })
@@ -28,7 +29,15 @@ let args = require("yargs")
   .option("test", { describe: "Run tests", boolean: true })
   .option("dev", { describe: "Run dev build", boolean: true });
 
-for (const t of TEMPLATE) {
+const chooseExt = (template) => {
+  if (template === "raw-data") return ".json";
+
+  if (template === "list") return ".yml";
+
+  return ".html";
+};
+
+for (const t of ALL_TEMPLATE) {
   args = args.option(t, {
     describe: `Build ${t} template`,
     boolean: true,
@@ -39,22 +48,21 @@ args = args.help();
 
 const argv = args.argv;
 
-const fileExt = argv.json ? ".json" : ".html";
-
 const templatesToBuild = [];
 if (argv.all) {
-  templatesToBuild.push(...TEMPLATE);
+  templatesToBuild.push(...ALL_TEMPLATE);
 } else {
-  for (const t of TEMPLATE) {
+  for (const t of ALL_TEMPLATE) {
     if (argv[t]) {
       templatesToBuild.push(t);
     }
   }
 }
 
+console.log("Building templates", templatesToBuild);
+
 const simpleOptions = {
   open: argv.open,
-  json: argv.json,
   sourcemap: argv.sourcemap,
   gzipSize: argv.gzip,
   brotliSize: argv.brotli,
@@ -110,7 +118,7 @@ const runBuild = async (template) => {
 
 const runBuildDev = async (template) => {
   const input = {};
-  for (const t of TEMPLATE) {
+  for (const t of HTML_TEMPLATE) {
     input[t] = inputPath(t);
   }
   const inputOptions = {
@@ -119,7 +127,7 @@ const runBuildDev = async (template) => {
       ...COMMON_PLUGINS(),
       require(".").default({
         title: `test ${template}`,
-        filename: `stats.${template}${fileExt}`,
+        filename: `stats.${template}${chooseExt(template)}`,
         template,
         ...simpleOptions,
       }),
@@ -150,7 +158,7 @@ const runBuildTest_e2e = async (template = "treemap") => {
       ...COMMON_PLUGINS(),
       require(".").default({
         title: "test e2e",
-        filename: `stats.e2e${fileExt}`,
+        filename: `stats.e2e${chooseExt(template)}`,
         template,
         ...simpleOptions,
       }),
@@ -181,7 +189,7 @@ const runBuildTest_gh59 = async (template) => {
     plugins: [
       require(".").default({
         title: "test gh59",
-        filename: `stats.gh59${fileExt}`,
+        filename: `stats.gh59${chooseExt(template)}`,
         template,
         ...simpleOptions,
       }),
@@ -207,7 +215,7 @@ const runBuildTest_gh69 = async (template) => {
     plugins: [
       require(".").default({
         title: "test gh69",
-        filename: `stats.gh69${fileExt}`,
+        filename: `stats.gh69${chooseExt(template)}`,
         template,
         ...simpleOptions,
       }),
@@ -255,7 +263,7 @@ const runBuildTest_gh93 = async (template) => {
       },
       require(".").default({
         title: "test gh93",
-        filename: `stats.gh93${fileExt}`,
+        filename: `stats.gh93${chooseExt(template)}`,
         template,
         ...simpleOptions,
       }),
@@ -276,7 +284,7 @@ const runBuildTest_gh93 = async (template) => {
 const buildAll = (action) => Promise.all(templatesToBuild.map((t) => action(t)));
 
 const run = async () => {
-  await Promise.all(TEMPLATE.map((t) => runBuild(t)));
+  await Promise.all(HTML_TEMPLATE.map((t) => runBuild(t)));
   if (argv.dev) {
     await buildAll(runBuildDev);
   }

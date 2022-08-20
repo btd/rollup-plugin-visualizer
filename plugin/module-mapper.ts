@@ -10,7 +10,10 @@ const uniqueId = (): ModuleUID => `${UNIQUE_PREFIX}-${COUNTER++}`;
 
 type ModuleIdStorage = {
   uid: ModuleUID;
-  meta: Omit<ModuleMeta, "imported" | "importedBy"> & { imported: Set<string>; importedBy: Set<string> };
+  meta: Omit<ModuleMeta, "imported" | "importedBy"> & {
+    imported: Set<string>;
+    importedBy: Set<string>;
+  };
 };
 
 export class ModuleMapper {
@@ -27,7 +30,12 @@ export class ModuleMapper {
     if (!(moduleId in this.nodeMetas)) {
       this.nodeMetas[moduleId] = {
         uid: uniqueId(),
-        meta: { id: this.trimProjectRootId(moduleId), moduleParts: {}, imported: new Set(), importedBy: new Set() },
+        meta: {
+          id: this.trimProjectRootId(moduleId),
+          moduleParts: {},
+          imported: new Set(),
+          importedBy: new Set(),
+        },
       };
     }
 
@@ -38,7 +46,12 @@ export class ModuleMapper {
     if (!(moduleId in this.nodeMetas)) {
       this.nodeMetas[moduleId] = {
         uid: uniqueId(),
-        meta: { id: this.trimProjectRootId(moduleId), moduleParts: {}, imported: new Set(), importedBy: new Set() },
+        meta: {
+          id: this.trimProjectRootId(moduleId),
+          moduleParts: {},
+          imported: new Set(),
+          importedBy: new Set(),
+        },
       };
     }
     if (!(bundleId in this.nodeMetas[moduleId].meta.moduleParts)) {

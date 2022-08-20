@@ -58,8 +58,8 @@ const config = {
   plugins: [
     visualizer({
       emitFile: true,
-      file: 'stats.html'
-    })
+      file: "stats.html",
+    }),
   ],
 };
 
@@ -97,23 +97,23 @@ When you click on node it will hightlight nodes that are listed in tooltip (the 
 
 ## Options
 
-`filename` (string, default `stats.html`) - name of the file with diagram to generate
+`filename` (string, default `stats.{ext depending template}`) - name of the file with diagram to generate
 
 `title` (string, default `Rollup Visualizer`) - title tag value
 
-`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser). **Always add plugin as last option.**
-
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`emitFile` (boolean, default `false`) - Use rollup's `emitFile` to generate file
-
-`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`.
-
-`json` (boolean, default `false`) - Produce portable json file that can be used with plugin CLI util to generate graph from several json files. Every UI property ignored in this case.
+`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`, `raw-data`, `list`.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart.
 
 `brotliSize` (boolean, default `false`) - Collect brotli size from source code and display it at chart.
+
+### Advanced options (touch only if you really need it):
+
+`emitFile` (boolean, default `false`) - Use rollup's `emitFile` to generate file. Useful if you want to control all output in one place (via rollup output options). This also could be usefull with svelte as it calls vite several times.
+
+`sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser). **Always add plugin as last option.**
 
 `projectRoot` (string | RegExp, default `process.cwd()`) - This is some common root(s) path to your files. This is used to cut absolute files paths out.
 
