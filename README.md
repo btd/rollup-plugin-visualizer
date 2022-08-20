@@ -95,6 +95,14 @@ In real life scenarious, sometimes you will see terribly connected diagrams. The
 
 When you click on node it will hightlight nodes that are listed in tooltip (the files that imports current node).
 
+### Raw-data
+
+This template produce JSON output with raw data. Normally it should be used with CLI from this plugin.
+
+### List
+
+Output yml file with all the data, could be good idea to commit this file to track file changes.
+
 ## Options
 
 `filename` (string, default `stats.{ext depending template}`) - name of the file with diagram to generate

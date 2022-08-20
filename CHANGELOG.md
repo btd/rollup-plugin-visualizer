@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.8.0
+
+* New template type raw-data - it replaces .json option
+* Soft deprecate .json option in favor of new template type
+* New template type list - it outputs yml file with all contents
+
 ## 5.7.1
 
 * Return back filter to network diagram
