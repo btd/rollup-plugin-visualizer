@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.8.1
+
+* Make rollup to be optional peer dependency
+
 ## 5.8.0
 
 * New template type raw-data - it replaces .json option
