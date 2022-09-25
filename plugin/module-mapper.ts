@@ -1,7 +1,7 @@
-import { customAlphabet } from "nanoid/non-secure";
 import { ModuleImport, ModuleMeta, ModulePart, ModuleLengths, ModuleUID } from "../types/types";
+import { getUid } from "./uid";
 
-const nanoid = customAlphabet("1234567890abcdef", 4);
+const nanoid = getUid("1234567890abcdef", 4);
 
 const UNIQUE_PREFIX = nanoid();
 let COUNTER = 0;

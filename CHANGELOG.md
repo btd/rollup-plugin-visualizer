@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.8.2
+
+* Update dependencies. Most notable source-map updated to 0.7.4
+
 ## 5.8.1
 
 * Make rollup to be optional peer dependency
