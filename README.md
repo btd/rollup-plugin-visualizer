@@ -51,6 +51,15 @@ module.exports = {
 };
 ```
 
+Usage with vite TypeScript (vite.config.ts)
+
+```ts
+import { defineConfig, type PluginOption } from 'vite'
+export default defineConfig({
+  plugins: [visualizer() as PluginOption],
+})
+```
+
 Usage with SvelteKit (vite.config.js)
 
 ```js
