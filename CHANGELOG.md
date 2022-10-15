@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.8.3
+
+* Remove not used dependencies and updated rollup to v3
+
 ## 5.8.2
 
 * Update dependencies. Most notable source-map updated to 0.7.4
