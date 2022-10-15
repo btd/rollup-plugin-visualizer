@@ -1,9 +1,22 @@
 import { createContext, render } from "preact";
-import { hierarchy, HierarchyNode, HierarchyRectangularNode, partition, PartitionLayout } from "d3-hierarchy";
+import {
+  hierarchy,
+  HierarchyNode,
+  HierarchyRectangularNode,
+  partition,
+  PartitionLayout,
+} from "d3-hierarchy";
 import { Arc, arc as d3arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 
-import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf, SizeKey, VisualizerData } from "../../types/types";
+import {
+  isModuleTree,
+  ModuleLengths,
+  ModuleTree,
+  ModuleTreeLeaf,
+  SizeKey,
+  VisualizerData,
+} from "../../types/types";
 
 import { getAvailableSizeOptions } from "../sizes";
 import { generateUniqueId, Id } from "../uid";
@@ -38,7 +51,12 @@ export type Context = StaticData & ChartData;
 
 export const StaticContext = createContext<Context>({} as unknown as Context);
 
-const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
+const drawChart = (
+  parentNode: Element,
+  data: VisualizerData,
+  width: number,
+  height: number
+): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
   const layout = partition<ModuleTree | ModuleTreeLeaf>();
@@ -62,7 +80,10 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
     const sizes: ModuleLengths = { renderedLength: 0, gzipLength: 0, brotliLength: 0 };
     if (isModuleTree(nodeData)) {
       for (const sizeKey of availableSizeProperties) {
-        sizes[sizeKey] = nodeData.children.reduce((acc, child) => getModuleSize(child, sizeKey) + acc, 0);
+        sizes[sizeKey] = nodeData.children.reduce(
+          (acc, child) => getModuleSize(child, sizeKey) + acc,
+          0
+        );
       }
     } else {
       for (const sizeKey of availableSizeProperties) {

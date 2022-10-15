@@ -21,26 +21,32 @@ const Tooltip_marginY = 30;
 const SOURCEMAP_RENDERED = (
   <span>
     {" "}
-    <b>{LABELS.renderedLength}</b> is a number of characters in the file after individual and <br /> whole bundle
-    transformations according to sourcemap.
+    <b>{LABELS.renderedLength}</b> is a number of characters in the file after individual and <br />{" "}
+    whole bundle transformations according to sourcemap.
   </span>
 );
 
 const RENDRED = (
   <span>
-    <b>{LABELS.renderedLength}</b> is a byte size of individual file after transformations and treeshake.
+    <b>{LABELS.renderedLength}</b> is a byte size of individual file after transformations and
+    treeshake.
   </span>
 );
 
 const COMPRESSED = (
   <span>
-    <b>{LABELS.gzipLength}</b> and <b>{LABELS.brotliLength}</b> is a byte size of individual file after individual{" "}
-    transformations,
+    <b>{LABELS.gzipLength}</b> and <b>{LABELS.brotliLength}</b> is a byte size of individual file
+    after individual transformations,
     <br /> treeshake and compression.
   </span>
 );
 
-export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root, sizeProperty }) => {
+export const Tooltip: FunctionalComponent<TooltipProps> = ({
+  node,
+  visible,
+  root,
+  sizeProperty,
+}) => {
   const { availableSizeProperties, getModuleSize, data } = useContext(StaticContext);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -73,7 +79,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
         {availableSizeProperties.map((sizeProp) => {
           if (sizeProp === sizeProperty) {
             return (
-              <div>
+              <div key={sizeProp}>
                 <b>
                   {LABELS[sizeProp]}: {formatBytes(mainSize)}
                 </b>{" "}
@@ -82,7 +88,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible, root
             );
           } else {
             return (
-              <div>
+              <div key={sizeProp}>
                 {LABELS[sizeProp]}: {formatBytes(getModuleSize(node.data, sizeProp))}
               </div>
             );

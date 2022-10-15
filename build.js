@@ -7,7 +7,6 @@ const commonJs = require("@rollup/plugin-commonjs");
 const resolve = require("@rollup/plugin-node-resolve").default;
 const typescript = require("@rollup/plugin-typescript");
 const postcss = require("rollup-plugin-postcss");
-const { terser } = require("rollup-plugin-terser");
 const postcssUrl = require("postcss-url");
 
 const HTML_TEMPLATE = ["treemap", "sunburst", "network"];
@@ -23,7 +22,6 @@ let args = require("yargs")
   .option("open", { describe: "Open browser with stat files", boolean: true })
   .option("e2e", { describe: "Exec e2e test", boolean: true })
   .option("sourcemap", { describe: "Enable sourcemap", boolean: true })
-  .option("terser", { describe: "Enable terser", boolean: true })
   .option("gzip", { describe: "Enable gzip", boolean: true })
   .option("brotli", { describe: "Enable brotli", boolean: true })
   .option("test", { describe: "Run tests", boolean: true })
@@ -84,7 +82,6 @@ const COMMON_PLUGINS = () =>
         }),
       ],
     }),
-    argv.terser ? terser() : null,
   ].filter(Boolean);
 
 const onwarn = (warning, warn) => {

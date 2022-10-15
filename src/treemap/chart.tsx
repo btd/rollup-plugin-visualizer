@@ -10,14 +10,21 @@ export interface ChartProps {
   root: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
   sizeProperty: SizeKey;
   selectedNode: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined;
-  setSelectedNode: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined) => void;
+  setSelectedNode: (
+    node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined
+  ) => void;
 }
 
-export const Chart: FunctionalComponent<ChartProps> = ({ root, sizeProperty, selectedNode, setSelectedNode }) => {
+export const Chart: FunctionalComponent<ChartProps> = ({
+  root,
+  sizeProperty,
+  selectedNode,
+  setSelectedNode,
+}) => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const [tooltipNode, setTooltipNode] = useState<HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined>(
-    undefined
-  );
+  const [tooltipNode, setTooltipNode] = useState<
+    HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined
+  >(undefined);
 
   useEffect(() => {
     const handleMouseOut = () => {

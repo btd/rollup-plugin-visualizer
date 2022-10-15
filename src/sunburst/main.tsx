@@ -11,13 +11,14 @@ import { Chart } from "./chart";
 import { StaticContext } from "./index";
 
 export const Main: FunctionalComponent = () => {
-  const { availableSizeProperties, rawHierarchy, getModuleSize, layout, data } = useContext(StaticContext);
+  const { availableSizeProperties, rawHierarchy, getModuleSize, layout, data } =
+    useContext(StaticContext);
 
   const [sizeProperty, setSizeProperty] = useState<SizeKey>(availableSizeProperties[0]);
 
-  const [selectedNode, setSelectedNode] = useState<HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined>(
-    undefined
-  );
+  const [selectedNode, setSelectedNode] = useState<
+    HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined
+  >(undefined);
 
   const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
 
@@ -49,14 +50,24 @@ export const Main: FunctionalComponent = () => {
         if (isModuleTree(node)) return 0;
         const ownSize = getModuleSize(node, sizeProperty);
         const zoomMultiplier = getNodeSizeMultiplier(node);
-        const filterMultiplier = getModuleFilterMultiplier(data.nodeMetas[data.nodeParts[node.uid].mainUid]);
+        const filterMultiplier = getModuleFilterMultiplier(
+          data.nodeMetas[data.nodeParts[node.uid].mainUid]
+        );
 
         return ownSize * zoomMultiplier * filterMultiplier;
       })
       .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
 
     return layout(rootWithSizesAndSorted);
-  }, [data, getModuleFilterMultiplier, getModuleSize, getNodeSizeMultiplier, layout, rawHierarchy, sizeProperty]);
+  }, [
+    data,
+    getModuleFilterMultiplier,
+    getModuleSize,
+    getNodeSizeMultiplier,
+    layout,
+    rawHierarchy,
+    sizeProperty,
+  ]);
 
   return (
     <>
@@ -67,7 +78,12 @@ export const Main: FunctionalComponent = () => {
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
       />
-      <Chart root={root} sizeProperty={sizeProperty} selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
+      <Chart
+        root={root}
+        sizeProperty={sizeProperty}
+        selectedNode={selectedNode}
+        setSelectedNode={setSelectedNode}
+      />
     </>
   );
 };

@@ -14,13 +14,21 @@ export interface TreeMapProps {
   onNodeClick: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => void;
 }
 
-export const TreeMap: FunctionalComponent<TreeMapProps> = ({ root, onNodeHover, selectedNode, onNodeClick }) => {
+export const TreeMap: FunctionalComponent<TreeMapProps> = ({
+  root,
+  onNodeHover,
+  selectedNode,
+  onNodeClick,
+}) => {
   const { width, height, getModuleIds } = useContext(StaticContext);
 
   console.time("layering");
   // this will make groups by height
   const nestedData = useMemo(() => {
-    const nestedDataMap = group(root.descendants(), (d: HierarchyNode<ModuleTree | ModuleTreeLeaf>) => d.height);
+    const nestedDataMap = group(
+      root.descendants(),
+      (d: HierarchyNode<ModuleTree | ModuleTreeLeaf>) => d.height
+    );
     const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
       key,
       values,

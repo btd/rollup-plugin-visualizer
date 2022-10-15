@@ -10,7 +10,10 @@ import { NODE_MODULES } from "./util";
 import "../style/style-treemap.scss";
 
 export type NetworkNode = NodeInfo & { radius: number } & SimulationNodeDatum;
-export type NetworkLink = SimulationLinkDatum<NetworkNode> & { source: NetworkNode; target: NetworkNode };
+export type NetworkLink = SimulationLinkDatum<NetworkNode> & {
+  source: NetworkNode;
+  target: NetworkNode;
+};
 
 export interface StaticData {
   data: VisualizerData;
@@ -32,10 +35,18 @@ export type Context = StaticData & ChartData;
 
 export const StaticContext = createContext<Context>({} as unknown as Context);
 
-const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[], uid: ModuleUID): NodeInfo => {
+const createNodeInfo = (
+  data: VisualizerData,
+  availableSizeProperties: SizeKey[],
+  uid: ModuleUID
+): NodeInfo => {
   const meta = data.nodeMetas[uid];
-  const entries: ModuleLengths[] = Object.values(meta.moduleParts).map((partUid) => data.nodeParts[partUid]);
-  const sizes = Object.fromEntries(availableSizeProperties.map((key) => [key, 0])) as unknown as ModuleLengths;
+  const entries: ModuleLengths[] = Object.values(meta.moduleParts).map(
+    (partUid) => data.nodeParts[partUid]
+  );
+  const sizes = Object.fromEntries(
+    availableSizeProperties.map((key) => [key, 0])
+  ) as unknown as ModuleLengths;
 
   for (const renderInfo of entries) {
     for (const sizeKey of availableSizeProperties) {
@@ -48,7 +59,12 @@ const createNodeInfo = (data: VisualizerData, availableSizeProperties: SizeKey[]
   return { uid, ...sizes, ...meta, group: match?.[1] ?? "" };
 };
 
-const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
+const drawChart = (
+  parentNode: Element,
+  data: VisualizerData,
+  width: number,
+  height: number
+): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
   const nodeGroups: Record<ModuleUID, string> = {};

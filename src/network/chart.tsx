@@ -14,7 +14,13 @@ export interface ChartProps {
   onNodeSelect: (node: string | undefined) => void;
 }
 
-export const Chart: FunctionalComponent<ChartProps> = ({ links, nodes, onNodeExclude, getColor, onNodeSelect }) => {
+export const Chart: FunctionalComponent<ChartProps> = ({
+  links,
+  nodes,
+  onNodeExclude,
+  getColor,
+  onNodeSelect,
+}) => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [tooltipNode, setTooltipNode] = useState<NetworkNode | undefined>(undefined);
 

@@ -15,7 +15,14 @@ export interface NodeProps {
   onClick: NodeEventHandler;
 }
 
-export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClick, path, highlighted, selected }) => {
+export const Node: FunctionalComponent<NodeProps> = ({
+  node,
+  onMouseOver,
+  onClick,
+  path,
+  highlighted,
+  selected,
+}) => {
   return (
     <path
       d={path}

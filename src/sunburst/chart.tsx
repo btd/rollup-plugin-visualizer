@@ -10,16 +10,25 @@ export interface ChartProps {
   root: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>;
   sizeProperty: SizeKey;
   selectedNode: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined;
-  setSelectedNode: (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined) => void;
+  setSelectedNode: (
+    node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined
+  ) => void;
 }
 
 type NodeSelectHandler = (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>) => boolean;
 
-export const Chart: FunctionalComponent<ChartProps> = ({ root, sizeProperty, selectedNode, setSelectedNode }) => {
+export const Chart: FunctionalComponent<ChartProps> = ({
+  root,
+  sizeProperty,
+  selectedNode,
+  setSelectedNode,
+}) => {
   const [tooltipNode, setTooltipNode] = useState(root);
 
   const isNodeHighlighted = useMemo<NodeSelectHandler>(() => {
-    const highlightedNodes = new Set(tooltipNode === root ? root.descendants() : tooltipNode.ancestors());
+    const highlightedNodes = new Set(
+      tooltipNode === root ? root.descendants() : tooltipNode.ancestors()
+    );
     return (node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf>): boolean => {
       return highlightedNodes.has(node);
     };
