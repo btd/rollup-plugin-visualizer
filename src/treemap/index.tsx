@@ -1,6 +1,13 @@
 import { createContext, render } from "preact";
 import { hierarchy, HierarchyNode, treemap, TreemapLayout, treemapResquarify } from "d3-hierarchy";
-import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf, SizeKey, VisualizerData } from "../../types/types";
+import {
+  isModuleTree,
+  ModuleLengths,
+  ModuleTree,
+  ModuleTreeLeaf,
+  SizeKey,
+  VisualizerData,
+} from "../../types/types";
 
 import { generateUniqueId, Id } from "../uid";
 import { getAvailableSizeOptions } from "../sizes";
@@ -34,7 +41,12 @@ export type Context = StaticData & ChartData;
 
 export const StaticContext = createContext<Context>({} as unknown as Context);
 
-const drawChart = (parentNode: Element, data: VisualizerData, width: number, height: number): void => {
+const drawChart = (
+  parentNode: Element,
+  data: VisualizerData,
+  width: number,
+  height: number
+): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
   console.time("layout create");
@@ -72,7 +84,10 @@ const drawChart = (parentNode: Element, data: VisualizerData, width: number, hei
     const sizes: ModuleLengths = { renderedLength: 0, gzipLength: 0, brotliLength: 0 };
     if (isModuleTree(nodeData)) {
       for (const sizeKey of availableSizeProperties) {
-        sizes[sizeKey] = nodeData.children.reduce((acc, child) => getModuleSize(child, sizeKey) + acc, 0);
+        sizes[sizeKey] = nodeData.children.reduce(
+          (acc, child) => getModuleSize(child, sizeKey) + acc,
+          0
+        );
       }
     } else {
       for (const sizeKey of availableSizeProperties) {

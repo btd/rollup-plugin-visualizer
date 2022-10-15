@@ -19,8 +19,10 @@
     "strict": true,
     "paths": {
       "*": ["../node_modules/*", "./@types/*"]
-    }
+    },
+    "types": [
+    ]
   },
-  "include": ["./**/*", "../types/**/*", "../temp/script-network.js"],
+  "include": ["./**/*", "../types/**/*"],
   "exclude": ["node_modules"]
 }

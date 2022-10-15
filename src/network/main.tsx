@@ -35,7 +35,10 @@ export const Main: FunctionalComponent = () => {
 
   const getColor = (node: NodeInfo) => {
     if (selectedNode != null) {
-      if (node.uid === selectedNode || data.nodeMetas[selectedNode].importedBy.some(({ uid }) => node.uid === uid)) {
+      if (
+        node.uid === selectedNode ||
+        data.nodeMetas[selectedNode].importedBy.some(({ uid }) => node.uid === uid)
+      ) {
         return getModuleColor(node);
       }
       return COLOR_BASE;
@@ -71,7 +74,9 @@ export const Main: FunctionalComponent = () => {
   }, [excludedNodes, getModuleFilterMultiplier, groupLayers, nodeGroups, nodes, sizeScale]);
 
   const links = useMemo(() => {
-    const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(processedNodes.map((d) => [d.uid, d]));
+    const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(
+      processedNodes.map((d) => [d.uid, d])
+    );
 
     return Object.entries(data.nodeMetas)
       .flatMap(([sourceUid, { imported }]) => {

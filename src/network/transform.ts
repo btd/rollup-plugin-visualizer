@@ -6,7 +6,9 @@ export class Transform {
   }
 
   translated(x: number, y: number) {
-    return x === 0 && y === 0 ? this : new Transform(this.k, this.x + this.k * x, this.y + this.k * y);
+    return x === 0 && y === 0
+      ? this
+      : new Transform(this.k, this.x + this.k * x, this.y + this.k * y);
   }
 
   invertPoint(location: [number, number]): [number, number] {

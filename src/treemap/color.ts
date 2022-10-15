@@ -53,7 +53,9 @@ const createRainbowColor = (root: HierarchyNode<ModuleTree | ModuleTreeLeaf>): N
   const getBackgroundColor = (node: HierarchyNode<ModuleTree | ModuleTreeLeaf>) => {
     const parents = node.ancestors();
     const colorStr =
-      parents.length === 1 ? colorParentMap.get(parents[0]) : colorParentMap.get(parents[parents.length - 2]);
+      parents.length === 1
+        ? colorParentMap.get(parents[0])
+        : colorParentMap.get(parents[parents.length - 2]);
 
     const hslColor = hsl(colorStr as string);
     hslColor.l = lightScale(node.depth);
