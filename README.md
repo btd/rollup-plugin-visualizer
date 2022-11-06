@@ -90,17 +90,17 @@ All charts refresh layout on window resize.
 
 ### Sunburst
 
-This circular hierarchical diagram can help you find huge peaces of code (aka that one huge thing). If you click on some arc it will increase its and all nested arcs size for better inspection.
+This circular hierarchical diagram can help you find huge pieces of code (aka that one huge thing). If you click on some arc it will increase its and all nested arcs size for better inspection.
 
 ### Treemap
 
-This rectangular hierarchical diagram can help you find huge peaces. Just look on biggest reclangle. But also it can help you find modules included several times, they will have the same topology and relative size. If you click on reclangle it will increase in size for further inspection.
+This rectangular hierarchical diagram can help you find huge pieces. Just look on biggest reclangle. But also it can help you find modules included several times, they will have the same topology and relative size. If you click on reclangle it will increase in size for further inspection.
 
 ### Network
 
 This digram should help you answer for the question 'why it is included?'. After force layout stabilize all nodes, you can move it back and forth by dragging with your mouse. Gray circles are treeshakened out files.
 
-In real life scenarious, sometimes you will see terribly connected diagrams. There is no 100% working solution for everyone, it is expected you topology will look 'terrible' and not hold on screen. To make it still visually ispectable, first remove all highly connected nodes that you see (typical examples: commonjsHelpers, tslib, react etc, basically if tooltip for the node is not hold on the screen - exclude this node), after layout stabilization you will see, your layout is not that terrible anymore and most of dependencies cluster together. Move layout to find peaces you looked for.
+In real life scenarious, sometimes you will see terribly connected diagrams. There is no 100% working solution for everyone, it is expected you topology will look 'terrible' and not hold on screen. To make it still visually ispectable, first remove all highly connected nodes that you see (typical examples: commonjsHelpers, tslib, react etc, basically if tooltip for the node is not hold on the screen - exclude this node), after layout stabilization you will see, your layout is not that terrible anymore and most of dependencies cluster together. Move layout to find pieces you looked for.
 
 When you click on node it will hightlight nodes that are listed in tooltip (the files that imports current node).
 
