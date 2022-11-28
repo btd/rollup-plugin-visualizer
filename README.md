@@ -67,7 +67,7 @@ const config = {
   plugins: [
     visualizer({
       emitFile: true,
-      file: "stats.html",
+      filename: "stats.html",
     }),
   ],
 };
