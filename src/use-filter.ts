@@ -61,7 +61,7 @@ export const useFilter = (): UseFilter => {
       if (isDefaultInclude) {
         return isModuleExcluded(data) ? 0 : 1;
       }
-      return isModuleExcluded(data) && !isModuleIncluded(data) ? 0 : 1;
+      return isModuleExcluded(data) || !isModuleIncluded(data) ? 0 : 1;
     };
   }, [isDefaultInclude, isModuleExcluded, isModuleIncluded]);
 
