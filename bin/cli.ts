@@ -21,7 +21,7 @@ const argv = yargs(hideBin(process.argv))
   .option("title", {
     describe: "Output file title",
     type: "string",
-    default: "RollUp Visualizer",
+    default: "Rollup Visualizer",
   })
   .option("template", {
     describe: "Template type",
