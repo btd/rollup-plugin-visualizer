@@ -4,6 +4,7 @@
 
 * Add `include` and `exclude` options used default `@rollup/pluginutils` `createFilter`
 * Fix possible bug with not correctly cutting prefix when `projectRoot` is a string
+* Use glob patterns via `picomatch` in include and exclude
 
 ## 5.8.3
 

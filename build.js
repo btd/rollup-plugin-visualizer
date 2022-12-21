@@ -6,6 +6,7 @@ const { rollup } = require("rollup");
 const commonJs = require("@rollup/plugin-commonjs");
 const resolve = require("@rollup/plugin-node-resolve").default;
 const typescript = require("@rollup/plugin-typescript");
+const alias = require('@rollup/plugin-alias');
 const postcss = require("rollup-plugin-postcss");
 const postcssUrl = require("postcss-url");
 
@@ -69,6 +70,11 @@ const simpleOptions = {
 const COMMON_PLUGINS = () =>
   [
     typescript({ tsconfig: "./src/tsconfig.json", noEmitOnError: true }),
+    alias({
+      entries: [
+        { find: 'picomatch', replacement: 'picomatch-browser' },
+      ]
+    }),
     resolve({ mainFields: ["module", "main"] }),
     commonJs({
       ignoreGlobal: true,

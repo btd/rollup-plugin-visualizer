@@ -1,4 +1,7 @@
-import { useState, useMemo } from "preact/hooks";
+import { useState, useMemo, useCallback } from "preact/hooks";
+
+import "./create-filter";
+import createFilter from "./create-filter";
 
 export type FilterSetter = (value: string) => void;
 
@@ -23,6 +26,14 @@ export type UseFilter = {
   getModuleFilterMultiplier: (data: { id: string }) => number;
 };
 
+const prepareFilter = (filt: string) => {
+  if (filt === "") return [];
+  return filt
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter((entry) => entry);
+};
+
 export const useFilter = (): UseFilter => {
   const [includeFilter, setIncludeFilter] = useState<string>("");
   const [excludeFilter, setExcludeFilter] = useState<string>("");
@@ -30,40 +41,17 @@ export const useFilter = (): UseFilter => {
   const setIncludeFilterTrottled = useMemo(() => throttleFilter(setIncludeFilter, 200), []);
   const setExcludeFilterTrottled = useMemo(() => throttleFilter(setExcludeFilter, 200), []);
 
-  const isModuleIncluded = useMemo(() => {
-    if (includeFilter === "") {
-      return () => true;
-    }
-    try {
-      const re = new RegExp(includeFilter);
-      return ({ id }: { id: string }) => re.test(id);
-    } catch (err) {
-      return () => false;
-    }
-  }, [includeFilter]);
+  const isIncluded = useMemo(
+    () => createFilter(prepareFilter(includeFilter), prepareFilter(excludeFilter)),
+    [includeFilter, excludeFilter]
+  );
 
-  const isModuleExcluded = useMemo(() => {
-    if (excludeFilter === "") {
-      return () => false;
-    }
-    try {
-      const re = new RegExp(excludeFilter);
-      return ({ id }: { id: string }) => re.test(id);
-    } catch (err) {
-      return () => false;
-    }
-  }, [excludeFilter]);
-
-  const isDefaultInclude = includeFilter === "";
-
-  const getModuleFilterMultiplier = useMemo(() => {
-    return (data: { id: string }) => {
-      if (isDefaultInclude) {
-        return isModuleExcluded(data) ? 0 : 1;
-      }
-      return isModuleExcluded(data) && !isModuleIncluded(data) ? 0 : 1;
-    };
-  }, [isDefaultInclude, isModuleExcluded, isModuleIncluded]);
+  const getModuleFilterMultiplier = useCallback(
+    (data: { id: string }) => {
+      return isIncluded(data.id) ? 1 : 0;
+    },
+    [isIncluded]
+  );
 
   return {
     getModuleFilterMultiplier,

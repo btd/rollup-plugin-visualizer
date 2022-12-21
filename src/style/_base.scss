@@ -113,6 +113,7 @@ main {
 
 .module-filters {
   display: flex;
+  flex-grow: 1;
 }
 
 .module-filter {

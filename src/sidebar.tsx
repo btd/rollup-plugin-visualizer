@@ -66,7 +66,7 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             id="module-filter-exclude"
             value={excludeValue}
             onInput={handleExcludeChange}
-            placeholder="RegExp"
+            placeholder="glob pattern"
           />
         </div>
         <div className="module-filter">
@@ -76,7 +76,7 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             id="module-filter-include"
             value={includeValue}
             onInput={handleIncludeChange}
-            placeholder="RegExp"
+            placeholder="glob pattern"
           />
         </div>
       </div>
