@@ -129,7 +129,7 @@ export const visualizer = (
         if (opts.json) opts.template = "raw-data";
       }
       const filename = opts.filename ?? chooseDefaultFileName(opts);
-      const title = opts.title ?? "RollUp Visualizer";
+      const title = opts.title ?? "Rollup Visualizer";
 
       const open = !!opts.open;
       const openOptions = opts.openOptions ?? {};
