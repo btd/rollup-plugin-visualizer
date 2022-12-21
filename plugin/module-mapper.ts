@@ -23,6 +23,9 @@ export class ModuleMapper {
   constructor(private projectRoot: string | RegExp) {}
 
   trimProjectRootId(moduleId: string): string {
+    if(typeof this.projectRoot === 'string' && moduleId.startsWith(this.projectRoot)) {
+      return moduleId.slice(this.projectRoot.length)
+    }
     return moduleId.replace(this.projectRoot, "");
   }
 
