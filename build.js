@@ -278,6 +278,38 @@ const runBuildTest_gh93 = async (template) => {
   await bundle.write(outputOptions);
 };
 
+const runBuildTest_filter = async (template) => {
+  const input = {
+    input: "./test/e2e/input.js",
+    input2: "./test/e2e/input2.js",
+  };
+
+  const inputOptions = {
+    external: ["jquery"],
+    input,
+    plugins: [
+      ...COMMON_PLUGINS(),
+      require(".").default({
+        title: "test filter",
+        filename: `stats.filter${chooseExt(template)}`,
+        template,
+        exclude: ['**/node_modules/**'],
+        ...simpleOptions,
+      }),
+    ],
+    onwarn,
+  };
+  const outputOptions = {
+    format: "es",
+    dir: "./temp/",
+    sourcemap: argv.sourcemap,
+  };
+
+  const bundle = await rollup(inputOptions);
+
+  await bundle.write(outputOptions);
+};
+
 const buildAll = (action) => Promise.all(templatesToBuild.map((t) => action(t)));
 
 const run = async () => {
@@ -292,6 +324,7 @@ const run = async () => {
     await buildAll(runBuildTest_gh59);
     await buildAll(runBuildTest_gh69);
     await buildAll(runBuildTest_gh93);
+    await buildAll(runBuildTest_filter)
   }
 };
 

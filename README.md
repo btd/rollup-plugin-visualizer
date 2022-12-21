@@ -134,6 +134,12 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 `projectRoot` (string | RegExp, default `process.cwd()`) - This is some common root(s) path to your files. This is used to cut absolute files paths out.
 
+`include` (string | string[] | RegExp | RegExp[], default `undefined`) - Valid picomatch pattern for inclusion
+
+`exclude` (string | string[] | RegExp | RegExp[], default `undefined`) - Valid picomatch pattern for exclusion
+
+**Note about `include` and `exclude`** - If options.include is omitted or has zero length, filter will return true by default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns. This entries will not be included in stats at all.
+
 ## CLI
 
 This plugin provides cli util `rollup-plugin-visualizer`. Add `--help` to check actual options. It can be used like:

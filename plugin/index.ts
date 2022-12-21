@@ -4,6 +4,8 @@ import path from "path";
 import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
 import opn from "open";
 
+import { createFilter, FilterPattern } from "@rollup/pluginutils";
+
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../types/types";
 import { version } from "./version";
 
@@ -36,6 +38,7 @@ export interface PluginVisualizerOptions {
    * If plugin should emit json file with visualizer data. It can be used with plugin CLI
    *
    * @default false
+   * @deprecated use template 'raw-data'
    */
   json?: boolean;
 
@@ -98,6 +101,18 @@ export interface PluginVisualizerOptions {
    * @default false
    */
   emitFile?: boolean;
+
+  /**
+   * A valid picomatch pattern, or array of patterns. If options.include is omitted or has zero length, filter will return true by 
+   * default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns.
+   */
+  include?: FilterPattern;
+
+  /**
+   * A valid picomatch pattern, or array of patterns. If options.include is omitted or has zero length, filter will return true by 
+   * default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns.
+   */
+  exclude?: FilterPattern;
 }
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
@@ -137,6 +152,10 @@ export const visualizer = (
       const template = opts.template ?? "treemap";
       const projectRoot = opts.projectRoot ?? process.cwd();
 
+      const filter = createFilter(opts.include, opts.exclude, {
+        resolve: typeof projectRoot === "string" ? projectRoot : process.cwd(),
+      });
+
       const gzipSize = !!opts.gzipSize && !opts.sourcemap;
       const brotliSize = !!opts.brotliSize && !opts.sourcemap;
       const gzipSizeGetter = gzipSize
@@ -155,12 +174,14 @@ export const visualizer = (
         renderedLength: number;
         code: string | null;
       }): Promise<ModuleLengths & { id: string }> => {
+  
+        const isCodeEmpty = code == null || code == "";
+
         const result = {
           id,
-          gzipLength: code == null || code == "" ? 0 : await gzipSizeGetter(code),
-          brotliLength: code == null || code == "" ? 0 : await brotliSizeGetter(code),
-          renderedLength:
-            code == null || code == "" ? renderedLength : Buffer.byteLength(code, "utf-8"),
+          gzipLength: isCodeEmpty ? 0 : await gzipSizeGetter(code),
+          brotliLength: isCodeEmpty ? 0 : await brotliSizeGetter(code),
+          renderedLength: isCodeEmpty ? renderedLength : Buffer.byteLength(code, "utf-8"),
         };
         return result;
       };
@@ -192,7 +213,9 @@ export const visualizer = (
           );
 
           const moduleRenderInfo = await Promise.all(
-            Object.values(modules).map(({ id, renderedLength }) => {
+            Object.values(modules)
+            .filter(({ id }) => filter(id))
+            .map(({ id, renderedLength }) => {
               const code = bundle.modules[id]?.code;
               return ModuleLengths({ id, renderedLength, code });
             })
@@ -201,7 +224,9 @@ export const visualizer = (
           tree = buildTree(bundleId, moduleRenderInfo, mapper);
         } else {
           const modules = await Promise.all(
-            Object.entries(bundle.modules).map(([id, { renderedLength, code }]) =>
+            Object.entries(bundle.modules)
+            .filter(([ id ]) => filter(id))
+            .map(([id, { renderedLength, code }]) =>
               ModuleLengths({ id, renderedLength, code })
             )
           );
