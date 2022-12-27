@@ -2,9 +2,9 @@
 
 ## Not released
 
-* Add `include` and `exclude` options used default `@rollup/pluginutils` `createFilter`
+* Add `include` and `exclude` options allowing to filter bundles, and files in separate or together
 * Fix possible bug with not correctly cutting prefix when `projectRoot` is a string
-* Use glob patterns via `picomatch` in include and exclude
+* Use glob patterns via `picomatch` in include and exclude allowing to filter both bundles and files
 
 ## 5.8.3
 

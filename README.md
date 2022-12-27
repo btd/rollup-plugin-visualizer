@@ -134,9 +134,11 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 `projectRoot` (string | RegExp, default `process.cwd()`) - This is some common root(s) path to your files. This is used to cut absolute files paths out.
 
-`include` (string | string[] | RegExp | RegExp[], default `undefined`) - Valid picomatch pattern for inclusion
+`include` (Filter | Filter[], default `undefined`) - Filter for inclusion
 
-`exclude` (string | string[] | RegExp | RegExp[], default `undefined`) - Valid picomatch pattern for exclusion
+`exclude` (Filter | Filter[], default `undefined`) - Filter for exclusion
+
+`Filter` type is `{ bundle?: picomatchPattern, file?: picomatchPattern }`
 
 **Note about `include` and `exclude`** - If options.include is omitted or has zero length, filter will return true by default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns. This entries will not be included in stats at all.
 
@@ -172,3 +174,11 @@ This statistical information can contain:
 ## Upgrades
 
 See CHANGELOG.md.
+
+## Versioning
+
+* Plugin backend (one appears in configs) are strictly follows SemVer
+* Plugin frontend (generated file):
+  * `network`, `treemap`, `sunburst` can change does not matter of version (colors, texts, visual structure etc)
+  * `raw-data` format follows own `version` property
+  * `list` follows semver

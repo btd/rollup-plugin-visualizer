@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { promises as fs } from "fs";
 import path from "path";
-import { BundleId, ModuleLengths, VisualizerData } from "../types/types";
+import { BundleId, ModuleLengths, VisualizerData } from "../shared/types";
 import { TemplateType } from "./template-types";
 
 const htmlEscape = (str: string) =>
@@ -78,7 +78,7 @@ const outputPlainTextList = (data: VisualizerData) => {
   for (const meta of Object.values(data.nodeMetas)) {
     for (const [bundleId, uid] of Object.entries(meta.moduleParts)) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { mainUid, ...lengths } = data.nodeParts[uid];
+      const { metaUid: mainUid, ...lengths } = data.nodeParts[uid];
 
       bundles[bundleId] = bundles[bundleId] ?? [];
       bundles[bundleId].push([meta.id, lengths]);

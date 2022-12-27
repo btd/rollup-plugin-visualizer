@@ -3,7 +3,7 @@ import { hsl, RGBColor } from "d3-color";
 
 import { HierarchyNode } from "d3-hierarchy";
 import { COLOR_BASE, CssColor } from "../color";
-import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf } from "../../shared/types";
 
 // https://www.w3.org/TR/WCAG20/#relativeluminancedef
 const rc = 0.2126;

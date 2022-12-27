@@ -1,7 +1,7 @@
 import { createContext, render } from "preact";
 import { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 
-import { ModuleMeta, ModuleLengths, ModuleUID, SizeKey, VisualizerData } from "../../types/types";
+import { ModuleMeta, ModuleLengths, ModuleUID, SizeKey, VisualizerData } from "../../shared/types";
 
 import { getAvailableSizeOptions } from "../sizes";
 import { Main } from "./main";

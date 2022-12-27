@@ -10,7 +10,7 @@ import { renderTemplate } from "../plugin/render-template";
 import TEMPLATE, { TemplateType } from "../plugin/template-types";
 import { warn } from "../plugin/warn";
 import { version } from "../plugin/version";
-import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../types/types";
+import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../shared/types";
 
 const argv = yargs(hideBin(process.argv))
   .option("filename", {

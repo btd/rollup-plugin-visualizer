@@ -1,4 +1,4 @@
-import { SizeKey, VisualizerData } from "../types/types";
+import { SizeKey, VisualizerData } from "../shared/types";
 
 export const LABELS: Record<SizeKey, string> = {
   renderedLength: "Rendered",

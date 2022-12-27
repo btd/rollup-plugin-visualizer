@@ -6,7 +6,7 @@ const { rollup } = require("rollup");
 const commonJs = require("@rollup/plugin-commonjs");
 const resolve = require("@rollup/plugin-node-resolve").default;
 const typescript = require("@rollup/plugin-typescript");
-const alias = require('@rollup/plugin-alias');
+const alias = require("@rollup/plugin-alias");
 const postcss = require("rollup-plugin-postcss");
 const postcssUrl = require("postcss-url");
 
@@ -71,9 +71,7 @@ const COMMON_PLUGINS = () =>
   [
     typescript({ tsconfig: "./src/tsconfig.json", noEmitOnError: true }),
     alias({
-      entries: [
-        { find: 'picomatch', replacement: 'picomatch-browser' },
-      ]
+      entries: [{ find: "picomatch", replacement: "picomatch-browser" }],
     }),
     resolve({ mainFields: ["module", "main"] }),
     commonJs({
@@ -299,7 +297,7 @@ const runBuildTest_filter = async (template) => {
         title: "test filter",
         filename: `stats.filter${chooseExt(template)}`,
         template,
-        exclude: ['**/node_modules/**'],
+        exclude: [{ file: "**/node_modules/**" }],
         ...simpleOptions,
       }),
     ],
@@ -330,7 +328,7 @@ const run = async () => {
     await buildAll(runBuildTest_gh59);
     await buildAll(runBuildTest_gh69);
     await buildAll(runBuildTest_gh93);
-    await buildAll(runBuildTest_filter)
+    await buildAll(runBuildTest_filter);
   }
 };
 

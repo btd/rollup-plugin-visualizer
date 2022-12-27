@@ -6,7 +6,7 @@ import { format as formatBytes } from "bytes";
 import { HierarchyRectangularNode } from "d3-hierarchy";
 
 import { LABELS } from "../sizes";
-import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../shared/types";
 import { StaticContext } from ".";
 
 export interface TooltipProps {

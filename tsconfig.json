@@ -18,6 +18,6 @@
       "yargs"
     ]
   },
-  "include": ["plugin/**/*", "types/**/*", "bin/**/*"],
+  "include": ["plugin/**/*", "shared/**/*", "bin/**/*"],
   "exclude": ["node_modules"]
 }

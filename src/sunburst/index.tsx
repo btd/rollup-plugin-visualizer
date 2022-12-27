@@ -16,7 +16,7 @@ import {
   ModuleTreeLeaf,
   SizeKey,
   VisualizerData,
-} from "../../types/types";
+} from "../../shared/types";
 
 import { getAvailableSizeOptions } from "../sizes";
 import { generateUniqueId, Id } from "../uid";

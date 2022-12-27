@@ -1,4 +1,4 @@
-import { ModuleImport, ModuleMeta, ModulePart, ModuleLengths, ModuleUID } from "../types/types";
+import { ModuleImport, ModuleMeta, ModulePart, ModuleLengths, ModuleUID } from "../shared/types";
 import { getUid } from "./uid";
 
 const nanoid = getUid("1234567890abcdef", 4);
@@ -73,7 +73,7 @@ export class ModuleMapper {
         )}, existing value: ${JSON.stringify(this.nodeParts[uid])}`
       );
     }
-    this.nodeParts[uid] = { ...value, mainUid: this.getModuleUid(moduleId) };
+    this.nodeParts[uid] = { ...value, metaUid: this.getModuleUid(moduleId) };
     return uid;
   }
 

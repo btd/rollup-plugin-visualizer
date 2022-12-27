@@ -5,7 +5,7 @@ import { scaleSqrt } from "d3-scale";
 import { max } from "d3-array";
 import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3-force";
 
-import { ModuleUID } from "../../types/types";
+import { ModuleUID } from "../../shared/types";
 
 import { COLOR_BASE } from "../color";
 import { useFilter } from "../use-filter";
@@ -53,7 +53,12 @@ export const Main: FunctionalComponent = () => {
     for (const node of nodes) {
       //if (node.renderedLength === 0) continue;
       if (excludedNodes.includes(node.uid)) continue;
-      const filterMultiplier = getModuleFilterMultiplier(node);
+
+      const bundleId = Object.entries(node.moduleParts).find(
+        ([bundleId, uid]) => uid == node.uid
+      )?.[0]!!;
+
+      const filterMultiplier = getModuleFilterMultiplier(bundleId, node);
       if (filterMultiplier === 0) continue;
 
       const nodeGroup = nodeGroups[node.uid];

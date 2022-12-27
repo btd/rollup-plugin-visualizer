@@ -1,6 +1,6 @@
 import { FunctionalComponent, JSX } from "preact";
 import { useState } from "preact/hooks";
-import { SizeKey } from "../types/types";
+import { SizeKey } from "../shared/types";
 import { LABELS } from "./sizes";
 
 export interface SideBarProps {
@@ -10,6 +10,8 @@ export interface SideBarProps {
   onExcludeChange: (value: string) => void;
   onIncludeChange: (value: string) => void;
 }
+
+const PLACEHOLDER = "bundle-*:**/file/**,**/file**, bundle-*:";
 
 export const SideBar: FunctionalComponent<SideBarProps> = ({
   availableSizeProperties,
@@ -66,7 +68,7 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             id="module-filter-exclude"
             value={excludeValue}
             onInput={handleExcludeChange}
-            placeholder="glob pattern"
+            placeholder={PLACEHOLDER}
           />
         </div>
         <div className="module-filter">
@@ -76,7 +78,7 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             id="module-filter-include"
             value={includeValue}
             onInput={handleIncludeChange}
-            placeholder="glob pattern"
+            placeholder={PLACEHOLDER}
           />
         </div>
       </div>

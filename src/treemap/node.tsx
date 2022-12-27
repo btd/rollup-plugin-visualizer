@@ -2,7 +2,7 @@
 import { FunctionalComponent } from "preact";
 import { useContext, useLayoutEffect, useRef } from "preact/hooks";
 import { HierarchyRectangularNode } from "d3-hierarchy";
-import { ModuleTree, ModuleTreeLeaf } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf } from "../../shared/types";
 import { PADDING, TOP_PADDING } from "./const";
 import { StaticContext } from ".";
 

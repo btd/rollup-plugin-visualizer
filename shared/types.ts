@@ -17,7 +17,7 @@ export interface ModuleTree {
 }
 
 export type ModulePart = {
-  mainUid: ModuleUID;
+  metaUid: ModuleUID;
 } & ModuleLengths;
 
 export type ModuleImport = {

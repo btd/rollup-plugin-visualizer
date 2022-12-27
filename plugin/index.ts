@@ -4,9 +4,8 @@ import path from "path";
 import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
 import opn from "open";
 
-import { createFilter, FilterPattern } from "@rollup/pluginutils";
 
-import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../types/types";
+import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types";
 import { version } from "./version";
 
 import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
@@ -16,6 +15,7 @@ import { ModuleMapper } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { renderTemplate } from "./render-template";
+import { createFilter, Filter } from "../shared/create-filter";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -25,6 +25,8 @@ const WARN_SOURCEMAP_MISSING = (id: string) => `${id} missing source map`;
 const WARN_JSON_DEPRECATED = 'Option `json` deprecated, please use template: "raw-data"';
 
 const ERR_FILENAME_EMIT = "When using emitFile option, filename must not be path but a filename";
+
+
 
 export interface PluginVisualizerOptions {
   /**
@@ -50,7 +52,7 @@ export interface PluginVisualizerOptions {
   title?: string;
 
   /**
-   * If plugin should open browser with generated file. Ignored when `json` is true.
+   * If plugin should open browser with generated file. Ignored when `json` or `emitFile` is true.
    *
    * @default false
    */
@@ -103,16 +105,16 @@ export interface PluginVisualizerOptions {
   emitFile?: boolean;
 
   /**
-   * A valid picomatch pattern, or array of patterns. If options.include is omitted or has zero length, filter will return true by 
+   * A valid picomatch pattern, or array of patterns. If options.include is omitted or has zero length, filter will return true by
    * default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns.
    */
-  include?: FilterPattern;
+  include?: Filter | Filter[];
 
   /**
-   * A valid picomatch pattern, or array of patterns. If options.include is omitted or has zero length, filter will return true by 
+   * A valid picomatch pattern, or array of patterns. If options.include is omitted or has zero length, filter will return true by
    * default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns.
    */
-  exclude?: FilterPattern;
+  exclude?: Filter | Filter[];
 }
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
@@ -152,9 +154,7 @@ export const visualizer = (
       const template = opts.template ?? "treemap";
       const projectRoot = opts.projectRoot ?? process.cwd();
 
-      const filter = createFilter(opts.include, opts.exclude, {
-        resolve: typeof projectRoot === "string" ? projectRoot : process.cwd(),
-      });
+      const filter = createFilter(opts.include, opts.exclude);
 
       const gzipSize = !!opts.gzipSize && !opts.sourcemap;
       const brotliSize = !!opts.brotliSize && !opts.sourcemap;
@@ -174,7 +174,6 @@ export const visualizer = (
         renderedLength: number;
         code: string | null;
       }): Promise<ModuleLengths & { id: string }> => {
-  
         const isCodeEmpty = code == null || code == "";
 
         const result = {
@@ -214,21 +213,19 @@ export const visualizer = (
 
           const moduleRenderInfo = await Promise.all(
             Object.values(modules)
-            .filter(({ id }) => filter(id))
-            .map(({ id, renderedLength }) => {
-              const code = bundle.modules[id]?.code;
-              return ModuleLengths({ id, renderedLength, code });
-            })
+              .filter(({ id }) => filter(bundleId, id))
+              .map(({ id, renderedLength }) => {
+                const code = bundle.modules[id]?.code;
+                return ModuleLengths({ id, renderedLength, code });
+              })
           );
 
           tree = buildTree(bundleId, moduleRenderInfo, mapper);
         } else {
           const modules = await Promise.all(
             Object.entries(bundle.modules)
-            .filter(([ id ]) => filter(id))
-            .map(([id, { renderedLength, code }]) =>
-              ModuleLengths({ id, renderedLength, code })
-            )
+              .filter(([id]) => filter(bundleId, id))
+              .map(([id, { renderedLength, code }]) => ModuleLengths({ id, renderedLength, code }))
           );
 
           tree = buildTree(bundleId, modules, mapper);

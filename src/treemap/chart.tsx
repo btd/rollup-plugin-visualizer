@@ -2,7 +2,7 @@ import { FunctionalComponent } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { HierarchyRectangularNode } from "d3-hierarchy";
 
-import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../shared/types";
 import { TreeMap } from "./treemap";
 import { Tooltip } from "./tooltip";
 

@@ -2,7 +2,7 @@ import { FunctionalComponent } from "preact";
 import { useState, useEffect, useMemo } from "preact/hooks";
 
 import { HierarchyRectangularNode } from "d3-hierarchy";
-import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { ModuleTree, ModuleTreeLeaf, SizeKey } from "../../shared/types";
 import { Tooltip } from "./tooltip";
 import { SunBurst } from "./sunburst";
 

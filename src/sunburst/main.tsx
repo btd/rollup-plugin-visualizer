@@ -2,7 +2,7 @@ import { HierarchyRectangularNode } from "d3-hierarchy";
 import { FunctionalComponent } from "preact";
 import { useContext, useMemo, useState } from "preact/hooks";
 
-import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../shared/types";
 
 import { SideBar } from "../sidebar";
 import { useFilter } from "../use-filter";
@@ -48,11 +48,15 @@ export const Main: FunctionalComponent = () => {
     const rootWithSizesAndSorted = rawHierarchy
       .sum((node) => {
         if (isModuleTree(node)) return 0;
+
+        const meta = data.nodeMetas[data.nodeParts[node.uid].metaUid];
+        const bundleId = Object.entries(meta.moduleParts).find(
+          ([bundleId, uid]) => uid == node.uid
+        )?.[0]!!;
+
         const ownSize = getModuleSize(node, sizeProperty);
         const zoomMultiplier = getNodeSizeMultiplier(node);
-        const filterMultiplier = getModuleFilterMultiplier(
-          data.nodeMetas[data.nodeParts[node.uid].mainUid]
-        );
+        const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
 
         return ownSize * zoomMultiplier * filterMultiplier;
       })

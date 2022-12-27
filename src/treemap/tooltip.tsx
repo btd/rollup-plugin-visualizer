@@ -5,7 +5,7 @@ import { format as formatBytes } from "bytes";
 import { FunctionalComponent } from "preact";
 import { HierarchyRectangularNode } from "d3-hierarchy";
 import { LABELS } from "../sizes";
-import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../types/types";
+import { isModuleTree, ModuleTree, ModuleTreeLeaf, SizeKey } from "../../shared/types";
 import { StaticContext } from ".";
 
 export interface TooltipProps {
@@ -69,7 +69,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({
 
     let dataNode = null;
     if (!isModuleTree(node.data)) {
-      const mainUid = data.nodeParts[node.data.uid].mainUid;
+      const mainUid = data.nodeParts[node.data.uid].metaUid;
       dataNode = data.nodeMetas[mainUid];
     }
 

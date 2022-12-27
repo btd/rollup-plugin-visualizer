@@ -1,5 +1,5 @@
 import { HierarchyRectangularNode } from "d3-hierarchy";
-import { ModuleTree, ModuleTreeLeaf } from "../types/types";
+import { ModuleTree, ModuleTreeLeaf } from "../shared/types";
 
 export type CssColor = string;
 
