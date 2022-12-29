@@ -25,7 +25,7 @@ export type UseFilter = {
   getModuleFilterMultiplier: (bundleId: string, data: { id: string }) => number;
 };
 
-const prepareFilter = (filt: string) => {
+export const prepareFilter = (filt: string) => {
   if (filt === "") return [];
   return (
     filt

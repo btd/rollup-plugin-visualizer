@@ -1,8 +1,8 @@
 import pm from "picomatch";
 
 export type Filter = {
-  bundle: string | null | undefined;
-  file: string | null | undefined;
+  bundle?: string | null | undefined;
+  file?: string | null | undefined;
 };
 
 function isArray(arg: unknown): arg is any[] | readonly any[] {
