@@ -5,6 +5,7 @@
 * Add `include` and `exclude` options allowing to filter bundles, and files in separate or together
 * Fix possible bug with not correctly cutting prefix when `projectRoot` is a string
 * Use glob patterns via `picomatch` in include and exclude allowing to filter both bundles and files
+* `treemap` received new zoom. On click on node it will increase it size to 100%
 
 ## 5.8.3
 
