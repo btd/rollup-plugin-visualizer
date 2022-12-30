@@ -48,7 +48,8 @@ module.exports = ALL_TEMPLATE.map((templateType) => ({
         template: templateType,
         gzipSize: true,
         brotliSize: true,
-        sourcemap: process.env.SOURCEMAP == "true",
+        sourcemap: !!process.env.SOURCEMAP,
+        open: !!process.env.OPEN
       }),
     ],
   ],
@@ -56,6 +57,6 @@ module.exports = ALL_TEMPLATE.map((templateType) => ({
   output: {
     format: "es",
     dir: `./temp/`,
-    sourcemap: process.env.SOURCEMAP == "true",
+    sourcemap: !!process.env.SOURCEMAP,
   },
 }));

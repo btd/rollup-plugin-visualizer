@@ -23,25 +23,25 @@ export const Main: FunctionalComponent = () => {
 
   console.time("getNodeSizeMultiplier");
   const getNodeSizeMultiplier = useMemo(() => {
-    const rootSize = getModuleSize(rawHierarchy.data, sizeProperty);
-    const selectedSize = selectedNode ? getModuleSize(selectedNode.data, sizeProperty) : 1;
-    const multiplier = rootSize * 0.2 > selectedSize ? (rootSize * 0.2) / selectedSize : 3;
+    const selectedMultiplier = 1; // selectedSize < rootSize * increaseFactor ? (rootSize * increaseFactor) / selectedSize : rootSize / selectedSize;
+    const nonSelectedMultiplier = 0; // 1 / selectedMultiplier
+
     if (selectedNode === undefined) {
       return (): number => 1;
     } else if (isModuleTree(selectedNode.data)) {
       const leaves = new Set(selectedNode.leaves().map((d) => d.data));
       return (node: ModuleTree | ModuleTreeLeaf): number => {
         if (leaves.has(node)) {
-          return multiplier;
+          return selectedMultiplier;
         }
-        return 1;
+        return nonSelectedMultiplier;
       };
     } else {
       return (node: ModuleTree | ModuleTreeLeaf): number => {
         if (node === selectedNode.data) {
-          return multiplier;
+          return selectedMultiplier;
         }
-        return 1;
+        return nonSelectedMultiplier;
       };
     }
   }, [getModuleSize, rawHierarchy.data, selectedNode, sizeProperty]);
