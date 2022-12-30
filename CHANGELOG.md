@@ -1,6 +1,6 @@
 # Changelog
 
-## Not released
+## 5.9.0
 
 * Add `include` and `exclude` options allowing to filter bundles, and files in separate or together
 * Fix possible bug with not correctly cutting prefix when `projectRoot` is a string
