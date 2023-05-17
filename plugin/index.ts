@@ -156,8 +156,8 @@ export const visualizer = (
 
       const filter = createFilter(opts.include, opts.exclude);
 
-      const gzipSize = !!opts.gzipSize && !opts.sourcemap;
-      const brotliSize = !!opts.brotliSize && !opts.sourcemap;
+      const gzipSize = !!opts.gzipSize;
+      const brotliSize = !!opts.brotliSize;
       const gzipSizeGetter = gzipSize
         ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
         : defaultSizeGetter;

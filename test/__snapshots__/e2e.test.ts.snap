@@ -39,20 +39,20 @@ exports[`E2E sourcemap + terser test 1`] = `
   "nodeParts": {
     "1111-81": {
       "renderedLength": 22,
-      "gzipLength": 0,
-      "brotliLength": 0,
+      "gzipLength": 42,
+      "brotliLength": 26,
       "metaUid": "1111-80"
     },
     "1111-83": {
       "renderedLength": 57,
-      "gzipLength": 0,
-      "brotliLength": 0,
+      "gzipLength": 77,
+      "brotliLength": 61,
       "metaUid": "1111-82"
     },
     "1111-85": {
       "renderedLength": 32,
-      "gzipLength": 0,
-      "brotliLength": 0,
+      "gzipLength": 52,
+      "brotliLength": 36,
       "metaUid": "1111-84"
     }
   },
@@ -125,8 +125,8 @@ exports[`E2E sourcemap + terser test 1`] = `
     "rollup": "3.9.0"
   },
   "options": {
-    "gzip": false,
-    "brotli": false,
+    "gzip": true,
+    "brotli": true,
     "sourcemap": true
   }
 }"
@@ -136,12 +136,18 @@ exports[`E2E sourcemap test - "list" 1`] = `
 "file3-6fe2c43f.js:
   /test/e2e/file3.js:
     rendered: 19
+    gzip: 39
+    brotli: 23
 input.js:
   /test/e2e/input.js:
     rendered: 67
+    gzip: 80
+    brotli: 68
 input2.js:
   /test/e2e/input2.js:
     rendered: 81
+    gzip: 95
+    brotli: 82
 "
 `;
 
@@ -6766,7 +6772,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"1111-57"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"1111-59"}]},{"name":"file3-6fe2c43f.js","children":[{"name":"test/e2e/file3.js","uid":"1111-61"}]}],"isRoot":true},"nodeParts":{"1111-57":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"1111-56"},"1111-59":{"renderedLength":81,"gzipLength":0,"brotliLength":0,"metaUid":"1111-58"},"1111-61":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-60"}},"nodeMetas":{"1111-56":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"1111-57"},"imported":[{"uid":"1111-62"},{"uid":"1111-63"}],"importedBy":[],"isEntry":true},"1111-58":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"1111-59"},"imported":[{"uid":"1111-60","dynamic":true}],"importedBy":[],"isEntry":true},"1111-60":{"id":"/test/e2e/file3.js","moduleParts":{"file3-6fe2c43f.js":"1111-61"},"imported":[],"importedBy":[{"uid":"1111-58"}]},"1111-62":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-56"}]},"1111-63":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-56"}],"isExternal":true}},"env":{"rollup":"3.9.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"1111-57"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"1111-59"}]},{"name":"file3-6fe2c43f.js","children":[{"name":"test/e2e/file3.js","uid":"1111-61"}]}],"isRoot":true},"nodeParts":{"1111-57":{"renderedLength":67,"gzipLength":80,"brotliLength":68,"metaUid":"1111-56"},"1111-59":{"renderedLength":81,"gzipLength":95,"brotliLength":82,"metaUid":"1111-58"},"1111-61":{"renderedLength":19,"gzipLength":39,"brotliLength":23,"metaUid":"1111-60"}},"nodeMetas":{"1111-56":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"1111-57"},"imported":[{"uid":"1111-62"},{"uid":"1111-63"}],"importedBy":[],"isEntry":true},"1111-58":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"1111-59"},"imported":[{"uid":"1111-60","dynamic":true}],"importedBy":[],"isEntry":true},"1111-60":{"id":"/test/e2e/file3.js","moduleParts":{"file3-6fe2c43f.js":"1111-61"},"imported":[],"importedBy":[{"uid":"1111-58"}]},"1111-62":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-56"}]},"1111-63":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-56"}],"isExternal":true}},"env":{"rollup":"3.9.0"},"options":{"gzip":true,"brotli":true,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -6826,20 +6832,20 @@ exports[`E2E sourcemap test - "raw-data" 1`] = `
   "nodeParts": {
     "1111-65": {
       "renderedLength": 67,
-      "gzipLength": 0,
-      "brotliLength": 0,
+      "gzipLength": 80,
+      "brotliLength": 68,
       "metaUid": "1111-64"
     },
     "1111-67": {
       "renderedLength": 81,
-      "gzipLength": 0,
-      "brotliLength": 0,
+      "gzipLength": 95,
+      "brotliLength": 82,
       "metaUid": "1111-66"
     },
     "1111-69": {
       "renderedLength": 19,
-      "gzipLength": 0,
-      "brotliLength": 0,
+      "gzipLength": 39,
+      "brotliLength": 23,
       "metaUid": "1111-68"
     }
   },
@@ -6912,8 +6918,8 @@ exports[`E2E sourcemap test - "raw-data" 1`] = `
     "rollup": "3.9.0"
   },
   "options": {
-    "gzip": false,
-    "brotli": false,
+    "gzip": true,
+    "brotli": true,
     "sourcemap": true
   }
 }"
@@ -13813,7 +13819,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"1111-49"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"1111-51"}]},{"name":"file3-6fe2c43f.js","children":[{"name":"test/e2e/file3.js","uid":"1111-53"}]}],"isRoot":true},"nodeParts":{"1111-49":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"1111-48"},"1111-51":{"renderedLength":81,"gzipLength":0,"brotliLength":0,"metaUid":"1111-50"},"1111-53":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-52"}},"nodeMetas":{"1111-48":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"1111-49"},"imported":[{"uid":"1111-54"},{"uid":"1111-55"}],"importedBy":[],"isEntry":true},"1111-50":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"1111-51"},"imported":[{"uid":"1111-52","dynamic":true}],"importedBy":[],"isEntry":true},"1111-52":{"id":"/test/e2e/file3.js","moduleParts":{"file3-6fe2c43f.js":"1111-53"},"imported":[],"importedBy":[{"uid":"1111-50"}]},"1111-54":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-48"}]},"1111-55":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-48"}],"isExternal":true}},"env":{"rollup":"3.9.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"1111-49"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"1111-51"}]},{"name":"file3-6fe2c43f.js","children":[{"name":"test/e2e/file3.js","uid":"1111-53"}]}],"isRoot":true},"nodeParts":{"1111-49":{"renderedLength":67,"gzipLength":80,"brotliLength":68,"metaUid":"1111-48"},"1111-51":{"renderedLength":81,"gzipLength":95,"brotliLength":82,"metaUid":"1111-50"},"1111-53":{"renderedLength":19,"gzipLength":39,"brotliLength":23,"metaUid":"1111-52"}},"nodeMetas":{"1111-48":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"1111-49"},"imported":[{"uid":"1111-54"},{"uid":"1111-55"}],"importedBy":[],"isEntry":true},"1111-50":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"1111-51"},"imported":[{"uid":"1111-52","dynamic":true}],"importedBy":[],"isEntry":true},"1111-52":{"id":"/test/e2e/file3.js","moduleParts":{"file3-6fe2c43f.js":"1111-53"},"imported":[],"importedBy":[{"uid":"1111-50"}]},"1111-54":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-48"}]},"1111-55":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-48"}],"isExternal":true}},"env":{"rollup":"3.9.0"},"options":{"gzip":true,"brotli":true,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -19994,7 +20000,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"1111-41"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"1111-43"}]},{"name":"file3-6fe2c43f.js","children":[{"name":"test/e2e/file3.js","uid":"1111-45"}]}],"isRoot":true},"nodeParts":{"1111-41":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"1111-40"},"1111-43":{"renderedLength":81,"gzipLength":0,"brotliLength":0,"metaUid":"1111-42"},"1111-45":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-44"}},"nodeMetas":{"1111-40":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"1111-41"},"imported":[{"uid":"1111-46"},{"uid":"1111-47"}],"importedBy":[],"isEntry":true},"1111-42":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"1111-43"},"imported":[{"uid":"1111-44","dynamic":true}],"importedBy":[],"isEntry":true},"1111-44":{"id":"/test/e2e/file3.js","moduleParts":{"file3-6fe2c43f.js":"1111-45"},"imported":[],"importedBy":[{"uid":"1111-42"}]},"1111-46":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-40"}]},"1111-47":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-40"}],"isExternal":true}},"env":{"rollup":"3.9.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"1111-41"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"1111-43"}]},{"name":"file3-6fe2c43f.js","children":[{"name":"test/e2e/file3.js","uid":"1111-45"}]}],"isRoot":true},"nodeParts":{"1111-41":{"renderedLength":67,"gzipLength":80,"brotliLength":68,"metaUid":"1111-40"},"1111-43":{"renderedLength":81,"gzipLength":95,"brotliLength":82,"metaUid":"1111-42"},"1111-45":{"renderedLength":19,"gzipLength":39,"brotliLength":23,"metaUid":"1111-44"}},"nodeMetas":{"1111-40":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"1111-41"},"imported":[{"uid":"1111-46"},{"uid":"1111-47"}],"importedBy":[],"isEntry":true},"1111-42":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"1111-43"},"imported":[{"uid":"1111-44","dynamic":true}],"importedBy":[],"isEntry":true},"1111-44":{"id":"/test/e2e/file3.js","moduleParts":{"file3-6fe2c43f.js":"1111-45"},"imported":[],"importedBy":[{"uid":"1111-42"}]},"1111-46":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-40"}]},"1111-47":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"1111-40"}],"isExternal":true}},"env":{"rollup":"3.9.0"},"options":{"gzip":true,"brotli":true,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
