@@ -167,12 +167,10 @@ export const visualizer = (
 
       const ModuleLengths = async ({
         id,
-        renderedLength,
         code,
       }: {
         id: string;
-        renderedLength: number;
-        code: string | null;
+        code: string;
       }): Promise<ModuleLengths & { id: string }> => {
         const isCodeEmpty = code == null || code == "";
 
@@ -180,7 +178,7 @@ export const visualizer = (
           id,
           gzipLength: isCodeEmpty ? 0 : await gzipSizeGetter(code),
           brotliLength: isCodeEmpty ? 0 : await brotliSizeGetter(code),
-          renderedLength: isCodeEmpty ? renderedLength : Buffer.byteLength(code, "utf-8"),
+          renderedLength: isCodeEmpty ? 0 : Buffer.byteLength(code, "utf-8"),
         };
         return result;
       };
@@ -214,9 +212,8 @@ export const visualizer = (
           const moduleRenderInfo = await Promise.all(
             Object.values(modules)
               .filter(({ id }) => filter(bundleId, id))
-              .map(({ id, renderedLength }) => {
-                const code = bundle.modules[id]?.code;
-                return ModuleLengths({ id, renderedLength, code });
+              .map(({ id, code }) => {
+                return ModuleLengths({ id, code });
               })
           );
 
@@ -225,7 +222,7 @@ export const visualizer = (
           const modules = await Promise.all(
             Object.entries(bundle.modules)
               .filter(([id]) => filter(bundleId, id))
-              .map(([id, { renderedLength, code }]) => ModuleLengths({ id, renderedLength, code }))
+              .map(([id, { code }]) => ModuleLengths({ id, code: code || "" }))
           );
 
           tree = buildTree(bundleId, modules, mapper);
@@ -234,7 +231,6 @@ export const visualizer = (
         if (tree.children.length === 0) {
           const bundleSizes = await ModuleLengths({
             id: bundleId,
-            renderedLength: bundle.code.length,
             code: bundle.code,
           });
 

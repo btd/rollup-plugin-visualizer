@@ -4,7 +4,7 @@ import { SourceMapConsumer } from "source-map";
 
 interface SourceMapModuleRenderInfo {
   id: string;
-  renderedLength: number;
+  code: string;
 }
 
 const getBytesPerFileUsingSourceMap = (
@@ -25,8 +25,8 @@ const getBytesPerFileUsingSourceMap = (
     if (source != null) {
       const id = path.resolve(path.dirname(path.join(dir, bundleId)), source);
 
-      modules[id] = modules[id] || { id, renderedLength: 0 };
-      modules[id].renderedLength += 1;
+      modules[id] = modules[id] || { id, code: "" };
+      modules[id].code += code[i];
     }
 
     if (code[i] === "\n") {
