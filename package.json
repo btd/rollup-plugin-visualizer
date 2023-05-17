@@ -45,6 +45,7 @@
     "@rollup/plugin-alias": "^4.0.2",
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.2",
     "@rollup/plugin-typescript": "^10.0.1",
     "@types/bytes": "^3.1.1",
     "@types/d3-array": "^3.0.3",

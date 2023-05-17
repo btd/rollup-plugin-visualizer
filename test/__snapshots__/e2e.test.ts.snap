@@ -1,5 +1,137 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`E2E sourcemap + terser test 1`] = `
+"{
+  "version": 2,
+  "tree": {
+    "name": "root",
+    "children": [
+      {
+        "name": "input.js",
+        "children": [
+          {
+            "name": "test/e2e/input.js",
+            "uid": "1111-81"
+          }
+        ]
+      },
+      {
+        "name": "input2.js",
+        "children": [
+          {
+            "name": "test/e2e/input2.js",
+            "uid": "1111-83"
+          }
+        ]
+      },
+      {
+        "name": "file3-fd37dfe7.js",
+        "children": [
+          {
+            "name": "test/e2e/file3.js",
+            "uid": "1111-85"
+          }
+        ]
+      }
+    ],
+    "isRoot": true
+  },
+  "nodeParts": {
+    "1111-81": {
+      "renderedLength": 66,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "1111-80"
+    },
+    "1111-83": {
+      "renderedLength": 80,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "1111-82"
+    },
+    "1111-85": {
+      "renderedLength": 18,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "1111-84"
+    }
+  },
+  "nodeMetas": {
+    "1111-80": {
+      "id": "/test/e2e/input.js",
+      "moduleParts": {
+        "input.js": "1111-81"
+      },
+      "imported": [
+        {
+          "uid": "1111-86"
+        },
+        {
+          "uid": "1111-87"
+        }
+      ],
+      "importedBy": [],
+      "isEntry": true
+    },
+    "1111-82": {
+      "id": "/test/e2e/input2.js",
+      "moduleParts": {
+        "input2.js": "1111-83"
+      },
+      "imported": [
+        {
+          "uid": "1111-84",
+          "dynamic": true
+        }
+      ],
+      "importedBy": [],
+      "isEntry": true
+    },
+    "1111-84": {
+      "id": "/test/e2e/file3.js",
+      "moduleParts": {
+        "file3-fd37dfe7.js": "1111-85"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "1111-82"
+        }
+      ]
+    },
+    "1111-86": {
+      "id": "/test/e2e/node_modules/module/test.js",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "1111-80"
+        }
+      ]
+    },
+    "1111-87": {
+      "id": "jquery",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "1111-80"
+        }
+      ],
+      "isExternal": true
+    }
+  },
+  "env": {
+    "rollup": "3.9.0"
+  },
+  "options": {
+    "gzip": false,
+    "brotli": false,
+    "sourcemap": true
+  }
+}"
+`;
+
 exports[`E2E sourcemap test - "list" 1`] = `
 "file3-6fe2c43f.js:
   /test/e2e/file3.js:
