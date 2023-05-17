@@ -83,7 +83,6 @@ export interface PluginVisualizerOptions {
 
   /**
    * If plugin should use sourcemap to calculate sizes of modules. By idea it will present more accurate results.
-   * `gzipSize` and `brotliSize` does not make much sense with this option.
    *
    * @default false
    */

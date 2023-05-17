@@ -120,6 +120,8 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
+`sourcemap` (boolean, default `false`) - Use sourcemap to calculate module sizes. Gives more precise results by accounting for code transformation and minification. Sourcemap generation [must be enabled in rollup options.](https://rollupjs.org/configuration-options/#output-sourcemap)
+
 `template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`, `raw-data`, `list`.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart.
