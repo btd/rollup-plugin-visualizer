@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sourcemap test 1`] = `
+"const text$1 = "😀wyjście😀";
+
+// some text ü
+// with surrogate pairs 葛
+const text = "😀wyjście😀";
+console.log("" + text + text$1);
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`Sourcemap test 2`] = `180`;
+
+exports[`Sourcemap test 3`] = `
+"{
+  "version": 2,
+  "tree": {
+    "name": "root",
+    "children": [
+      {
+        "name": "index.js",
+        "children": [
+          {
+            "name": "test/sourcemap",
+            "children": [
+              {
+                "uid": "1111-1",
+                "name": "input2.js"
+              },
+              {
+                "uid": "1111-3",
+                "name": "input.js"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "isRoot": true
+  },
+  "nodeParts": {
+    "1111-1": {
+      "renderedLength": 34,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "1111-0"
+    },
+    "1111-3": {
+      "renderedLength": 109,
+      "gzipLength": 0,
+      "brotliLength": 0,
+      "metaUid": "1111-2"
+    }
+  },
+  "nodeMetas": {
+    "1111-0": {
+      "id": "/test/sourcemap/input2.js",
+      "moduleParts": {
+        "index.js": "1111-1"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "1111-2"
+        }
+      ]
+    },
+    "1111-2": {
+      "id": "/test/sourcemap/input.js",
+      "moduleParts": {
+        "index.js": "1111-3"
+      },
+      "imported": [
+        {
+          "uid": "1111-0"
+        }
+      ],
+      "importedBy": [],
+      "isEntry": true
+    }
+  },
+  "env": {
+    "rollup": "3.24.1"
+  },
+  "options": {
+    "gzip": false,
+    "brotli": false,
+    "sourcemap": true
+  }
+}"
+`;
