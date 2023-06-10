@@ -1,5 +1,6 @@
 import path from "path";
 import { OutputChunk } from "rollup";
+import type { RawSourceMap } from "source-map";
 import { SourceMapConsumer } from "source-map";
 
 interface SourceMapModuleRenderInfo {
@@ -17,7 +18,8 @@ const getBytesPerFileUsingSourceMap = (
 
   let line = 1;
   let column = 0;
-  for (let i = 0; i < code.length; i++, column++) {
+  const codeChars = [...code];
+  for (let i = 0; i < codeChars.length; i++, column++) {
     const { source } = map.originalPositionFor({
       line,
       column,
@@ -26,7 +28,7 @@ const getBytesPerFileUsingSourceMap = (
       const id = path.resolve(path.dirname(path.join(dir, bundleId)), source);
 
       modules[id] = modules[id] || { id, renderedLength: 0 };
-      modules[id].renderedLength += 1;
+      modules[id].renderedLength += Buffer.byteLength(codeChars[i]);
     }
 
     if (code[i] === "\n") {
@@ -43,10 +45,10 @@ export const getSourcemapModules = (
   outputChunk: OutputChunk,
   dir: string
 ): Promise<Record<string, SourceMapModuleRenderInfo>> => {
-  if (!outputChunk.map) {
+  if (outputChunk.map == null) {
     return Promise.resolve({});
   }
-  return SourceMapConsumer.with(outputChunk.map, null, (map) => {
+  return SourceMapConsumer.with(outputChunk.map as RawSourceMap, null, (map) => {
     return getBytesPerFileUsingSourceMap(id, outputChunk.code, map, dir);
   });
 };
