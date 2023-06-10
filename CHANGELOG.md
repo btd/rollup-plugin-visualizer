@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.9.1
+
+* Update dependencies
+* Change a way code traversed for sourcemap in attempt to account for surrogate pairs
+
 ## 5.9.0
 
 * Add `include` and `exclude` options allowing to filter bundles, and files in separate or together
