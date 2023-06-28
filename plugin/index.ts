@@ -145,7 +145,7 @@ export const visualizer = (
         this.warn(WARN_JSON_DEPRECATED);
         if (opts.json) opts.template = "raw-data";
       }
-      const filename = opts.filename ?? chooseDefaultFileName(opts);
+      const filename = (opts.filename ?? chooseDefaultFileName(opts)).replace('[format]', outputOptions.format);
       const title = opts.title ?? "Rollup Visualizer";
 
       const open = !!opts.open;
