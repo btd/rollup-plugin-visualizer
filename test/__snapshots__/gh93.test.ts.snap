@@ -4,7 +4,7 @@ exports[`GH-93 sourcemap test - "list" 1`] = `
 "main.js:
   /test/gh93/main.js:
     rendered: 84
-virtual-id-7429d3ba.js:
+virtual-id-lPbjfJsL.js:
   virtual-id:
     rendered: 75
 "
@@ -5298,7 +5298,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","uid":"1111-29"},{"name":"virtual-id-7429d3ba.js","uid":"1111-31"}],"isRoot":true},"nodeParts":{"1111-29":{"id":"main.js","gzipLength":0,"brotliLength":0,"renderedLength":84,"metaUid":"1111-28"},"1111-31":{"id":"virtual-id-7429d3ba.js","gzipLength":0,"brotliLength":0,"renderedLength":75,"metaUid":"1111-30"}},"nodeMetas":{"1111-28":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-29"},"imported":[],"importedBy":[],"isEntry":true},"1111-30":{"id":"virtual-id","moduleParts":{"virtual-id-7429d3ba.js":"1111-31"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"3.24.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","uid":"1111-29"},{"name":"virtual-id-lPbjfJsL.js","uid":"1111-31"}],"isRoot":true},"nodeParts":{"1111-29":{"id":"main.js","gzipLength":0,"brotliLength":0,"renderedLength":84,"metaUid":"1111-28"},"1111-31":{"id":"virtual-id-lPbjfJsL.js","gzipLength":0,"brotliLength":0,"renderedLength":75,"metaUid":"1111-30"}},"nodeMetas":{"1111-28":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-29"},"imported":[],"importedBy":[],"isEntry":true},"1111-30":{"id":"virtual-id","moduleParts":{"virtual-id-lPbjfJsL.js":"1111-31"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"4.1.4"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -5330,7 +5330,7 @@ exports[`GH-93 sourcemap test - "raw-data" 1`] = `
         "uid": "1111-33"
       },
       {
-        "name": "virtual-id-7429d3ba.js",
+        "name": "virtual-id-lPbjfJsL.js",
         "uid": "1111-35"
       }
     ],
@@ -5345,7 +5345,7 @@ exports[`GH-93 sourcemap test - "raw-data" 1`] = `
       "metaUid": "1111-32"
     },
     "1111-35": {
-      "id": "virtual-id-7429d3ba.js",
+      "id": "virtual-id-lPbjfJsL.js",
       "gzipLength": 0,
       "brotliLength": 0,
       "renderedLength": 75,
@@ -5365,7 +5365,7 @@ exports[`GH-93 sourcemap test - "raw-data" 1`] = `
     "1111-34": {
       "id": "virtual-id",
       "moduleParts": {
-        "virtual-id-7429d3ba.js": "1111-35"
+        "virtual-id-lPbjfJsL.js": "1111-35"
       },
       "imported": [],
       "importedBy": [],
@@ -5373,7 +5373,7 @@ exports[`GH-93 sourcemap test - "raw-data" 1`] = `
     }
   },
   "env": {
-    "rollup": "3.24.1"
+    "rollup": "4.1.4"
   },
   "options": {
     "gzip": false,
@@ -10255,7 +10255,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","uid":"1111-25"},{"name":"virtual-id-7429d3ba.js","uid":"1111-27"}],"isRoot":true},"nodeParts":{"1111-25":{"id":"main.js","gzipLength":0,"brotliLength":0,"renderedLength":84,"metaUid":"1111-24"},"1111-27":{"id":"virtual-id-7429d3ba.js","gzipLength":0,"brotliLength":0,"renderedLength":75,"metaUid":"1111-26"}},"nodeMetas":{"1111-24":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-25"},"imported":[],"importedBy":[],"isEntry":true},"1111-26":{"id":"virtual-id","moduleParts":{"virtual-id-7429d3ba.js":"1111-27"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"3.24.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","uid":"1111-25"},{"name":"virtual-id-lPbjfJsL.js","uid":"1111-27"}],"isRoot":true},"nodeParts":{"1111-25":{"id":"main.js","gzipLength":0,"brotliLength":0,"renderedLength":84,"metaUid":"1111-24"},"1111-27":{"id":"virtual-id-lPbjfJsL.js","gzipLength":0,"brotliLength":0,"renderedLength":75,"metaUid":"1111-26"}},"nodeMetas":{"1111-24":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-25"},"imported":[],"importedBy":[],"isEntry":true},"1111-26":{"id":"virtual-id","moduleParts":{"virtual-id-lPbjfJsL.js":"1111-27"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"4.1.4"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -15097,7 +15097,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","uid":"1111-21"},{"name":"virtual-id-7429d3ba.js","uid":"1111-23"}],"isRoot":true},"nodeParts":{"1111-21":{"id":"main.js","gzipLength":0,"brotliLength":0,"renderedLength":84,"metaUid":"1111-20"},"1111-23":{"id":"virtual-id-7429d3ba.js","gzipLength":0,"brotliLength":0,"renderedLength":75,"metaUid":"1111-22"}},"nodeMetas":{"1111-20":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-21"},"imported":[],"importedBy":[],"isEntry":true},"1111-22":{"id":"virtual-id","moduleParts":{"virtual-id-7429d3ba.js":"1111-23"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"3.24.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","uid":"1111-21"},{"name":"virtual-id-lPbjfJsL.js","uid":"1111-23"}],"isRoot":true},"nodeParts":{"1111-21":{"id":"main.js","gzipLength":0,"brotliLength":0,"renderedLength":84,"metaUid":"1111-20"},"1111-23":{"id":"virtual-id-lPbjfJsL.js","gzipLength":0,"brotliLength":0,"renderedLength":75,"metaUid":"1111-22"}},"nodeMetas":{"1111-20":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-21"},"imported":[],"importedBy":[],"isEntry":true},"1111-22":{"id":"virtual-id","moduleParts":{"virtual-id-lPbjfJsL.js":"1111-23"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"4.1.4"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -15124,7 +15124,7 @@ exports[`GH-93 test - "list" 1`] = `
     rendered: 50
     gzip: 66
     brotli: 54
-virtual-id-7429d3ba.js:
+virtual-id-lPbjfJsL.js:
   virtual-id:
     rendered: 26
     gzip: 46
@@ -20420,7 +20420,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh93/main.js","uid":"1111-9"}]},{"name":"virtual-id-7429d3ba.js","children":[{"uid":"1111-11","name":"virtual-id"}]}],"isRoot":true},"nodeParts":{"1111-9":{"renderedLength":50,"gzipLength":66,"brotliLength":54,"metaUid":"1111-8"},"1111-11":{"renderedLength":26,"gzipLength":46,"brotliLength":30,"metaUid":"1111-10"}},"nodeMetas":{"1111-8":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-9"},"imported":[],"importedBy":[],"isEntry":true},"1111-10":{"id":"virtual-id","moduleParts":{"virtual-id-7429d3ba.js":"1111-11"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"3.24.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh93/main.js","uid":"1111-9"}]},{"name":"virtual-id-lPbjfJsL.js","children":[{"uid":"1111-11","name":"virtual-id"}]}],"isRoot":true},"nodeParts":{"1111-9":{"renderedLength":50,"gzipLength":66,"brotliLength":54,"metaUid":"1111-8"},"1111-11":{"renderedLength":26,"gzipLength":46,"brotliLength":30,"metaUid":"1111-10"}},"nodeMetas":{"1111-8":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-9"},"imported":[],"importedBy":[],"isEntry":true},"1111-10":{"id":"virtual-id","moduleParts":{"virtual-id-lPbjfJsL.js":"1111-11"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"4.1.4"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -20457,7 +20457,7 @@ exports[`GH-93 test - "raw-data" 1`] = `
         ]
       },
       {
-        "name": "virtual-id-7429d3ba.js",
+        "name": "virtual-id-lPbjfJsL.js",
         "children": [
           {
             "uid": "1111-15",
@@ -20495,7 +20495,7 @@ exports[`GH-93 test - "raw-data" 1`] = `
     "1111-14": {
       "id": "virtual-id",
       "moduleParts": {
-        "virtual-id-7429d3ba.js": "1111-15"
+        "virtual-id-lPbjfJsL.js": "1111-15"
       },
       "imported": [],
       "importedBy": [],
@@ -20503,7 +20503,7 @@ exports[`GH-93 test - "raw-data" 1`] = `
     }
   },
   "env": {
-    "rollup": "3.24.1"
+    "rollup": "4.1.4"
   },
   "options": {
     "gzip": true,
@@ -25385,7 +25385,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh93/main.js","uid":"1111-5"}]},{"name":"virtual-id-7429d3ba.js","children":[{"uid":"1111-7","name":"virtual-id"}]}],"isRoot":true},"nodeParts":{"1111-5":{"renderedLength":50,"gzipLength":66,"brotliLength":54,"metaUid":"1111-4"},"1111-7":{"renderedLength":26,"gzipLength":46,"brotliLength":30,"metaUid":"1111-6"}},"nodeMetas":{"1111-4":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-5"},"imported":[],"importedBy":[],"isEntry":true},"1111-6":{"id":"virtual-id","moduleParts":{"virtual-id-7429d3ba.js":"1111-7"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"3.24.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh93/main.js","uid":"1111-5"}]},{"name":"virtual-id-lPbjfJsL.js","children":[{"uid":"1111-7","name":"virtual-id"}]}],"isRoot":true},"nodeParts":{"1111-5":{"renderedLength":50,"gzipLength":66,"brotliLength":54,"metaUid":"1111-4"},"1111-7":{"renderedLength":26,"gzipLength":46,"brotliLength":30,"metaUid":"1111-6"}},"nodeMetas":{"1111-4":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-5"},"imported":[],"importedBy":[],"isEntry":true},"1111-6":{"id":"virtual-id","moduleParts":{"virtual-id-lPbjfJsL.js":"1111-7"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"4.1.4"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -30227,7 +30227,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh93/main.js","uid":"1111-1"}]},{"name":"virtual-id-7429d3ba.js","children":[{"uid":"1111-3","name":"virtual-id"}]}],"isRoot":true},"nodeParts":{"1111-1":{"renderedLength":50,"gzipLength":66,"brotliLength":54,"metaUid":"1111-0"},"1111-3":{"renderedLength":26,"gzipLength":46,"brotliLength":30,"metaUid":"1111-2"}},"nodeMetas":{"1111-0":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-1"},"imported":[],"importedBy":[],"isEntry":true},"1111-2":{"id":"virtual-id","moduleParts":{"virtual-id-7429d3ba.js":"1111-3"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"3.24.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh93/main.js","uid":"1111-1"}]},{"name":"virtual-id-lPbjfJsL.js","children":[{"uid":"1111-3","name":"virtual-id"}]}],"isRoot":true},"nodeParts":{"1111-1":{"renderedLength":50,"gzipLength":66,"brotliLength":54,"metaUid":"1111-0"},"1111-3":{"renderedLength":26,"gzipLength":46,"brotliLength":30,"metaUid":"1111-2"}},"nodeMetas":{"1111-0":{"id":"/test/gh93/main.js","moduleParts":{"main.js":"1111-1"},"imported":[],"importedBy":[],"isEntry":true},"1111-2":{"id":"virtual-id","moduleParts":{"virtual-id-lPbjfJsL.js":"1111-3"},"imported":[],"importedBy":[],"isEntry":true}},"env":{"rollup":"4.1.4"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;

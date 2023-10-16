@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`GH-69 sourcemap test - "list" 1`] = `
-"dynamic-a5dd5b16.js:
+"dynamic-LaNVtkrK.js:
   /test/gh69/dynamic.js:
     rendered: 6
 main.js:
@@ -5300,7 +5300,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-43","name":"lib.js"},{"uid":"1111-45","name":"main.js"}]}]},{"name":"dynamic-a5dd5b16.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-47"}]}],"isRoot":true},"nodeParts":{"1111-43":{"renderedLength":86,"gzipLength":0,"brotliLength":0,"metaUid":"1111-42"},"1111-45":{"renderedLength":84,"gzipLength":0,"brotliLength":0,"metaUid":"1111-44"},"1111-47":{"renderedLength":6,"gzipLength":0,"brotliLength":0,"metaUid":"1111-46"}},"nodeMetas":{"1111-42":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-43"},"imported":[],"importedBy":[{"uid":"1111-44"},{"uid":"1111-46"}]},"1111-44":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-45"},"imported":[{"uid":"1111-42"},{"uid":"1111-46","dynamic":true}],"importedBy":[],"isEntry":true},"1111-46":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-a5dd5b16.js":"1111-47"},"imported":[{"uid":"1111-42"}],"importedBy":[{"uid":"1111-44"}]}},"env":{"rollup":"3.24.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-43","name":"lib.js"},{"uid":"1111-45","name":"main.js"}]}]},{"name":"dynamic-LaNVtkrK.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-47"}]}],"isRoot":true},"nodeParts":{"1111-43":{"renderedLength":86,"gzipLength":0,"brotliLength":0,"metaUid":"1111-42"},"1111-45":{"renderedLength":84,"gzipLength":0,"brotliLength":0,"metaUid":"1111-44"},"1111-47":{"renderedLength":6,"gzipLength":0,"brotliLength":0,"metaUid":"1111-46"}},"nodeMetas":{"1111-42":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-43"},"imported":[],"importedBy":[{"uid":"1111-44"},{"uid":"1111-46"}]},"1111-44":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-45"},"imported":[{"uid":"1111-42"},{"uid":"1111-46","dynamic":true}],"importedBy":[],"isEntry":true},"1111-46":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-LaNVtkrK.js":"1111-47"},"imported":[{"uid":"1111-42"}],"importedBy":[{"uid":"1111-44"}]}},"env":{"rollup":"4.1.4"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -5346,7 +5346,7 @@ exports[`GH-69 sourcemap test - "raw-data" 1`] = `
         ]
       },
       {
-        "name": "dynamic-a5dd5b16.js",
+        "name": "dynamic-LaNVtkrK.js",
         "children": [
           {
             "name": "test/gh69/dynamic.js",
@@ -5413,7 +5413,7 @@ exports[`GH-69 sourcemap test - "raw-data" 1`] = `
     "1111-52": {
       "id": "/test/gh69/dynamic.js",
       "moduleParts": {
-        "dynamic-a5dd5b16.js": "1111-53"
+        "dynamic-LaNVtkrK.js": "1111-53"
       },
       "imported": [
         {
@@ -5428,7 +5428,7 @@ exports[`GH-69 sourcemap test - "raw-data" 1`] = `
     }
   },
   "env": {
-    "rollup": "3.24.1"
+    "rollup": "4.1.4"
   },
   "options": {
     "gzip": false,
@@ -10310,7 +10310,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-37","name":"lib.js"},{"uid":"1111-39","name":"main.js"}]}]},{"name":"dynamic-a5dd5b16.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-41"}]}],"isRoot":true},"nodeParts":{"1111-37":{"renderedLength":86,"gzipLength":0,"brotliLength":0,"metaUid":"1111-36"},"1111-39":{"renderedLength":84,"gzipLength":0,"brotliLength":0,"metaUid":"1111-38"},"1111-41":{"renderedLength":6,"gzipLength":0,"brotliLength":0,"metaUid":"1111-40"}},"nodeMetas":{"1111-36":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-37"},"imported":[],"importedBy":[{"uid":"1111-38"},{"uid":"1111-40"}]},"1111-38":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-39"},"imported":[{"uid":"1111-36"},{"uid":"1111-40","dynamic":true}],"importedBy":[],"isEntry":true},"1111-40":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-a5dd5b16.js":"1111-41"},"imported":[{"uid":"1111-36"}],"importedBy":[{"uid":"1111-38"}]}},"env":{"rollup":"3.24.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-37","name":"lib.js"},{"uid":"1111-39","name":"main.js"}]}]},{"name":"dynamic-LaNVtkrK.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-41"}]}],"isRoot":true},"nodeParts":{"1111-37":{"renderedLength":86,"gzipLength":0,"brotliLength":0,"metaUid":"1111-36"},"1111-39":{"renderedLength":84,"gzipLength":0,"brotliLength":0,"metaUid":"1111-38"},"1111-41":{"renderedLength":6,"gzipLength":0,"brotliLength":0,"metaUid":"1111-40"}},"nodeMetas":{"1111-36":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-37"},"imported":[],"importedBy":[{"uid":"1111-38"},{"uid":"1111-40"}]},"1111-38":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-39"},"imported":[{"uid":"1111-36"},{"uid":"1111-40","dynamic":true}],"importedBy":[],"isEntry":true},"1111-40":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-LaNVtkrK.js":"1111-41"},"imported":[{"uid":"1111-36"}],"importedBy":[{"uid":"1111-38"}]}},"env":{"rollup":"4.1.4"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -15152,7 +15152,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-31","name":"lib.js"},{"uid":"1111-33","name":"main.js"}]}]},{"name":"dynamic-a5dd5b16.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-35"}]}],"isRoot":true},"nodeParts":{"1111-31":{"renderedLength":86,"gzipLength":0,"brotliLength":0,"metaUid":"1111-30"},"1111-33":{"renderedLength":84,"gzipLength":0,"brotliLength":0,"metaUid":"1111-32"},"1111-35":{"renderedLength":6,"gzipLength":0,"brotliLength":0,"metaUid":"1111-34"}},"nodeMetas":{"1111-30":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-31"},"imported":[],"importedBy":[{"uid":"1111-32"},{"uid":"1111-34"}]},"1111-32":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-33"},"imported":[{"uid":"1111-30"},{"uid":"1111-34","dynamic":true}],"importedBy":[],"isEntry":true},"1111-34":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-a5dd5b16.js":"1111-35"},"imported":[{"uid":"1111-30"}],"importedBy":[{"uid":"1111-32"}]}},"env":{"rollup":"3.24.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-31","name":"lib.js"},{"uid":"1111-33","name":"main.js"}]}]},{"name":"dynamic-LaNVtkrK.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-35"}]}],"isRoot":true},"nodeParts":{"1111-31":{"renderedLength":86,"gzipLength":0,"brotliLength":0,"metaUid":"1111-30"},"1111-33":{"renderedLength":84,"gzipLength":0,"brotliLength":0,"metaUid":"1111-32"},"1111-35":{"renderedLength":6,"gzipLength":0,"brotliLength":0,"metaUid":"1111-34"}},"nodeMetas":{"1111-30":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-31"},"imported":[],"importedBy":[{"uid":"1111-32"},{"uid":"1111-34"}]},"1111-32":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-33"},"imported":[{"uid":"1111-30"},{"uid":"1111-34","dynamic":true}],"importedBy":[],"isEntry":true},"1111-34":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-LaNVtkrK.js":"1111-35"},"imported":[{"uid":"1111-30"}],"importedBy":[{"uid":"1111-32"}]}},"env":{"rollup":"4.1.4"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -15174,7 +15174,7 @@ var drawChart = (function (exports) {
 `;
 
 exports[`GH-69 test - "list" 1`] = `
-"dynamic-a5dd5b16.js:
+"dynamic-LaNVtkrK.js:
   /test/gh69/dynamic.js:
     rendered: 6
     gzip: 26
@@ -20479,7 +20479,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-13","name":"lib.js"},{"uid":"1111-15","name":"main.js"}]}]},{"name":"dynamic-a5dd5b16.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-17"}]}],"isRoot":true},"nodeParts":{"1111-13":{"renderedLength":86,"gzipLength":73,"brotliLength":67,"metaUid":"1111-12"},"1111-15":{"renderedLength":84,"gzipLength":97,"brotliLength":88,"metaUid":"1111-14"},"1111-17":{"renderedLength":6,"gzipLength":26,"brotliLength":10,"metaUid":"1111-16"}},"nodeMetas":{"1111-12":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-13"},"imported":[],"importedBy":[{"uid":"1111-14"},{"uid":"1111-16"}]},"1111-14":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-15"},"imported":[{"uid":"1111-12"},{"uid":"1111-16","dynamic":true}],"importedBy":[],"isEntry":true},"1111-16":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-a5dd5b16.js":"1111-17"},"imported":[{"uid":"1111-12"}],"importedBy":[{"uid":"1111-14"}]}},"env":{"rollup":"3.24.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-13","name":"lib.js"},{"uid":"1111-15","name":"main.js"}]}]},{"name":"dynamic-LaNVtkrK.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-17"}]}],"isRoot":true},"nodeParts":{"1111-13":{"renderedLength":86,"gzipLength":73,"brotliLength":67,"metaUid":"1111-12"},"1111-15":{"renderedLength":84,"gzipLength":97,"brotliLength":88,"metaUid":"1111-14"},"1111-17":{"renderedLength":6,"gzipLength":26,"brotliLength":10,"metaUid":"1111-16"}},"nodeMetas":{"1111-12":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-13"},"imported":[],"importedBy":[{"uid":"1111-14"},{"uid":"1111-16"}]},"1111-14":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-15"},"imported":[{"uid":"1111-12"},{"uid":"1111-16","dynamic":true}],"importedBy":[],"isEntry":true},"1111-16":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-LaNVtkrK.js":"1111-17"},"imported":[{"uid":"1111-12"}],"importedBy":[{"uid":"1111-14"}]}},"env":{"rollup":"4.1.4"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -20525,7 +20525,7 @@ exports[`GH-69 test - "raw-data" 1`] = `
         ]
       },
       {
-        "name": "dynamic-a5dd5b16.js",
+        "name": "dynamic-LaNVtkrK.js",
         "children": [
           {
             "name": "test/gh69/dynamic.js",
@@ -20592,7 +20592,7 @@ exports[`GH-69 test - "raw-data" 1`] = `
     "1111-22": {
       "id": "/test/gh69/dynamic.js",
       "moduleParts": {
-        "dynamic-a5dd5b16.js": "1111-23"
+        "dynamic-LaNVtkrK.js": "1111-23"
       },
       "imported": [
         {
@@ -20607,7 +20607,7 @@ exports[`GH-69 test - "raw-data" 1`] = `
     }
   },
   "env": {
-    "rollup": "3.24.1"
+    "rollup": "4.1.4"
   },
   "options": {
     "gzip": true,
@@ -25489,7 +25489,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-7","name":"lib.js"},{"uid":"1111-9","name":"main.js"}]}]},{"name":"dynamic-a5dd5b16.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-11"}]}],"isRoot":true},"nodeParts":{"1111-7":{"renderedLength":86,"gzipLength":73,"brotliLength":67,"metaUid":"1111-6"},"1111-9":{"renderedLength":84,"gzipLength":97,"brotliLength":88,"metaUid":"1111-8"},"1111-11":{"renderedLength":6,"gzipLength":26,"brotliLength":10,"metaUid":"1111-10"}},"nodeMetas":{"1111-6":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-7"},"imported":[],"importedBy":[{"uid":"1111-8"},{"uid":"1111-10"}]},"1111-8":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-9"},"imported":[{"uid":"1111-6"},{"uid":"1111-10","dynamic":true}],"importedBy":[],"isEntry":true},"1111-10":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-a5dd5b16.js":"1111-11"},"imported":[{"uid":"1111-6"}],"importedBy":[{"uid":"1111-8"}]}},"env":{"rollup":"3.24.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-7","name":"lib.js"},{"uid":"1111-9","name":"main.js"}]}]},{"name":"dynamic-LaNVtkrK.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-11"}]}],"isRoot":true},"nodeParts":{"1111-7":{"renderedLength":86,"gzipLength":73,"brotliLength":67,"metaUid":"1111-6"},"1111-9":{"renderedLength":84,"gzipLength":97,"brotliLength":88,"metaUid":"1111-8"},"1111-11":{"renderedLength":6,"gzipLength":26,"brotliLength":10,"metaUid":"1111-10"}},"nodeMetas":{"1111-6":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-7"},"imported":[],"importedBy":[{"uid":"1111-8"},{"uid":"1111-10"}]},"1111-8":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-9"},"imported":[{"uid":"1111-6"},{"uid":"1111-10","dynamic":true}],"importedBy":[],"isEntry":true},"1111-10":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-LaNVtkrK.js":"1111-11"},"imported":[{"uid":"1111-6"}],"importedBy":[{"uid":"1111-8"}]}},"env":{"rollup":"4.1.4"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -30331,7 +30331,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-1","name":"lib.js"},{"uid":"1111-3","name":"main.js"}]}]},{"name":"dynamic-a5dd5b16.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-5"}]}],"isRoot":true},"nodeParts":{"1111-1":{"renderedLength":86,"gzipLength":73,"brotliLength":67,"metaUid":"1111-0"},"1111-3":{"renderedLength":84,"gzipLength":97,"brotliLength":88,"metaUid":"1111-2"},"1111-5":{"renderedLength":6,"gzipLength":26,"brotliLength":10,"metaUid":"1111-4"}},"nodeMetas":{"1111-0":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-1"},"imported":[],"importedBy":[{"uid":"1111-2"},{"uid":"1111-4"}]},"1111-2":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-3"},"imported":[{"uid":"1111-0"},{"uid":"1111-4","dynamic":true}],"importedBy":[],"isEntry":true},"1111-4":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-a5dd5b16.js":"1111-5"},"imported":[{"uid":"1111-0"}],"importedBy":[{"uid":"1111-2"}]}},"env":{"rollup":"3.24.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"main.js","children":[{"name":"test/gh69","children":[{"uid":"1111-1","name":"lib.js"},{"uid":"1111-3","name":"main.js"}]}]},{"name":"dynamic-LaNVtkrK.js","children":[{"name":"test/gh69/dynamic.js","uid":"1111-5"}]}],"isRoot":true},"nodeParts":{"1111-1":{"renderedLength":86,"gzipLength":73,"brotliLength":67,"metaUid":"1111-0"},"1111-3":{"renderedLength":84,"gzipLength":97,"brotliLength":88,"metaUid":"1111-2"},"1111-5":{"renderedLength":6,"gzipLength":26,"brotliLength":10,"metaUid":"1111-4"}},"nodeMetas":{"1111-0":{"id":"/test/gh69/lib.js","moduleParts":{"main.js":"1111-1"},"imported":[],"importedBy":[{"uid":"1111-2"},{"uid":"1111-4"}]},"1111-2":{"id":"/test/gh69/main.js","moduleParts":{"main.js":"1111-3"},"imported":[{"uid":"1111-0"},{"uid":"1111-4","dynamic":true}],"importedBy":[],"isEntry":true},"1111-4":{"id":"/test/gh69/dynamic.js","moduleParts":{"dynamic-LaNVtkrK.js":"1111-5"},"imported":[{"uid":"1111-0"}],"importedBy":[{"uid":"1111-2"}]}},"env":{"rollup":"4.1.4"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
