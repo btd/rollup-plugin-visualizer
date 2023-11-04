@@ -33,7 +33,7 @@
     "yargs": "^17.5.1"
   },
   "peerDependencies": {
-    "rollup": "2.x || 3.x"
+    "rollup": "2.x || 3.x || 4.x"
   },
   "peerDependenciesMeta": {
     "rollup": {
