@@ -82,7 +82,7 @@ exports[`Sourcemap test 3`] = `
     }
   },
   "env": {
-    "rollup": "3.24.1"
+    "rollup": "4.5.2"
   },
   "options": {
     "gzip": false,

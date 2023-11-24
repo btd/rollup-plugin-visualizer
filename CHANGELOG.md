@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.9.3
+
+* Update dependencies
+* Add Rollup 4.x to the list of supported
+
 ## 5.9.1
 
 * Update dependencies
