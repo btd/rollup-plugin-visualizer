@@ -11,7 +11,7 @@ export interface SideBarProps {
   onIncludeChange: (value: string) => void;
 }
 
-const PLACEHOLDER = "bundle-*:**/file/**,**/file**, bundle-*:";
+const PLACEHOLDER = "*/**/file.js";
 
 export const SideBar: FunctionalComponent<SideBarProps> = ({
   availableSizeProperties,
