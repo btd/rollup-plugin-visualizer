@@ -119,6 +119,7 @@ const TEMPLATE_TYPE_RENDERED: Record<
   treemap: buildHtml("treemap"),
   "raw-data": async ({ data }) => outputRawData(data),
   list: async ({ data }) => outputPlainTextList(data),
+  flamegraph: buildHtml("flamegraph"),
 };
 
 export const renderTemplate = (templateType: TemplateType, options: RenderTemplateOptions) => {

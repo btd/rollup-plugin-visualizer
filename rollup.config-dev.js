@@ -7,7 +7,7 @@ const postcssUrl = require("postcss-url");
 
 const { visualizer } = require(".");
 
-const HTML_TEMPLATE = ["treemap", "sunburst", "network"];
+const HTML_TEMPLATE = ["treemap", "sunburst", "network", "flamegraph"];
 const PLAIN_TEMPLATE = ["raw-data", "list"];
 const ALL_TEMPLATE = [...HTML_TEMPLATE, ...PLAIN_TEMPLATE];
 
