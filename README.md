@@ -142,6 +142,18 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 **Note about `include` and `exclude`** - If options.include is omitted or has zero length, filter will return true by default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns. This entries will not be included in stats at all.
 
+#### Include and Exclude
+
+Include and exclude filters uses glob matchers with picomatch. In UI you can do such combinations (both exclude and include):
+* Filter bundle and file in one string
+  * `translation-*.js:*/**/index.js` - this selects all bundles that matches `translation-*.js` and all the files by all paths that name is `index.js`. `:` is separator and required only when bundle search used.
+  * Format for this kind of filter is `BUNDLE_GLOB:FILE_GLOB`
+* Filter bundle in one string
+  * This is special case of bundle+file filter, you need to omit `FILE_GLOB` part (empty string) 
+* Filter file in one string
+  * **This is DEFAULT search option**
+  * `*/**/index.js` - select all files that name is index.js   
+
 ## CLI
 
 This plugin provides cli util `rollup-plugin-visualizer`. Add `--help` to check actual options. It can be used like:
