@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.10.0
+
+* Update dependencies
+* Add experimental `flamegraph` template
+* Make super simple placeholder to test if people stop complaining about input/output inputs
+
 ## 5.9.3
 
 * Update dependencies
