@@ -35,31 +35,34 @@ const addToPath = (
   }
 };
 
-// TODO try to make it without recursion, but still typesafe
 const mergeSingleChildTrees = (tree: ModuleTree): ModuleTree | ModuleTreeLeaf => {
-  if (tree.children.length === 1) {
-    const child = tree.children[0];
-    const name = `${tree.name}/${child.name}`;
-    if (isModuleTree(child)) {
-      tree.name = name;
-      tree.children = child.children;
-      return mergeSingleChildTrees(tree);
-    } else {
-      return {
-        name,
-        uid: child.uid,
-      };
-    }
-  } else {
-    tree.children = tree.children.map((node) => {
-      if (isModuleTree(node)) {
-        return mergeSingleChildTrees(node);
+  const stack: (ModuleTree | ModuleTreeLeaf)[] = [tree];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+
+    if (current && isModuleTree(current) && current.children.length === 1) {
+      const child = current.children[0];
+      const name = `${current.name}/${child.name}`;
+
+      if (isModuleTree(child)) {
+        current.name = name;
+        current.children = child.children;
+        stack.push(current);
       } else {
-        return node;
+        const leaf: ModuleTreeLeaf = { name, uid: child.uid };
+        return leaf;
       }
-    });
-    return tree;
+    } else if (current && isModuleTree(current) ) {
+      current.children.forEach(child => {
+        if (isModuleTree(child)) {
+          stack.push(child);
+        }
+      });
+    }
   }
+
+  return tree;
 };
 
 export const buildTree = (
