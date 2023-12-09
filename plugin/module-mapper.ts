@@ -23,8 +23,8 @@ export class ModuleMapper {
   constructor(private projectRoot: string | RegExp) {}
 
   trimProjectRootId(moduleId: string): string {
-    if(typeof this.projectRoot === 'string' && moduleId.startsWith(this.projectRoot)) {
-      return moduleId.slice(this.projectRoot.length)
+    if (typeof this.projectRoot === "string" && moduleId.startsWith(this.projectRoot)) {
+      return moduleId.slice(this.projectRoot.length);
     }
     return moduleId.replace(this.projectRoot, "");
   }
@@ -69,8 +69,8 @@ export class ModuleMapper {
     if (uid in this.nodeParts) {
       throw new Error(
         `Override module: bundle id ${bundleId}, module id ${moduleId}, value ${JSON.stringify(
-          value
-        )}, existing value: ${JSON.stringify(this.nodeParts[uid])}`
+          value,
+        )}, existing value: ${JSON.stringify(this.nodeParts[uid])}`,
       );
     }
     this.nodeParts[uid] = { ...value, metaUid: this.getModuleUid(moduleId) };

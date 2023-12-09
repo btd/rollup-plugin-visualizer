@@ -4559,7 +4559,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-73"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-75"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-77"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-79"}]}],"isRoot":true},"nodeParts":{"1111-73":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-72"},"1111-75":{"renderedLength":18,"gzipLength":0,"brotliLength":0,"metaUid":"1111-74"},"1111-77":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-76"},"1111-79":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-78"}},"nodeMetas":{"1111-72":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-73"},"imported":[{"uid":"1111-76"},{"uid":"1111-78"}],"importedBy":[{"uid":"1111-74"}],"isEntry":true},"1111-74":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-75"},"imported":[{"uid":"1111-72"}],"importedBy":[],"isEntry":true},"1111-76":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-77"},"imported":[],"importedBy":[{"uid":"1111-72"}],"isEntry":true},"1111-78":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-79"},"imported":[],"importedBy":[{"uid":"1111-72"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-73"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-75"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-77"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-79"}]}],"isRoot":true},"nodeParts":{"1111-73":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-72"},"1111-75":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-74"},"1111-77":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-76"},"1111-79":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-78"}},"nodeMetas":{"1111-72":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-73"},"imported":[{"uid":"1111-76"},{"uid":"1111-78"}],"importedBy":[{"uid":"1111-74"}],"isEntry":true},"1111-74":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-75"},"imported":[{"uid":"1111-72"}],"importedBy":[],"isEntry":true},"1111-76":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-77"},"imported":[],"importedBy":[{"uid":"1111-72"}],"isEntry":true},"1111-78":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-79"},"imported":[],"importedBy":[{"uid":"1111-72"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -4583,16 +4583,16 @@ var drawChart = (function (exports) {
 exports[`GH-59 sourcemap test - "list" 1`] = `
 "components/A.js:
   /test/gh59/src/components/A.js:
-    rendered: 12
+    rendered: 13
 components/B.js:
   /test/gh59/src/components/B.js:
-    rendered: 12
+    rendered: 13
 components/index.js:
   /test/gh59/src/components/index.js:
     rendered: 112
 index.js:
   /test/gh59/src/index.js:
-    rendered: 18
+    rendered: 19
 "
 `;
 
@@ -9884,7 +9884,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-65"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-67"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-69"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-71"}]}],"isRoot":true},"nodeParts":{"1111-65":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-64"},"1111-67":{"renderedLength":18,"gzipLength":0,"brotliLength":0,"metaUid":"1111-66"},"1111-69":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-68"},"1111-71":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-70"}},"nodeMetas":{"1111-64":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-65"},"imported":[{"uid":"1111-68"},{"uid":"1111-70"}],"importedBy":[{"uid":"1111-66"}],"isEntry":true},"1111-66":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-67"},"imported":[{"uid":"1111-64"}],"importedBy":[],"isEntry":true},"1111-68":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-69"},"imported":[],"importedBy":[{"uid":"1111-64"}],"isEntry":true},"1111-70":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-71"},"imported":[],"importedBy":[{"uid":"1111-64"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-65"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-67"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-69"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-71"}]}],"isRoot":true},"nodeParts":{"1111-65":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-64"},"1111-67":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-66"},"1111-69":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-68"},"1111-71":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-70"}},"nodeMetas":{"1111-64":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-65"},"imported":[{"uid":"1111-68"},{"uid":"1111-70"}],"importedBy":[{"uid":"1111-66"}],"isEntry":true},"1111-66":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-67"},"imported":[{"uid":"1111-64"}],"importedBy":[],"isEntry":true},"1111-68":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-69"},"imported":[],"importedBy":[{"uid":"1111-64"}],"isEntry":true},"1111-70":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-71"},"imported":[],"importedBy":[{"uid":"1111-64"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -9954,19 +9954,19 @@ exports[`GH-59 sourcemap test - "raw-data" 1`] = `
       "metaUid": "1111-80"
     },
     "1111-83": {
-      "renderedLength": 18,
+      "renderedLength": 19,
       "gzipLength": 0,
       "brotliLength": 0,
       "metaUid": "1111-82"
     },
     "1111-85": {
-      "renderedLength": 12,
+      "renderedLength": 13,
       "gzipLength": 0,
       "brotliLength": 0,
       "metaUid": "1111-84"
     },
     "1111-87": {
-      "renderedLength": 12,
+      "renderedLength": 13,
       "gzipLength": 0,
       "brotliLength": 0,
       "metaUid": "1111-86"
@@ -14916,7 +14916,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-57"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-59"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-61"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-63"}]}],"isRoot":true},"nodeParts":{"1111-57":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-56"},"1111-59":{"renderedLength":18,"gzipLength":0,"brotliLength":0,"metaUid":"1111-58"},"1111-61":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-60"},"1111-63":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-62"}},"nodeMetas":{"1111-56":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-57"},"imported":[{"uid":"1111-60"},{"uid":"1111-62"}],"importedBy":[{"uid":"1111-58"}],"isEntry":true},"1111-58":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-59"},"imported":[{"uid":"1111-56"}],"importedBy":[],"isEntry":true},"1111-60":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-61"},"imported":[],"importedBy":[{"uid":"1111-56"}],"isEntry":true},"1111-62":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-63"},"imported":[],"importedBy":[{"uid":"1111-56"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-57"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-59"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-61"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-63"}]}],"isRoot":true},"nodeParts":{"1111-57":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-56"},"1111-59":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-58"},"1111-61":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-60"},"1111-63":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-62"}},"nodeMetas":{"1111-56":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-57"},"imported":[{"uid":"1111-60"},{"uid":"1111-62"}],"importedBy":[{"uid":"1111-58"}],"isEntry":true},"1111-58":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-59"},"imported":[{"uid":"1111-56"}],"importedBy":[],"isEntry":true},"1111-60":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-61"},"imported":[],"importedBy":[{"uid":"1111-56"}],"isEntry":true},"1111-62":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-63"},"imported":[],"importedBy":[{"uid":"1111-56"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -19758,7 +19758,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-49"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-51"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-53"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-55"}]}],"isRoot":true},"nodeParts":{"1111-49":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-48"},"1111-51":{"renderedLength":18,"gzipLength":0,"brotliLength":0,"metaUid":"1111-50"},"1111-53":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-52"},"1111-55":{"renderedLength":12,"gzipLength":0,"brotliLength":0,"metaUid":"1111-54"}},"nodeMetas":{"1111-48":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-49"},"imported":[{"uid":"1111-52"},{"uid":"1111-54"}],"importedBy":[{"uid":"1111-50"}],"isEntry":true},"1111-50":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-51"},"imported":[{"uid":"1111-48"}],"importedBy":[],"isEntry":true},"1111-52":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-53"},"imported":[],"importedBy":[{"uid":"1111-48"}],"isEntry":true},"1111-54":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-55"},"imported":[],"importedBy":[{"uid":"1111-48"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"1111-49"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"1111-51"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"1111-53"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"1111-55"}]}],"isRoot":true},"nodeParts":{"1111-49":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"1111-48"},"1111-51":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"1111-50"},"1111-53":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-52"},"1111-55":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"1111-54"}},"nodeMetas":{"1111-48":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"1111-49"},"imported":[{"uid":"1111-52"},{"uid":"1111-54"}],"importedBy":[{"uid":"1111-50"}],"isEntry":true},"1111-50":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"1111-51"},"imported":[{"uid":"1111-48"}],"importedBy":[],"isEntry":true},"1111-52":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"1111-53"},"imported":[],"importedBy":[{"uid":"1111-48"}],"isEntry":true},"1111-54":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"1111-55"},"imported":[],"importedBy":[{"uid":"1111-48"}],"isEntry":true}},"env":{"rollup":"4.6.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;

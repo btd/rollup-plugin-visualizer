@@ -10,7 +10,7 @@ import { visualizer } from "../../dist/plugin";
 
 describe("Sourcemap", () => {
     const input = {
-      index: "test/sourcemap/input.js",
+      index: "test/sourcemap-encoding/input.js",
     };
   
     it("test", async () => {

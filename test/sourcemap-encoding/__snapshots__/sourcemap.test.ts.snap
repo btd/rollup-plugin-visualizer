@@ -23,7 +23,7 @@ exports[`Sourcemap test 3`] = `
         "name": "index.js",
         "children": [
           {
-            "name": "test/sourcemap",
+            "name": "test/sourcemap-encoding",
             "children": [
               {
                 "uid": "1111-1",
@@ -42,13 +42,13 @@ exports[`Sourcemap test 3`] = `
   },
   "nodeParts": {
     "1111-1": {
-      "renderedLength": 34,
+      "renderedLength": 37,
       "gzipLength": 0,
       "brotliLength": 0,
       "metaUid": "1111-0"
     },
     "1111-3": {
-      "renderedLength": 109,
+      "renderedLength": 112,
       "gzipLength": 0,
       "brotliLength": 0,
       "metaUid": "1111-2"
@@ -56,7 +56,7 @@ exports[`Sourcemap test 3`] = `
   },
   "nodeMetas": {
     "1111-0": {
-      "id": "/test/sourcemap/input2.js",
+      "id": "/test/sourcemap-encoding/input2.js",
       "moduleParts": {
         "index.js": "1111-1"
       },
@@ -68,7 +68,7 @@ exports[`Sourcemap test 3`] = `
       ]
     },
     "1111-2": {
-      "id": "/test/sourcemap/input.js",
+      "id": "/test/sourcemap-encoding/input.js",
       "moduleParts": {
         "index.js": "1111-3"
       },

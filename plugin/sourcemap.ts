@@ -6,13 +6,14 @@ import { SourceMapConsumer } from "source-map";
 interface SourceMapModuleRenderInfo {
   id: string;
   renderedLength: number;
+  code: string[];
 }
 
 const getBytesPerFileUsingSourceMap = (
   bundleId: string,
   code: string,
   map: SourceMapConsumer,
-  dir: string
+  dir: string,
 ) => {
   const modules: Record<string, SourceMapModuleRenderInfo> = {};
 
@@ -27,8 +28,11 @@ const getBytesPerFileUsingSourceMap = (
     if (source != null) {
       const id = path.resolve(path.dirname(path.join(dir, bundleId)), source);
 
-      modules[id] = modules[id] || { id, renderedLength: 0 };
-      modules[id].renderedLength += Buffer.byteLength(codeChars[i]);
+      const char = codeChars[i];
+
+      modules[id] = modules[id] || { id, renderedLength: 0, code: [] };
+      modules[id].renderedLength += Buffer.byteLength(char);
+      modules[id].code.push(char);
     }
 
     if (code[i] === "\n") {
@@ -43,7 +47,7 @@ const getBytesPerFileUsingSourceMap = (
 export const getSourcemapModules = (
   id: string,
   outputChunk: OutputChunk,
-  dir: string
+  dir: string,
 ): Promise<Record<string, SourceMapModuleRenderInfo>> => {
   if (outputChunk.map == null) {
     return Promise.resolve({});
