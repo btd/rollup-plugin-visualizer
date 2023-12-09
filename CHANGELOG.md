@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 5.11.0
 
 * Correct lenghts in case of sourcemap it will strictly use sourcemap data always
 * Add css cursor pointer
