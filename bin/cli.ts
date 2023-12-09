@@ -3,6 +3,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 
+import opn from "open";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -34,6 +35,12 @@ const argv = yargs(hideBin(process.argv))
     type: "boolean",
     default: false,
   })
+  .option("open", {
+    describe: "Open generated tempate in default user agent",
+    type: "boolean",
+    default: false,
+  })
+  .strict()
   .help()
   .parseSync();
 
@@ -44,9 +51,10 @@ interface CliArgs {
   title: string;
   template: TemplateType;
   sourcemap: boolean;
+  open: boolean;
 }
 
-const runForPluginJson = async ({ title, template, filename }: CliArgs, files: string[]) => {
+const runForPluginJson = async ({ title, template, filename, open }: CliArgs, files: string[]) => {
   if (files.length === 0) {
     throw new Error("Empty file list");
   }
@@ -57,7 +65,7 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
       const data = JSON.parse(textContent) as VisualizerData;
 
       return { file, data };
-    })
+    }),
   );
 
   const tree: ModuleTree = {
@@ -70,7 +78,7 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
   for (const { file, data } of fileContents) {
     if (data.version !== version) {
       warn(
-        `Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`
+        `Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`,
       );
       continue;
     }
@@ -106,6 +114,10 @@ const runForPluginJson = async ({ title, template, filename }: CliArgs, files: s
     // ignore
   }
   await fs.writeFile(filename, fileContent);
+
+  if (open) {
+    await opn(filename);
+  }
 };
 
 runForPluginJson(argv, listOfFiles as string[]).catch((err: Error) => {
