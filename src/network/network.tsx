@@ -98,6 +98,7 @@ export const Network: FunctionalComponent<NetworkProps> = ({
           {nodes.map((node) => {
             return (
               <circle
+                className="node"
                 key={node.uid}
                 r={node.radius}
                 fill={getColor(node)}

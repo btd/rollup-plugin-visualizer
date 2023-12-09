@@ -25,6 +25,7 @@ export const Node: FunctionalComponent<NodeProps> = ({
 }) => {
   return (
     <path
+      className="node"
       d={path}
       fill-rule="evenodd"
       stroke="#fff"

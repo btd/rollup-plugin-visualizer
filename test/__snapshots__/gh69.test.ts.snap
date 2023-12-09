@@ -139,6 +139,10 @@ main {
 .module-filter + .module-filter {
   margin-left: 0.5rem;
 }
+
+.node {
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
@@ -4730,6 +4734,10 @@ main {
 }
 .module-filter + .module-filter {
   margin-left: 0.5rem;
+}
+
+.node {
+  cursor: pointer;
 }
   </style>
 </head>
@@ -9656,7 +9664,7 @@ var drawChart = (function (exports) {
         return (u$1("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: \`\${-width / 2} \${-height / 2} \${width} \${height}\`, onMouseDown: handleMouseDown, onMouseMove: handleMouseMove, onMouseUp: handleMouseUp, onClick: onCanvasClick, children: u$1("g", { transform: transform.toString(), children: [u$1("g", { stroke: "#fff", "stroke-opacity": "0.9", children: links.map((link) => {
                             return (u$1("line", { "stroke-width": "1", x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid} - \${link.target.uid}\`));
                         }) }), u$1("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => {
-                            return (u$1("circle", { r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, onMouseOver: (evt) => {
+                            return (u$1("circle", { className: "node", r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, onMouseOver: (evt) => {
                                     noEvent(evt);
                                     onNodeHover(node);
                                 }, onClick: (evt) => {
@@ -10156,6 +10164,10 @@ main {
 }
 .module-filter + .module-filter {
   margin-left: 0.5rem;
+}
+
+.node {
+  cursor: pointer;
 }
 
 .details {
@@ -14730,7 +14742,7 @@ var drawChart = (function (exports) {
   };
 
   const Node = ({ node, onMouseOver, onClick, path, highlighted, selected, }) => {
-      return (u$1("path", { d: path, "fill-rule": "evenodd", stroke: "#fff", fill: colorDefault(node), onMouseOver: (evt) => {
+      return (u$1("path", { className: "node", d: path, "fill-rule": "evenodd", stroke: "#fff", fill: colorDefault(node), onMouseOver: (evt) => {
               evt.stopPropagation();
               onMouseOver(node);
           }, onClick: (evt) => {
@@ -15049,6 +15061,10 @@ main {
 }
 .module-filter + .module-filter {
   margin-left: 0.5rem;
+}
+
+.node {
+  cursor: pointer;
 }
   </style>
 </head>
@@ -19892,6 +19908,10 @@ main {
 .module-filter + .module-filter {
   margin-left: 0.5rem;
 }
+
+.node {
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
@@ -24489,6 +24509,10 @@ main {
 }
 .module-filter + .module-filter {
   margin-left: 0.5rem;
+}
+
+.node {
+  cursor: pointer;
 }
   </style>
 </head>
@@ -29415,7 +29439,7 @@ var drawChart = (function (exports) {
         return (u$1("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: \`\${-width / 2} \${-height / 2} \${width} \${height}\`, onMouseDown: handleMouseDown, onMouseMove: handleMouseMove, onMouseUp: handleMouseUp, onClick: onCanvasClick, children: u$1("g", { transform: transform.toString(), children: [u$1("g", { stroke: "#fff", "stroke-opacity": "0.9", children: links.map((link) => {
                             return (u$1("line", { "stroke-width": "1", x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid} - \${link.target.uid}\`));
                         }) }), u$1("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => {
-                            return (u$1("circle", { r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, onMouseOver: (evt) => {
+                            return (u$1("circle", { className: "node", r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, onMouseOver: (evt) => {
                                     noEvent(evt);
                                     onNodeHover(node);
                                 }, onClick: (evt) => {
@@ -29915,6 +29939,10 @@ main {
 }
 .module-filter + .module-filter {
   margin-left: 0.5rem;
+}
+
+.node {
+  cursor: pointer;
 }
 
 .details {
@@ -34489,7 +34517,7 @@ var drawChart = (function (exports) {
   };
 
   const Node = ({ node, onMouseOver, onClick, path, highlighted, selected, }) => {
-      return (u$1("path", { d: path, "fill-rule": "evenodd", stroke: "#fff", fill: colorDefault(node), onMouseOver: (evt) => {
+      return (u$1("path", { className: "node", d: path, "fill-rule": "evenodd", stroke: "#fff", fill: colorDefault(node), onMouseOver: (evt) => {
               evt.stopPropagation();
               onMouseOver(node);
           }, onClick: (evt) => {
@@ -34808,6 +34836,10 @@ main {
 }
 .module-filter + .module-filter {
   margin-left: 0.5rem;
+}
+
+.node {
+  cursor: pointer;
 }
   </style>
 </head>
