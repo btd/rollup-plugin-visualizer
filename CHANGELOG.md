@@ -1,5 +1,11 @@
 # Changelog
 
+## Next
+
+* Correct lenghts in case of sourcemap it will strictly use sourcemap data always
+* Add css cursor pointer
+* Add --open to CLI
+
 ## 5.10.0
 
 * Update dependencies
