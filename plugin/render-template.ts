@@ -55,7 +55,7 @@ ${script}
 `;
 
 export type RenderTemplateOptions = {
-  data: VisualizerData;
+  data: string;
   title: string;
 };
 
@@ -67,12 +67,16 @@ const buildHtml =
       fs.readFile(path.join(__dirname, "..", "lib", `${template}.css`), "utf8"),
     ]);
 
-    return buildHtmlTemplate(title, script, JSON.stringify(data), style);
+    return buildHtmlTemplate(title, script, data, style);
   };
 
-const outputRawData = (data: VisualizerData) => JSON.stringify(data, null, 2);
+const outputRawData = (strData: string) => {
+  const data = JSON.parse(strData) as VisualizerData;
+  return JSON.stringify(data, null, 2);
+};
 
-const outputPlainTextList = (data: VisualizerData) => {
+const outputPlainTextList = (strData: string) => {
+  const data = JSON.parse(strData) as VisualizerData;
   const bundles: Record<BundleId, [string, ModuleLengths][]> = {};
 
   for (const meta of Object.values(data.nodeMetas)) {

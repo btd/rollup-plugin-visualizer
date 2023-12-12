@@ -1,12 +1,15 @@
-import { ModuleImport, ModuleMeta, ModulePart, ModuleLengths, ModuleUID } from "../shared/types";
-import { getUid } from "./uid";
+import {
+  ModuleImport,
+  ModuleMeta,
+  ModulePart,
+  ModuleLengths,
+  ModuleUID,
+  VisualizerData,
+} from "../shared/types";
+import * as crypto from "crypto";
 
-const nanoid = getUid("1234567890abcdef", 4);
-
-const UNIQUE_PREFIX = nanoid();
-let COUNTER = 0;
-
-const uniqueId = (): ModuleUID => `${UNIQUE_PREFIX}-${COUNTER++}`;
+const HASH_PLACEHOLDER = "!{ROLLUP_VISUALIZER_HASH_PLACEHOLDER}";
+const HASH_PLACEHOLDER_REGEXP = new RegExp(`"${HASH_PLACEHOLDER}-(\\d+)"`, "g");
 
 type ModuleIdStorage = {
   uid: ModuleUID;
@@ -16,9 +19,23 @@ type ModuleIdStorage = {
   };
 };
 
+export const getDataHash = (json: string) => {
+  const hash = crypto.createHash("sha1").update(json).digest("hex");
+  const hashSub = hash.substring(0, 8);
+  return hashSub;
+};
+
+export const replaceHashPlaceholders = (data: VisualizerData) => {
+  const json = JSON.stringify(data);
+  const hash = getDataHash(json);
+  const jsonWithHash = json.replace(HASH_PLACEHOLDER_REGEXP, (_, num) => `"${hash}-${num}"`);
+  return jsonWithHash;
+};
+
 export class ModuleMapper {
   private nodeParts: Record<ModuleUID, ModulePart> = {};
   private nodeMetas: Record<string, ModuleIdStorage> = {};
+  private counter: number = 0;
 
   constructor(private projectRoot: string | RegExp) {}
 
@@ -29,10 +46,14 @@ export class ModuleMapper {
     return moduleId.replace(this.projectRoot, "");
   }
 
+  uniqueId(): ModuleUID {
+    return `${HASH_PLACEHOLDER}-${this.counter++}`;
+  }
+
   getModuleUid(moduleId: string): ModuleUID {
     if (!(moduleId in this.nodeMetas)) {
       this.nodeMetas[moduleId] = {
-        uid: uniqueId(),
+        uid: this.uniqueId(),
         meta: {
           id: this.trimProjectRootId(moduleId),
           moduleParts: {},
@@ -48,7 +69,7 @@ export class ModuleMapper {
   getBundleModuleUid(bundleId: string, moduleId: string): ModuleUID {
     if (!(moduleId in this.nodeMetas)) {
       this.nodeMetas[moduleId] = {
-        uid: uniqueId(),
+        uid: this.uniqueId(),
         meta: {
           id: this.trimProjectRootId(moduleId),
           moduleParts: {},
@@ -58,7 +79,7 @@ export class ModuleMapper {
       };
     }
     if (!(bundleId in this.nodeMetas[moduleId].meta.moduleParts)) {
-      this.nodeMetas[moduleId].meta.moduleParts[bundleId] = uniqueId();
+      this.nodeMetas[moduleId].meta.moduleParts[bundleId] = this.uniqueId();
     }
 
     return this.nodeMetas[moduleId].meta.moduleParts[bundleId];

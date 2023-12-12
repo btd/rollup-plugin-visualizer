@@ -10,7 +10,7 @@ import { version } from "./version";
 import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
 
 import { TemplateType } from "./template-types";
-import { ModuleMapper } from "./module-mapper";
+import { ModuleMapper, replaceHashPlaceholders } from "./module-mapper";
 import { addLinks, buildTree, mergeTrees } from "./data";
 import { getSourcemapModules } from "./sourcemap";
 import { renderTemplate } from "./render-template";
@@ -281,9 +281,11 @@ export const visualizer = (
         },
       };
 
+      const stringData = replaceHashPlaceholders(data);
+
       const fileContent: string = await renderTemplate(template, {
         title,
-        data,
+        data: stringData,
       });
 
       if (opts.emitFile) {
