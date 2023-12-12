@@ -40,7 +40,6 @@ const argv = yargs(hideBin(process.argv))
     type: "boolean",
     default: false,
   })
-  .strict()
   .help()
   .parseSync();
 
@@ -104,7 +103,7 @@ const runForPluginJson = async ({ title, template, filename, open }: CliArgs, fi
 
   const fileContent = await renderTemplate(template, {
     title,
-    data,
+    data: JSON.stringify(data),
   });
 
   await fs.mkdir(path.dirname(filename), { recursive: true });
