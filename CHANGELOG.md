@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.12.0
+
+* Make unique id in generated data to be hash of data
+* Remove strict from CLI
+
 ## 5.11.0
 
 * Correct lenghts in case of sourcemap it will strictly use sourcemap data always
