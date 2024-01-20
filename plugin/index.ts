@@ -16,6 +16,8 @@ import { getSourcemapModules } from "./sourcemap";
 import { renderTemplate } from "./render-template";
 import { createFilter, Filter } from "../shared/create-filter";
 
+export * from "./merge-outputs";
+
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
 
