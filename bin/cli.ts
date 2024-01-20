@@ -1,17 +1,11 @@
 #!/usr/bin/env node
 
-import { promises as fs } from "fs";
-import path from "path";
-
-import opn from "open";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-import { renderTemplate } from "../plugin/render-template";
 import TEMPLATE, { TemplateType } from "../plugin/template-types";
 import { warn } from "../plugin/warn";
-import { version } from "../plugin/version";
-import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../shared/types";
+import { mergeJsonOutputs } from "../plugin";
 
 const argv = yargs(hideBin(process.argv))
   .option("filename", {
@@ -31,9 +25,10 @@ const argv = yargs(hideBin(process.argv))
     default: "treemap" as TemplateType,
   })
   .option("sourcemap", {
-    describe: "Provided files is sourcemaps",
+    describe: "Provided files are sourcemaps",
     type: "boolean",
     default: false,
+    deprecated: true, // unused
   })
   .option("open", {
     describe: "Open generated tempate in default user agent",
@@ -43,83 +38,10 @@ const argv = yargs(hideBin(process.argv))
   .help()
   .parseSync();
 
-const listOfFiles = argv._;
-
-interface CliArgs {
-  filename: string;
-  title: string;
-  template: TemplateType;
-  sourcemap: boolean;
-  open: boolean;
-}
-
-const runForPluginJson = async ({ title, template, filename, open }: CliArgs, files: string[]) => {
-  if (files.length === 0) {
-    throw new Error("Empty file list");
-  }
-
-  const fileContents = await Promise.all(
-    files.map(async (file) => {
-      const textContent = await fs.readFile(file, { encoding: "utf-8" });
-      const data = JSON.parse(textContent) as VisualizerData;
-
-      return { file, data };
-    }),
-  );
-
-  const tree: ModuleTree = {
-    name: "root",
-    children: [],
-  };
-  const nodeParts: Record<ModuleUID, ModulePart> = {};
-  const nodeMetas: Record<ModuleUID, ModuleMeta> = {};
-
-  for (const { file, data } of fileContents) {
-    if (data.version !== version) {
-      warn(
-        `Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`,
-      );
-      continue;
-    }
-
-    if (data.tree.name === "root") {
-      tree.children = tree.children.concat(data.tree.children);
-    } else {
-      tree.children.push(data.tree);
-    }
-
-    Object.assign(nodeParts, data.nodeParts);
-    Object.assign(nodeMetas, data.nodeMetas);
-  }
-
-  const data: VisualizerData = {
-    version,
-    tree,
-    nodeParts,
-    nodeMetas,
-    env: fileContents[0].data.env,
-    options: fileContents[0].data.options,
-  };
-
-  const fileContent = await renderTemplate(template, {
-    title,
-    data: JSON.stringify(data),
-  });
-
-  await fs.mkdir(path.dirname(filename), { recursive: true });
-  try {
-    await fs.unlink(filename);
-  } catch (err) {
-    // ignore
-  }
-  await fs.writeFile(filename, fileContent);
-
-  if (open) {
-    await opn(filename);
-  }
-};
-
-runForPluginJson(argv, listOfFiles as string[]).catch((err: Error) => {
+mergeJsonOutputs({
+  inputs: argv._ as string[],
+  ...argv,
+}).catch((err: Error) => {
   warn(err.message);
   process.exit(1);
 });
