@@ -94,15 +94,15 @@ This circular hierarchical diagram can help you find huge pieces of code (aka th
 
 ### Treemap
 
-This rectangular hierarchical diagram can help you find huge pieces. Just look on biggest reclangle. But also it can help you find modules included several times, they will have the same topology and relative size. If you click on reclangle it will increase in size for further inspection.
+This rectangular hierarchical diagram can help you find huge pieces. Just look on biggest rectangle. But also it can help you find modules included several times, they will have the same topology and relative size. If you click on rectangle it will increase in size for further inspection.
 
 ### Network
 
-This digram should help you answer for the question 'why it is included?'. After force layout stabilize all nodes, you can move it back and forth by dragging with your mouse. Gray circles are treeshakened out files.
+This diagram should help you answer for the question 'why it is included?'. After force layout stabilize all nodes, you can move it back and forth by dragging with your mouse. Gray circles are treeshaken out files.
 
-In real life scenarious, sometimes you will see terribly connected diagrams. There is no 100% working solution for everyone, it is expected you topology will look 'terrible' and not hold on screen. To make it still visually ispectable, first remove all highly connected nodes that you see (typical examples: commonjsHelpers, tslib, react etc, basically if tooltip for the node is not hold on the screen - exclude this node), after layout stabilization you will see, your layout is not that terrible anymore and most of dependencies cluster together. Move layout to find pieces you looked for.
+In real life scenarios, sometimes you will see terribly connected diagrams. There is no 100% working solution for everyone, it is expected you topology will look 'terrible' and not hold on screen. To make it still visually inspectable, first remove all highly connected nodes that you see (typical examples: commonjsHelpers, tslib, react etc, basically if tooltip for the node is not hold on the screen - exclude this node), after layout stabilization you will see, your layout is not that terrible anymore and most of dependencies cluster together. Move layout to find pieces you looked for.
 
-When you click on node it will hightlight nodes that are listed in tooltip (the files that imports current node).
+When you click on node it will highlight nodes that are listed in tooltip (the files that imports current node).
 
 ### Raw-data
 
@@ -128,7 +128,7 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 ### Advanced options (touch only if you really need it):
 
-`emitFile` (boolean, default `false`) - Use rollup's `emitFile` to generate file. Useful if you want to control all output in one place (via rollup output options). This also could be usefull with svelte as it calls vite several times.
+`emitFile` (boolean, default `false`) - Use rollup's `emitFile` to generate file. Useful if you want to control all output in one place (via rollup output options). This also could be useful with svelte as it calls vite several times.
 
 `sourcemap` (boolean, default `false`) - Use sourcemaps to calculate sizes (e.g. after UglifyJs or Terser). **Always add plugin as last option.**
 
@@ -162,7 +162,7 @@ This plugin provides cli util `rollup-plugin-visualizer`. Add `--help` to check 
 rollup-plugin-visualizer [OPTIONS] stat1.json stat2.json ../stat3.json
 ```
 
-This can be usefull in case you have different config files in the same project and you want to display all of them in the same chart.
+This can be useful in case you have different config files in the same project and you want to display all of them in the same chart.
 
 ## Build plugin
 
