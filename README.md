@@ -43,6 +43,18 @@ module.exports = {
 };
 ```
 
+Usage with rolldown (rolldown.config.ts)
+
+```js
+import { defineConfig, type RolldownPlugin } from 'rolldown';
+
+export default defineConfig({
+  plugins: [
+    visualizer() as RolldownPlugin
+  ],
+})
+```
+
 Usage with vite (vite.config.js)
 
 ```js
@@ -54,10 +66,11 @@ module.exports = {
 Usage with vite TypeScript (vite.config.ts)
 
 ```ts
-import { defineConfig, type PluginOption } from 'vite'
+import { defineConfig, type PluginOption } from "vite";
+
 export default defineConfig({
   plugins: [visualizer() as PluginOption],
-})
+});
 ```
 
 Usage with SvelteKit (vite.config.js)
@@ -145,14 +158,15 @@ Output yml file with all the data, could be good idea to commit this file to tra
 #### Include and Exclude
 
 Include and exclude filters uses glob matchers with picomatch. In UI you can do such combinations (both exclude and include):
-* Filter bundle and file in one string
-  * `translation-*.js:*/**/index.js` - this selects all bundles that matches `translation-*.js` and all the files by all paths that name is `index.js`. `:` is separator and required only when bundle search used.
-  * Format for this kind of filter is `BUNDLE_GLOB:FILE_GLOB`
-* Filter bundle in one string
-  * This is special case of bundle+file filter, you need to omit `FILE_GLOB` part (empty string) 
-* Filter file in one string
-  * **This is DEFAULT search option**
-  * `*/**/index.js` - select all files that name is index.js   
+
+- Filter bundle and file in one string
+  - `translation-*.js:*/**/index.js` - this selects all bundles that matches `translation-*.js` and all the files by all paths that name is `index.js`. `:` is separator and required only when bundle search used.
+  - Format for this kind of filter is `BUNDLE_GLOB:FILE_GLOB`
+- Filter bundle in one string
+  - This is special case of bundle+file filter, you need to omit `FILE_GLOB` part (empty string)
+- Filter file in one string
+  - **This is DEFAULT search option**
+  - `*/**/index.js` - select all files that name is index.js
 
 ## CLI
 
@@ -189,8 +203,8 @@ See CHANGELOG.md.
 
 ## Versioning
 
-* Plugin backend (one appears in configs) are strictly follows SemVer
-* Plugin frontend (generated file):
-  * `network`, `treemap`, `sunburst` can change does not matter of version (colors, texts, visual structure etc)
-  * `raw-data` format follows own `version` property
-  * `list` follows semver
+- Plugin backend (one appears in configs) are strictly follows SemVer
+- Plugin frontend (generated file):
+  - `network`, `treemap`, `sunburst` can change does not matter of version (colors, texts, visual structure etc)
+  - `raw-data` format follows own `version` property
+  - `list` follows semver
