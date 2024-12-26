@@ -1,14 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Sourcemap Comments test 1`] = `
+exports[`Sourcemap Comments > test 1`] = `
 "alert("hello");
 //# sourceMappingURL=index.js.map
 "
 `;
 
-exports[`Sourcemap Comments test 2`] = `50`;
+exports[`Sourcemap Comments > test 2`] = `50`;
 
-exports[`Sourcemap Comments test 3`] = `
+exports[`Sourcemap Comments > test 3`] = `
 "{
   "version": 2,
   "tree": {

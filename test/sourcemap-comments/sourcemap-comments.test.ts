@@ -1,5 +1,5 @@
 import { OutputAsset, OutputChunk, OutputOptions, rollup } from "rollup";
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 import terser from '@rollup/plugin-terser';
 import { ALL_TEMPLATE } from "../util";
 

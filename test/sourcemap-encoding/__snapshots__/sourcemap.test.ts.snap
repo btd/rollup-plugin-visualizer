@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Sourcemap test 1`] = `
+exports[`Sourcemap > test 1`] = `
 "const text$1 = "😀wyjście😀";
 
 // some text ü
@@ -11,9 +11,9 @@ console.log("" + text + text$1);
 "
 `;
 
-exports[`Sourcemap test 2`] = `180`;
+exports[`Sourcemap > test 2`] = `180`;
 
-exports[`Sourcemap test 3`] = `
+exports[`Sourcemap > test 3`] = `
 "{
   "version": 2,
   "tree": {

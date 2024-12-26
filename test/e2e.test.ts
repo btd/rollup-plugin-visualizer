@@ -1,5 +1,5 @@
 import { OutputAsset, OutputOptions, rollup } from "rollup";
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 import { ALL_TEMPLATE } from "./util";
 
 // mock random for stable id
