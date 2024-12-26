@@ -33,10 +33,14 @@
     "yargs": "^17.5.1"
   },
   "peerDependencies": {
-    "rollup": "2.x || 3.x || 4.x"
+    "rollup": "2.x || 3.x || 4.x",
+    "rolldown": "1.x"
   },
   "peerDependenciesMeta": {
     "rollup": {
+      "optional": true
+    },
+    "rolldown": {
       "optional": true
     }
   },
@@ -77,6 +81,7 @@
     "postcss-url": "^10.1.3",
     "preact": "^10.7.2",
     "prettier": "^3.1.0",
+    "rolldown": "^1.0.0-beta.1",
     "rollup": "^4.5.2",
     "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.52.1",
