@@ -1,5 +1,13 @@
 # Changelog
 
+## Next
+
+* Update deps
+* Switch jest -> vitest
+* Switch eslint -> oxlint
+* Add test for rolldown
+* Make node v18 min required
+
 ## 5.12.0
 
 * Make unique id in generated data to be hash of data
