@@ -27,7 +27,7 @@ export const TreeMap: FunctionalComponent<TreeMapProps> = ({
   const nestedData = useMemo(() => {
     const nestedDataMap = group(
       root.descendants(),
-      (d: HierarchyNode<ModuleTree | ModuleTreeLeaf>) => d.height
+      (d: HierarchyNode<ModuleTree | ModuleTreeLeaf>) => d.height,
     );
     const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
       key,

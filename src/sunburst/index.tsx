@@ -55,7 +55,7 @@ const drawChart = (
   parentNode: Element,
   data: VisualizerData,
   width: number,
-  height: number
+  height: number,
 ): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
@@ -82,7 +82,7 @@ const drawChart = (
       for (const sizeKey of availableSizeProperties) {
         sizes[sizeKey] = nodeData.children.reduce(
           (acc, child) => getModuleSize(child, sizeKey) + acc,
-          0
+          0,
         );
       }
     } else {
@@ -125,7 +125,7 @@ const drawChart = (
     >
       <Main />
     </StaticContext.Provider>,
-    parentNode
+    parentNode,
   );
 };
 

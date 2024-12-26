@@ -1,10 +1,5 @@
 import { createContext, render } from "preact";
-import {
-  hierarchy,
-  HierarchyNode,
-  partition,
-  PartitionLayout,
-} from "d3-hierarchy";
+import { hierarchy, HierarchyNode, partition, PartitionLayout } from "d3-hierarchy";
 import {
   isModuleTree,
   ModuleLengths,
@@ -59,7 +54,7 @@ const drawChart = (
   const layout = partition<ModuleTree | ModuleTreeLeaf>()
     .size([width, height])
     .padding(PADDING)
-    .round(true)
+    .round(true);
 
   console.timeEnd("layout create");
 

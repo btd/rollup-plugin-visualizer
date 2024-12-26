@@ -1,7 +1,6 @@
 import { FunctionalComponent } from "preact";
-import { useContext, useMemo } from "preact/hooks";
-import { group } from "d3-array";
-import { HierarchyNode, HierarchyRectangularNode } from "d3-hierarchy";
+import { useContext } from "preact/hooks";
+import { HierarchyRectangularNode } from "d3-hierarchy";
 
 import { ModuleTree, ModuleTreeLeaf } from "../../shared/types";
 import { Node } from "./node";
@@ -22,21 +21,19 @@ export const FlameGraph: FunctionalComponent<FlameGraphProps> = ({
 }) => {
   const { width, height, getModuleIds } = useContext(StaticContext);
 
-
-
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`}>
       {root.descendants().map((node) => {
-          return (
-            <Node
-              key={getModuleIds(node.data).nodeUid.id}
-              node={node}
-              onMouseOver={onNodeHover}
-              selected={selectedNode === node}
-              onClick={onNodeClick}
-            />
-          );
-        })}
+        return (
+          <Node
+            key={getModuleIds(node.data).nodeUid.id}
+            node={node}
+            onMouseOver={onNodeHover}
+            selected={selectedNode === node}
+            onClick={onNodeClick}
+          />
+        );
+      })}
     </svg>
   );
 };

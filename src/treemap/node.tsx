@@ -51,18 +51,18 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
     if (children != null) {
       scale = Math.min(
         (width * 0.9) / textRectRef.current.width,
-        Math.min(height, TOP_PADDING + PADDING) / textRectRef.current.height
+        Math.min(height, TOP_PADDING + PADDING) / textRectRef.current.height,
       );
       scale = Math.min(1, scale);
       textRef.current.setAttribute(
         "y",
-        String(Math.min(TOP_PADDING + PADDING, height) / 2 / scale)
+        String(Math.min(TOP_PADDING + PADDING, height) / 2 / scale),
       );
       textRef.current.setAttribute("x", String(width / 2 / scale));
     } else {
       scale = Math.min(
         (width * 0.9) / textRectRef.current.width,
-        (height * 0.9) / textRectRef.current.height
+        (height * 0.9) / textRectRef.current.height,
       );
       scale = Math.min(1, scale);
       textRef.current.setAttribute("y", String(height / 2 / scale));

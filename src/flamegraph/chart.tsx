@@ -11,7 +11,7 @@ export interface ChartProps {
   sizeProperty: SizeKey;
   selectedNode: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined;
   setSelectedNode: (
-    node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined
+    node: HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined,
   ) => void;
 }
 

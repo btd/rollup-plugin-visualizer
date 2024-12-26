@@ -55,9 +55,9 @@ export const Main: FunctionalComponent = () => {
         if (isModuleTree(node)) return 0;
 
         const meta = data.nodeMetas[data.nodeParts[node.uid].metaUid];
-        const bundleId = Object.entries(meta.moduleParts).find(
-          ([bundleId, uid]) => uid == node.uid
-        )?.[0]!!;
+
+        /* eslint-disable typescript/no-non-null-asserted-optional-chain typescript/no-extra-non-null-assertion */
+        const bundleId = Object.entries(meta.moduleParts).find(([, uid]) => uid == node.uid)?.[0]!!;
 
         const ownSize = getModuleSize(node, sizeProperty);
         const zoomMultiplier = getNodeSizeMultiplier(node);

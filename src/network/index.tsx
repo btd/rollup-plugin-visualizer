@@ -38,14 +38,14 @@ export const StaticContext = createContext<Context>({} as unknown as Context);
 const createNodeInfo = (
   data: VisualizerData,
   availableSizeProperties: SizeKey[],
-  uid: ModuleUID
+  uid: ModuleUID,
 ): NodeInfo => {
   const meta = data.nodeMetas[uid];
   const entries: ModuleLengths[] = Object.values(meta.moduleParts).map(
-    (partUid) => data.nodeParts[partUid]
+    (partUid) => data.nodeParts[partUid],
   );
   const sizes = Object.fromEntries(
-    availableSizeProperties.map((key) => [key, 0])
+    availableSizeProperties.map((key) => [key, 0]),
   ) as unknown as ModuleLengths;
 
   for (const renderInfo of entries) {
@@ -63,7 +63,7 @@ const drawChart = (
   parentNode: Element,
   data: VisualizerData,
   width: number,
-  height: number
+  height: number,
 ): void => {
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
@@ -132,7 +132,7 @@ const drawChart = (
     >
       <Main />
     </StaticContext.Provider>,
-    parentNode
+    parentNode,
   );
 };
 

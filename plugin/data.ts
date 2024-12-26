@@ -10,7 +10,7 @@ const addToPath = (
   moduleId: string,
   tree: ModuleTree,
   modulePath: string[],
-  node: MappedNode
+  node: MappedNode,
 ): void => {
   if (modulePath.length === 0) {
     throw new Error(`Error adding node to path ${moduleId}`);
@@ -23,7 +23,7 @@ const addToPath = (
     return;
   } else {
     let newTree = tree.children.find(
-      (folder): folder is ModuleTree => folder.name === head && isModuleTree(folder)
+      (folder): folder is ModuleTree => folder.name === head && isModuleTree(folder),
     );
 
     if (!newTree) {
@@ -65,7 +65,7 @@ const mergeSingleChildTrees = (tree: ModuleTree): ModuleTree | ModuleTreeLeaf =>
 export const buildTree = (
   bundleId: string,
   modules: Array<ModuleLengths & { id: string }>,
-  mapper: ModuleMapper
+  mapper: ModuleMapper,
 ): ModuleTree => {
   const tree: ModuleTree = {
     name: bundleId,
@@ -109,7 +109,7 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
 export const addLinks = (
   startModuleId: string,
   getModuleInfo: GetModuleInfo,
-  mapper: ModuleMapper
+  mapper: ModuleMapper,
 ): void => {
   const processedNodes: Record<string, boolean> = {};
 

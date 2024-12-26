@@ -54,9 +54,8 @@ export const Main: FunctionalComponent = () => {
       //if (node.renderedLength === 0) continue;
       if (excludedNodes.includes(node.uid)) continue;
 
-      const bundleId = Object.entries(node.moduleParts).find(
-        ([bundleId, uid]) => uid == node.uid
-      )?.[0]!!;
+      /* eslint-disable typescript/no-non-null-asserted-optional-chain typescript/no-extra-non-null-assertion */
+      const bundleId = Object.entries(node.moduleParts).find(([, uid]) => uid == node.uid)?.[0]!!;
 
       const filterMultiplier = getModuleFilterMultiplier(bundleId, node);
       if (filterMultiplier === 0) continue;
@@ -80,7 +79,7 @@ export const Main: FunctionalComponent = () => {
 
   const links = useMemo(() => {
     const nodesCache: Record<ModuleUID, NetworkNode> = Object.fromEntries(
-      processedNodes.map((d) => [d.uid, d])
+      processedNodes.map((d) => [d.uid, d]),
     );
 
     return Object.entries(data.nodeMetas)
@@ -104,7 +103,7 @@ export const Main: FunctionalComponent = () => {
     const simulation = forceSimulation<NetworkNode>()
       .force(
         "collision",
-        forceCollide<NetworkNode>().radius((node) => node.radius)
+        forceCollide<NetworkNode>().radius((node) => node.radius),
       )
       .force("charge", forceManyBody().strength(-30))
       .force(
@@ -117,7 +116,7 @@ export const Main: FunctionalComponent = () => {
               return 0.1;
             }
           })
-          .iterations(2)
+          .iterations(2),
       )
       .force("x", forceX(0))
       .force("y", forceY(0));

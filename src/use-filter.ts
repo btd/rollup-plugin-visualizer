@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from "preact/hooks";
 import { createFilter } from "../shared/create-filter";
 
-
 export type FilterSetter = (value: string) => void;
 
 const throttleFilter = (callback: FilterSetter, limit: number): typeof callback => {
@@ -34,11 +33,11 @@ export const prepareFilter = (filt: string) => {
       .map((entry) => entry.trim())
       // unquote "
       .map((entry) =>
-        entry.startsWith('"') && entry.endsWith('"') ? entry.substring(1, entry.length - 1) : entry
+        entry.startsWith('"') && entry.endsWith('"') ? entry.substring(1, entry.length - 1) : entry,
       )
       // unquote '
       .map((entry) =>
-        entry.startsWith("'") && entry.endsWith("'") ? entry.substring(1, entry.length - 1) : entry
+        entry.startsWith("'") && entry.endsWith("'") ? entry.substring(1, entry.length - 1) : entry,
       )
       // remove empty strings
       .filter((entry) => entry)
@@ -71,14 +70,14 @@ export const useFilter = (): UseFilter => {
 
   const isIncluded = useMemo(
     () => createFilter(prepareFilter(includeFilter), prepareFilter(excludeFilter)),
-    [includeFilter, excludeFilter]
+    [includeFilter, excludeFilter],
   );
 
   const getModuleFilterMultiplier = useCallback(
     (bundleId: string, data: { id: string }) => {
       return isIncluded(bundleId, data.id) ? 1 : 0;
     },
-    [isIncluded]
+    [isIncluded],
   );
 
   return {

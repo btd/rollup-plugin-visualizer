@@ -1,5 +1,9 @@
 export class Transform {
-  constructor(readonly k: number, readonly x: number, readonly y: number) {}
+  constructor(
+    readonly k: number,
+    readonly x: number,
+    readonly y: number,
+  ) {}
 
   scaled(k: number) {
     return k === 1 ? this : new Transform(this.k * k, this.x, this.y);
