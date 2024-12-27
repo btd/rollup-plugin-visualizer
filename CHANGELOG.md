@@ -2,6 +2,8 @@
 
 ## Next
 
+* Remove `flamegraph`
+* Merge #191. Thanks to @guillaumeduboc
 * Update deps
 * Switch jest -> vitest
 * Switch eslint -> oxlint
