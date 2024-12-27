@@ -1,6 +1,6 @@
 "use strict";
 
-export type TemplateType = "sunburst" | "treemap" | "network" | "raw-data" | "list" ;
+export type TemplateType = "sunburst" | "treemap" | "network" | "raw-data" | "list";
 
 const templates: ReadonlyArray<TemplateType> = [
   "sunburst",
