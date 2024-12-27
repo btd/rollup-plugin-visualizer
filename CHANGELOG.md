@@ -1,8 +1,8 @@
 # Changelog
 
-## Next
+## 5.13.0
 
-* Remove `flamegraph`
+* Remove `flamegraph` template
 * Merge #191. Thanks to @guillaumeduboc
 * Update deps
 * Switch jest -> vitest
