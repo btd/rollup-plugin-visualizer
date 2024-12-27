@@ -70,7 +70,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -4781,7 +4780,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -9793,11 +9791,11 @@ var drawChart = (function (exports) {
             const boundingRect = ref.current.getBoundingClientRect();
             if (pos.left + boundingRect.width > window.innerWidth) {
                 // Shifting horizontally
-                pos.left = window.innerWidth - boundingRect.width;
+                pos.left = Math.max(0, window.innerWidth - boundingRect.width);
             }
             if (pos.top + boundingRect.height > window.innerHeight) {
                 // Flipping vertically
-                pos.top = mouseCoords.y - Tooltip_marginY - boundingRect.height;
+                pos.top = Math.max(0, mouseCoords.y - Tooltip_marginY - boundingRect.height);
             }
             setStyle(pos);
         };
@@ -10324,7 +10322,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -15329,7 +15326,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -18718,11 +18714,11 @@ var drawChart = (function (exports) {
           const boundingRect = ref.current.getBoundingClientRect();
           if (pos.left + boundingRect.width > window.innerWidth) {
               // Shifting horizontally
-              pos.left = window.innerWidth - boundingRect.width;
+              pos.left = Math.max(0, window.innerWidth - boundingRect.width);
           }
           if (pos.top + boundingRect.height > window.innerHeight) {
               // Flipping vertically
-              pos.top = mouseCoords.y - Tooltip_marginY - boundingRect.height;
+              pos.top = Math.max(0, mouseCoords.y - Tooltip_marginY - boundingRect.height);
           }
           setStyle(pos);
       };
@@ -20283,7 +20279,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -24988,7 +24983,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -30000,11 +29994,11 @@ var drawChart = (function (exports) {
             const boundingRect = ref.current.getBoundingClientRect();
             if (pos.left + boundingRect.width > window.innerWidth) {
                 // Shifting horizontally
-                pos.left = window.innerWidth - boundingRect.width;
+                pos.left = Math.max(0, window.innerWidth - boundingRect.width);
             }
             if (pos.top + boundingRect.height > window.innerHeight) {
                 // Flipping vertically
-                pos.top = mouseCoords.y - Tooltip_marginY - boundingRect.height;
+                pos.top = Math.max(0, mouseCoords.y - Tooltip_marginY - boundingRect.height);
             }
             setStyle(pos);
         };
@@ -30531,7 +30525,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -35536,7 +35529,6 @@ main {
   border: 2px solid;
   border-radius: 5px;
   padding: 5px;
-  white-space: nowrap;
   font-size: 0.875rem;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -38925,11 +38917,11 @@ var drawChart = (function (exports) {
           const boundingRect = ref.current.getBoundingClientRect();
           if (pos.left + boundingRect.width > window.innerWidth) {
               // Shifting horizontally
-              pos.left = window.innerWidth - boundingRect.width;
+              pos.left = Math.max(0, window.innerWidth - boundingRect.width);
           }
           if (pos.top + boundingRect.height > window.innerHeight) {
               // Flipping vertically
-              pos.top = mouseCoords.y - Tooltip_marginY - boundingRect.height;
+              pos.top = Math.max(0, mouseCoords.y - Tooltip_marginY - boundingRect.height);
           }
           setStyle(pos);
       };
