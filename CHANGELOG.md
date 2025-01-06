@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.14.0
+
+* Return `flamegraph`
+
 ## 5.13.0
 
 * Remove `flamegraph` template

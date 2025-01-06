@@ -4,7 +4,7 @@ const typescript = require("@rollup/plugin-typescript");
 const postcss = require("rollup-plugin-postcss");
 const postcssUrl = require("postcss-url");
 
-const HTML_TEMPLATE = ["treemap", "sunburst", "network"];
+const HTML_TEMPLATE = ["treemap", "sunburst", "network", "flamegraph"];
 
 /** @type {import('rollup').RollupOptions} */
 module.exports = HTML_TEMPLATE.map((templateType) => ({
