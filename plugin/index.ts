@@ -58,7 +58,8 @@ export interface PluginVisualizerOptions {
 
   /**
    * Which diagram to generate. 'sunburst' or 'treemap' can help find big dependencies or if they are repeated.
-   * 'network' can answer you why something was included
+   * 'network' can answer you why something was included.
+   * 'flamegraph' will be familar to tools that you know already.
    *
    * @default 'treemap'
    */

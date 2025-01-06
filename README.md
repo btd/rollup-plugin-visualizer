@@ -105,6 +105,10 @@ All charts refresh layout on window resize.
 
 This circular hierarchical diagram can help you find huge pieces of code (aka that one huge thing). If you click on some arc it will increase its and all nested arcs size for better inspection.
 
+### Flamegraph
+
+This diagram is top down version of sunburst. It is used a lot by other JS developer tools and would be very familar to developers.
+
 ### Treemap
 
 This rectangular hierarchical diagram can help you find huge pieces. Just look on biggest rectangle. But also it can help you find modules included several times, they will have the same topology and relative size. If you click on rectangle it will increase in size for further inspection.
@@ -133,7 +137,7 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`, `raw-data`, `list`.
+`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`, `raw-data`, `list`, `flamegraph`.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart.
 
@@ -205,6 +209,6 @@ See CHANGELOG.md.
 
 - Plugin backend (one appears in configs) are strictly follows SemVer
 - Plugin frontend (generated file):
-  - `network`, `treemap`, `sunburst` can change does not matter of version (colors, texts, visual structure etc)
+  - `network`, `treemap`, `sunburst`, `flamegraph` can change does not matter of version (colors, texts, visual structure etc)
   - `raw-data` format follows own `version` property
   - `list` follows semver
