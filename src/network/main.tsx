@@ -31,7 +31,7 @@ export const Main: FunctionalComponent = () => {
   const [excludedNodes, setExcludedNodes] = useState<ModuleUID[]>([]);
   const [selectedNode, setSelectedNode] = useState<string>();
 
-  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
+  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter, setFilterModel } = useFilter();
 
   const getColor = (node: NodeInfo) => {
     if (selectedNode != null) {
@@ -139,6 +139,7 @@ export const Main: FunctionalComponent = () => {
         setSizeProperty={() => {}}
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
+        onFilterModelChange={setFilterModel}
       />
       <Chart
         nodes={animatedNodes}

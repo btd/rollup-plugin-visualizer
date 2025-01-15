@@ -2,6 +2,7 @@ import { FunctionalComponent, JSX } from "preact";
 import { useState } from "preact/hooks";
 import { SizeKey } from "../shared/types";
 import { LABELS } from "./sizes";
+import { FilterModel } from "../shared/create-filter";
 
 export interface SideBarProps {
   availableSizeProperties: SizeKey[];
@@ -9,6 +10,8 @@ export interface SideBarProps {
   setSizeProperty: (key: SizeKey) => void;
   onExcludeChange: (value: string) => void;
   onIncludeChange: (value: string) => void;
+  defaultFilterValue?: string;
+  onFilterModelChange: (value: FilterModel) => void
 }
 
 const PLACEHOLDER = "*/**/file.js";
@@ -19,6 +22,8 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
   setSizeProperty,
   onExcludeChange,
   onIncludeChange,
+  defaultFilterValue = 'glob',
+  onFilterModelChange
 }) => {
   const [includeValue, setIncludeValue] = useState("");
   const [excludeValue, setExcludeValue] = useState("");
@@ -40,6 +45,11 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
     setExcludeValue(value);
     onExcludeChange(value);
   };
+
+  const handleSelectFilterChange =  (event: JSX.TargetedEvent<HTMLSelectElement, Event>) => {
+    const value = event.currentTarget.value;
+    onFilterModelChange(value as FilterModel)
+  }
 
   return (
     <aside className="sidebar">
@@ -80,6 +90,13 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
             onInput={handleIncludeChange}
             placeholder={PLACEHOLDER}
           />
+        </div>
+        <div>
+          <label style={{ width: '80px' }} htmlFor="module-filter-include">filterModel</label>
+          <select id="patternType" defaultValue={defaultFilterValue} onChange={handleSelectFilterChange}>
+            <option value="glob">glob model</option>
+            <option value="regexp">regexp model</option>
+          </select>
         </div>
       </div>
     </aside>
