@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "preact/hooks";
-import { createFilter } from "../shared/create-filter";
+import { createFilter, FilterModel } from "../shared/create-filter";
 
 export type FilterSetter = (value: string) => void;
 
@@ -22,6 +22,8 @@ export type UseFilter = {
   setIncludeFilter: FilterSetter;
   setExcludeFilter: FilterSetter;
   getModuleFilterMultiplier: (bundleId: string, data: { id: string }) => number;
+  filterModel: string
+  setFilterModel: (value: FilterModel) => void
 };
 
 export const prepareFilter = (filt: string) => {
@@ -61,15 +63,17 @@ export const prepareFilter = (filt: string) => {
   );
 };
 
+
 export const useFilter = (): UseFilter => {
   const [includeFilter, setIncludeFilter] = useState<string>("");
   const [excludeFilter, setExcludeFilter] = useState<string>("");
+  const [filterModel, setFilterModel] = useState<'glob' | 'regexp'>('glob') 
 
   const setIncludeFilterTrottled = useMemo(() => throttleFilter(setIncludeFilter, 200), []);
   const setExcludeFilterTrottled = useMemo(() => throttleFilter(setExcludeFilter, 200), []);
 
   const isIncluded = useMemo(
-    () => createFilter(prepareFilter(includeFilter), prepareFilter(excludeFilter)),
+    () => createFilter(prepareFilter(includeFilter), prepareFilter(excludeFilter), filterModel),
     [includeFilter, excludeFilter],
   );
 
@@ -86,5 +90,7 @@ export const useFilter = (): UseFilter => {
     excludeFilter,
     setExcludeFilter: setExcludeFilterTrottled,
     setIncludeFilter: setIncludeFilterTrottled,
+    filterModel, 
+    setFilterModel
   };
 };

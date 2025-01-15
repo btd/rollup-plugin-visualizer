@@ -5,6 +5,8 @@ export type Filter = {
   file?: string | null | undefined;
 };
 
+export type FilterModel = 'glob' | 'regexp'
+
 function isArray(arg: unknown): arg is any[] | readonly any[] {
   return Array.isArray(arg);
 }
@@ -39,20 +41,23 @@ const testTrue: Testable = {
   test: () => true,
 };
 
-const getMatcher = (filter: Filter) => {
+const getMatcher = (filter: Filter, filterModel: FilterModel) => {
+  const filterMethods = (str: string) => filterModel === 'glob' ? globToTest(str) : new RegExp(str)
+
   const bundleTest =
-    "bundle" in filter && filter.bundle != null ? globToTest(filter.bundle) : testTrue;
-  const fileTest = "file" in filter && filter.file != null ? globToTest(filter.file) : testTrue;
+    "bundle" in filter && filter.bundle != null ? filterMethods(filter.bundle) : testTrue;
+  const fileTest = "file" in filter && filter.file != null ? filterMethods(filter.file) : testTrue;
 
   return { bundleTest, fileTest };
 };
 
 export const createFilter = (
   include: Filter | Filter[] | undefined,
-  exclude: Filter | Filter[] | undefined
+  exclude: Filter | Filter[] | undefined,
+  filterModel: FilterModel
 ) => {
-  const includeMatchers = ensureArray(include).map(getMatcher);
-  const excludeMatchers = ensureArray(exclude).map(getMatcher);
+  const includeMatchers = ensureArray(include).map(item => getMatcher(item, filterModel));
+  const excludeMatchers = ensureArray(exclude).map(item => getMatcher(item, filterModel));
 
   return (bundleId: string, id: string) => {
     for (let i = 0; i < excludeMatchers.length; ++i) {

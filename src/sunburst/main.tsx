@@ -20,7 +20,7 @@ export const Main: FunctionalComponent = () => {
     HierarchyRectangularNode<ModuleTree | ModuleTreeLeaf> | undefined
   >(undefined);
 
-  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter } = useFilter();
+  const { getModuleFilterMultiplier, setExcludeFilter, setIncludeFilter, setFilterModel } = useFilter();
 
   const getNodeSizeMultiplier = useMemo(() => {
     if (selectedNode === undefined) {
@@ -81,6 +81,7 @@ export const Main: FunctionalComponent = () => {
         setSizeProperty={setSizeProperty}
         onExcludeChange={setExcludeFilter}
         onIncludeChange={setIncludeFilter}
+        onFilterModelChange={setFilterModel}
       />
       <Chart
         root={root}

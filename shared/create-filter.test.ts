@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { createFilter } from "./create-filter";
+import { createFilter as _createFilter, Filter } from "./create-filter";
 
 describe("createFilter", () => {
+  const createFilter = (include: Filter | Filter[] | undefined, exclude: Filter | Filter[] | undefined) => _createFilter(include, exclude, 'glob')
   it("should return true when input and output is empty", () => {
     const isIncluded = createFilter([], []);
-
     expect(isIncluded("bundle", "file")).toBe(true);
   });
 

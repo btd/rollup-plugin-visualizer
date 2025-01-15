@@ -113,6 +113,11 @@ export interface PluginVisualizerOptions {
    * default. Otherwise, an ID must match one or more of the picomatch patterns, and must not match any of the options.exclude patterns.
    */
   exclude?: Filter | Filter[];
+
+  /**
+   * filterModel: 'glob' | 'regexp'
+   */
+  filterModel?: 'glob' | 'regexp'
 }
 
 const defaultSizeGetter: SizeGetter = () => Promise.resolve(0);
@@ -152,7 +157,7 @@ export const visualizer = (
       const template = opts.template ?? "treemap";
       const projectRoot = opts.projectRoot ?? process.cwd();
 
-      const filter = createFilter(opts.include, opts.exclude);
+      const filter = createFilter(opts.include, opts.exclude, opts.filterModel || 'glob');
 
       const gzipSize = !!opts.gzipSize && !opts.sourcemap;
       const brotliSize = !!opts.brotliSize && !opts.sourcemap;
