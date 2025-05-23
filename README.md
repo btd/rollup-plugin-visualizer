@@ -37,7 +37,7 @@ Usage with rollup (rollup.config.js)
 ```js
 module.exports = {
   plugins: [
-    // put it the last one
+    // put it last
     visualizer(),
   ],
 };
