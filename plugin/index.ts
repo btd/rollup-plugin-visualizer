@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
-import opn from "open";
+import opn, { Options as OpenOptions } from "open";
 
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types";
 import { version } from "./version";
@@ -54,7 +54,7 @@ export interface PluginVisualizerOptions {
    * @default false
    */
   open?: boolean;
-  openOptions?: opn.Options;
+  openOptions?: OpenOptions;
 
   /**
    * Which diagram to generate. 'sunburst' or 'treemap' can help find big dependencies or if they are repeated.
