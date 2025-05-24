@@ -28,7 +28,7 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "open": "^8.4.0",
+    "open": "^10.1.2",
     "source-map": "^0.7.4",
     "yargs": "^17.5.1",
     "picomatch": "^4.0.2"
