@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.0
+
+* Update dependencies
+* Set minumum required node version to v20
+
 ## 5.14.0
 
 * Return `flamegraph`
