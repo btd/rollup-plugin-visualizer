@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.0.0 (future)
+
+* Migrate to ESM
+
+## 6.0.1
+
+* Rollback dependency package `open` to version 8 as require(esm) is not ready to be used
+
 ## 6.0.0
 
 * Update dependencies
