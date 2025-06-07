@@ -6,6 +6,10 @@
 ** `open` updated to >= 10
 ** `yargs` updated to >=18
 
+## 6.0.3
+
+* Republish due to bug in npm cli https://github.com/npm/cli/issues/4828
+
 ## 6.0.2
 
 * Update `rolldown` peerDependendcy range to include betas
