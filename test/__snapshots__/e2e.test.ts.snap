@@ -4670,7 +4670,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dd0bf565-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dd0bf565-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dd0bf565-5"}]}],"isRoot":true},"nodeParts":{"dd0bf565-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"dd0bf565-0"},"dd0bf565-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"dd0bf565-2"},"dd0bf565-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"dd0bf565-4"}},"nodeMetas":{"dd0bf565-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dd0bf565-1"},"imported":[{"uid":"dd0bf565-6"},{"uid":"dd0bf565-7"}],"importedBy":[],"isEntry":true},"dd0bf565-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dd0bf565-3"},"imported":[{"uid":"dd0bf565-4","dynamic":true}],"importedBy":[],"isEntry":true},"dd0bf565-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dd0bf565-5"},"imported":[],"importedBy":[{"uid":"dd0bf565-2"}]},"dd0bf565-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}]},"dd0bf565-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"4888b094-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"4888b094-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"4888b094-5"}]}],"isRoot":true},"nodeParts":{"4888b094-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"4888b094-0"},"4888b094-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"4888b094-2"},"4888b094-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"4888b094-4"}},"nodeMetas":{"4888b094-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"4888b094-1"},"imported":[{"uid":"4888b094-6"},{"uid":"4888b094-7"}],"importedBy":[],"isEntry":true},"4888b094-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"4888b094-3"},"imported":[{"uid":"4888b094-4","dynamic":true}],"importedBy":[],"isEntry":true},"4888b094-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"4888b094-5"},"imported":[],"importedBy":[{"uid":"4888b094-2"}]},"4888b094-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}]},"4888b094-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -10099,7 +10099,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dd0bf565-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dd0bf565-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dd0bf565-5"}]}],"isRoot":true},"nodeParts":{"dd0bf565-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"dd0bf565-0"},"dd0bf565-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"dd0bf565-2"},"dd0bf565-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"dd0bf565-4"}},"nodeMetas":{"dd0bf565-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dd0bf565-1"},"imported":[{"uid":"dd0bf565-6"},{"uid":"dd0bf565-7"}],"importedBy":[],"isEntry":true},"dd0bf565-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dd0bf565-3"},"imported":[{"uid":"dd0bf565-4","dynamic":true}],"importedBy":[],"isEntry":true},"dd0bf565-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dd0bf565-5"},"imported":[],"importedBy":[{"uid":"dd0bf565-2"}]},"dd0bf565-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}]},"dd0bf565-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"4888b094-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"4888b094-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"4888b094-5"}]}],"isRoot":true},"nodeParts":{"4888b094-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"4888b094-0"},"4888b094-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"4888b094-2"},"4888b094-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"4888b094-4"}},"nodeMetas":{"4888b094-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"4888b094-1"},"imported":[{"uid":"4888b094-6"},{"uid":"4888b094-7"}],"importedBy":[],"isEntry":true},"4888b094-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"4888b094-3"},"imported":[{"uid":"4888b094-4","dynamic":true}],"importedBy":[],"isEntry":true},"4888b094-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"4888b094-5"},"imported":[],"importedBy":[{"uid":"4888b094-2"}]},"4888b094-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}]},"4888b094-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -10131,7 +10131,7 @@ exports[`E2E > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/e2e/input.js",
-            "uid": "dd0bf565-1"
+            "uid": "4888b094-1"
           }
         ]
       },
@@ -10140,7 +10140,7 @@ exports[`E2E > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/e2e/input2.js",
-            "uid": "dd0bf565-3"
+            "uid": "4888b094-3"
           }
         ]
       },
@@ -10149,7 +10149,7 @@ exports[`E2E > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/e2e/file3.js",
-            "uid": "dd0bf565-5"
+            "uid": "4888b094-5"
           }
         ]
       }
@@ -10157,92 +10157,92 @@ exports[`E2E > test - "raw-data" 1`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "dd0bf565-1": {
+    "4888b094-1": {
       "renderedLength": 66,
       "gzipLength": 80,
       "brotliLength": 67,
-      "metaUid": "dd0bf565-0"
+      "metaUid": "4888b094-0"
     },
-    "dd0bf565-3": {
+    "4888b094-3": {
       "renderedLength": 80,
       "gzipLength": 96,
       "brotliLength": 84,
-      "metaUid": "dd0bf565-2"
+      "metaUid": "4888b094-2"
     },
-    "dd0bf565-5": {
+    "4888b094-5": {
       "renderedLength": 18,
       "gzipLength": 38,
       "brotliLength": 22,
-      "metaUid": "dd0bf565-4"
+      "metaUid": "4888b094-4"
     }
   },
   "nodeMetas": {
-    "dd0bf565-0": {
+    "4888b094-0": {
       "id": "/test/e2e/input.js",
       "moduleParts": {
-        "input.js": "dd0bf565-1"
+        "input.js": "4888b094-1"
       },
       "imported": [
         {
-          "uid": "dd0bf565-6"
+          "uid": "4888b094-6"
         },
         {
-          "uid": "dd0bf565-7"
+          "uid": "4888b094-7"
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "dd0bf565-2": {
+    "4888b094-2": {
       "id": "/test/e2e/input2.js",
       "moduleParts": {
-        "input2.js": "dd0bf565-3"
+        "input2.js": "4888b094-3"
       },
       "imported": [
         {
-          "uid": "dd0bf565-4",
+          "uid": "4888b094-4",
           "dynamic": true
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "dd0bf565-4": {
+    "4888b094-4": {
       "id": "/test/e2e/file3.js",
       "moduleParts": {
-        "file3-Bi_Qu0hn.js": "dd0bf565-5"
+        "file3-Bi_Qu0hn.js": "4888b094-5"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "dd0bf565-2"
+          "uid": "4888b094-2"
         }
       ]
     },
-    "dd0bf565-6": {
+    "4888b094-6": {
       "id": "/test/e2e/node_modules/module/test.js",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "dd0bf565-0"
+          "uid": "4888b094-0"
         }
       ]
     },
-    "dd0bf565-7": {
+    "4888b094-7": {
       "id": "jquery",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "dd0bf565-0"
+          "uid": "4888b094-0"
         }
       ],
       "isExternal": true
     }
   },
   "env": {
-    "rollup": "4.41.1"
+    "rollup": "4.42.0"
   },
   "options": {
     "gzip": true,
@@ -15235,7 +15235,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dd0bf565-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dd0bf565-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dd0bf565-5"}]}],"isRoot":true},"nodeParts":{"dd0bf565-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"dd0bf565-0"},"dd0bf565-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"dd0bf565-2"},"dd0bf565-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"dd0bf565-4"}},"nodeMetas":{"dd0bf565-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dd0bf565-1"},"imported":[{"uid":"dd0bf565-6"},{"uid":"dd0bf565-7"}],"importedBy":[],"isEntry":true},"dd0bf565-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dd0bf565-3"},"imported":[{"uid":"dd0bf565-4","dynamic":true}],"importedBy":[],"isEntry":true},"dd0bf565-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dd0bf565-5"},"imported":[],"importedBy":[{"uid":"dd0bf565-2"}]},"dd0bf565-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}]},"dd0bf565-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"4888b094-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"4888b094-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"4888b094-5"}]}],"isRoot":true},"nodeParts":{"4888b094-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"4888b094-0"},"4888b094-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"4888b094-2"},"4888b094-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"4888b094-4"}},"nodeMetas":{"4888b094-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"4888b094-1"},"imported":[{"uid":"4888b094-6"},{"uid":"4888b094-7"}],"importedBy":[],"isEntry":true},"4888b094-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"4888b094-3"},"imported":[{"uid":"4888b094-4","dynamic":true}],"importedBy":[],"isEntry":true},"4888b094-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"4888b094-5"},"imported":[],"importedBy":[{"uid":"4888b094-2"}]},"4888b094-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}]},"4888b094-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -20188,7 +20188,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dd0bf565-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dd0bf565-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dd0bf565-5"}]}],"isRoot":true},"nodeParts":{"dd0bf565-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"dd0bf565-0"},"dd0bf565-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"dd0bf565-2"},"dd0bf565-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"dd0bf565-4"}},"nodeMetas":{"dd0bf565-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dd0bf565-1"},"imported":[{"uid":"dd0bf565-6"},{"uid":"dd0bf565-7"}],"importedBy":[],"isEntry":true},"dd0bf565-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dd0bf565-3"},"imported":[{"uid":"dd0bf565-4","dynamic":true}],"importedBy":[],"isEntry":true},"dd0bf565-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dd0bf565-5"},"imported":[],"importedBy":[{"uid":"dd0bf565-2"}]},"dd0bf565-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}]},"dd0bf565-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dd0bf565-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"4888b094-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"4888b094-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"4888b094-5"}]}],"isRoot":true},"nodeParts":{"4888b094-1":{"renderedLength":66,"gzipLength":80,"brotliLength":67,"metaUid":"4888b094-0"},"4888b094-3":{"renderedLength":80,"gzipLength":96,"brotliLength":84,"metaUid":"4888b094-2"},"4888b094-5":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"4888b094-4"}},"nodeMetas":{"4888b094-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"4888b094-1"},"imported":[{"uid":"4888b094-6"},{"uid":"4888b094-7"}],"importedBy":[],"isEntry":true},"4888b094-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"4888b094-3"},"imported":[{"uid":"4888b094-4","dynamic":true}],"importedBy":[],"isEntry":true},"4888b094-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"4888b094-5"},"imported":[],"importedBy":[{"uid":"4888b094-2"}]},"4888b094-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}]},"4888b094-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"4888b094-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -24879,7 +24879,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"405eb5b4-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"405eb5b4-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"405eb5b4-5"}]}],"isRoot":true},"nodeParts":{"405eb5b4-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-0"},"405eb5b4-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-2"},"405eb5b4-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-4"}},"nodeMetas":{"405eb5b4-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"405eb5b4-1"},"imported":[{"uid":"405eb5b4-6"},{"uid":"405eb5b4-7"}],"importedBy":[],"isEntry":true},"405eb5b4-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"405eb5b4-3"},"imported":[{"uid":"405eb5b4-4","dynamic":true}],"importedBy":[],"isEntry":true},"405eb5b4-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"405eb5b4-5"},"imported":[],"importedBy":[{"uid":"405eb5b4-2"}]},"405eb5b4-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}]},"405eb5b4-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dc72bbcf-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dc72bbcf-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dc72bbcf-5"}]}],"isRoot":true},"nodeParts":{"dc72bbcf-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-0"},"dc72bbcf-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-2"},"dc72bbcf-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-4"}},"nodeMetas":{"dc72bbcf-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dc72bbcf-1"},"imported":[{"uid":"dc72bbcf-6"},{"uid":"dc72bbcf-7"}],"importedBy":[],"isEntry":true},"dc72bbcf-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dc72bbcf-3"},"imported":[{"uid":"dc72bbcf-4","dynamic":true}],"importedBy":[],"isEntry":true},"dc72bbcf-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dc72bbcf-5"},"imported":[],"importedBy":[{"uid":"dc72bbcf-2"}]},"dc72bbcf-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}]},"dc72bbcf-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -30302,7 +30302,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"405eb5b4-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"405eb5b4-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"405eb5b4-5"}]}],"isRoot":true},"nodeParts":{"405eb5b4-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-0"},"405eb5b4-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-2"},"405eb5b4-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-4"}},"nodeMetas":{"405eb5b4-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"405eb5b4-1"},"imported":[{"uid":"405eb5b4-6"},{"uid":"405eb5b4-7"}],"importedBy":[],"isEntry":true},"405eb5b4-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"405eb5b4-3"},"imported":[{"uid":"405eb5b4-4","dynamic":true}],"importedBy":[],"isEntry":true},"405eb5b4-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"405eb5b4-5"},"imported":[],"importedBy":[{"uid":"405eb5b4-2"}]},"405eb5b4-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}]},"405eb5b4-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dc72bbcf-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dc72bbcf-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dc72bbcf-5"}]}],"isRoot":true},"nodeParts":{"dc72bbcf-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-0"},"dc72bbcf-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-2"},"dc72bbcf-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-4"}},"nodeMetas":{"dc72bbcf-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dc72bbcf-1"},"imported":[{"uid":"dc72bbcf-6"},{"uid":"dc72bbcf-7"}],"importedBy":[],"isEntry":true},"dc72bbcf-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dc72bbcf-3"},"imported":[{"uid":"dc72bbcf-4","dynamic":true}],"importedBy":[],"isEntry":true},"dc72bbcf-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dc72bbcf-5"},"imported":[],"importedBy":[{"uid":"dc72bbcf-2"}]},"dc72bbcf-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}]},"dc72bbcf-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -30334,7 +30334,7 @@ exports[`E2E sourcemap > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/e2e/input.js",
-            "uid": "405eb5b4-1"
+            "uid": "dc72bbcf-1"
           }
         ]
       },
@@ -30343,7 +30343,7 @@ exports[`E2E sourcemap > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/e2e/input2.js",
-            "uid": "405eb5b4-3"
+            "uid": "dc72bbcf-3"
           }
         ]
       },
@@ -30352,7 +30352,7 @@ exports[`E2E sourcemap > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/e2e/file3.js",
-            "uid": "405eb5b4-5"
+            "uid": "dc72bbcf-5"
           }
         ]
       }
@@ -30360,92 +30360,92 @@ exports[`E2E sourcemap > test - "raw-data" 1`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "405eb5b4-1": {
+    "dc72bbcf-1": {
       "renderedLength": 67,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "405eb5b4-0"
+      "metaUid": "dc72bbcf-0"
     },
-    "405eb5b4-3": {
+    "dc72bbcf-3": {
       "renderedLength": 80,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "405eb5b4-2"
+      "metaUid": "dc72bbcf-2"
     },
-    "405eb5b4-5": {
+    "dc72bbcf-5": {
       "renderedLength": 19,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "405eb5b4-4"
+      "metaUid": "dc72bbcf-4"
     }
   },
   "nodeMetas": {
-    "405eb5b4-0": {
+    "dc72bbcf-0": {
       "id": "/test/e2e/input.js",
       "moduleParts": {
-        "input.js": "405eb5b4-1"
+        "input.js": "dc72bbcf-1"
       },
       "imported": [
         {
-          "uid": "405eb5b4-6"
+          "uid": "dc72bbcf-6"
         },
         {
-          "uid": "405eb5b4-7"
+          "uid": "dc72bbcf-7"
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "405eb5b4-2": {
+    "dc72bbcf-2": {
       "id": "/test/e2e/input2.js",
       "moduleParts": {
-        "input2.js": "405eb5b4-3"
+        "input2.js": "dc72bbcf-3"
       },
       "imported": [
         {
-          "uid": "405eb5b4-4",
+          "uid": "dc72bbcf-4",
           "dynamic": true
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "405eb5b4-4": {
+    "dc72bbcf-4": {
       "id": "/test/e2e/file3.js",
       "moduleParts": {
-        "file3-Bi_Qu0hn.js": "405eb5b4-5"
+        "file3-Bi_Qu0hn.js": "dc72bbcf-5"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "405eb5b4-2"
+          "uid": "dc72bbcf-2"
         }
       ]
     },
-    "405eb5b4-6": {
+    "dc72bbcf-6": {
       "id": "/test/e2e/node_modules/module/test.js",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "405eb5b4-0"
+          "uid": "dc72bbcf-0"
         }
       ]
     },
-    "405eb5b4-7": {
+    "dc72bbcf-7": {
       "id": "jquery",
       "moduleParts": {},
       "imported": [],
       "importedBy": [
         {
-          "uid": "405eb5b4-0"
+          "uid": "dc72bbcf-0"
         }
       ],
       "isExternal": true
     }
   },
   "env": {
-    "rollup": "4.41.1"
+    "rollup": "4.42.0"
   },
   "options": {
     "gzip": false,
@@ -35438,7 +35438,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"405eb5b4-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"405eb5b4-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"405eb5b4-5"}]}],"isRoot":true},"nodeParts":{"405eb5b4-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-0"},"405eb5b4-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-2"},"405eb5b4-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-4"}},"nodeMetas":{"405eb5b4-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"405eb5b4-1"},"imported":[{"uid":"405eb5b4-6"},{"uid":"405eb5b4-7"}],"importedBy":[],"isEntry":true},"405eb5b4-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"405eb5b4-3"},"imported":[{"uid":"405eb5b4-4","dynamic":true}],"importedBy":[],"isEntry":true},"405eb5b4-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"405eb5b4-5"},"imported":[],"importedBy":[{"uid":"405eb5b4-2"}]},"405eb5b4-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}]},"405eb5b4-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dc72bbcf-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dc72bbcf-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dc72bbcf-5"}]}],"isRoot":true},"nodeParts":{"dc72bbcf-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-0"},"dc72bbcf-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-2"},"dc72bbcf-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-4"}},"nodeMetas":{"dc72bbcf-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dc72bbcf-1"},"imported":[{"uid":"dc72bbcf-6"},{"uid":"dc72bbcf-7"}],"importedBy":[],"isEntry":true},"dc72bbcf-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dc72bbcf-3"},"imported":[{"uid":"dc72bbcf-4","dynamic":true}],"importedBy":[],"isEntry":true},"dc72bbcf-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dc72bbcf-5"},"imported":[],"importedBy":[{"uid":"dc72bbcf-2"}]},"dc72bbcf-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}]},"dc72bbcf-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -40391,7 +40391,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"405eb5b4-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"405eb5b4-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"405eb5b4-5"}]}],"isRoot":true},"nodeParts":{"405eb5b4-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-0"},"405eb5b4-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-2"},"405eb5b4-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"405eb5b4-4"}},"nodeMetas":{"405eb5b4-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"405eb5b4-1"},"imported":[{"uid":"405eb5b4-6"},{"uid":"405eb5b4-7"}],"importedBy":[],"isEntry":true},"405eb5b4-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"405eb5b4-3"},"imported":[{"uid":"405eb5b4-4","dynamic":true}],"importedBy":[],"isEntry":true},"405eb5b4-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"405eb5b4-5"},"imported":[],"importedBy":[{"uid":"405eb5b4-2"}]},"405eb5b4-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}]},"405eb5b4-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"405eb5b4-0"}],"isExternal":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"input.js","children":[{"name":"test/e2e/input.js","uid":"dc72bbcf-1"}]},{"name":"input2.js","children":[{"name":"test/e2e/input2.js","uid":"dc72bbcf-3"}]},{"name":"file3-Bi_Qu0hn.js","children":[{"name":"test/e2e/file3.js","uid":"dc72bbcf-5"}]}],"isRoot":true},"nodeParts":{"dc72bbcf-1":{"renderedLength":67,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-0"},"dc72bbcf-3":{"renderedLength":80,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-2"},"dc72bbcf-5":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"dc72bbcf-4"}},"nodeMetas":{"dc72bbcf-0":{"id":"/test/e2e/input.js","moduleParts":{"input.js":"dc72bbcf-1"},"imported":[{"uid":"dc72bbcf-6"},{"uid":"dc72bbcf-7"}],"importedBy":[],"isEntry":true},"dc72bbcf-2":{"id":"/test/e2e/input2.js","moduleParts":{"input2.js":"dc72bbcf-3"},"imported":[{"uid":"dc72bbcf-4","dynamic":true}],"importedBy":[],"isEntry":true},"dc72bbcf-4":{"id":"/test/e2e/file3.js","moduleParts":{"file3-Bi_Qu0hn.js":"dc72bbcf-5"},"imported":[],"importedBy":[{"uid":"dc72bbcf-2"}]},"dc72bbcf-6":{"id":"/test/e2e/node_modules/module/test.js","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}]},"dc72bbcf-7":{"id":"jquery","moduleParts":{},"imported":[],"importedBy":[{"uid":"dc72bbcf-0"}],"isExternal":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;

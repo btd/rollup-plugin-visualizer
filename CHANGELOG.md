@@ -6,6 +6,11 @@
 ** `open` updated to >= 10
 ** `yargs` updated to >=18
 
+## 6.0.2
+
+* Update `rolldown` peerDependendcy range to include betas
+* Update deps
+
 ## 6.0.1
 
 * Rollback dependency package `open` to version 8 as require(esm) is not ready to be used

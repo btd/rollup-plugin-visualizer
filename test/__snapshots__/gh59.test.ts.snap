@@ -4670,7 +4670,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"2dc6d9c9-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"2dc6d9c9-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"2dc6d9c9-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"2dc6d9c9-7"}]}],"isRoot":true},"nodeParts":{"2dc6d9c9-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"2dc6d9c9-0"},"2dc6d9c9-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"2dc6d9c9-2"},"2dc6d9c9-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-4"},"2dc6d9c9-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-6"}},"nodeMetas":{"2dc6d9c9-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"2dc6d9c9-1"},"imported":[{"uid":"2dc6d9c9-4"},{"uid":"2dc6d9c9-6"}],"importedBy":[{"uid":"2dc6d9c9-2"}],"isEntry":true},"2dc6d9c9-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"2dc6d9c9-3"},"imported":[{"uid":"2dc6d9c9-0"}],"importedBy":[],"isEntry":true},"2dc6d9c9-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"2dc6d9c9-5"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true},"2dc6d9c9-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"2dc6d9c9-7"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"83b94529-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"83b94529-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"83b94529-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"83b94529-7"}]}],"isRoot":true},"nodeParts":{"83b94529-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"83b94529-0"},"83b94529-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"83b94529-2"},"83b94529-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-4"},"83b94529-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-6"}},"nodeMetas":{"83b94529-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"83b94529-1"},"imported":[{"uid":"83b94529-4"},{"uid":"83b94529-6"}],"importedBy":[{"uid":"83b94529-2"}],"isEntry":true},"83b94529-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"83b94529-3"},"imported":[{"uid":"83b94529-0"}],"importedBy":[],"isEntry":true},"83b94529-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"83b94529-5"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true},"83b94529-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"83b94529-7"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -10104,7 +10104,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"2dc6d9c9-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"2dc6d9c9-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"2dc6d9c9-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"2dc6d9c9-7"}]}],"isRoot":true},"nodeParts":{"2dc6d9c9-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"2dc6d9c9-0"},"2dc6d9c9-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"2dc6d9c9-2"},"2dc6d9c9-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-4"},"2dc6d9c9-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-6"}},"nodeMetas":{"2dc6d9c9-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"2dc6d9c9-1"},"imported":[{"uid":"2dc6d9c9-4"},{"uid":"2dc6d9c9-6"}],"importedBy":[{"uid":"2dc6d9c9-2"}],"isEntry":true},"2dc6d9c9-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"2dc6d9c9-3"},"imported":[{"uid":"2dc6d9c9-0"}],"importedBy":[],"isEntry":true},"2dc6d9c9-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"2dc6d9c9-5"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true},"2dc6d9c9-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"2dc6d9c9-7"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"83b94529-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"83b94529-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"83b94529-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"83b94529-7"}]}],"isRoot":true},"nodeParts":{"83b94529-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"83b94529-0"},"83b94529-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"83b94529-2"},"83b94529-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-4"},"83b94529-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-6"}},"nodeMetas":{"83b94529-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"83b94529-1"},"imported":[{"uid":"83b94529-4"},{"uid":"83b94529-6"}],"importedBy":[{"uid":"83b94529-2"}],"isEntry":true},"83b94529-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"83b94529-3"},"imported":[{"uid":"83b94529-0"}],"importedBy":[],"isEntry":true},"83b94529-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"83b94529-5"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true},"83b94529-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"83b94529-7"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -10136,7 +10136,7 @@ exports[`GH-59 > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/gh59/src/components/index.js",
-            "uid": "2dc6d9c9-1"
+            "uid": "83b94529-1"
           }
         ]
       },
@@ -10145,7 +10145,7 @@ exports[`GH-59 > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/gh59/src/index.js",
-            "uid": "2dc6d9c9-3"
+            "uid": "83b94529-3"
           }
         ]
       },
@@ -10154,7 +10154,7 @@ exports[`GH-59 > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/gh59/src/components/A.js",
-            "uid": "2dc6d9c9-5"
+            "uid": "83b94529-5"
           }
         ]
       },
@@ -10163,7 +10163,7 @@ exports[`GH-59 > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/gh59/src/components/B.js",
-            "uid": "2dc6d9c9-7"
+            "uid": "83b94529-7"
           }
         ]
       }
@@ -10171,94 +10171,94 @@ exports[`GH-59 > test - "raw-data" 1`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "2dc6d9c9-1": {
+    "83b94529-1": {
       "renderedLength": 0,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "2dc6d9c9-0"
+      "metaUid": "83b94529-0"
     },
-    "2dc6d9c9-3": {
+    "83b94529-3": {
       "renderedLength": 18,
       "gzipLength": 38,
       "brotliLength": 22,
-      "metaUid": "2dc6d9c9-2"
+      "metaUid": "83b94529-2"
     },
-    "2dc6d9c9-5": {
+    "83b94529-5": {
       "renderedLength": 12,
       "gzipLength": 32,
       "brotliLength": 16,
-      "metaUid": "2dc6d9c9-4"
+      "metaUid": "83b94529-4"
     },
-    "2dc6d9c9-7": {
+    "83b94529-7": {
       "renderedLength": 12,
       "gzipLength": 32,
       "brotliLength": 16,
-      "metaUid": "2dc6d9c9-6"
+      "metaUid": "83b94529-6"
     }
   },
   "nodeMetas": {
-    "2dc6d9c9-0": {
+    "83b94529-0": {
       "id": "/test/gh59/src/components/index.js",
       "moduleParts": {
-        "components/index.js": "2dc6d9c9-1"
+        "components/index.js": "83b94529-1"
       },
       "imported": [
         {
-          "uid": "2dc6d9c9-4"
+          "uid": "83b94529-4"
         },
         {
-          "uid": "2dc6d9c9-6"
+          "uid": "83b94529-6"
         }
       ],
       "importedBy": [
         {
-          "uid": "2dc6d9c9-2"
+          "uid": "83b94529-2"
         }
       ],
       "isEntry": true
     },
-    "2dc6d9c9-2": {
+    "83b94529-2": {
       "id": "/test/gh59/src/index.js",
       "moduleParts": {
-        "index.js": "2dc6d9c9-3"
+        "index.js": "83b94529-3"
       },
       "imported": [
         {
-          "uid": "2dc6d9c9-0"
+          "uid": "83b94529-0"
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "2dc6d9c9-4": {
+    "83b94529-4": {
       "id": "/test/gh59/src/components/A.js",
       "moduleParts": {
-        "components/A.js": "2dc6d9c9-5"
+        "components/A.js": "83b94529-5"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "2dc6d9c9-0"
+          "uid": "83b94529-0"
         }
       ],
       "isEntry": true
     },
-    "2dc6d9c9-6": {
+    "83b94529-6": {
       "id": "/test/gh59/src/components/B.js",
       "moduleParts": {
-        "components/B.js": "2dc6d9c9-7"
+        "components/B.js": "83b94529-7"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "2dc6d9c9-0"
+          "uid": "83b94529-0"
         }
       ],
       "isEntry": true
     }
   },
   "env": {
-    "rollup": "4.41.1"
+    "rollup": "4.42.0"
   },
   "options": {
     "gzip": true,
@@ -15251,7 +15251,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"2dc6d9c9-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"2dc6d9c9-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"2dc6d9c9-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"2dc6d9c9-7"}]}],"isRoot":true},"nodeParts":{"2dc6d9c9-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"2dc6d9c9-0"},"2dc6d9c9-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"2dc6d9c9-2"},"2dc6d9c9-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-4"},"2dc6d9c9-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-6"}},"nodeMetas":{"2dc6d9c9-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"2dc6d9c9-1"},"imported":[{"uid":"2dc6d9c9-4"},{"uid":"2dc6d9c9-6"}],"importedBy":[{"uid":"2dc6d9c9-2"}],"isEntry":true},"2dc6d9c9-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"2dc6d9c9-3"},"imported":[{"uid":"2dc6d9c9-0"}],"importedBy":[],"isEntry":true},"2dc6d9c9-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"2dc6d9c9-5"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true},"2dc6d9c9-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"2dc6d9c9-7"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"83b94529-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"83b94529-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"83b94529-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"83b94529-7"}]}],"isRoot":true},"nodeParts":{"83b94529-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"83b94529-0"},"83b94529-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"83b94529-2"},"83b94529-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-4"},"83b94529-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-6"}},"nodeMetas":{"83b94529-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"83b94529-1"},"imported":[{"uid":"83b94529-4"},{"uid":"83b94529-6"}],"importedBy":[{"uid":"83b94529-2"}],"isEntry":true},"83b94529-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"83b94529-3"},"imported":[{"uid":"83b94529-0"}],"importedBy":[],"isEntry":true},"83b94529-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"83b94529-5"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true},"83b94529-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"83b94529-7"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -20204,7 +20204,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"2dc6d9c9-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"2dc6d9c9-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"2dc6d9c9-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"2dc6d9c9-7"}]}],"isRoot":true},"nodeParts":{"2dc6d9c9-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"2dc6d9c9-0"},"2dc6d9c9-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"2dc6d9c9-2"},"2dc6d9c9-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-4"},"2dc6d9c9-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"2dc6d9c9-6"}},"nodeMetas":{"2dc6d9c9-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"2dc6d9c9-1"},"imported":[{"uid":"2dc6d9c9-4"},{"uid":"2dc6d9c9-6"}],"importedBy":[{"uid":"2dc6d9c9-2"}],"isEntry":true},"2dc6d9c9-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"2dc6d9c9-3"},"imported":[{"uid":"2dc6d9c9-0"}],"importedBy":[],"isEntry":true},"2dc6d9c9-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"2dc6d9c9-5"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true},"2dc6d9c9-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"2dc6d9c9-7"},"imported":[],"importedBy":[{"uid":"2dc6d9c9-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","children":[{"name":"test/gh59/src/components/index.js","uid":"83b94529-1"}]},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"83b94529-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"83b94529-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"83b94529-7"}]}],"isRoot":true},"nodeParts":{"83b94529-1":{"renderedLength":0,"gzipLength":0,"brotliLength":0,"metaUid":"83b94529-0"},"83b94529-3":{"renderedLength":18,"gzipLength":38,"brotliLength":22,"metaUid":"83b94529-2"},"83b94529-5":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-4"},"83b94529-7":{"renderedLength":12,"gzipLength":32,"brotliLength":16,"metaUid":"83b94529-6"}},"nodeMetas":{"83b94529-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"83b94529-1"},"imported":[{"uid":"83b94529-4"},{"uid":"83b94529-6"}],"importedBy":[{"uid":"83b94529-2"}],"isEntry":true},"83b94529-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"83b94529-3"},"imported":[{"uid":"83b94529-0"}],"importedBy":[],"isEntry":true},"83b94529-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"83b94529-5"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true},"83b94529-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"83b94529-7"},"imported":[],"importedBy":[{"uid":"83b94529-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":true,"brotli":true,"sourcemap":false}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -24895,7 +24895,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"d06f2095-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"d06f2095-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"d06f2095-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"d06f2095-7"}]}],"isRoot":true},"nodeParts":{"d06f2095-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"d06f2095-0"},"d06f2095-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-2"},"d06f2095-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-4"},"d06f2095-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-6"}},"nodeMetas":{"d06f2095-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"d06f2095-1"},"imported":[{"uid":"d06f2095-4"},{"uid":"d06f2095-6"}],"importedBy":[{"uid":"d06f2095-2"}],"isEntry":true},"d06f2095-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"d06f2095-3"},"imported":[{"uid":"d06f2095-0"}],"importedBy":[],"isEntry":true},"d06f2095-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"d06f2095-5"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true},"d06f2095-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"d06f2095-7"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"9114fe46-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"9114fe46-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"9114fe46-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"9114fe46-7"}]}],"isRoot":true},"nodeParts":{"9114fe46-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"9114fe46-0"},"9114fe46-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-2"},"9114fe46-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-4"},"9114fe46-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-6"}},"nodeMetas":{"9114fe46-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"9114fe46-1"},"imported":[{"uid":"9114fe46-4"},{"uid":"9114fe46-6"}],"importedBy":[{"uid":"9114fe46-2"}],"isEntry":true},"9114fe46-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"9114fe46-3"},"imported":[{"uid":"9114fe46-0"}],"importedBy":[],"isEntry":true},"9114fe46-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"9114fe46-5"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true},"9114fe46-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"9114fe46-7"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -30321,7 +30321,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"d06f2095-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"d06f2095-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"d06f2095-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"d06f2095-7"}]}],"isRoot":true},"nodeParts":{"d06f2095-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"d06f2095-0"},"d06f2095-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-2"},"d06f2095-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-4"},"d06f2095-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-6"}},"nodeMetas":{"d06f2095-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"d06f2095-1"},"imported":[{"uid":"d06f2095-4"},{"uid":"d06f2095-6"}],"importedBy":[{"uid":"d06f2095-2"}],"isEntry":true},"d06f2095-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"d06f2095-3"},"imported":[{"uid":"d06f2095-0"}],"importedBy":[],"isEntry":true},"d06f2095-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"d06f2095-5"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true},"d06f2095-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"d06f2095-7"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"9114fe46-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"9114fe46-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"9114fe46-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"9114fe46-7"}]}],"isRoot":true},"nodeParts":{"9114fe46-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"9114fe46-0"},"9114fe46-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-2"},"9114fe46-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-4"},"9114fe46-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-6"}},"nodeMetas":{"9114fe46-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"9114fe46-1"},"imported":[{"uid":"9114fe46-4"},{"uid":"9114fe46-6"}],"importedBy":[{"uid":"9114fe46-2"}],"isEntry":true},"9114fe46-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"9114fe46-3"},"imported":[{"uid":"9114fe46-0"}],"importedBy":[],"isEntry":true},"9114fe46-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"9114fe46-5"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true},"9114fe46-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"9114fe46-7"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -30350,14 +30350,14 @@ exports[`GH-59 sourcemap > test - "raw-data" 1`] = `
     "children": [
       {
         "name": "components/index.js",
-        "uid": "d06f2095-1"
+        "uid": "9114fe46-1"
       },
       {
         "name": "index.js",
         "children": [
           {
             "name": "test/gh59/src/index.js",
-            "uid": "d06f2095-3"
+            "uid": "9114fe46-3"
           }
         ]
       },
@@ -30366,7 +30366,7 @@ exports[`GH-59 sourcemap > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/gh59/src/components/A.js",
-            "uid": "d06f2095-5"
+            "uid": "9114fe46-5"
           }
         ]
       },
@@ -30375,7 +30375,7 @@ exports[`GH-59 sourcemap > test - "raw-data" 1`] = `
         "children": [
           {
             "name": "test/gh59/src/components/B.js",
-            "uid": "d06f2095-7"
+            "uid": "9114fe46-7"
           }
         ]
       }
@@ -30383,95 +30383,95 @@ exports[`GH-59 sourcemap > test - "raw-data" 1`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "d06f2095-1": {
+    "9114fe46-1": {
       "id": "components/index.js",
       "gzipLength": 0,
       "brotliLength": 0,
       "renderedLength": 112,
-      "metaUid": "d06f2095-0"
+      "metaUid": "9114fe46-0"
     },
-    "d06f2095-3": {
+    "9114fe46-3": {
       "renderedLength": 19,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d06f2095-2"
+      "metaUid": "9114fe46-2"
     },
-    "d06f2095-5": {
+    "9114fe46-5": {
       "renderedLength": 13,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d06f2095-4"
+      "metaUid": "9114fe46-4"
     },
-    "d06f2095-7": {
+    "9114fe46-7": {
       "renderedLength": 13,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "d06f2095-6"
+      "metaUid": "9114fe46-6"
     }
   },
   "nodeMetas": {
-    "d06f2095-0": {
+    "9114fe46-0": {
       "id": "/test/gh59/src/components/index.js",
       "moduleParts": {
-        "components/index.js": "d06f2095-1"
+        "components/index.js": "9114fe46-1"
       },
       "imported": [
         {
-          "uid": "d06f2095-4"
+          "uid": "9114fe46-4"
         },
         {
-          "uid": "d06f2095-6"
+          "uid": "9114fe46-6"
         }
       ],
       "importedBy": [
         {
-          "uid": "d06f2095-2"
+          "uid": "9114fe46-2"
         }
       ],
       "isEntry": true
     },
-    "d06f2095-2": {
+    "9114fe46-2": {
       "id": "/test/gh59/src/index.js",
       "moduleParts": {
-        "index.js": "d06f2095-3"
+        "index.js": "9114fe46-3"
       },
       "imported": [
         {
-          "uid": "d06f2095-0"
+          "uid": "9114fe46-0"
         }
       ],
       "importedBy": [],
       "isEntry": true
     },
-    "d06f2095-4": {
+    "9114fe46-4": {
       "id": "/test/gh59/src/components/A.js",
       "moduleParts": {
-        "components/A.js": "d06f2095-5"
+        "components/A.js": "9114fe46-5"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d06f2095-0"
+          "uid": "9114fe46-0"
         }
       ],
       "isEntry": true
     },
-    "d06f2095-6": {
+    "9114fe46-6": {
       "id": "/test/gh59/src/components/B.js",
       "moduleParts": {
-        "components/B.js": "d06f2095-7"
+        "components/B.js": "9114fe46-7"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "d06f2095-0"
+          "uid": "9114fe46-0"
         }
       ],
       "isEntry": true
     }
   },
   "env": {
-    "rollup": "4.41.1"
+    "rollup": "4.42.0"
   },
   "options": {
     "gzip": false,
@@ -35464,7 +35464,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"d06f2095-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"d06f2095-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"d06f2095-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"d06f2095-7"}]}],"isRoot":true},"nodeParts":{"d06f2095-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"d06f2095-0"},"d06f2095-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-2"},"d06f2095-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-4"},"d06f2095-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-6"}},"nodeMetas":{"d06f2095-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"d06f2095-1"},"imported":[{"uid":"d06f2095-4"},{"uid":"d06f2095-6"}],"importedBy":[{"uid":"d06f2095-2"}],"isEntry":true},"d06f2095-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"d06f2095-3"},"imported":[{"uid":"d06f2095-0"}],"importedBy":[],"isEntry":true},"d06f2095-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"d06f2095-5"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true},"d06f2095-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"d06f2095-7"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"9114fe46-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"9114fe46-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"9114fe46-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"9114fe46-7"}]}],"isRoot":true},"nodeParts":{"9114fe46-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"9114fe46-0"},"9114fe46-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-2"},"9114fe46-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-4"},"9114fe46-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-6"}},"nodeMetas":{"9114fe46-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"9114fe46-1"},"imported":[{"uid":"9114fe46-4"},{"uid":"9114fe46-6"}],"importedBy":[{"uid":"9114fe46-2"}],"isEntry":true},"9114fe46-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"9114fe46-3"},"imported":[{"uid":"9114fe46-0"}],"importedBy":[],"isEntry":true},"9114fe46-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"9114fe46-5"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true},"9114fe46-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"9114fe46-7"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
@@ -40417,7 +40417,7 @@ var drawChart = (function (exports) {
   </script>
   <script>
     /*<!--*/
-    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"d06f2095-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"d06f2095-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"d06f2095-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"d06f2095-7"}]}],"isRoot":true},"nodeParts":{"d06f2095-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"d06f2095-0"},"d06f2095-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-2"},"d06f2095-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-4"},"d06f2095-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"d06f2095-6"}},"nodeMetas":{"d06f2095-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"d06f2095-1"},"imported":[{"uid":"d06f2095-4"},{"uid":"d06f2095-6"}],"importedBy":[{"uid":"d06f2095-2"}],"isEntry":true},"d06f2095-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"d06f2095-3"},"imported":[{"uid":"d06f2095-0"}],"importedBy":[],"isEntry":true},"d06f2095-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"d06f2095-5"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true},"d06f2095-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"d06f2095-7"},"imported":[],"importedBy":[{"uid":"d06f2095-0"}],"isEntry":true}},"env":{"rollup":"4.41.1"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
+    const data = {"version":2,"tree":{"name":"root","children":[{"name":"components/index.js","uid":"9114fe46-1"},{"name":"index.js","children":[{"name":"test/gh59/src/index.js","uid":"9114fe46-3"}]},{"name":"components/A.js","children":[{"name":"test/gh59/src/components/A.js","uid":"9114fe46-5"}]},{"name":"components/B.js","children":[{"name":"test/gh59/src/components/B.js","uid":"9114fe46-7"}]}],"isRoot":true},"nodeParts":{"9114fe46-1":{"id":"components/index.js","gzipLength":0,"brotliLength":0,"renderedLength":112,"metaUid":"9114fe46-0"},"9114fe46-3":{"renderedLength":19,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-2"},"9114fe46-5":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-4"},"9114fe46-7":{"renderedLength":13,"gzipLength":0,"brotliLength":0,"metaUid":"9114fe46-6"}},"nodeMetas":{"9114fe46-0":{"id":"/test/gh59/src/components/index.js","moduleParts":{"components/index.js":"9114fe46-1"},"imported":[{"uid":"9114fe46-4"},{"uid":"9114fe46-6"}],"importedBy":[{"uid":"9114fe46-2"}],"isEntry":true},"9114fe46-2":{"id":"/test/gh59/src/index.js","moduleParts":{"index.js":"9114fe46-3"},"imported":[{"uid":"9114fe46-0"}],"importedBy":[],"isEntry":true},"9114fe46-4":{"id":"/test/gh59/src/components/A.js","moduleParts":{"components/A.js":"9114fe46-5"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true},"9114fe46-6":{"id":"/test/gh59/src/components/B.js","moduleParts":{"components/B.js":"9114fe46-7"},"imported":[],"importedBy":[{"uid":"9114fe46-0"}],"isEntry":true}},"env":{"rollup":"4.42.0"},"options":{"gzip":false,"brotli":false,"sourcemap":true}};
 
     const run = () => {
       const width = window.innerWidth;
