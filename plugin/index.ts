@@ -290,7 +290,7 @@ export const visualizer = (
       });
 
       if (opts.emitFile) {
-        if (path.isAbsolute(filename) || filename.startsWith(".")) {
+        if (path.isAbsolute(filename) || filename.startsWith("./") || filename.startsWith("../")) {
           this.error(ERR_FILENAME_EMIT);
         }
         this.emitFile({
