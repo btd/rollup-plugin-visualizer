@@ -290,7 +290,9 @@ export const visualizer = (
       });
 
       if (opts.emitFile) {
-        if (path.isAbsolute(filename) || filename.startsWith("./") || filename.startsWith("../")) {
+        // Regex checks for filenames starting with `./`, `../`, `.\` or `..\`
+        // to account for windows-style path separators
+        if (path.isAbsolute(filename) ||  /^\.{1,2}[/\\]/.test(filename)) {
           this.error(ERR_FILENAME_EMIT);
         }
         this.emitFile({
