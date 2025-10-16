@@ -6,6 +6,14 @@
 ** `open` updated to >= 10
 ** `yargs` updated to >=18
 
+## 6.0.5
+
+* Bump version to test new deployment because of NPM update
+
+## 6.0.4
+
+* Allow using `emitFile` with dot filenames https://github.com/btd/rollup-plugin-visualizer/pull/211
+
 ## 6.0.3
 
 * Republish due to bug in npm cli https://github.com/npm/cli/issues/4828
