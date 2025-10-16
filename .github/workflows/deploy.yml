@@ -1,21 +1,31 @@
-name: Node.js Package
+name: Node.js Package Publish
+
+# https://docs.npmjs.com/trusted-publishers
+
 on:
   push:
     tags:
       - v*
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read 
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    # Setup .npmrc file to publish to npm
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        registry-url: 'https://registry.npmjs.org'
-    - run: npm ci --ignore-scripts
-    - run: npm run build
-    - run: npm test
-    - run: npm publish --ignore-scripts
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm test
+      - run: npm publish --ignore-scripts
