@@ -1,6 +1,6 @@
 import { GetModuleInfo } from "rollup";
-import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf } from "../shared/types";
-import { ModuleMapper } from "./module-mapper";
+import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf } from "../shared/types.js";
+import { ModuleMapper } from "./module-mapper.js";
 
 interface MappedNode {
   uid: string;

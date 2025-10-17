@@ -1,5 +1,5 @@
-import * as zlib from "zlib";
-import { promisify } from "util";
+import * as zlib from "node:zlib";
+import { promisify } from "node:util";
 
 const gzip = promisify(zlib.gzip);
 const brotliCompress = promisify(zlib.brotliCompress);

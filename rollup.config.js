@@ -11,7 +11,10 @@ export default HTML_TEMPLATE.map((templateType) => ({
   input: `./src/${templateType}/index.tsx`,
 
   plugins: [
-    typescript({ tsconfig: "./src/tsconfig.json", noEmitOnError: true }),
+    typescript({ 
+      tsconfig: "./src/tsconfig.json", 
+      noEmitOnError: false,
+    }),
     resolve({ mainFields: ["module", "main"] }),
     commonJs({
       ignoreGlobal: true,

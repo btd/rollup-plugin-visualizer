@@ -11,16 +11,14 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "paths": {
-      "*": ["../node_modules/*", "./@types/*"]
-    },
-    "types": []
+
+
   },
   "include": ["./**/*", "../shared/**/*"],
   "exclude": ["node_modules"]

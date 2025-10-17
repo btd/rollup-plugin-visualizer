@@ -1,20 +1,20 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 
 import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
 import opn, { Options as OpenOptions } from "open";
 
-import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types";
-import { version } from "./version";
+import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types.js";
+import { version } from "./version.js";
 
-import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress";
+import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress.js";
 
-import { TemplateType } from "./template-types";
-import { ModuleMapper, replaceHashPlaceholders } from "./module-mapper";
-import { addLinks, buildTree, mergeTrees } from "./data";
-import { getSourcemapModules } from "./sourcemap";
-import { renderTemplate } from "./render-template";
-import { createFilter, Filter } from "../shared/create-filter";
+import { TemplateType } from "./template-types.js";
+import { ModuleMapper, replaceHashPlaceholders } from "./module-mapper.js";
+import { addLinks, buildTree, mergeTrees } from "./data.js";
+import { getSourcemapModules } from "./sourcemap.js";
+import { renderTemplate } from "./render-template.js";
+import { createFilter, Filter } from "../shared/create-filter.js";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";

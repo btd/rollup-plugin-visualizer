@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createFilter } from "./create-filter";
+import { createFilter } from "./create-filter.js";
 
 describe("createFilter", () => {
   it("should return true when input and output is empty", () => {

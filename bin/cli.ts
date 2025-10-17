@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-import { promises as fs } from "fs";
-import path from "path";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 
 import opn from "open";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-import { renderTemplate } from "../plugin/render-template";
-import TEMPLATE, { TemplateType } from "../plugin/template-types";
-import { warn } from "../plugin/warn";
-import { version } from "../plugin/version";
-import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../shared/types";
+import { renderTemplate } from "../plugin/render-template.js";
+import TEMPLATE, { TemplateType } from "../plugin/template-types.js";
+import { warn } from "../plugin/warn.js";
+import { version } from "../plugin/version.js";
+import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../shared/types.js";
 
 const argv = yargs(hideBin(process.argv))
   .option("filename", {

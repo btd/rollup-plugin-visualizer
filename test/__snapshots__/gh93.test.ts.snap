@@ -11,9 +11,9 @@ exports[`GH-93 > test - "flamegraph" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -3040,7 +3040,7 @@ var drawChart = (function (exports) {
           const percentageString = percentage + "%";
           const path = node
               .ancestors()
-              .reverse()
+              .toReversed()
               .map((d) => d.data.name)
               .join("/");
           let dataNode = null;
@@ -3160,6 +3160,7 @@ var drawChart = (function (exports) {
               const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
               return ownSize * zoomMultiplier * filterMultiplier;
           })
+              // eslint-disable-next-line unicorn/no-array-sort
               .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
           return layout(rootWithSizesAndSorted);
       }, [
@@ -4717,9 +4718,9 @@ exports[`GH-93 > test - "network" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -10200,9 +10201,9 @@ exports[`GH-93 > test - "sunburst" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -15095,6 +15096,7 @@ var drawChart = (function (exports) {
               const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
               return ownSize * zoomMultiplier * filterMultiplier;
           })
+              // eslint-disable-next-line unicorn/no-array-sort
               .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
           return layout(rootWithSizesAndSorted);
       }, [
@@ -15205,9 +15207,9 @@ exports[`GH-93 > test - "treemap" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -18623,7 +18625,7 @@ var drawChart = (function (exports) {
           const percentageString = percentage + "%";
           const path = node
               .ancestors()
-              .reverse()
+              .toReversed()
               .map((d) => d.data.name)
               .join("/");
           let dataNode = null;
@@ -18743,6 +18745,7 @@ var drawChart = (function (exports) {
               const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
               return ownSize * zoomMultiplier * filterMultiplier;
           })
+              // eslint-disable-next-line unicorn/no-array-sort
               .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
           return layout(rootWithSizesAndSorted);
       }, [
@@ -20159,9 +20162,9 @@ exports[`GH-93 sourcemap > test - "flamegraph" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -23188,7 +23191,7 @@ var drawChart = (function (exports) {
           const percentageString = percentage + "%";
           const path = node
               .ancestors()
-              .reverse()
+              .toReversed()
               .map((d) => d.data.name)
               .join("/");
           let dataNode = null;
@@ -23308,6 +23311,7 @@ var drawChart = (function (exports) {
               const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
               return ownSize * zoomMultiplier * filterMultiplier;
           })
+              // eslint-disable-next-line unicorn/no-array-sort
               .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
           return layout(rootWithSizesAndSorted);
       }, [
@@ -24861,9 +24865,9 @@ exports[`GH-93 sourcemap > test - "network" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -30336,9 +30340,9 @@ exports[`GH-93 sourcemap > test - "sunburst" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -35231,6 +35235,7 @@ var drawChart = (function (exports) {
               const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
               return ownSize * zoomMultiplier * filterMultiplier;
           })
+              // eslint-disable-next-line unicorn/no-array-sort
               .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
           return layout(rootWithSizesAndSorted);
       }, [
@@ -35341,9 +35346,9 @@ exports[`GH-93 sourcemap > test - "treemap" 1`] = `
   <title>Rollup Visualizer</title>
   <style>
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --background-color: #2b2d42;
   --text-color: #edf2f4;
 }
@@ -38759,7 +38764,7 @@ var drawChart = (function (exports) {
           const percentageString = percentage + "%";
           const path = node
               .ancestors()
-              .reverse()
+              .toReversed()
               .map((d) => d.data.name)
               .join("/");
           let dataNode = null;
@@ -38879,6 +38884,7 @@ var drawChart = (function (exports) {
               const filterMultiplier = getModuleFilterMultiplier(bundleId, meta);
               return ownSize * zoomMultiplier * filterMultiplier;
           })
+              // eslint-disable-next-line unicorn/no-array-sort
               .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
           return layout(rootWithSizesAndSorted);
       }, [

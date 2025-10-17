@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { promises as fs } from "fs";
-import path from "path";
-import { BundleId, ModuleLengths, VisualizerData } from "../shared/types";
-import { TemplateType } from "./template-types";
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import { BundleId, ModuleLengths, VisualizerData } from "../shared/types.js";
+import { TemplateType } from "./template-types.js";
 
 const htmlEscape = (str: string) =>
   str
@@ -63,8 +63,8 @@ const buildHtml =
   (template: TemplateType) =>
   async ({ title, data }: RenderTemplateOptions): Promise<string> => {
     const [script, style] = await Promise.all([
-      fs.readFile(path.join(__dirname, "..", "lib", `${template}.js`), "utf8"),
-      fs.readFile(path.join(__dirname, "..", "lib", `${template}.css`), "utf8"),
+      fs.readFile(path.join(import.meta.dirname, "..", "lib", `${template}.js`), "utf8"),
+      fs.readFile(path.join(import.meta.dirname, "..", "lib", `${template}.css`), "utf8"),
     ]);
 
     return buildHtmlTemplate(title, script, data, style);

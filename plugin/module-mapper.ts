@@ -5,8 +5,8 @@ import {
   ModuleLengths,
   ModuleUID,
   VisualizerData,
-} from "../shared/types";
-import * as crypto from "crypto";
+} from "../shared/types.js";
+import * as crypto from "node:crypto";
 
 const HASH_PLACEHOLDER = "!{ROLLUP_VISUALIZER_HASH_PLACEHOLDER}";
 const HASH_PLACEHOLDER_REGEXP = new RegExp(`"${HASH_PLACEHOLDER}-(\\d+)"`, "g");
