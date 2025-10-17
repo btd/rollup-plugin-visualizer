@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string", "DOM"],
-    "module": "commonjs",
-    "target": "es2019",
+    "lib": ["es2020", "DOM"],
+    "module": "es2020",
+    "target": "es2020",
 
     "strict": true,
     "esModuleInterop": true,
@@ -10,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "outDir": "dist",
     "declaration": true,
     "types": [

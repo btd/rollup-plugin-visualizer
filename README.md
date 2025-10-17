@@ -22,20 +22,22 @@ yarn add --dev rollup-plugin-visualizer
 
 ## Usage
 
+## Requirements
+
+This package is **ESM-only** and requires Node.js >= 22.
+
 Import
 
 ```javascript
-// es
 import { visualizer } from "rollup-plugin-visualizer";
-// or
-// cjs
-const { visualizer } = require("rollup-plugin-visualizer");
 ```
 
 Usage with rollup (rollup.config.js)
 
 ```js
-module.exports = {
+import { visualizer } from "rollup-plugin-visualizer";
+
+export default {
   plugins: [
     // put it last
     visualizer(),
@@ -58,7 +60,9 @@ export default defineConfig({
 Usage with vite (vite.config.js)
 
 ```js
-module.exports = {
+import { visualizer } from "rollup-plugin-visualizer";
+
+export default {
   plugins: [visualizer()],
 };
 ```
@@ -76,7 +80,9 @@ export default defineConfig({
 Usage with SvelteKit (vite.config.js)
 
 ```js
-const config = {
+import { visualizer } from "rollup-plugin-visualizer";
+
+export default {
   plugins: [
     visualizer({
       emitFile: true,
@@ -84,8 +90,6 @@ const config = {
     }),
   ],
 };
-
-export default config;
 ```
 
 You will find 2/3 files in .svelte-kit/output dir named stats.html (see vite logs for file locations) . You can use this snippet as a starting point and change props/path.
