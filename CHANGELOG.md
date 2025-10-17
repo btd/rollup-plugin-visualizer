@@ -2,7 +2,8 @@
 
 ## 7.0.0 (future)
 
-* Drop NodeJS 20
+* Drop NodeJS 20, currently minimal version 22
+* Update dependencies
 * Migrate to ESM as dependencies moving to ESM
 ** `open` updated to >= 10
 ** `yargs` updated to >=18
