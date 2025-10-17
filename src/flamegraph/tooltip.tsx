@@ -63,7 +63,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({
 
     const path = node
       .ancestors()
-      .reverse()
+      .toReversed()
       .map((d) => d.data.name)
       .join("/");
 

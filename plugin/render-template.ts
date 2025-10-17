@@ -89,7 +89,7 @@ const outputPlainTextList = (strData: string) => {
     }
   }
 
-  const bundlesEntries = Object.entries(bundles).sort((e1, e2) => e1[0].localeCompare(e2[0]));
+  const bundlesEntries = Object.entries(bundles).toSorted((e1, e2) => e1[0].localeCompare(e2[0]));
 
   let output = "";
   const IDENT = "  ";

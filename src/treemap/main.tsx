@@ -65,6 +65,7 @@ export const Main: FunctionalComponent = () => {
 
         return ownSize * zoomMultiplier * filterMultiplier;
       })
+      // eslint-disable-next-line unicorn/no-array-sort
       .sort((a, b) => getModuleSize(a.data, sizeProperty) - getModuleSize(b.data, sizeProperty));
 
     return layout(rootWithSizesAndSorted);
