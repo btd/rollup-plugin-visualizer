@@ -8,6 +8,11 @@
 ** `open` updated to >= 10
 ** `yargs` updated to >=18
 
+## 6.0.6
+
+* Update version
+* Added rolldown RC versions to peer deps
+
 ## 6.0.5
 
 * Bump version to test new deployment because of NPM update
