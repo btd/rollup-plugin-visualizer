@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "strict": true,
 
-
+    "outDir": "../dist"
   },
   "include": ["./**/*", "../shared/**/*"],
   "exclude": ["node_modules"]
