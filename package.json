@@ -40,7 +40,7 @@
     "picomatch": "^4.0.2"
   },
   "peerDependencies": {
-    "rolldown": "1.x || ^1.0.0-beta",
+    "rolldown": "1.x || ^1.0.0-beta || ^1.0.0-rc",
     "rollup": "2.x || 3.x || 4.x"
   },
   "peerDependenciesMeta": {
@@ -52,7 +52,7 @@
     }
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.0.0",
