@@ -8,6 +8,10 @@
 ** `open` updated to >= 10
 ** `yargs` updated to >=18
 
+## 6.0.7
+
+* Fix build
+
 ## 6.0.6
 
 * Update version
