@@ -86,7 +86,7 @@
     "sass": "^1.52.1",
     "tslib": "^2.8.1",
     "typescript": "~5.9.3",
-    "vitest": "^3.1.4"
+    "vitest": "^4.0.0"
   },
   "engines": {
     "node": ">=22"

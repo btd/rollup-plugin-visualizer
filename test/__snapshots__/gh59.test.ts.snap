@@ -18489,12 +18489,12 @@ var drawChart = (function (exports) {
       // this will make groups by height
       const nestedData = T(() => {
           const nestedDataMap = group(root.descendants(), (d) => d.height);
-          const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+          const nestedDataKV = Array.from(nestedDataMap, ([key, values]) => ({
               key,
               values,
           }));
-          nestedData.sort((a, b) => b.key - a.key);
-          return nestedData;
+          nestedDataKV.sort((a, b) => b.key - a.key);
+          return nestedDataKV;
       }, [root]);
       console.timeEnd("layering");
       return (u$1("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: \`0 0 \${width} \${height}\`, children: nestedData.map(({ key, values }) => {
@@ -38705,12 +38705,12 @@ var drawChart = (function (exports) {
       // this will make groups by height
       const nestedData = T(() => {
           const nestedDataMap = group(root.descendants(), (d) => d.height);
-          const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+          const nestedDataKV = Array.from(nestedDataMap, ([key, values]) => ({
               key,
               values,
           }));
-          nestedData.sort((a, b) => b.key - a.key);
-          return nestedData;
+          nestedDataKV.sort((a, b) => b.key - a.key);
+          return nestedDataKV;
       }, [root]);
       console.timeEnd("layering");
       return (u$1("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: \`0 0 \${width} \${height}\`, children: nestedData.map(({ key, values }) => {
