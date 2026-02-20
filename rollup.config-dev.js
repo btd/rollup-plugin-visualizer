@@ -6,13 +6,14 @@ import postcssUrl from "postcss-url";
 import { visualizer } from "./dist/plugin/index.js";
 
 const HTML_TEMPLATE = ["treemap", "sunburst", "network", "flamegraph"];
-const PLAIN_TEMPLATE = ["raw-data", "list"];
+const PLAIN_TEMPLATE = ["raw-data", "list", "markdown"];
 const ALL_TEMPLATE = [...HTML_TEMPLATE, ...PLAIN_TEMPLATE];
 
 const chooseExt = (template) => {
   if (template === "raw-data") return ".json";
 
   if (template === "list") return ".yml";
+  if (template === "markdown") return ".md";
 
   return ".html";
 };
@@ -22,7 +23,7 @@ export default ALL_TEMPLATE.map((templateType) => ({
   input: Object.fromEntries(HTML_TEMPLATE.map((t) => [t, `./src/${t}/index.tsx`])),
 
   plugins: [
-    typescript({ tsconfig: "./src/tsconfig.json", noEmitOnError: true }),
+    typescript({ tsconfig: "./src/tsconfig.json", outDir: "./temp/", noEmitOnError: true }),
     resolve({ mainFields: ["module", "main"] }),
     commonJs({
       ignoreGlobal: true,
@@ -43,7 +44,7 @@ export default ALL_TEMPLATE.map((templateType) => ({
       gzipSize: true,
       brotliSize: true,
       sourcemap: !!process.env.SOURCEMAP,
-      open: !!process.env.OPEN
+      open: !!process.env.OPEN,
     }),
   ],
 

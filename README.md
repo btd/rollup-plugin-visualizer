@@ -133,6 +133,10 @@ This template produce JSON output with raw data. Normally it should be used with
 
 Output yml file with all the data, could be good idea to commit this file to track file changes.
 
+### Markdown
+
+Output markdown report with summary tables and bottom notes about report config and size precision.
+
 ## Options
 
 `filename` (string, default `stats.{ext depending template}`) - name of the file with diagram to generate
@@ -141,7 +145,7 @@ Output yml file with all the data, could be good idea to commit this file to tra
 
 `open` (boolean, default `false`) - Open generated file in default user agent
 
-`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`, `raw-data`, `list`, `flamegraph`.
+`template` (string, default `treemap`) - Which diagram type to use: `sunburst`, `treemap`, `network`, `raw-data`, `list`, `markdown`, `flamegraph`.
 
 `gzipSize` (boolean, default `false`) - Collect gzip size from source code and display it at chart.
 
@@ -212,7 +216,7 @@ See CHANGELOG.md.
 ## Versioning
 
 - Plugin backend (one appears in configs) are strictly follows SemVer
-- Plugin frontend (generated file):
+  - Plugin frontend (generated file):
   - `network`, `treemap`, `sunburst`, `flamegraph` can change does not matter of version (colors, texts, visual structure etc)
   - `raw-data` format follows own `version` property
-  - `list` follows semver
+  - `list` and `markdown` follows semver

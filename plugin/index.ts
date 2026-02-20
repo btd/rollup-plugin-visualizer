@@ -60,6 +60,7 @@ export interface PluginVisualizerOptions {
    * Which diagram to generate. 'sunburst' or 'treemap' can help find big dependencies or if they are repeated.
    * 'network' can answer you why something was included.
    * 'flamegraph' will be familar to tools that you know already.
+   * 'markdown' generates text report with notes about precision and config.
    *
    * @default 'treemap'
    */
@@ -123,6 +124,7 @@ const chooseDefaultFileName = (opts: PluginVisualizerOptions) => {
   if (opts.json || opts.template === "raw-data") return "stats.json";
 
   if (opts.template === "list") return "stats.yml";
+  if (opts.template === "markdown") return "stats.md";
 
   return "stats.html";
 };
@@ -154,8 +156,10 @@ export const visualizer = (
 
       const filter = createFilter(opts.include, opts.exclude);
 
-      const gzipSize = !!opts.gzipSize && !opts.sourcemap;
-      const brotliSize = !!opts.brotliSize && !opts.sourcemap;
+      const gzipSizeRequested = !!opts.gzipSize;
+      const brotliSizeRequested = !!opts.brotliSize;
+      const gzipSize = gzipSizeRequested && !opts.sourcemap;
+      const brotliSize = brotliSizeRequested && !opts.sourcemap;
       const gzipSizeGetter = gzipSize
         ? createGzipSizeGetter(typeof opts.gzipSize === "object" ? opts.gzipSize : {})
         : defaultSizeGetter;
@@ -287,6 +291,20 @@ export const visualizer = (
       const fileContent: string = await renderTemplate(template, {
         title,
         data: stringData,
+        reportConfig: {
+          sourcemap: !!opts.sourcemap,
+          outputSourcemap: !!outputOptions.sourcemap,
+          gzipSize: {
+            requested: gzipSizeRequested,
+            enabled: gzipSize,
+          },
+          brotliSize: {
+            requested: brotliSizeRequested,
+            enabled: brotliSize,
+          },
+          include: opts.include,
+          exclude: opts.exclude,
+        },
       });
 
       if (opts.emitFile) {
