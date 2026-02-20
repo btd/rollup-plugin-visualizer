@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-visualizer",
-  "version": "6.0.8",
+  "version": "7.0.0",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
   "bin": "./dist/bin/cli.js",
