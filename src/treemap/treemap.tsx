@@ -29,12 +29,12 @@ export const TreeMap: FunctionalComponent<TreeMapProps> = ({
       root.descendants(),
       (d: HierarchyNode<ModuleTree | ModuleTreeLeaf>) => d.height,
     );
-    const nestedData = Array.from(nestedDataMap, ([key, values]) => ({
+    const nestedDataKV = Array.from(nestedDataMap, ([key, values]) => ({
       key,
       values,
     }));
-    nestedData.sort((a, b) => b.key - a.key);
-    return nestedData;
+    nestedDataKV.sort((a, b) => b.key - a.key);
+    return nestedDataKV;
   }, [root]);
   console.timeEnd("layering");
 

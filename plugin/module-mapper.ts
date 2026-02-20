@@ -123,8 +123,8 @@ export class ModuleMapper {
 
   getNodeMetas(): Record<ModuleUID, ModuleMeta> {
     const nodeMetas: Record<ModuleUID, ModuleMeta> = {};
-    for (const { uid, meta } of Object.values(this.nodeMetas)) {
-      nodeMetas[uid] = {
+    for (const { uid: metaUid, meta } of Object.values(this.nodeMetas)) {
+      nodeMetas[metaUid] = {
         ...meta,
         imported: [...meta.imported].map((rawImport) => {
           const [uid, dynamic] = rawImport.split(",");
