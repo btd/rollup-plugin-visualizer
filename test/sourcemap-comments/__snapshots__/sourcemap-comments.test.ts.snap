@@ -19,7 +19,7 @@ exports[`Sourcemap Comments > test 3`] = `
         "children": [
           {
             "name": "test/sourcemap-comments/input.js",
-            "uid": "a315c19d-1"
+            "uid": "ba778d81-1"
           }
         ]
       }
@@ -27,18 +27,18 @@ exports[`Sourcemap Comments > test 3`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "a315c19d-1": {
+    "ba778d81-1": {
       "renderedLength": 16,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "a315c19d-0"
+      "metaUid": "ba778d81-0"
     }
   },
   "nodeMetas": {
-    "a315c19d-0": {
+    "ba778d81-0": {
       "id": "/test/sourcemap-comments/input.js",
       "moduleParts": {
-        "index.js": "a315c19d-1"
+        "index.js": "ba778d81-1"
       },
       "imported": [],
       "importedBy": [],
@@ -46,7 +46,7 @@ exports[`Sourcemap Comments > test 3`] = `
     }
   },
   "env": {
-    "rollup": "4.57.1"
+    "rollup": "4.58.0"
   },
   "options": {
     "gzip": false,
