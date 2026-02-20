@@ -1,25 +1,23 @@
 # Changelog
 
-## 7.0.0 (future)
+## 7.0.0
 
-* Drop NodeJS 20, currently minimal version 22
-* Update dependencies
-* Migrate to ESM as dependencies moving to ESM
-** `open` updated to >= 10
-** `yargs` updated to >=18
+* **Breaking change** Migrate package to ESM-only
+* **Breaking change** Drop NodeJS 20, minimal version is 22
+* Added rolldown RC versions to peer deps
+* Add markdown report template (LLM-friendly)
 
 ## 6.0.8
 
-* Update snapshots
+* Not published (rolled back, moved to 7.0.0)
 
 ## 6.0.7
 
-* Fix build
+* Not published (moved to 7.0.0)
 
 ## 6.0.6
 
-* Update version
-* Added rolldown RC versions to peer deps
+* Not published (moved to 7.0.0)
 
 ## 6.0.5
 
