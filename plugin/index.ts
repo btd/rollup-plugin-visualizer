@@ -58,6 +58,7 @@ export interface PluginVisualizerOptions {
 
   /**
    * Which diagram to generate. 'sunburst' or 'treemap' can help find big dependencies or if they are repeated.
+   * 'treemap-3d' renders the same hierarchy as extruded boxes with a 3D camera.
    * 'network' can answer you why something was included.
    * 'flamegraph' will be familar to tools that you know already.
    * 'markdown' generates text report with notes about precision and config.

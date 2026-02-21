@@ -150,7 +150,7 @@ Produces a Markdown report with summary tables and notes about config and size p
 - `filename` (`string`, default `stats.{ext based on template}`): Name of the generated report file.
 - `title` (`string`, default `Rollup Visualizer`): HTML `<title>` value.
 - `open` (`boolean`, default `false`): Open the generated file in your default browser.
-- `template` (`string`, default `treemap`): Report type: `sunburst`, `treemap`, `network`, `raw-data`, `list`, `markdown`, `flamegraph`.
+- `template` (`string`, default `treemap`): Report type: `sunburst`, `treemap`, `treemap-3d`, `network`, `raw-data`, `list`, `markdown`, `flamegraph`.
 - `gzipSize` (`boolean`, default `false`): Include gzip size in the report.
 - `brotliSize` (`boolean`, default `false`): Include Brotli size in the report.
 

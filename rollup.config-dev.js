@@ -5,7 +5,7 @@ import postcss from "rollup-plugin-postcss";
 import postcssUrl from "postcss-url";
 import { visualizer } from "./dist/plugin/index.js";
 
-const HTML_TEMPLATE = ["treemap", "sunburst", "network", "flamegraph"];
+const HTML_TEMPLATE = ["treemap", "treemap-3d", "sunburst", "network", "flamegraph"];
 const PLAIN_TEMPLATE = ["raw-data", "list", "markdown"];
 const ALL_TEMPLATE = [...HTML_TEMPLATE, ...PLAIN_TEMPLATE];
 
