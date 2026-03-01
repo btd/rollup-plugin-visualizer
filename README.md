@@ -222,4 +222,5 @@ See `CHANGELOG.md`.
 - The plugin API (the part used in your build config) follows SemVer.
 - Frontend report templates can change visual details (`network`, `treemap`, `sunburst`, `flamegraph`) without strict SemVer guarantees.
 - `raw-data` uses its own `version` field.
-- `list` and `markdown` outputs follow SemVer.
+- `list` outputs follow SemVer.
+- `markdown` do not follow any versioning for now and will change as LLM development changes
