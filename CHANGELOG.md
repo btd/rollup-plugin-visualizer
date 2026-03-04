@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.0.1
+
+* Fancy treemap
+* Correct main entry in package.json
+
 ## 7.0.0
 
 * **Breaking change** Migrate package to ESM-only
@@ -7,17 +12,13 @@
 * Added rolldown RC versions to peer deps
 * Add markdown report template (LLM-friendly)
 
+## 6.0.11
+
+* Identical to 6.0.5 to have latest v6 that is not deprecated
+
 ## 6.0.8
 
-* Not published (rolled back, moved to 7.0.0)
-
-## 6.0.7
-
-* Not published (moved to 7.0.0)
-
-## 6.0.6
-
-* Not published (moved to 7.0.0)
+* Deprecated - accidential breaking change
 
 ## 6.0.5
 
