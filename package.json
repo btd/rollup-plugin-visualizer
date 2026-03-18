@@ -34,7 +34,7 @@
     "picomatch": "^4.0.2"
   },
   "peerDependencies": {
-    "rolldown": "1.x",
+    "rolldown": "1.x || ^1.0.0-beta || ^1.0.0-rc",
     "rollup": "2.x || 3.x || 4.x"
   },
   "peerDependenciesMeta": {
