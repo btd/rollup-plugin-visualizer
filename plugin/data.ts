@@ -1,4 +1,4 @@
-import { GetModuleInfo } from "rollup";
+import type { GetModuleInfo } from "./rollup-types.js";
 import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf } from "../shared/types.js";
 import { ModuleMapper } from "./module-mapper.js";
 

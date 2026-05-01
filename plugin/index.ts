@@ -1,7 +1,8 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
+import type { OutputBundle, NormalizedOutputOptions } from "rollup";
+import type { Plugin, OutputOptions } from "./rollup-types.js";
 import opn, { Options as OpenOptions } from "open";
 
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types.js";
@@ -140,7 +141,10 @@ export const visualizer = (
       outputOptions: NormalizedOutputOptions,
       outputBundle: OutputBundle,
     ): Promise<void> {
-      opts = typeof opts === "function" ? opts(outputOptions) : opts;
+      // The local `OutputOptions` is a structural subset of rollup's
+      // `NormalizedOutputOptions` — see plugin/rollup-types.ts for why we
+      // don't import directly from "rollup" here.
+      opts = typeof opts === "function" ? opts(outputOptions as unknown as OutputOptions) : opts;
 
       if ("json" in opts) {
         this.warn(WARN_JSON_DEPRECATED);
