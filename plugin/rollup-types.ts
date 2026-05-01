@@ -41,7 +41,7 @@ export interface Plugin {
     options: any,
     bundle: any,
     isWrite?: boolean,
-  ) => unknown | Promise<unknown>;
+  ) => void | Promise<void>;
 }
 
 export interface OutputChunk {
