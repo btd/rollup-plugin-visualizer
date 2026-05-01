@@ -141,9 +141,6 @@ export const visualizer = (
       outputOptions: NormalizedOutputOptions,
       outputBundle: OutputBundle,
     ): Promise<void> {
-      // The local `OutputOptions` is a structural subset of rollup's
-      // `NormalizedOutputOptions` — see plugin/rollup-types.ts for why we
-      // don't import directly from "rollup" here.
       opts = typeof opts === "function" ? opts(outputOptions as unknown as OutputOptions) : opts;
 
       if ("json" in opts) {
