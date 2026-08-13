@@ -13,6 +13,7 @@
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "declaration": true,
+    "types": ["node"]
   },
   "include": ["plugin/**/*", "shared/**/*", "bin/**/*"],
   "exclude": ["node_modules"]
