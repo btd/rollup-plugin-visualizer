@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { OutputChunk } from "./rollup-types.js";
+import type { OutputChunk } from "./bundler-types.js";
 import type { RawSourceMap } from "source-map";
 import { SourceMapConsumer } from "source-map";
 

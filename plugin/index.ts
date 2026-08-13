@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import type { OutputBundle, NormalizedOutputOptions } from "rollup";
-import type { Plugin, OutputOptions } from "./rollup-types.js";
+import type { Plugin, OutputOptions } from "./bundler-types.js";
 import opn, { Options as OpenOptions } from "open";
 
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types.js";
