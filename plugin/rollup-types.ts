@@ -4,17 +4,17 @@
 export interface OutputOptions {
   dir?: string;
   file?: string;
-  format?: string;
+  format?: any;
   name?: string;
   entryFileNames?: string | ((chunkInfo: any) => string);
   chunkFileNames?: string | ((chunkInfo: any) => string);
   assetFileNames?: string | ((assetInfo: any) => string);
   sourcemap?: boolean | "inline" | "hidden";
-  banner?: unknown;
-  footer?: unknown;
-  intro?: unknown;
-  outro?: unknown;
-  globals?: unknown;
+  banner?: any;
+  footer?: any;
+  intro?: any;
+  outro?: any;
+  globals?: any;
   exports?: "auto" | "default" | "named" | "none";
 }
 

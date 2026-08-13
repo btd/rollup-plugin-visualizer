@@ -32,7 +32,9 @@
     "build-dev": "rollup -c rollup.config-dev.js",
     "clean": "del-cli dist",
     "prebuild": "npm run clean",
-    "test": "vitest --run"
+    "test": "run-s test:consumers test:unit",
+    "test:consumers": "node test/run-consumer-fixtures.mjs",
+    "test:unit": "vitest --run"
   },
   "dependencies": {
     "open": "^11.0.0",
