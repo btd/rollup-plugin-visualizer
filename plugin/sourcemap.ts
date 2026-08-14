@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { OutputChunk } from "./bundler-types.js";
+import { BundlerOutputChunk } from "./bundler-types.js";
 import type { RawSourceMap } from "source-map";
 import { SourceMapConsumer } from "source-map";
 
@@ -46,7 +46,7 @@ const getBytesPerFileUsingSourceMap = (
 
 export const getSourcemapModules = (
   id: string,
-  outputChunk: OutputChunk,
+  outputChunk: BundlerOutputChunk,
   dir: string,
 ): Promise<Record<string, SourceMapModuleRenderInfo>> => {
   if (outputChunk.map == null) {

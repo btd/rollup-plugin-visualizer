@@ -464,16 +464,16 @@ var drawChart = (function (exports) {
   let count = 0;
   class Id {
       constructor(id) {
-          this._id = id;
+          this.idValue = id;
           const url = new URL(window.location.href);
           url.hash = id;
-          this._href = url.toString();
+          this.hrefValue = url.toString();
       }
       get id() {
-          return this._id;
+          return this.idValue;
       }
       get href() {
-          return this._href;
+          return this.hrefValue;
       }
       toString() {
           return \`url(\${this.href})\`;
@@ -13267,16 +13267,16 @@ var drawChart = (function (exports) {
   let count = 0;
   class Id {
       constructor(id) {
-          this._id = id;
+          this.idValue = id;
           const url = new URL(window.location.href);
           url.hash = id;
-          this._href = url.toString();
+          this.hrefValue = url.toString();
       }
       get id() {
-          return this._id;
+          return this.idValue;
       }
       get href() {
-          return this._href;
+          return this.hrefValue;
       }
       toString() {
           return \`url(\${this.href})\`;
@@ -16951,16 +16951,16 @@ var drawChart = (function (exports) {
   let count = 0;
   class Id {
       constructor(id) {
-          this._id = id;
+          this.idValue = id;
           const url = new URL(window.location.href);
           url.hash = id;
-          this._href = url.toString();
+          this.hrefValue = url.toString();
       }
       get id() {
-          return this._id;
+          return this.idValue;
       }
       get href() {
-          return this._href;
+          return this.hrefValue;
       }
       toString() {
           return \`url(\${this.href})\`;
@@ -22095,16 +22095,16 @@ var drawChart = (function (exports) {
   let count = 0;
   class Id {
       constructor(id) {
-          this._id = id;
+          this.idValue = id;
           const url = new URL(window.location.href);
           url.hash = id;
-          this._href = url.toString();
+          this.hrefValue = url.toString();
       }
       get id() {
-          return this._id;
+          return this.idValue;
       }
       get href() {
-          return this._href;
+          return this.hrefValue;
       }
       toString() {
           return \`url(\${this.href})\`;
@@ -34892,16 +34892,16 @@ var drawChart = (function (exports) {
   let count = 0;
   class Id {
       constructor(id) {
-          this._id = id;
+          this.idValue = id;
           const url = new URL(window.location.href);
           url.hash = id;
-          this._href = url.toString();
+          this.hrefValue = url.toString();
       }
       get id() {
-          return this._id;
+          return this.idValue;
       }
       get href() {
-          return this._href;
+          return this.hrefValue;
       }
       toString() {
           return \`url(\${this.href})\`;
@@ -38576,16 +38576,16 @@ var drawChart = (function (exports) {
   let count = 0;
   class Id {
       constructor(id) {
-          this._id = id;
+          this.idValue = id;
           const url = new URL(window.location.href);
           url.hash = id;
-          this._href = url.toString();
+          this.hrefValue = url.toString();
       }
       get id() {
-          return this._id;
+          return this.idValue;
       }
       get href() {
-          return this._href;
+          return this.hrefValue;
       }
       toString() {
           return \`url(\${this.href})\`;
