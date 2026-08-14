@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.1.0
+
+* Published types no longer import from `rollup`, so they resolve with `rollup`, `rolldown` or `vite` installed alone. Previously they silently degraded to `any` under `skipLibCheck`, and failed with `TS2307` without it — which affected every `vite` 8 user, since `vite` 8 depends on `rolldown` and ships no `rollup`. Merge #218. Thanks to @birkskyum
+* Export `VisualizerPlugin` and `BundlerOutputOptions`, so the plugin type can be named without `rollup`
+* **Breaking change** (types only) the `visualizer(outputOptions => ...)` callback parameter now exposes only `dir`, `file` and `sourcemap`. Annotate it with your own bundler's `OutputOptions` to get the full type back
+* **Breaking change** (types only) the returned plugin declares just `name` and `generateBundle` instead of rollup's whole `Plugin` surface
+* Update deps
+
 ## 7.0.1
 
 * Fancy treemap
