@@ -1,22 +1,22 @@
 let count = 0;
 
 export class Id {
-  private _id: string;
-  private _href: string;
+  private readonly idValue: string;
+  private readonly hrefValue: string;
 
   constructor(id: string) {
-    this._id = id;
+    this.idValue = id;
     const url = new URL(window.location.href);
     url.hash = id;
-    this._href = url.toString();
+    this.hrefValue = url.toString();
   }
 
-  get id(): Id["_id"] {
-    return this._id;
+  get id(): string {
+    return this.idValue;
   }
 
-  get href(): Id["_href"] {
-    return this._href;
+  get href(): string {
+    return this.hrefValue;
   }
 
   toString(): string {

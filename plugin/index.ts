@@ -1,7 +1,12 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-import { OutputBundle, Plugin, NormalizedOutputOptions, OutputOptions } from "rollup";
+import {
+  BundlerNormalizedOutputOptions,
+  BundlerOutputBundle,
+  BundlerOutputOptions,
+  VisualizerPlugin,
+} from "./bundler-types.js";
 import opn, { Options as OpenOptions } from "open";
 
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types.js";
@@ -15,6 +20,8 @@ import { addLinks, buildTree, mergeTrees } from "./data.js";
 import { getSourcemapModules } from "./sourcemap.js";
 import { renderTemplate } from "./render-template.js";
 import { createFilter, Filter } from "../shared/create-filter.js";
+
+export type { BundlerOutputOptions, VisualizerPlugin } from "./bundler-types.js";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
@@ -131,14 +138,16 @@ const chooseDefaultFileName = (opts: PluginVisualizerOptions) => {
 };
 
 export const visualizer = (
-  opts: PluginVisualizerOptions | ((outputOptions: OutputOptions) => PluginVisualizerOptions) = {},
-): Plugin => {
+  opts:
+    | PluginVisualizerOptions
+    | ((outputOptions: BundlerOutputOptions) => PluginVisualizerOptions) = {},
+): VisualizerPlugin => {
   return {
     name: "visualizer",
 
     async generateBundle(
-      outputOptions: NormalizedOutputOptions,
-      outputBundle: OutputBundle,
+      outputOptions: BundlerNormalizedOutputOptions,
+      outputBundle: BundlerOutputBundle,
     ): Promise<void> {
       opts = typeof opts === "function" ? opts(outputOptions) : opts;
 

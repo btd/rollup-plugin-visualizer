@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "rollup": "^4.62.4",
+    "typescript": "~6.0.0"
+  }
+}
