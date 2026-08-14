@@ -7,7 +7,7 @@ import {
   BundlerOutputOptions,
   VisualizerPlugin,
 } from "./bundler-types.js";
-import opn, { Options as OpenOptions } from "open";
+import opn, { Options as OpenOptions } from "tiny-open";
 
 import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types.js";
 import { version } from "./version.js";

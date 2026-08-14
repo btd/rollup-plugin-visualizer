@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { promises as fs } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
+import { parseArgs } from "node:util";
 
-import opn from "open";
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
+import opn from "tiny-open";
 
 import { renderTemplate } from "../plugin/render-template.js";
 import TEMPLATE, { TemplateType } from "../plugin/template-types.js";
@@ -13,37 +13,25 @@ import { warn } from "../plugin/warn.js";
 import { version } from "../plugin/version.js";
 import { ModuleMeta, ModulePart, ModuleTree, ModuleUID, VisualizerData } from "../shared/types.js";
 
-const argv = yargs(hideBin(process.argv))
-  .option("filename", {
-    describe: "Output file name",
-    type: "string",
-    default: "./stats.html",
-  })
-  .option("title", {
-    describe: "Output file title",
-    type: "string",
-    default: "Rollup Visualizer",
-  })
-  .option("template", {
-    describe: "Template type",
-    type: "string",
-    choices: TEMPLATE,
-    default: "treemap" as TemplateType,
-  })
-  .option("sourcemap", {
-    describe: "Provided files is sourcemaps",
-    type: "boolean",
-    default: false,
-  })
-  .option("open", {
-    describe: "Open generated tempate in default user agent",
-    type: "boolean",
-    default: false,
-  })
-  .help()
-  .parseSync();
+const USAGE = `Usage: rollup-plugin-visualizer [options] <file..>
 
-const listOfFiles = argv._;
+Options:
+  --filename <path>    Output file name [default: "./stats.html"]
+  --title <title>      Output file title [default: "Rollup Visualizer"]
+  --template <type>    Template type [default: "treemap"]
+                       One of: ${TEMPLATE.join(", ")}
+  --sourcemap          Provided files is sourcemaps
+  --open               Open generated tempate in default user agent
+  --version            Show version number
+  --help               Show this help`;
+
+// Resolved from the compiled location of this file (dist/bin/cli.js)
+const { version: packageVersion } = createRequire(import.meta.url)("../../package.json") as {
+  version: string;
+};
+
+const isTemplateType = (value: string): value is TemplateType =>
+  (TEMPLATE as ReadonlyArray<string>).includes(value);
 
 interface CliArgs {
   filename: string;
@@ -52,6 +40,47 @@ interface CliArgs {
   sourcemap: boolean;
   open: boolean;
 }
+
+const parseCliArgs = (): { args: CliArgs; files: string[] } => {
+  const { values, positionals } = parseArgs({
+    args: process.argv.slice(2),
+    options: {
+      filename: { type: "string", default: "./stats.html" },
+      title: { type: "string", default: "Rollup Visualizer" },
+      template: { type: "string", default: "treemap" },
+      sourcemap: { type: "boolean", default: false },
+      open: { type: "boolean", default: false },
+      version: { type: "boolean", default: false },
+      help: { type: "boolean", default: false },
+    },
+    allowPositionals: true,
+  });
+
+  if (values.help) {
+    console.log(USAGE);
+    process.exit(0);
+  }
+
+  if (values.version) {
+    console.log(packageVersion);
+    process.exit(0);
+  }
+
+  if (!isTemplateType(values.template)) {
+    throw new Error(`Invalid template "${values.template}". Choices: ${TEMPLATE.join(", ")}`);
+  }
+
+  return {
+    args: {
+      filename: values.filename,
+      title: values.title,
+      template: values.template,
+      sourcemap: values.sourcemap,
+      open: values.open,
+    },
+    files: positionals,
+  };
+};
 
 const runForPluginJson = async ({ title, template, filename, open }: CliArgs, files: string[]) => {
   if (files.length === 0) {
@@ -119,7 +148,12 @@ const runForPluginJson = async ({ title, template, filename, open }: CliArgs, fi
   }
 };
 
-runForPluginJson(argv, listOfFiles as string[]).catch((err: Error) => {
+const main = async () => {
+  const { args, files } = parseCliArgs();
+  await runForPluginJson(args, files);
+};
+
+main().catch((err: Error) => {
   warn(err.message);
   process.exit(1);
 });
