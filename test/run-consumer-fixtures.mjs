@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { cpSync, mkdtempSync, rmSync } from "node:fs";
+import { cpSync, mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -31,8 +31,18 @@ const npm = (...args) =>
     stdio: ["ignore", "pipe", "inherit"],
   }).trim();
 
-const packed = JSON.parse(npm("pack", "--json", "--pack-destination", testRoot))[0].filename;
-const tarball = path.join(testRoot, packed);
+// Deliberately not `pack --json`: npm 11 returns an array of packed files while
+// npm 12 returns an object keyed by package name, so reading either shape ties
+// this to an npm version. The pack destination is a fresh mkdtemp, so the tarball
+// it contains is unambiguous.
+npm("pack", "--pack-destination", testRoot);
+const packed = readdirSync(testRoot).filter((entry) => entry.endsWith(".tgz"));
+assert.equal(
+  packed.length,
+  1,
+  `expected one packed tarball, found: ${packed.join(", ") || "none"}`,
+);
+const tarball = path.join(testRoot, packed[0]);
 
 for (const { name, requires, forbids } of FIXTURES) {
   const consumerRoot = path.join(testRoot, name);
