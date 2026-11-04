@@ -110,24 +110,22 @@ export const addLinks = (
   startModuleId: string,
   getModuleInfo: GetModuleInfo,
   mapper: ModuleMapper,
+  processedNodes: Set<string> = new Set(),
 ): void => {
-  const processedNodes: Record<string, boolean> = {};
+  const moduleIds: string[] = [];
+  const enqueue = (moduleId: string): void => {
+    if (processedNodes.has(moduleId)) return;
+    processedNodes.add(moduleId);
+    moduleIds.push(moduleId);
+  };
 
-  const moduleIds = [startModuleId];
+  enqueue(startModuleId);
 
-  while (moduleIds.length > 0) {
-    const moduleId = moduleIds.shift() as string;
-
-    if (processedNodes[moduleId]) {
-      continue;
-    } else {
-      processedNodes[moduleId] = true;
-    }
-
+  for (const moduleId of moduleIds) {
     const moduleInfo = getModuleInfo(moduleId);
 
     if (!moduleInfo) {
-      return;
+      continue;
     }
 
     if (moduleInfo.isEntry) {
@@ -141,13 +139,13 @@ export const addLinks = (
       mapper.addImportedByLink(importedId, moduleId);
       mapper.addImportedLink(moduleId, importedId);
 
-      moduleIds.push(importedId);
+      enqueue(importedId);
     }
     for (const importedId of moduleInfo.dynamicallyImportedIds || []) {
       mapper.addImportedByLink(importedId, moduleId);
       mapper.addImportedLink(moduleId, importedId, true);
 
-      moduleIds.push(importedId);
+      enqueue(importedId);
     }
   }
 };

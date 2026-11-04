@@ -273,10 +273,11 @@ export const visualizer = (
       }
 
       // after trees we process links (this is mostly for uids)
+      const processedNodes = new Set<string>();
       for (const [, bundle] of Object.entries(outputBundle)) {
         if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
 
-        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), mapper);
+        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), mapper, processedNodes);
       }
 
       const tree = mergeTrees(roots);
