@@ -58,7 +58,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible }) =>
       pos.top = Math.max(0, mouseCoords.y - Tooltip_marginY - boundingRect.height);
     }
 
-    setStyle(pos);
+    setStyle({ left: `${pos.left}px`, top: `${pos.top}px` });
   };
 
   useEffect(() => {

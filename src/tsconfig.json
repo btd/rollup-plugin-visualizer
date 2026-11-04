@@ -12,6 +12,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "moduleResolution": "bundler",
+    "rootDir": "..",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,

@@ -26,11 +26,11 @@ exports[`Sourcemap > test 3`] = `
             "name": "test/sourcemap-encoding",
             "children": [
               {
-                "uid": "13a4e090-1",
+                "uid": "ae43b9c8-1",
                 "name": "input2.js"
               },
               {
-                "uid": "13a4e090-3",
+                "uid": "ae43b9c8-3",
                 "name": "input.js"
               }
             ]
@@ -41,40 +41,40 @@ exports[`Sourcemap > test 3`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "13a4e090-1": {
+    "ae43b9c8-1": {
       "renderedLength": 37,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "13a4e090-0"
+      "metaUid": "ae43b9c8-0"
     },
-    "13a4e090-3": {
+    "ae43b9c8-3": {
       "renderedLength": 112,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "13a4e090-2"
+      "metaUid": "ae43b9c8-2"
     }
   },
   "nodeMetas": {
-    "13a4e090-0": {
+    "ae43b9c8-0": {
       "id": "/test/sourcemap-encoding/input2.js",
       "moduleParts": {
-        "index.js": "13a4e090-1"
+        "index.js": "ae43b9c8-1"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "13a4e090-2"
+          "uid": "ae43b9c8-2"
         }
       ]
     },
-    "13a4e090-2": {
+    "ae43b9c8-2": {
       "id": "/test/sourcemap-encoding/input.js",
       "moduleParts": {
-        "index.js": "13a4e090-3"
+        "index.js": "ae43b9c8-3"
       },
       "imported": [
         {
-          "uid": "13a4e090-0"
+          "uid": "ae43b9c8-0"
         }
       ],
       "importedBy": [],
@@ -82,7 +82,7 @@ exports[`Sourcemap > test 3`] = `
     }
   },
   "env": {
-    "rollup": "4.65.0"
+    "rollup": "4.67.5"
   },
   "options": {
     "gzip": false,

@@ -1,4 +1,4 @@
-import { FunctionalComponent, JSX } from "preact";
+import { FunctionalComponent, TargetedEvent } from "preact";
 import { useState } from "preact/hooks";
 import { SizeKey } from "../shared/types";
 import { LABELS } from "./sizes";
@@ -29,13 +29,13 @@ export const SideBar: FunctionalComponent<SideBarProps> = ({
     }
   };
 
-  const handleIncludeChange = (event: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+  const handleIncludeChange = (event: TargetedEvent<HTMLInputElement, Event>) => {
     const value = event.currentTarget.value;
     setIncludeValue(value);
     onIncludeChange(value);
   };
 
-  const handleExcludeChange = (event: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+  const handleExcludeChange = (event: TargetedEvent<HTMLInputElement, Event>) => {
     const value = event.currentTarget.value;
     setExcludeValue(value);
     onExcludeChange(value);

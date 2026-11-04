@@ -39,7 +39,7 @@ export const Network: FunctionalComponent<NetworkProps> = ({
 
   const [transform, setTransform] = useState<Transform>(identityTransform);
 
-  const startPosRef = useRef<[number, number]>();
+  const startPosRef = useRef<[number, number] | undefined>(undefined);
   const [dragging, setDragging] = useState(false);
 
   const handleMouseDown = (event: MouseEvent) => {

@@ -21,7 +21,7 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
   const { x0, x1, y1, y0, data, children = null } = node;
 
   const textRef = useRef<SVGTextElement>(null);
-  const textRectRef = useRef<DOMRect>();
+  const textRectRef = useRef<DOMRect | undefined>(undefined);
 
   const width = x1 - x0;
   const height = y1 - y0;
