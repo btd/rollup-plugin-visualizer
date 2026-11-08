@@ -26,11 +26,11 @@ exports[`Sourcemap > test 3`] = `
             "name": "test/sourcemap-encoding",
             "children": [
               {
-                "uid": "ae43b9c8-1",
+                "uid": "27b7f45b-1",
                 "name": "input2.js"
               },
               {
-                "uid": "ae43b9c8-3",
+                "uid": "27b7f45b-3",
                 "name": "input.js"
               }
             ]
@@ -41,40 +41,40 @@ exports[`Sourcemap > test 3`] = `
     "isRoot": true
   },
   "nodeParts": {
-    "ae43b9c8-1": {
-      "renderedLength": 37,
+    "27b7f45b-1": {
+      "renderedLength": 35,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "ae43b9c8-0"
+      "metaUid": "27b7f45b-0"
     },
-    "ae43b9c8-3": {
-      "renderedLength": 112,
+    "27b7f45b-3": {
+      "renderedLength": 110,
       "gzipLength": 0,
       "brotliLength": 0,
-      "metaUid": "ae43b9c8-2"
+      "metaUid": "27b7f45b-2"
     }
   },
   "nodeMetas": {
-    "ae43b9c8-0": {
+    "27b7f45b-0": {
       "id": "/test/sourcemap-encoding/input2.js",
       "moduleParts": {
-        "index.js": "ae43b9c8-1"
+        "index.js": "27b7f45b-1"
       },
       "imported": [],
       "importedBy": [
         {
-          "uid": "ae43b9c8-2"
+          "uid": "27b7f45b-2"
         }
       ]
     },
-    "ae43b9c8-2": {
+    "27b7f45b-2": {
       "id": "/test/sourcemap-encoding/input.js",
       "moduleParts": {
-        "index.js": "ae43b9c8-3"
+        "index.js": "27b7f45b-3"
       },
       "imported": [
         {
-          "uid": "ae43b9c8-0"
+          "uid": "27b7f45b-0"
         }
       ],
       "importedBy": [],

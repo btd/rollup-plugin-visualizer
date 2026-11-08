@@ -6,7 +6,12 @@ import { SourceMapConsumer } from "source-map";
 interface SourceMapModuleRenderInfo {
   id: string;
   renderedLength: number;
-  code: string[];
+}
+
+interface GeneratedMapping {
+  generatedLine: number;
+  generatedColumn: number;
+  source: string | null;
 }
 
 const getBytesPerFileUsingSourceMap = (
@@ -16,30 +21,60 @@ const getBytesPerFileUsingSourceMap = (
   dir: string,
 ) => {
   const modules: Record<string, SourceMapModuleRenderInfo> = {};
+  const modulesBySource = new Map<string, SourceMapModuleRenderInfo>();
+  const bundleDir = path.dirname(path.join(dir, bundleId));
 
   let line = 1;
-  let column = 0;
-  const codeChars = [...code];
-  for (let i = 0; i < codeChars.length; i++, column++) {
-    const { source } = map.originalPositionFor({
-      line,
-      column,
-    });
-    if (source != null) {
-      const id = path.resolve(path.dirname(path.join(dir, bundleId)), source);
+  let lineStart = 0;
+  let lineEnd = 0;
+  let previous: GeneratedMapping | undefined;
 
-      const char = codeChars[i];
+  const countSpan = (next?: GeneratedMapping): void => {
+    if (previous?.source == null) return;
+    // Columns and string offsets both use UTF-16; only the size uses UTF-8.
+    const start = Math.min(lineStart + previous.generatedColumn, lineEnd);
+    const end =
+      next?.generatedLine === previous.generatedLine
+        ? Math.min(lineStart + next.generatedColumn, lineEnd)
+        : lineEnd;
+    if (end <= start) return;
 
-      modules[id] = modules[id] || { id, renderedLength: 0, code: [] };
-      modules[id].renderedLength += Buffer.byteLength(char);
-      modules[id].code.push(char);
+    let module = modulesBySource.get(previous.source);
+    if (module == null) {
+      const id = path.resolve(bundleDir, previous.source);
+      module = modules[id] ??= { id, renderedLength: 0 };
+      modulesBySource.set(previous.source, module);
     }
+    module.renderedLength += Buffer.byteLength(code.slice(start, end));
+  };
 
-    if (code[i] === "\n") {
-      line += 1;
-      column = -1;
-    }
-  }
+  // Rollup and Rolldown emit flat maps. Stream their generated mappings without
+  // materializing characters or retaining the generated code for each module.
+  map.eachMapping(
+    (mapping) => {
+      // Original positions within the same source do not affect module sizes.
+      if (previous?.generatedLine === mapping.generatedLine && previous.source === mapping.source) {
+        return;
+      }
+      countSpan(mapping);
+
+      while (line < mapping.generatedLine && lineStart < code.length) {
+        const newline = code.indexOf("\n", lineStart);
+        lineStart = newline === -1 ? code.length : newline + 1;
+        line++;
+      }
+      if (previous?.generatedLine !== mapping.generatedLine) {
+        const newline = code.indexOf("\n", lineStart);
+        // Preserve the existing policy: include a mapped line's terminating LF,
+        // but do not extend its final mapping into an unmapped following line.
+        lineEnd = newline === -1 ? code.length : newline + 1;
+      }
+      previous = mapping;
+    },
+    null,
+    SourceMapConsumer.GENERATED_ORDER,
+  );
+  countSpan();
 
   return modules;
 };

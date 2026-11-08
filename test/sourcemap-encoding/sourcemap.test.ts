@@ -1,6 +1,6 @@
 import { OutputAsset, OutputChunk, OutputOptions, rollup } from "rollup";
 import { describe, it, expect } from "vitest";
-import { ALL_TEMPLATE } from "../util";
+import type { VisualizerData } from "../../shared/types";
 
 // mock random for stable id
 let randomCall = 0;
@@ -9,45 +9,55 @@ Math.random = () => randomCall / 100;
 import { visualizer } from "../../dist/plugin";
 
 describe("Sourcemap", () => {
-    const input = {
-      index: "test/sourcemap-encoding/input.js",
+  const input = {
+    index: "test/sourcemap-encoding/input.js",
+  };
+
+  it("test", async () => {
+    const inputOptions = {
+      input,
+      plugins: [
+        visualizer({
+          filename: `stats`,
+          template: "raw-data",
+          emitFile: true,
+          sourcemap: true,
+          brotliSize: true,
+          gzipSize: true,
+        }),
+      ],
     };
-  
-    it("test", async () => {
-      const inputOptions = {
-        input,
-        plugins: [
-          visualizer({
-            filename: `stats`,
-            template: 'raw-data',
-            emitFile: true,
-            sourcemap: true,
-            brotliSize: true,
-            gzipSize: true
-          }),
-        ],
-      };
-      const outputOptions: OutputOptions = {
-        format: "es",
-        dir: "./temp/",
-        sourcemap: true
-      };
-  
-      const bundle = await rollup(inputOptions);
-  
-      const result = await bundle.generate(outputOptions);
+    const outputOptions: OutputOptions = {
+      format: "es",
+      dir: "./temp/",
+      sourcemap: true,
+    };
 
-      const bundleChunk = result.output.find(file => file.fileName === "index.js")
+    const bundle = await rollup(inputOptions);
 
-      expect(bundleChunk).not.toBeNull();
-      const bundleChunkCode = (bundleChunk as OutputChunk).code
-      expect(bundleChunkCode).toMatchSnapshot();
-      expect(Buffer.byteLength(bundleChunkCode)).toMatchSnapshot();
-  
-      const generatedStats = result.output.find((file) => file.fileName === "stats");
-  
-      expect(generatedStats).not.toBeNull();
-      expect((generatedStats as OutputAsset).source).toMatchSnapshot();
+    const result = await bundle.generate(outputOptions);
+
+    const bundleChunk = result.output.find((file) => file.fileName === "index.js");
+
+    expect(bundleChunk).not.toBeNull();
+    const bundleChunkCode = (bundleChunk as OutputChunk).code;
+    expect(bundleChunkCode).toMatchSnapshot();
+    expect(Buffer.byteLength(bundleChunkCode)).toMatchSnapshot();
+
+    const generatedStats = result.output.find((file) => file.fileName === "stats");
+
+    expect(generatedStats).not.toBeNull();
+    expect((generatedStats as OutputAsset).source).toMatchSnapshot();
+    const stats = JSON.parse(String((generatedStats as OutputAsset).source)) as VisualizerData;
+    const sizes = Object.values(stats.nodeParts).map((part) => [
+      stats.nodeMetas[part.metaUid].id,
+      part.renderedLength,
+    ]);
+    // Independent expectations: the old snapshots included pieces of the next
+    // module and the sourceMappingURL comment after losing track of newlines.
+    expect(Object.fromEntries(sizes)).toEqual({
+      "/test/sourcemap-encoding/input2.js": 35,
+      "/test/sourcemap-encoding/input.js": 110,
     });
   });
-  
+});

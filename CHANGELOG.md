@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+* Fix incorrect module sizes after emoji when using sourcemaps.
+* Reduce sourcemap report generation time and memory use.
+
 ## 7.1.2
 
 * Improve report generation performance.

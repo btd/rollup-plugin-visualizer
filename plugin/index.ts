@@ -177,29 +177,20 @@ export const visualizer = (
         ? createBrotliSizeGetter(typeof opts.brotliSize === "object" ? opts.brotliSize : {})
         : defaultSizeGetter;
 
-      const getModuleLengths = async (
-        {
-          id,
-          renderedLength,
-          code,
-        }: {
-          id: string;
-          renderedLength: number;
-          code: string | null;
-        },
-        useRenderedLength: boolean = false,
-      ): Promise<ModuleLengths & { id: string }> => {
+      const getModuleLengths = async ({
+        id,
+        code,
+      }: {
+        id: string;
+        code: string | null;
+      }): Promise<ModuleLengths & { id: string }> => {
         const isCodeEmpty = code == null || code == "";
 
         const result = {
           id,
           gzipLength: isCodeEmpty ? 0 : await gzipSizeGetter(code),
           brotliLength: isCodeEmpty ? 0 : await brotliSizeGetter(code),
-          renderedLength: useRenderedLength
-            ? renderedLength
-            : isCodeEmpty
-              ? 0
-              : Buffer.byteLength(code, "utf-8"),
+          renderedLength: isCodeEmpty ? 0 : Buffer.byteLength(code, "utf-8"),
         };
         return result;
       };
@@ -230,37 +221,28 @@ export const visualizer = (
               process.cwd(),
           );
 
-          const moduleRenderInfo = await Promise.all(
-            Object.values(modules)
-              .filter(({ id }) => filter(bundleId, id))
-              .map(({ id, renderedLength, code }) => {
-                return getModuleLengths({ id, renderedLength, code: code.join("") }, true);
-              }),
-          );
+          const moduleRenderInfo = Object.values(modules)
+            .filter(({ id }) => filter(bundleId, id))
+            .map(({ id, renderedLength }) => ({
+              id,
+              renderedLength,
+              gzipLength: 0,
+              brotliLength: 0,
+            }));
 
           tree = buildTree(bundleId, moduleRenderInfo, mapper);
         } else {
           const modules = await Promise.all(
             Object.entries(bundle.modules)
               .filter(([id]) => filter(bundleId, id))
-              .map(
-                ([id, { renderedLength, code }]) => getModuleLengths({ id, renderedLength, code }),
-                false,
-              ),
+              .map(([id, { code }]) => getModuleLengths({ id, code })),
           );
 
           tree = buildTree(bundleId, modules, mapper);
         }
 
         if (tree.children.length === 0) {
-          const bundleSizes = await getModuleLengths(
-            {
-              id: bundleId,
-              renderedLength: bundle.code.length,
-              code: bundle.code,
-            },
-            false,
-          );
+          const bundleSizes = await getModuleLengths({ id: bundleId, code: bundle.code });
 
           const facadeModuleId = bundle.facadeModuleId ?? `${bundleId}-unknown`;
           const bundleUid = mapper.setNodePart(bundleId, facadeModuleId, bundleSizes);
