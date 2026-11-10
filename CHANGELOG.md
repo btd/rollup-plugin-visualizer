@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Warn when using the deprecated CLI `--sourcemap` option, which has no effect. The plugin's `sourcemap` option remains supported.
+
 ## 7.1.3
 
 * Fix incorrect module sizes after emoji when using sourcemaps.

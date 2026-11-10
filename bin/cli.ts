@@ -31,9 +31,8 @@ const argv = yargs(hideBin(process.argv))
     default: "treemap" as TemplateType,
   })
   .option("sourcemap", {
-    describe: "Provided files is sourcemaps",
+    describe: "Deprecated: has no effect; inputs must be plugin-generated raw-data JSON reports",
     type: "boolean",
-    default: false,
   })
   .option("open", {
     describe: "Open generated tempate in default user agent",
@@ -43,13 +42,18 @@ const argv = yargs(hideBin(process.argv))
   .help()
   .parseSync();
 
+if (argv.sourcemap !== undefined) {
+  warn(
+    "The CLI --sourcemap option is deprecated and has no effect. Inputs must be plugin-generated raw-data JSON reports. The plugin's sourcemap option remains supported.",
+  );
+}
+
 const listOfFiles = argv._;
 
 interface CliArgs {
   filename: string;
   title: string;
   template: TemplateType;
-  sourcemap: boolean;
   open: boolean;
 }
 
@@ -109,7 +113,7 @@ const runForPluginJson = async ({ title, template, filename, open }: CliArgs, fi
   await fs.mkdir(path.dirname(filename), { recursive: true });
   try {
     await fs.unlink(filename);
-  } catch (err) {
+  } catch {
     // ignore
   }
   await fs.writeFile(filename, fileContent);
