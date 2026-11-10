@@ -1,5 +1,9 @@
 # Repository instructions
 
+## Working agreement
+
+* Create commits or rewrite history only when explicitly requested. Approval to implement, proceed, or continue does not authorize commits.
+
 ## Dependency updates
 
 * Use `npm update` for compatible patch and minor updates.
@@ -27,3 +31,10 @@
 * Keep entries brief and focused on user-visible changes.
 * Summarize dependency maintenance as "Update dependencies" without listing individual packages or versions.
 * Omit implementation details. Include technical specifics only when needed to explain breaking changes or required user action.
+
+## Session-end review
+
+* Before finishing a session, review this file for missing or outdated guidance revealed by the work.
+* Record durable repository constraints, verified invariants, and explicit user preferences that would materially affect decisions in future, unrelated tasks.
+* Do not add facts that can be rediscovered through a straightforward repository inspection in 10–30 seconds.
+* Prefer correcting or consolidating existing instructions. Leave this file unchanged when there is no substantive improvement.
