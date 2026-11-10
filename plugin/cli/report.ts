@@ -31,6 +31,34 @@ export const readReports = async (files: string[]): Promise<ReportFile[]> => {
   );
 };
 
+export const filterCompatibleReports = (fileContents: ReportFile[]): ReportFile[] => {
+  const compatible = fileContents.filter(({ file, data }) => {
+    if (data.version === version) return true;
+
+    warn(
+      `Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`,
+    );
+    return false;
+  });
+
+  if (compatible.length === 0) throw new Error("No compatible reports found");
+  return compatible;
+};
+
+export const warnAboutMixedSettings = (fileContents: ReportFile[]): void => {
+  const first = fileContents[0];
+  for (const { file, data } of fileContents.slice(1)) {
+    const differences = (["gzip", "brotli", "sourcemap"] as const).filter(
+      (setting) => data.options[setting] !== first.data.options[setting],
+    );
+    if (differences.length > 0) {
+      warn(
+        `Settings in ${file} differ from ${first.file} (${differences.join(", ")}). Using settings from ${first.file} for the merged report; measurements may not be comparable.`,
+      );
+    }
+  }
+};
+
 export const mergeReports = (fileContents: ReportFile[]): VisualizerData => {
   const tree: ModuleTree = {
     name: "root",
@@ -39,14 +67,7 @@ export const mergeReports = (fileContents: ReportFile[]): VisualizerData => {
   const nodeParts: Record<ModuleUID, ModulePart> = {};
   const nodeMetas: Record<ModuleUID, ModuleMeta> = {};
 
-  for (const { file, data } of fileContents) {
-    if (data.version !== version) {
-      warn(
-        `Version in ${file} is not supported (${data.version}). Current version ${version}. Skipping...`,
-      );
-      continue;
-    }
-
+  for (const { data } of fileContents) {
     if (data.tree.name === "root") {
       tree.children = tree.children.concat(data.tree.children);
     } else {

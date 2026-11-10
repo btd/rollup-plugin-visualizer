@@ -5,6 +5,7 @@ import { warn } from "../warn.js";
 
 export const parseCliArgs = (args: string[]) => {
   const argv = yargs(args)
+    .parserConfiguration({ "parse-positional-numbers": false })
     .option("filename", {
       describe: "Output file name",
       type: "string",

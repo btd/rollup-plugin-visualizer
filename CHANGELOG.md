@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Support numeric input filenames in the CLI.
+* Warn when merging CLI reports with different measurement settings.
+* Fix CLI merging of reports with unsupported versions; fail when all reports are unsupported.
 * Warn when using the deprecated CLI `--sourcemap` option, which has no effect. The plugin's `sourcemap` option remains supported.
 
 ## 7.1.3

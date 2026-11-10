@@ -151,6 +151,132 @@ describe("CLI contract", () => {
     expect(data.options).toEqual(rollupData.options);
   });
 
+  it.each([
+    { files: ["unsupported.json", "rollup.json"] },
+    { files: ["rollup.json", "unsupported.json"] },
+  ])("skips unsupported reports and uses compatible metadata: $files", async ({ files }) => {
+    await writeFile(
+      path.join(cwd, "unsupported.json"),
+      JSON.stringify({
+        ...rolldownData,
+        version: rollupData.version + 1,
+        env: { unsupported: true },
+        options: { gzip: false, brotli: false, sourcemap: true },
+      }),
+    );
+    const result = run(["--template=raw-data", "--filename=result.json", ...files]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("unsupported.json");
+    expect(result.stderr).toContain("not supported");
+    expect(result.stderr).toContain("Skipping");
+    expect(result.stderr.trim().split("\n")).toHaveLength(1);
+    expectRollupReport(await readReport());
+  });
+
+  it.each([false, true])(
+    "fails without writing when all reports are unsupported (existing output: %s)",
+    async (existingOutput) => {
+      for (const [filename, data] of [
+        ["rollup.json", rollupData],
+        ["rolldown.json", rolldownData],
+      ] as const) {
+        await writeFile(
+          path.join(cwd, filename),
+          JSON.stringify({ ...data, version: data.version + 1 }),
+        );
+      }
+      if (existingOutput) await writeFile(path.join(cwd, "result.json"), "previous report");
+      const result = run([
+        "--template=raw-data",
+        "--filename=result.json",
+        "rollup.json",
+        "rolldown.json",
+      ]);
+
+      expect(result.status).toBe(1);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).toContain("rollup.json");
+      expect(result.stderr).toContain("rolldown.json");
+      expect(result.stderr).toContain("No compatible reports");
+      if (existingOutput) {
+        expect(await readFile(path.join(cwd, "result.json"), "utf8")).toBe("previous report");
+      } else {
+        expect(await readdir(cwd)).not.toContain("result.json");
+      }
+    },
+  );
+
+  it.each(
+    (["gzip", "brotli", "sourcemap"] as const).flatMap((setting) => [
+      { setting, reversed: false },
+      { setting, reversed: true },
+    ]),
+  )(
+    "warns about different measurement settings: $setting (reversed: $reversed)",
+    async ({ setting, reversed }) => {
+      const differentReport = {
+        ...rolldownData,
+        options: { ...rolldownData.options, [setting]: !rolldownData.options[setting] },
+      };
+      await writeFile(path.join(cwd, "rolldown.json"), JSON.stringify(differentReport));
+      const files = reversed ? ["rolldown.json", "rollup.json"] : ["rollup.json", "rolldown.json"];
+      const result = run(["--template=raw-data", "--filename=result.json", ...files]);
+
+      expect(result.status).toBe(0);
+      expect(result.stdout).toBe("");
+      expect(result.stderr.trim().split("\n")).toHaveLength(1);
+      expect(result.stderr).toContain("rollup.json");
+      expect(result.stderr).toContain("rolldown.json");
+      expect(result.stderr).toContain(setting);
+      expect(result.stderr).toContain(`Using settings from ${files[0]}`);
+      const data = await readReport();
+      expect(data.options).toEqual(reversed ? differentReport.options : rollupData.options);
+      expect(Object.keys(data.nodeParts)).toHaveLength(
+        Object.keys(rollupData.nodeParts).length + Object.keys(rolldownData.nodeParts).length,
+      );
+    },
+  );
+
+  it("warns once per report when multiple measurement settings differ", async () => {
+    await writeFile(
+      path.join(cwd, "rolldown.json"),
+      JSON.stringify({
+        ...rolldownData,
+        options: { gzip: false, brotli: false, sourcemap: true },
+      }),
+    );
+    const result = run([
+      "--template=raw-data",
+      "--filename=result.json",
+      "rollup.json",
+      "rolldown.json",
+    ]);
+
+    expect(result.status).toBe(0);
+    expect(result.stderr.trim().split("\n")).toHaveLength(1);
+    for (const setting of ["gzip", "brotli", "sourcemap"]) {
+      expect(result.stderr).toContain(setting);
+    }
+  });
+
+  it.each([
+    { filename: "123", separator: [] },
+    { filename: "00123", separator: [] },
+    { filename: "123", separator: ["--"] },
+  ])(
+    "reads numeric filenames without coercion: $filename (separator: $separator)",
+    async ({ filename, separator }) => {
+      await writeFile(path.join(cwd, filename), reports.rollup);
+      const result = run(["--template=raw-data", "--filename=result.json", ...separator, filename]);
+
+      expect(result.status).toBe(0);
+      expect(result.stderr).toBe("");
+      expectRollupReport(await readReport());
+    },
+  );
+
   it("reads Unicode input paths", async () => {
     await writeFile(path.join(cwd, "données-🌍.json"), reports.rollup);
     const result = run(["--template=raw-data", "--filename=result.json", "données-🌍.json"]);
