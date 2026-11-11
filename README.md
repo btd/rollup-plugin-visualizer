@@ -123,11 +123,17 @@ This rectangular hierarchical view makes large modules easy to find quickly. It 
 ### Network
 
 Use this view to answer, "Why is this included?"  
-After the force layout stabilizes, you can drag nodes around. Gray circles are tree-shaken files.
+Files from the same package cluster together. Widely shared dependencies have less influence on the
+layout, while all import relationships remain visible. Pale circles are tree-shaken files.
+
+Drag the background to pan, scroll to zoom around the pointer, or drag a node to pin it in place.
+Click **Fit graph** to show all visible modules. Open **Controls** for the mouse-action guide,
+**Reset view** to restore the original scale and center, or **Reset layout** to release pinned nodes
+and restart the layout. Filtering and resizing preserve your working view.
 
 In real projects, network graphs can look noisy. A practical way to explore them is:
 
-1. Remove highly connected helper nodes (for example `commonjsHelpers`, `tslib`, `react`) when they dominate the graph.
+1. Double-click highly connected helper nodes (for example `commonjsHelpers`, `tslib`, `react`) to hide them when they dominate the graph. Use **Restore hidden** to bring them back.
 2. Wait for layout stabilization.
 3. Explore clusters that become easier to read.
 

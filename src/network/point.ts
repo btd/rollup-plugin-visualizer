@@ -1,8 +1,12 @@
-export const svgPoint = (event: MouseEvent) => {
-  const node = event.currentTarget as SVGSVGElement;
-  const point = node.createSVGPoint();
+// Screen coordinates are CSS pixels; the inverse CTM also accounts for the
+// SVG viewBox, desktop resizing, and browser zoom before graph zoom is applied.
+export const svgPoint = (
+  svg: SVGSVGElement,
+  event: { clientX: number; clientY: number },
+): [number, number] => {
+  const point = svg.createSVGPoint();
   point.x = event.clientX;
   point.y = event.clientY;
-  const finalPoint = point.matrixTransform(node.getScreenCTM()?.inverse());
-  return [finalPoint.x, finalPoint.y];
+  const transformed = point.matrixTransform(svg.getScreenCTM()!.inverse());
+  return [transformed.x, transformed.y];
 };

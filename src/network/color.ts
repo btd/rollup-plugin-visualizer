@@ -2,7 +2,7 @@ import { scaleSequential } from "d3-scale";
 import { hsl } from "d3-color";
 
 import { CssColor } from "../color";
-import { NodeInfo } from ".";
+import type { NodeInfo } from "./types";
 
 export type NodeColorGetter = (node: NodeInfo) => CssColor;
 

@@ -1,7 +1,8 @@
 import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
-import { StaticContext, NetworkNode } from ".";
+import { StaticContext } from ".";
+import type { NetworkNode } from "./types";
 
 export interface TooltipProps {
   node?: NetworkNode;

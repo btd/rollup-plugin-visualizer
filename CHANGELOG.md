@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Add network zoom, node dragging, fit/reset controls, and restoration of hidden nodes.
+* Improve network package clustering around widely shared dependencies.
+* Fix network bundle filters, package-only entry points, and invisible tree-shaken nodes.
 * Support numeric input filenames in the CLI.
 * Warn when merging CLI reports with different measurement settings.
 * Fix CLI merging of reports with unsupported versions; fail when all reports are unsupported.

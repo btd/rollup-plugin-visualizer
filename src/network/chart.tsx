@@ -1,57 +1,46 @@
 import { FunctionalComponent } from "preact";
 import { useState, useEffect } from "preact/hooks";
-
 import { Tooltip } from "./tooltip";
-import { Network } from "./network";
-import { NodeColorGetter } from "./color";
-import { NetworkLink, NetworkNode } from ".";
+import { Network, NetworkProps } from "./network";
+import type { NetworkNode } from "./types";
 
-export interface ChartProps {
-  links: NetworkLink[];
-  nodes: NetworkNode[];
+export interface ChartProps extends Omit<
+  NetworkProps,
+  "onNodeHover" | "onNodeDblClick" | "onNodeClick" | "onCanvasClick"
+> {
   onNodeExclude: (node: NetworkNode) => void;
-  getColor: NodeColorGetter;
   onNodeSelect: (node: string | undefined) => void;
 }
 
 export const Chart: FunctionalComponent<ChartProps> = ({
-  links,
-  nodes,
   onNodeExclude,
-  getColor,
   onNodeSelect,
+  ...props
 }) => {
-  const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const [tooltipNode, setTooltipNode] = useState<NetworkNode | undefined>(undefined);
+  const [tooltipNode, setTooltipNode] = useState<NetworkNode>();
 
   useEffect(() => {
-    const handleMouseOut = () => {
-      setShowTooltip(false);
-    };
-
-    document.addEventListener("mouseover", handleMouseOut);
-    return () => {
-      document.removeEventListener("mouseover", handleMouseOut);
-    };
+    const hide = () => setTooltipNode(undefined);
+    document.addEventListener("mouseover", hide);
+    return () => document.removeEventListener("mouseover", hide);
   }, []);
 
   return (
     <>
       <Network
-        links={links}
-        nodes={nodes}
-        onNodeHover={(node) => {
-          setTooltipNode(node);
-          setShowTooltip(true);
+        {...props}
+        onNodeHover={setTooltipNode}
+        onNodeDblClick={(node) => {
+          setTooltipNode(undefined);
+          onNodeExclude(node);
         }}
-        onNodeDblClick={onNodeExclude}
         onNodeClick={(node) => onNodeSelect(node.uid)}
-        onCanvasClick={() => {
-          onNodeSelect(undefined);
-        }}
-        getColor={getColor}
+        onCanvasClick={() => onNodeSelect(undefined)}
       />
-      <Tooltip visible={showTooltip} node={tooltipNode} />
+      <Tooltip
+        visible={tooltipNode != null && props.nodes.includes(tooltipNode)}
+        node={tooltipNode}
+      />
     </>
   );
 };
