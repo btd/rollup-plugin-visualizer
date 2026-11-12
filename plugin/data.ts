@@ -1,4 +1,3 @@
-import { GetModuleInfo } from "./bundler-types.js";
 import { isModuleTree, ModuleLengths, ModuleTree, ModuleTreeLeaf } from "../shared/types.js";
 import { ModuleMapper } from "./module-mapper.js";
 
@@ -104,48 +103,4 @@ export const mergeTrees = (trees: Array<ModuleTree | ModuleTreeLeaf>): ModuleTre
   };
 
   return newTree;
-};
-
-export const addLinks = (
-  startModuleId: string,
-  getModuleInfo: GetModuleInfo,
-  mapper: ModuleMapper,
-  processedNodes: Set<string> = new Set(),
-): void => {
-  const moduleIds: string[] = [];
-  const enqueue = (moduleId: string): void => {
-    if (processedNodes.has(moduleId)) return;
-    processedNodes.add(moduleId);
-    moduleIds.push(moduleId);
-  };
-
-  enqueue(startModuleId);
-
-  for (const moduleId of moduleIds) {
-    const moduleInfo = getModuleInfo(moduleId);
-
-    if (!moduleInfo) {
-      continue;
-    }
-
-    if (moduleInfo.isEntry) {
-      mapper.setNodeMeta(moduleId, { isEntry: true });
-    }
-    if (moduleInfo.isExternal) {
-      mapper.setNodeMeta(moduleId, { isExternal: true });
-    }
-
-    for (const importedId of moduleInfo.importedIds) {
-      mapper.addImportedByLink(importedId, moduleId);
-      mapper.addImportedLink(moduleId, importedId);
-
-      enqueue(importedId);
-    }
-    for (const importedId of moduleInfo.dynamicallyImportedIds || []) {
-      mapper.addImportedByLink(importedId, moduleId);
-      mapper.addImportedLink(moduleId, importedId, true);
-
-      enqueue(importedId);
-    }
-  }
 };

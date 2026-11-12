@@ -41,7 +41,15 @@ const getBytesPerFileUsingSourceMap = (
 
     let module = modulesBySource.get(previous.source);
     if (module == null) {
-      const id = path.resolve(bundleDir, previous.source);
+      // The consumer exposes URL-encoded sources. Match the bundler's original
+      // filesystem IDs, including Unicode, spaces, and literal percent signs.
+      let source = previous.source;
+      try {
+        source = decodeURIComponent(source);
+      } catch {
+        // Some plugins supply source paths with unescaped percent signs.
+      }
+      const id = path.resolve(bundleDir, source);
       module = modules[id] ??= { id, renderedLength: 0 };
       modulesBySource.set(previous.source, module);
     }

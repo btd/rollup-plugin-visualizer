@@ -10,6 +10,7 @@ import {
 } from "../../shared/types";
 
 import { getAvailableSizeOptions } from "../sizes";
+import { renderEmptyReport } from "../empty-report";
 import { Main } from "./main";
 import createRainbowColor, { NodeColorGetter } from "../treemap/color";
 
@@ -42,6 +43,10 @@ const drawChart = (
   width: number,
   height: number,
 ): void => {
+  if (data.tree.children.length === 0) {
+    renderEmptyReport(parentNode);
+    return;
+  }
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
   const layout = treemap<ModuleTree | ModuleTreeLeaf>()

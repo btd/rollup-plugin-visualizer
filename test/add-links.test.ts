@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { addLinks } from "../plugin/data.js";
-import { ModuleMapper } from "../plugin/module-mapper.js";
+import { collectReport } from "../plugin/report.js";
 import { visualizer } from "../plugin/index.js";
 import {
   BundlerModuleInfo,
@@ -9,7 +8,7 @@ import {
 } from "../plugin/bundler-types.js";
 import { VisualizerData } from "../shared/types.js";
 
-describe("addLinks", () => {
+describe("Report graph collection", () => {
   it("visits a shared graph once per report while preserving the emitted links", async () => {
     const pageCount = 100;
     const pages = Array.from({ length: pageCount }, (_, index) => `page${index}`);
@@ -75,22 +74,35 @@ describe("addLinks", () => {
     expect(getModuleInfo).toHaveBeenCalledTimes((pageCount + 2) * 2);
   });
 
-  it("continues past a missing module to process other queued links", () => {
+  it("continues past a missing module to process other queued links", async () => {
     const getModuleInfo = vi.fn((id: string) => {
       if (id === "entry") return { isEntry: true, importedIds: ["missing", "present"] };
       if (id === "present") return { isEntry: false, importedIds: ["deep"] };
       if (id === "deep") return { isEntry: false, importedIds: [] };
       return null;
     });
-    const mapper = new ModuleMapper("");
-
-    addLinks("entry", getModuleInfo, mapper);
+    const report = await collectReport(
+      {
+        "entry.js": {
+          type: "chunk",
+          code: "",
+          modules: {},
+          facadeModuleId: "entry",
+        },
+      },
+      { sourcemap: false, dir: "/", getModuleInfo, warn: vi.fn() },
+    );
 
     expect(getModuleInfo.mock.calls.map(([id]) => id)).toEqual([
       "entry",
       "missing",
       "present",
       "deep",
+    ]);
+    expect(report.links).toEqual([
+      { source: "entry", target: "missing" },
+      { source: "entry", target: "present" },
+      { source: "present", target: "deep" },
     ]);
   });
 });

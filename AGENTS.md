@@ -3,6 +3,8 @@
 ## Working agreement
 
 * Create commits or rewrite history only when explicitly requested. Approval to implement, proceed, or continue does not authorize commits.
+* Bug investigations should include viable fix approaches and the tradeoffs of each, followed by a comparison that explains the relative weight of relevant criteria and recommends an approach. Recommendations do not authorize implementation.
+* Do not score effort, agent workload, or implementation time when comparing approaches. Weigh technical outcomes and risks instead.
 
 ## Dependency updates
 
@@ -25,6 +27,7 @@
 
 * Do not create research reports unless requested.
 * Implement compatibility for supported tools and concrete use cases; do not generalize to unrelated inputs without a demonstrated need.
+* Keep configured report filtering in a single selection stage. Collection, measurement, and serialization must not reapply include/exclude rules; interactive UI visibility filters remain separate.
 
 ## Changelogs
 

@@ -173,6 +173,12 @@ Produces a Markdown report with summary tables and notes about config and size p
 **Note on `include` and `exclude`**:  
 If `include` is omitted or empty, files are included by default.  
 Otherwise, an ID must match at least one `include` pattern and must not match any `exclude` pattern.
+Config filters remove modules from the entire report, including dependency links, tooltips, and
+exports. They match original module IDs before `projectRoot` trimming. A module present in several
+bundles remains in the dependency graph if it passes the filter in at least one bundle; its sizes
+include only allowed bundles. Dependency-only modules with no output membership use an empty bundle
+name for matching. Zero-size modules are retained when they pass the filter. Interactive filters
+control visibility within the generated report.
 
 ### Include And Exclude
 

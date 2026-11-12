@@ -1,6 +1,7 @@
 import { createContext, render } from "preact";
 import type { VisualizerData } from "../../shared/types";
 import { Main } from "./main";
+import { renderEmptyReport } from "../empty-report";
 
 import "../style/style-network.scss";
 
@@ -18,6 +19,10 @@ const drawChart = (
   width: number,
   height: number,
 ): void => {
+  if (Object.keys(data.nodeMetas).length === 0) {
+    renderEmptyReport(parentNode);
+    return;
+  }
   render(
     <StaticContext.Provider value={{ data, width, height }}>
       <Main />

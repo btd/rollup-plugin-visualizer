@@ -11,6 +11,7 @@ import {
 
 import { generateUniqueId, Id } from "../uid";
 import { getAvailableSizeOptions } from "../sizes";
+import { renderEmptyReport } from "../empty-report";
 import { Main } from "./main";
 import createRainbowColor, { NodeColorGetter } from "./color";
 
@@ -47,6 +48,10 @@ const drawChart = (
   width: number,
   height: number,
 ): void => {
+  if (data.tree.children.length === 0) {
+    renderEmptyReport(parentNode);
+    return;
+  }
   const availableSizeProperties = getAvailableSizeOptions(data.options);
 
   console.time("layout create");

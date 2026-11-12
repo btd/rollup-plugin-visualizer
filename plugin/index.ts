@@ -9,24 +9,21 @@ import {
 } from "./bundler-types.js";
 import opn, { Options as OpenOptions } from "open";
 
-import { ModuleLengths, ModuleTree, ModuleTreeLeaf, VisualizerData } from "../shared/types.js";
+import { ModuleLengths, VisualizerData } from "../shared/types.js";
 import { version } from "./version.js";
 
 import { createGzipSizeGetter, createBrotliSizeGetter, SizeGetter } from "./compress.js";
 
 import { TemplateType } from "./template-types.js";
-import { ModuleMapper, replaceHashPlaceholders } from "./module-mapper.js";
-import { addLinks, buildTree, mergeTrees } from "./data.js";
-import { getSourcemapModules } from "./sourcemap.js";
+import { replaceHashPlaceholders } from "./module-mapper.js";
+import { collectReport, selectReport, buildReport } from "./report.js";
 import { renderTemplate } from "./render-template.js";
-import { createFilter, Filter } from "../shared/create-filter.js";
+import type { Filter } from "../shared/create-filter.js";
 
 export type { BundlerOutputOptions, VisualizerPlugin } from "./bundler-types.js";
 
 const WARN_SOURCEMAP_DISABLED =
   "rollup output configuration missing sourcemap = true. You should add output.sourcemap = true or disable sourcemap in this plugin";
-
-const WARN_SOURCEMAP_MISSING = (id: string) => `${id} missing source map`;
 
 const WARN_JSON_DEPRECATED = 'Option `json` deprecated, please use template: "raw-data"';
 
@@ -164,8 +161,6 @@ export const visualizer = (
       const template = opts.template ?? "treemap";
       const projectRoot = opts.projectRoot ?? process.cwd();
 
-      const filter = createFilter(opts.include, opts.exclude);
-
       const gzipSizeRequested = !!opts.gzipSize;
       const brotliSizeRequested = !!opts.brotliSize;
       const gzipSize = gzipSizeRequested && !opts.sourcemap;
@@ -199,76 +194,21 @@ export const visualizer = (
         this.warn(WARN_SOURCEMAP_DISABLED);
       }
 
-      const roots: Array<ModuleTree | ModuleTreeLeaf> = [];
-      const mapper = new ModuleMapper(projectRoot);
-
-      // collect trees
-      for (const [bundleId, bundle] of Object.entries(outputBundle)) {
-        if (bundle.type !== "chunk") continue; //only chunks
-
-        let tree: ModuleTree;
-
-        if (opts.sourcemap) {
-          if (!bundle.map) {
-            this.warn(WARN_SOURCEMAP_MISSING(bundleId));
-          }
-
-          const modules = await getSourcemapModules(
-            bundleId,
-            bundle,
-            outputOptions.dir ??
-              (outputOptions.file && path.dirname(outputOptions.file)) ??
-              process.cwd(),
-          );
-
-          const moduleRenderInfo = Object.values(modules)
-            .filter(({ id }) => filter(bundleId, id))
-            .map(({ id, renderedLength }) => ({
-              id,
-              renderedLength,
-              gzipLength: 0,
-              brotliLength: 0,
-            }));
-
-          tree = buildTree(bundleId, moduleRenderInfo, mapper);
-        } else {
-          const modules = await Promise.all(
-            Object.entries(bundle.modules)
-              .filter(([id]) => filter(bundleId, id))
-              .map(([id, { code }]) => getModuleLengths({ id, code })),
-          );
-
-          tree = buildTree(bundleId, modules, mapper);
-        }
-
-        if (tree.children.length === 0) {
-          const bundleSizes = await getModuleLengths({ id: bundleId, code: bundle.code });
-
-          const facadeModuleId = bundle.facadeModuleId ?? `${bundleId}-unknown`;
-          const bundleUid = mapper.setNodePart(bundleId, facadeModuleId, bundleSizes);
-          mapper.setNodeMeta(facadeModuleId, { isEntry: true });
-          const leaf: ModuleTreeLeaf = { name: bundleId, uid: bundleUid };
-          roots.push(leaf);
-        } else {
-          roots.push(tree);
-        }
-      }
-
-      // after trees we process links (this is mostly for uids)
-      const processedNodes = new Set<string>();
-      for (const [, bundle] of Object.entries(outputBundle)) {
-        if (bundle.type !== "chunk" || bundle.facadeModuleId == null) continue; //only chunks
-
-        addLinks(bundle.facadeModuleId, this.getModuleInfo.bind(this), mapper, processedNodes);
-      }
-
-      const tree = mergeTrees(roots);
+      const collected = await collectReport(outputBundle, {
+        sourcemap: !!opts.sourcemap,
+        dir:
+          outputOptions.dir ??
+          (outputOptions.file && path.dirname(outputOptions.file)) ??
+          process.cwd(),
+        getModuleInfo: this.getModuleInfo.bind(this),
+        warn: this.warn.bind(this),
+      });
+      const selected = selectReport(collected, opts.include, opts.exclude);
+      const report = await buildReport(selected, projectRoot, getModuleLengths);
 
       const data: VisualizerData = {
         version,
-        tree,
-        nodeParts: mapper.getNodeParts(),
-        nodeMetas: mapper.getNodeMetas(),
+        ...report,
         env: {
           rollup: this.meta.rollupVersion,
         },
