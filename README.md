@@ -4,6 +4,55 @@ Visualize and analyze your bundle to quickly see which modules are taking up spa
 
 [![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer) [![Node.js CI](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml/badge.svg)](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml)
 
+## Sharing reports
+
+Generate raw-data JSON to share as an attachment:
+
+```js
+visualizer({ template: "raw-data", filename: "stats.json" });
+```
+
+The static [report viewer](https://btd.github.io/rollup-plugin-visualizer/) lets you choose or drop
+that file, select a diagram, and generate a complete link. Open the result or copy it. The index
+does not navigate automatically. The viewer must be deployed before this URL is available.
+
+To print a report link directly during a build:
+
+```js
+visualizer({ output: "link", template: "treemap", open: false });
+```
+
+File output remains the default. Link output supports treemap, sunburst, flamegraph, network,
+and treemap-3d. It ignores `filename`, rejects `emitFile: true`, and creates no report file or asset.
+`open: true` opens the report link. Links use the bundler's info logger, so keep info logs enabled.
+Markdown, list, and raw-data still use file output.
+
+Reports are encoded in the URL fragment and processed locally. The application does not upload
+files or save reports in browser storage. Links contain report data, are not encrypted, and may
+remain in logs, history, clipboards, or wherever you share them. The viewer uses native gzip in
+current desktop browsers; no compression polyfill is bundled. 3D treemap requires WebGL 2.
+
+The index generates the complete link for a supported report within its processing budgets,
+without a GitHub-specific cutoff. Destination sites and browsers may impose their own limits.
+Input JSON, decompressed binary, and reconstructed text each have a 64 MiB budget; count and depth
+limits also apply. Use file output if a report exceeds sharing budgets. Generate current raw-data
+JSON if an old file's structure is unsupported. See the [sharing design](docs/report-sharing.md)
+for the wire contract and processing limits.
+
+### Hosting the viewer
+
+`npm run build` produces the complete static application in `dist/viewer/`, with real template
+directories and relative assets. Host that directory through HTTP(S); no report backend is needed.
+For local verification, run `npx playwright install --with-deps chromium firefox webkit`, then
+`npm run test:viewer` after building.
+
+The [Pages workflow](.github/workflows/pages.yml) validates and deploys that directory on master
+updates or manual dispatch. First set Settings → Pages → Source to **GitHub Actions**. Deploy and
+verify the viewer before releasing plugin link output. Npm publication is separate. The index
+uses its own deployment URL; plugin links target the project's GitHub Pages address. See
+[GitHub's custom workflow instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+for setup.
+
 ## Screenshots
 
 ![pic](https://github.com/btd/rollup-plugin-visualizer/blob/master/pics/collage.png?raw=true)
@@ -153,7 +202,9 @@ Produces a Markdown report with summary tables and notes about config and size p
 
 ## Options
 
-- `filename` (`string`, default `stats.{ext based on template}`): Name of the generated report file.
+- `output` (`"file" | "link"`, default `"file"`): Write a report file or print a complete static viewer link. See [Sharing reports](#sharing-reports).
+
+- `filename` (`string`, default `stats.{ext based on template}`): Name of the generated report file. Ignored with `output: "link"`.
 - `title` (`string`, default `Rollup Visualizer`): HTML `<title>` value.
 - `open` (`boolean`, default `false`): Open the generated file in your default browser.
 - `template` (`string`, default `treemap`): Report type: `sunburst`, `treemap`, `treemap-3d`, `network`, `raw-data`, `list`, `markdown`, `flamegraph`.

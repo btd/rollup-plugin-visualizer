@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Add a static raw-data viewer and optional shareable report links.
+
 * Apply configured filters consistently to diagrams, dependency links, tooltips, and exports.
 * Keep entirely excluded chunks out of reports.
 * Add network zoom, node dragging, fit/reset controls, and restoration of hidden nodes.
