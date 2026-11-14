@@ -44,6 +44,7 @@ describe("Report graph collection", () => {
       getModuleInfo,
       emitFile,
       warn: vi.fn(),
+      info: vi.fn(),
       error: (message) => {
         throw new Error(message);
       },

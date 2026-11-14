@@ -27,6 +27,7 @@ export type GetModuleInfo = (moduleId: string) => BundlerModuleInfo | null;
 
 export interface BundlerPluginContext {
   meta: { rollupVersion: string };
+  info(log: string): void;
   warn(log: string): void;
   error(err: string): never;
   emitFile(file: { type: "asset"; fileName: string; source: string }): string;

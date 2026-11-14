@@ -1,5 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { createShareLink } from "./share-link.js";
+import { isVisualTemplate } from "../shared/share/url.js";
 
 import {
   BundlerNormalizedOutputOptions,
@@ -30,8 +32,13 @@ const WARN_JSON_DEPRECATED = 'Option `json` deprecated, please use template: "ra
 const ERR_FILENAME_EMIT = "When using emitFile option, filename must not be path but a filename";
 
 export interface PluginVisualizerOptions {
+  /** Write a report file (default), or print a complete static viewer URL. */
+  output?: "file" | "link";
+
   /**
    * The path to the template file to use. Or just a name of a file.
+   *
+   * Ignored with output: "link".
    *
    * @default "stats.html"
    */
@@ -53,7 +60,7 @@ export interface PluginVisualizerOptions {
   title?: string;
 
   /**
-   * If plugin should open browser with generated file. Ignored when `json` or `emitFile` is true.
+   * If plugin should open browser with the generated file or report link. Ignored when `json` or `emitFile` is true.
    *
    * @default false
    */
@@ -135,7 +142,7 @@ const chooseDefaultFileName = (opts: PluginVisualizerOptions) => {
 };
 
 export const visualizer = (
-  opts:
+  pluginOptions:
     | PluginVisualizerOptions
     | ((outputOptions: BundlerOutputOptions) => PluginVisualizerOptions) = {},
 ): VisualizerPlugin => {
@@ -146,11 +153,22 @@ export const visualizer = (
       outputOptions: BundlerNormalizedOutputOptions,
       outputBundle: BundlerOutputBundle,
     ): Promise<void> {
-      opts = typeof opts === "function" ? opts(outputOptions) : opts;
+      const opts =
+        typeof pluginOptions === "function" ? pluginOptions(outputOptions) : pluginOptions;
+      const output = opts.output ?? "file";
+      if (output !== "file" && output !== "link")
+        this.error(`Unknown visualizer output: ${output}`);
+      const template = opts.json ? "raw-data" : (opts.template ?? "treemap");
+      if (output === "link") {
+        if (opts.emitFile) this.error("Link output cannot be combined with emitFile: true.");
+        if (!isVisualTemplate(template))
+          this.error(
+            `Template "${template}" does not support link output. Choose a visual template or file output.`,
+          );
+      }
 
       if ("json" in opts) {
         this.warn(WARN_JSON_DEPRECATED);
-        if (opts.json) opts.template = "raw-data";
       }
       const filename = opts.filename ?? chooseDefaultFileName(opts);
       const title = opts.title ?? "Rollup Visualizer";
@@ -158,7 +176,6 @@ export const visualizer = (
       const open = !!opts.open;
       const openOptions = opts.openOptions ?? {};
 
-      const template = opts.template ?? "treemap";
       const projectRoot = opts.projectRoot ?? process.cwd();
 
       const gzipSizeRequested = !!opts.gzipSize;
@@ -220,6 +237,12 @@ export const visualizer = (
       };
 
       const stringData = replaceHashPlaceholders(data);
+      if (output === "link") {
+        const url = createShareLink(template, title, JSON.parse(stringData));
+        this.info(url);
+        if (open) await opn(url, openOptions);
+        return;
+      }
 
       const fileContent: string = await renderTemplate(template, {
         title,
