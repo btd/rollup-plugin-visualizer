@@ -1,0 +1,135 @@
+:root {
+  color-scheme: dark;
+  --viewer-background: #2b2d42;
+  --viewer-text: #edf2f4;
+  --viewer-border: #727589;
+  --viewer-surface: #202234;
+  --viewer-link: #b9dfff;
+}
+.viewer-index {
+  margin: 0;
+  background: var(--viewer-background);
+  color: var(--viewer-text);
+  font:
+    1rem/1.5 system-ui,
+    sans-serif;
+}
+.viewer-index * {
+  box-sizing: border-box;
+}
+.viewer-index main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.viewer-index h1 {
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem;
+}
+.viewer-index h2 {
+  font-size: 1.125rem;
+  margin: 0 0 0.75rem;
+}
+.viewer-index .intro {
+  max-width: 55rem;
+}
+.viewer-index form {
+  margin: 1.5rem 0 1rem;
+}
+.viewer-index .drop-target {
+  border: 1px dashed var(--viewer-border);
+  padding: 1.25rem;
+}
+.viewer-index .drop-target.dragging {
+  outline: 2px solid var(--viewer-link);
+  outline-offset: 2px;
+}
+.viewer-index label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.viewer-index #file-hint,
+.viewer-index #file-name {
+  font-size: 0.875rem;
+  margin: 0.75rem 0 0;
+  overflow-wrap: anywhere;
+}
+.viewer-index .controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+.viewer-index .controls label {
+  margin: 0;
+}
+.viewer-index select,
+.viewer-index button,
+.viewer-index input,
+.viewer-index textarea {
+  font: inherit;
+}
+.viewer-index select,
+.viewer-index button {
+  border: 1px solid var(--viewer-border);
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--viewer-surface);
+  color: inherit;
+}
+.viewer-index button {
+  cursor: pointer;
+}
+.viewer-index button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.viewer-index :focus-visible {
+  outline: 2px solid var(--viewer-link);
+  outline-offset: 3px;
+}
+.viewer-index #status {
+  min-height: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.viewer-index #result {
+  border-top: 1px solid var(--viewer-border);
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+}
+.viewer-index .actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.viewer-index a,
+.viewer-message a {
+  color: var(--viewer-link);
+}
+.viewer-index textarea {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  color: inherit;
+  background: var(--viewer-surface);
+  border: 1px solid var(--viewer-border);
+  border-radius: 0.25rem;
+  font-family: ui-monospace, monospace;
+  resize: vertical;
+}
+.viewer-index [hidden] {
+  display: none;
+}
+.viewer-report main.viewer-message {
+  padding: 2rem;
+  overflow: auto;
+  font:
+    1rem/1.5 system-ui,
+    sans-serif;
+}
+.viewer-report .viewer-message p {
+  max-width: 60rem;
+}

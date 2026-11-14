@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; worker-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Rollup Visualizer — report links</title>
+    <link rel="stylesheet" href="./assets/viewer.css" />
+    <script type="module" src="./assets/index.js"></script>
+  </head>
+  <body class="viewer-index">
+    <main>
+      <h1>Rollup Visualizer</h1>
+      <p class="intro">
+        Open your build statistics in a diagram. Choose a raw-data JSON file to generate a report
+        link.
+      </p>
+      <p>File contents are processed locally in your browser.</p>
+      <form id="report-form" aria-busy="false">
+        <div id="drop-target" class="drop-target">
+          <label for="report-file">Report JSON</label>
+          <input
+            id="report-file"
+            type="file"
+            accept=".json,application/json"
+            aria-describedby="file-hint"
+          />
+          <p id="file-hint">
+            Choose a file or drop it here. Use <code>template: "raw-data"</code> to generate it.
+            Maximum file size: 64 MiB.
+          </p>
+          <p id="file-name">No file selected.</p>
+        </div>
+        <div class="controls">
+          <label for="template">Diagram</label>
+          <select id="template">
+            <option value="treemap">Treemap</option>
+            <option value="sunburst">Sunburst</option>
+            <option value="flamegraph">Flamegraph</option>
+            <option value="network">Network</option>
+            <option value="treemap-3d">3D treemap</option>
+          </select>
+          <button id="generate" type="submit" disabled>Generate link</button>
+          <button id="cancel" type="button" hidden>Cancel</button>
+        </div>
+      </form>
+      <p id="status" role="status" aria-live="polite">
+        Choose a raw-data JSON file to generate a report link.
+      </p>
+      <section id="result" aria-labelledby="result-heading" hidden>
+        <h2 id="result-heading">Report link</h2>
+        <div class="actions">
+          <a id="open-report" target="_blank" rel="noopener noreferrer">Open report</a
+          ><button id="copy-link" type="button">Copy link</button>
+        </div>
+        <label for="report-url">Complete link</label>
+        <textarea id="report-url" rows="3" readonly wrap="off" spellcheck="false"></textarea>
+      </section>
+      <noscript>This viewer requires JavaScript and a current desktop browser.</noscript>
+    </main>
+  </body>
+</html>
