@@ -7,7 +7,10 @@
   "main": "./dist/plugin/index.js",
   "type": "module",
   "files": [
-    "dist"
+    "dist/bin",
+    "dist/plugin",
+    "dist/shared",
+    "dist/lib"
   ],
   "exports": {
     ".": {
@@ -24,9 +27,9 @@
     "url": "https://github.com/btd/rollup-plugin-visualizer/issues"
   },
   "scripts": {
-    "lint": "oxlint -c .oxlintrc.json plugin src",
+    "lint": "oxlint -c .oxlintrc.json plugin src shared/share",
     "format": "prettier plugin src --write --list-different",
-    "build": "run-p build:*",
+    "build": "run-p build:plugin build:frontend && npm run build:viewer",
     "build:plugin": "tsc",
     "build:frontend": "rollup -c rollup.config.js",
     "build-dev": "rollup -c rollup.config-dev.js",
@@ -35,7 +38,9 @@
     "test": "run-s test:types test:unit test:consumers",
     "test:types": "tsc -p test/types/tsconfig.json",
     "test:unit": "vitest --run",
-    "test:consumers": "node test/run-consumer-fixtures.mjs"
+    "test:consumers": "node test/run-consumer-fixtures.mjs",
+    "build:viewer": "rollup -c rollup.config-viewer.js && node scripts/package-viewer.mjs",
+    "test:viewer": "node scripts/test-viewer.mjs"
   },
   "dependencies": {
     "open": "^11.0.0",
@@ -81,6 +86,7 @@
     "del-cli": "^8.0.1",
     "npm-run-all": "^4.1.5",
     "oxlint": "^1.78.0",
+    "playwright": "^1.65.1",
     "postcss": "^8.5.26",
     "postcss-url": "^10.1.4",
     "preact": "^11.1.1",
