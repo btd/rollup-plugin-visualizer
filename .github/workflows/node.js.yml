@@ -29,3 +29,16 @@ jobs:
     - run: npm run build --if-present
     - run: npm run test
     - run: npm run lint
+
+  viewer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+      - run: npm ci
+      - run: npm run build
+      - run: npx tsc -p src/tsconfig.json --noEmit
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:viewer
