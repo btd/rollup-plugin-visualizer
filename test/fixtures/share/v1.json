@@ -1,0 +1,105 @@
+{
+  "title": "Frozen v1 — 分析😀",
+  "data": {
+    "version": 2,
+    "tree": {
+      "name": "📦 report",
+      "children": [
+        {
+          "name": "empty",
+          "children": []
+        },
+        {
+          "name": "🐢é / é.js",
+          "uid": "part-00"
+        },
+        {
+          "name": "zero",
+          "uid": "other-4"
+        }
+      ],
+      "isRoot": true
+    },
+    "nodeParts": {
+      "part-00": {
+        "metaUid": "α-00",
+        "renderedLength": 9007199254740991,
+        "gzipLength": 4294967296,
+        "brotliLength": 0
+      },
+      "other-4": {
+        "metaUid": "α-00",
+        "renderedLength": 0,
+        "gzipLength": 0,
+        "brotliLength": 0
+      }
+    },
+    "nodeMetas": {
+      "α-00": {
+        "id": "/🐢é/文件.js",
+        "moduleParts": {
+          "β.bundle.js": "part-00",
+          "zero.js": "other-4"
+        },
+        "isEntry": false,
+        "imported": [
+          {
+            "uid": "other-prefix-2",
+            "dynamic": false
+          },
+          {
+            "uid": "other-prefix-2",
+            "dynamic": true
+          }
+        ],
+        "importedBy": [
+          {
+            "uid": "other-prefix-2",
+            "dynamic": false
+          }
+        ]
+      },
+      "other-prefix-2": {
+        "id": "\u0000/🐢é/file.js",
+        "moduleParts": {},
+        "isExternal": true,
+        "imported": [
+          {
+            "uid": "α-00",
+            "dynamic": false
+          }
+        ],
+        "importedBy": [
+          {
+            "uid": "α-00",
+            "dynamic": true
+          },
+          {
+            "uid": "α-00",
+            "dynamic": false
+          }
+        ]
+      }
+    },
+    "env": {
+      "array": [
+        null,
+        1.25,
+        true,
+        "🐢",
+        {
+          "x": false
+        }
+      ],
+      "nested": {
+        "answer": 42
+      }
+    },
+    "options": {
+      "gzip": true,
+      "brotli": false,
+      "sourcemap": false
+    }
+  },
+  "fragment": "1.H4sIAAAAAAAAAyWLP0vDUBTF77vvNS2o1G6O4c3516JLZvFLiEOkN9gQk_CSav9QSBd1LCjiZMFBcNTBxdG19EOIdu43UF9z7nDuPfd39o5UOqLEvGibX-Wd-XNztXqcrecPJTscy0CpYCj946Qfx1bb6RxYheqTJdfz2ZO0xnIg_TCIc5qcWDKhvKCu9McySPJLUtLf70wmjQZoCQBogat7tJi6YS8mJ8pbm-DzxV3dX39_vDtRXqPzrBiKEamUO1G-vXxzTvtJd0M3K9h0TVpMnSjfWs9vn01FWaoKYaTFGSl7p7JMUdgb2PUsUIXtebXlq-15AhgXhgCBAMgMjgwZAmsg6KkJZIDIBEcGgPBbqQkIZVmWu_-uY2RclzgwjQNDrpfNyerIOaDBOQCr3n-r1cFVXQEAAA"
+}
