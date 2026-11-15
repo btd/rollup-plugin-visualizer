@@ -130,6 +130,9 @@ const memoryTimer = process.env.VIEWER_MEASURE_MEMORY
 try {
   for (const name of (process.env.VIEWER_TEST_BROWSERS ?? "chromium,firefox,webkit").split(",")) {
     assert(engines[name], `Unknown browser: ${name}`);
+    // Playwright's WebKit screenshot helper injects inline CSS blocked by our CSP.
+    // Capture visuals in Chromium/Firefox and retain WebKit's runtime CSP checks.
+    const captureScreenshots = !!process.env.VIEWER_SCREENSHOT_DIR && name !== "webkit";
     peakRssBytes = 0;
     browser = await engines[name].launch({
       headless: true,
@@ -151,30 +154,91 @@ try {
     const page = await context.newPage();
     await page.goto(base);
     assert.equal(await page.locator('input[type="file"]').count(), 1);
-    assert.equal(await page.locator("svg, canvas").count(), 0);
-    await page.locator("#report-file").setInputFiles(jsonFile);
+    assert.equal(await page.locator('input[name="template"]').count(), 5);
+    if (captureScreenshots) {
+      await fs.mkdir(process.env.VIEWER_SCREENSHOT_DIR, { recursive: true });
+      await page.screenshot({
+        path: path.join(process.env.VIEWER_SCREENSHOT_DIR, `${name}-empty.png`),
+      });
+    }
+    await page.setViewportSize({ width: 960, height: 720 });
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "125%";
+    });
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    await page.locator('input[name="template"][value="treemap"]').focus();
+    await page.keyboard.press("ArrowRight");
+    assert(await page.locator('input[name="template"][value="sunburst"]').isChecked());
+    await page.keyboard.press("ArrowLeft");
+    assert(await page.locator('input[name="template"][value="treemap"]').isChecked());
+    await page.evaluate(() => {
+      document.documentElement.style.removeProperty("font-size");
+    });
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const chooserReady = page.waitForEvent("filechooser");
+    await page.locator("#drop-target").click();
+    await (await chooserReady).setFiles(jsonFile);
     const first = await readyLink(page);
     assert.equal(page.url(), base);
+    assert(
+      await page
+        .locator("#open-report")
+        .evaluate((node) => node.getBoundingClientRect().bottom <= window.innerHeight),
+    );
     assert.equal(context.pages().length, 1);
     assert.deepEqual((await decodeFragment(new URL(first).hash)).data, data);
     await page.evaluate((json) => {
       const transfer = new DataTransfer();
       transfer.items.add(new File([json], "dropped.json", { type: "application/json" }));
-      document
-        .querySelector("#drop-target")
-        .dispatchEvent(
-          new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: transfer }),
-        );
+      const target = document.querySelector("#drop-target");
+      const icon = target.querySelector(".drop-icon");
+      target.dispatchEvent(new DragEvent("dragenter", { bubbles: true, dataTransfer: transfer }));
+      icon.dispatchEvent(new DragEvent("dragenter", { bubbles: true, dataTransfer: transfer }));
+      icon.dispatchEvent(new DragEvent("dragleave", { bubbles: true, dataTransfer: transfer }));
+      if (!target.classList.contains("dragging"))
+        throw new Error("Nested drag leave cleared the drop highlight");
+      target.dispatchEvent(
+        new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: transfer }),
+      );
     }, jsonFile.buffer.toString("utf8"));
     assert.deepEqual((await decodeFragment(new URL(await readyLink(page)).hash)).data, data);
     assert.equal(await page.locator("#file-name").innerText(), "dropped.json");
+    assert.equal(
+      await page.locator("#drop-target").evaluate((node) => node.classList.contains("dragging")),
+      false,
+    );
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+          writeText: async (text) => {
+            window.copiedReportLink = text;
+          },
+        },
+      });
+    });
     await page.locator("#copy-link").click();
     await page.waitForFunction(() =>
-      /copied|selected/.test(document.querySelector("#status").textContent),
+      document.querySelector("#status").textContent.includes("copied"),
     );
-    assert.equal(await page.locator("#report-url").inputValue(), first);
+    assert.equal(await page.evaluate(() => window.copiedReportLink), first);
+    await page.evaluate(() => {
+      navigator.clipboard.writeText = async () => {
+        throw new Error("Clipboard denied");
+      };
+    });
+    await page.locator("#copy-link").click();
+    await page.waitForFunction(() =>
+      document.querySelector("#status").textContent.includes("context menu"),
+    );
+    assert.equal(await page.evaluate(() => document.activeElement.id), "open-report");
+    await page.evaluate(() => {
+      navigator.clipboard.writeText = async (text) => {
+        window.copiedReportLink = text;
+      };
+    });
     for (const template of ["treemap", "sunburst", "flamegraph", "network", "treemap-3d"]) {
-      await page.locator("#template").selectOption(template);
+      await page.locator(`input[name="template"][value="${template}"]`).check();
       const url = await readyLink(page);
       assert.equal(new URL(url).pathname, mount + template + "/");
       // Headless Firefox/WebKit may lack WebGL; their 3D page still exercises the empty-state path.
@@ -185,7 +249,6 @@ try {
       const report = await context.newPage();
       await report.goto(destination);
       await readyReport(report);
-      assert.equal(await report.locator('input[type="file"], #template').count(), 0);
       if (!(name !== "chromium" && template === "treemap-3d"))
         await report.locator("main svg, main canvas").first().waitFor({ state: "attached" });
       await report.setViewportSize({ width: 960, height: 720 });
@@ -195,12 +258,12 @@ try {
     // Changing controls clears stale results synchronously, before a replacement worker replies.
     assert(
       await page.evaluate(() => {
-        const select = document.querySelector("#template");
-        select.value = "network";
-        select.dispatchEvent(new Event("change"));
+        const radio = document.querySelector('input[name="template"][value="network"]');
+        radio.checked = true;
+        radio.dispatchEvent(new Event("change", { bubbles: true }));
         return (
           document.querySelector("#result").hidden &&
-          document.querySelector("#report-url").value === ""
+          !document.querySelector("#open-report").hasAttribute("href")
         );
       }),
     );
@@ -321,7 +384,7 @@ try {
     console.log(
       `${name} stress: ${JSON.stringify({ records, jsonBytes: stressJson.length, urlCharacters: stressUrl.length, encodeMs: Math.round(encodedMs), decodeMs: Math.round(summary.decodeMs) })}`,
     );
-    if (process.env.VIEWER_SCREENSHOT_DIR) {
+    if (captureScreenshots) {
       await page.locator("#report-file").setInputFiles(jsonFile);
       await readyLink(page);
     }
@@ -337,7 +400,11 @@ try {
     });
     const veryLong = await readyLink(page);
     assert(veryLong.length > 1_048_576);
-    assert.equal(await page.locator("#report-url").inputValue(), veryLong);
+    await page.locator("#copy-link").click();
+    await page.waitForFunction(() =>
+      document.querySelector("#status").textContent.includes("copied"),
+    );
+    assert.equal(await page.evaluate(() => window.copiedReportLink), veryLong);
     assert.equal(
       (await decodeFragment(veryLong.slice(veryLong.indexOf("#")))).data.env.note,
       veryLongNote,
@@ -369,8 +436,7 @@ try {
     );
     assert.equal(await page.evaluate(() => sessionStorage.length), 0);
     assert.deepEqual(external, []);
-    assert.deepEqual(errors, []);
-    if (process.env.VIEWER_SCREENSHOT_DIR) {
+    if (captureScreenshots) {
       await page.locator("#report-file").setInputFiles(jsonFile);
       await readyLink(page);
       await fs.mkdir(process.env.VIEWER_SCREENSHOT_DIR, { recursive: true });
@@ -378,8 +444,9 @@ try {
         path: path.join(process.env.VIEWER_SCREENSHOT_DIR, `${name}-index.png`),
       });
     }
+    assert.deepEqual(errors, []);
     console.log(
-      `${name}: file-to-link, templates, resize, cancellation, stale results, invalid input, long fragments and local-only processing passed`,
+      `${name}: file-to-link, templates, keyboard, clipboard, resize, cancellation, stale results, invalid input, long fragments and local-only processing passed`,
     );
     if (memoryTimer) {
       await sampleRss();

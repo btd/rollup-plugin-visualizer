@@ -2,21 +2,30 @@ import { createReportUrl } from "../../shared/share/url.js";
 import { startWorker } from "./worker.js";
 
 const fileInput = document.querySelector<HTMLInputElement>("#report-file")!;
-const template = document.querySelector<HTMLSelectElement>("#template")!;
+const templates = document.querySelector<HTMLFieldSetElement>("#template-options")!;
 const form = document.querySelector<HTMLFormElement>("#report-form")!;
 const drop = document.querySelector<HTMLElement>("#drop-target")!;
 const status = document.querySelector<HTMLElement>("#status")!;
 const result = document.querySelector<HTMLElement>("#result")!;
+const caption = document.querySelector<HTMLElement>("#result-caption")!;
 const link = document.querySelector<HTMLAnchorElement>("#open-report")!;
-const urlText = document.querySelector<HTMLTextAreaElement>("#report-url")!;
 const copy = document.querySelector<HTMLButtonElement>("#copy-link")!;
+const copyLabel = document.querySelector<HTMLElement>("#copy-label")!;
 const generate = document.querySelector<HTMLButtonElement>("#generate")!;
 const cancel = document.querySelector<HTMLButtonElement>("#cancel")!;
 const fileName = document.querySelector<HTMLElement>("#file-name")!;
+const fileHint = document.querySelector<HTMLElement>("#file-hint")!;
 let selected: File | undefined,
   worker: Worker | undefined,
-  generation = 0;
+  generation = 0,
+  dragDepth = 0,
+  reportUrl = "";
 
+const setStatus = (message: string, state: "idle" | "loading" | "ready" | "error"): void => {
+  status.textContent = message;
+  status.dataset.state = state;
+  form.dataset.state = state;
+};
 const stop = (): void => {
   generation++;
   worker?.terminate();
@@ -28,21 +37,25 @@ const stop = (): void => {
 const clear = (): void => {
   result.hidden = true;
   link.removeAttribute("href");
-  urlText.value = "";
+  reportUrl = "";
+  copyLabel.textContent = "Copy link";
 };
 const run = (): void => {
   stop();
   clear();
   if (!selected) {
-    status.textContent = "Choose a raw-data JSON file to generate a report link.";
+    setStatus("Choose a report to get started.", "idle");
     return;
   }
-  const current = generation,
-    diagram = template.value;
+  const current = generation;
+  const template = templates.querySelector<HTMLInputElement>("input:checked")!;
+  const diagram = template.value;
+  const diagramName = template.closest("label")!.querySelector(".diagram-name")!.textContent;
+  const name = selected.name;
   form.setAttribute("aria-busy", "true");
   cancel.hidden = false;
   generate.disabled = true;
-  status.textContent = "Reading report…";
+  setStatus("Reading report…", "loading");
   try {
     worker = startWorker(
       new URL("./load.worker.js", import.meta.url),
@@ -50,39 +63,45 @@ const run = (): void => {
       (reply) => {
         if (current !== generation) return;
         if (reply.type === "progress") {
-          status.textContent = reply.message;
+          setStatus(reply.message, "loading");
           return;
         }
         if (reply.type === "encoded") {
           try {
-            const url = createReportUrl(new URL("./", location.href).href, diagram, reply.fragment);
-            link.href = url;
-            urlText.value = url;
-            urlText.scrollLeft = 0;
-            urlText.scrollTop = 0;
+            reportUrl = createReportUrl(new URL("./", location.href).href, diagram, reply.fragment);
+            link.href = reportUrl;
+            caption.textContent = `${diagramName} · ${name}`;
             result.hidden = false;
-            status.textContent = "Report link ready. Open it or copy the link.";
+            setStatus("Ready to explore. Open your report or copy the link.", "ready");
           } catch {
-            status.textContent = "Could not construct the report link.";
+            setStatus("Could not construct the report link.", "error");
           }
-        } else if (reply.type === "error") status.textContent = reply.message;
+        } else if (reply.type === "error") setStatus(reply.message, "error");
         stop();
       },
     );
   } catch {
     stop();
-    status.textContent =
-      "This viewer requires browser worker support. Use a current desktop browser.";
+    setStatus(
+      "This viewer requires browser worker support. Use a current desktop browser.",
+      "error",
+    );
   }
 };
 
 const select = (file: File | undefined): void => {
   selected = file;
-  fileName.textContent = file ? file.name : "No file selected.";
+  drop.classList.toggle("has-file", !!file);
+  fileName.textContent = file ? file.name : "Drop your report here";
+  const units = file && file.size >= 1024 * 1024 ? "MiB" : "KiB";
+  const divisor = units === "MiB" ? 1024 * 1024 : 1024;
+  fileHint.textContent = file
+    ? `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(file.size / divisor)} ${units} · Drop another file to replace`
+    : "Raw-data JSON · Up to 64 MiB";
   run();
 };
 fileInput.addEventListener("change", () => select(fileInput.files?.[0]));
-template.addEventListener("change", run);
+templates.addEventListener("change", run);
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   run();
@@ -90,41 +109,59 @@ form.addEventListener("submit", (event) => {
 cancel.addEventListener("click", () => {
   stop();
   clear();
-  status.textContent = "Cancelled. Generate the link again when ready.";
+  setStatus("Cancelled. Generate the link again when ready.", "idle");
 });
-drop.addEventListener("dragover", (event) => {
+const isFileDrag = (event: DragEvent): boolean => !!event.dataTransfer?.types.includes("Files");
+drop.addEventListener("dragenter", (event) => {
+  if (!isFileDrag(event)) return;
   event.preventDefault();
+  dragDepth++;
   drop.classList.add("dragging");
 });
-drop.addEventListener("dragleave", () => drop.classList.remove("dragging"));
+drop.addEventListener("dragover", (event) => {
+  if (!isFileDrag(event)) return;
+  event.preventDefault();
+  event.dataTransfer!.dropEffect = "copy";
+  drop.classList.add("dragging");
+});
+drop.addEventListener("dragleave", () => {
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) drop.classList.remove("dragging");
+});
 drop.addEventListener("drop", (event) => {
   event.preventDefault();
+  dragDepth = 0;
   drop.classList.remove("dragging");
   stop();
   clear();
   const files = event.dataTransfer?.files;
+  fileInput.value = "";
   if (files?.length !== 1) {
-    selected = undefined;
-    fileInput.value = "";
-    fileName.textContent = "No file selected.";
-    generate.disabled = true;
-    status.textContent = "Choose one raw-data JSON file at a time.";
+    select(undefined);
+    setStatus("Choose one raw-data JSON file at a time.", "error");
     return;
   }
-  fileInput.value = "";
   select(files[0]);
 });
+// Keep an accidental file drop outside the target from navigating away from the viewer.
+for (const type of ["dragover", "drop"] as const)
+  document.addEventListener(type, (event) => {
+    if (isFileDrag(event)) event.preventDefault();
+  });
 copy.addEventListener("click", async () => {
-  const url = urlText.value;
+  const url = reportUrl;
   if (!url) return;
   try {
     await navigator.clipboard.writeText(url);
-    if (url === urlText.value) status.textContent = "Report link copied.";
+    if (url === reportUrl) {
+      copyLabel.textContent = "Copied";
+      setStatus("Report link copied.", "ready");
+    }
   } catch {
-    if (url === urlText.value) {
-      urlText.focus();
-      urlText.select();
-      status.textContent = "Link selected. Use your browser’s copy command.";
+    if (url === reportUrl) {
+      copyLabel.textContent = "Copy link";
+      link.focus();
+      setStatus("Copy is unavailable. Use Open report’s context menu to copy the link.", "ready");
     }
   }
 });
