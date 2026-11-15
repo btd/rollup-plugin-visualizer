@@ -43,9 +43,9 @@
     "test:viewer": "node scripts/test-viewer.mjs"
   },
   "dependencies": {
+    "@jridgewell/trace-mapping": "^0.3.31",
     "open": "^11.0.0",
     "picomatch": "^4.0.5",
-    "source-map": "^0.8.0",
     "yargs": "^18.1.0"
   },
   "peerDependencies": {
@@ -95,6 +95,7 @@
     "rollup": "^4.62.4",
     "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.102.0",
+    "source-map": "^0.8.0",
     "three": "^0.187.0",
     "tslib": "^2.8.1",
     "typescript": "~6.0.0",

@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { SourceMapConsumer } from "source-map";
+import { SourceMapConsumer, SourceMapGenerator } from "source-map";
 import type { RawSourceMap } from "source-map";
 import { rollup } from "rollup";
 import { rolldown } from "rolldown";
@@ -8,6 +8,7 @@ import terser from "@rollup/plugin-terser";
 import { getSourcemapModules } from "../dist/plugin/sourcemap.js";
 import { visualizer } from "../dist/plugin/index.js";
 import type { VisualizerData } from "../shared/types.js";
+import { FILTER_ROOT, generateFilteredReport } from "./filtering-fixture";
 
 const dir = path.resolve("temp");
 const projectRoot = process.cwd();
@@ -185,3 +186,76 @@ it.each([undefined, null])("returns no module sizes for an absent map: %j", asyn
     ),
   ).toEqual({});
 });
+
+it.each(["rollup", "rolldown", "vite"] as const)(
+  "%s preserves distinct sourcemap filenames and their UTF-8 byte counts",
+  async (bundler) => {
+    const names = [
+      "space file.js",
+      "space%20file.js",
+      "space%2520file.js",
+      "path/file.js",
+      "path%2Ffile.js",
+      "percent%25.js",
+      "percent%.js",
+      "entrée😀.js",
+      "entr%C3%A9e%F0%9F%98%80.js",
+      "hash#file.js",
+      "query?file.js",
+    ];
+    const input = `${FILTER_ROOT}src/index.js`;
+    const files = Object.fromEntries(
+      names.map((name, index) => [
+        `${FILTER_ROOT}src/${name}`,
+        `globalThis.source${index} = "${"é😀".repeat(index + 1)}";\n`,
+      ]),
+    );
+    files[input] = names.map((name) => `import ${JSON.stringify(`./${name}`)};`).join("\n");
+    const options = { sourcemap: true, input: { entry: input }, files };
+    const { data, chunks } = await generateFilteredReport(bundler, options);
+    const code = chunks.get("entry.js")!.code;
+    const expected = Object.fromEntries(
+      names.map((name, index) => {
+        // Each source contributes one complete line. Derive expected UTF-8
+        // sizes from emitted code, independently of a sourcemap consumer.
+        const statement = code.match(new RegExp(`globalThis\\.source${index} = [^\\n]+\\n`))?.[0];
+        expect(statement).toBeDefined();
+        return [`src/${name}`, Buffer.byteLength(statement!)];
+      }),
+    );
+    expect(reportSizes(data)).toEqual(expected);
+
+    for (const name of names) {
+      const selected = await generateFilteredReport(bundler, {
+        ...options,
+        visualizer: { include: { file: `${FILTER_ROOT}src/${name}` } },
+      });
+      expect(reportSizes(selected.data)).toEqual({ [`src/${name}`]: expected[`src/${name}`] });
+      expect(Object.values(selected.data.nodeMetas).map((meta) => meta.id)).toEqual([
+        `src/${name}`,
+      ]);
+    }
+  },
+);
+
+it.each(["../original space%20", "/original space%20"])(
+  "preserves filenames when resolving sourceRoot %s",
+  async (sourceRoot) => {
+    const source = "entrée%20😀.js";
+    const code = 'globalThis.value = "é😀";\n';
+    const map = new SourceMapGenerator({ sourceRoot });
+    map.addMapping({
+      generated: { line: 1, column: 0 },
+      original: { line: 1, column: 0 },
+      source,
+    });
+    const id = path.resolve(dir, sourceRoot, source);
+    expect(
+      await getSourcemapModules(
+        "out.js",
+        { type: "chunk", code, map: JSON.parse(map.toString()), modules: {}, facadeModuleId: null },
+        dir,
+      ),
+    ).toEqual({ [id]: { id, renderedLength: Buffer.byteLength(code) } });
+  },
+);

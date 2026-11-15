@@ -3,9 +3,7 @@
 ## Unreleased
 
 * Deprecate function-valued plugin options; pass an options object instead.
-
-## 7.2.0
-
+* Fix sourcemap filename attribution and filtering for spaces, Unicode, and literal percent escapes.
 * Add report sharing through `output: "link"` and a static raw-data viewer.
 * Apply configured filters consistently to diagrams, dependency links, tooltips, and exports.
 * Keep entirely excluded chunks out of reports.

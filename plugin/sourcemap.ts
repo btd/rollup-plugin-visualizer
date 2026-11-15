@@ -1,7 +1,6 @@
 import path from "node:path";
 import { BundlerOutputChunk } from "./bundler-types.js";
-import type { RawSourceMap } from "source-map";
-import { SourceMapConsumer } from "source-map";
+import { eachMapping, TraceMap, type EncodedSourceMap } from "@jridgewell/trace-mapping";
 
 interface SourceMapModuleRenderInfo {
   id: string;
@@ -17,7 +16,7 @@ interface GeneratedMapping {
 const getBytesPerFileUsingSourceMap = (
   bundleId: string,
   code: string,
-  map: SourceMapConsumer,
+  map: TraceMap,
   dir: string,
 ) => {
   const modules: Record<string, SourceMapModuleRenderInfo> = {};
@@ -41,61 +40,50 @@ const getBytesPerFileUsingSourceMap = (
 
     let module = modulesBySource.get(previous.source);
     if (module == null) {
-      // The consumer exposes URL-encoded sources. Match the bundler's original
-      // filesystem IDs, including Unicode, spaces, and literal percent signs.
-      let source = previous.source;
-      try {
-        source = decodeURIComponent(source);
-      } catch {
-        // Some plugins supply source paths with unescaped percent signs.
-      }
-      const id = path.resolve(bundleDir, source);
+      // Preserve the bundler's source names: literal percent escapes are part
+      // of filenames and must remain distinct from spaces or path separators.
+      const id = path.resolve(bundleDir, previous.source);
       module = modules[id] ??= { id, renderedLength: 0 };
       modulesBySource.set(previous.source, module);
     }
     module.renderedLength += Buffer.byteLength(code.slice(start, end));
   };
 
-  // Rollup and Rolldown emit flat maps. Stream their generated mappings without
+  // Rollup and Rolldown emit flat maps. Count spans in generated order without
   // materializing characters or retaining the generated code for each module.
-  map.eachMapping(
-    (mapping) => {
-      // Original positions within the same source do not affect module sizes.
-      if (previous?.generatedLine === mapping.generatedLine && previous.source === mapping.source) {
-        return;
-      }
-      countSpan(mapping);
+  eachMapping(map, (mapping) => {
+    // Original positions within the same source do not affect module sizes.
+    if (previous?.generatedLine === mapping.generatedLine && previous.source === mapping.source) {
+      return;
+    }
+    countSpan(mapping);
 
-      while (line < mapping.generatedLine && lineStart < code.length) {
-        const newline = code.indexOf("\n", lineStart);
-        lineStart = newline === -1 ? code.length : newline + 1;
-        line++;
-      }
-      if (previous?.generatedLine !== mapping.generatedLine) {
-        const newline = code.indexOf("\n", lineStart);
-        // Preserve the existing policy: include a mapped line's terminating LF,
-        // but do not extend its final mapping into an unmapped following line.
-        lineEnd = newline === -1 ? code.length : newline + 1;
-      }
-      previous = mapping;
-    },
-    null,
-    SourceMapConsumer.GENERATED_ORDER,
-  );
+    while (line < mapping.generatedLine && lineStart < code.length) {
+      const newline = code.indexOf("\n", lineStart);
+      lineStart = newline === -1 ? code.length : newline + 1;
+      line++;
+    }
+    if (previous?.generatedLine !== mapping.generatedLine) {
+      const newline = code.indexOf("\n", lineStart);
+      // Preserve the existing policy: include a mapped line's terminating LF,
+      // but do not extend its final mapping into an unmapped following line.
+      lineEnd = newline === -1 ? code.length : newline + 1;
+    }
+    previous = mapping;
+  });
   countSpan();
 
   return modules;
 };
 
-export const getSourcemapModules = (
+export const getSourcemapModules = async (
   id: string,
   outputChunk: BundlerOutputChunk,
   dir: string,
 ): Promise<Record<string, SourceMapModuleRenderInfo>> => {
   if (outputChunk.map == null) {
-    return Promise.resolve({});
+    return {};
   }
-  return SourceMapConsumer.with(outputChunk.map as RawSourceMap, null, (map) => {
-    return getBytesPerFileUsingSourceMap(id, outputChunk.code, map, dir);
-  });
+  const map = new TraceMap(outputChunk.map as EncodedSourceMap);
+  return getBytesPerFileUsingSourceMap(id, outputChunk.code, map, dir);
 };
