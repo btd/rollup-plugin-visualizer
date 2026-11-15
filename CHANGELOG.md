@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Deprecate function-valued plugin options; pass an options object instead.
+
 ## 7.2.0
 
 * Add report sharing through `output: "link"` and a static raw-data viewer.

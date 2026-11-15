@@ -29,6 +29,9 @@ const WARN_SOURCEMAP_DISABLED =
 
 const WARN_JSON_DEPRECATED = 'Option `json` deprecated, please use template: "raw-data"';
 
+const WARN_FUNCTION_OPTIONS_DEPRECATED =
+  "Passing a function to visualizer() is deprecated. Pass an options object instead.";
+
 const ERR_FILENAME_EMIT = "When using emitFile option, filename must not be path but a filename";
 
 export interface PluginVisualizerOptions {
@@ -141,11 +144,22 @@ const chooseDefaultFileName = (opts: PluginVisualizerOptions) => {
   return "stats.html";
 };
 
-export const visualizer = (
+export function visualizer(pluginOptions?: PluginVisualizerOptions): VisualizerPlugin;
+/** @deprecated Pass an options object instead of a function. */
+export function visualizer(
+  pluginOptions: (outputOptions: BundlerOutputOptions) => PluginVisualizerOptions,
+): VisualizerPlugin;
+export function visualizer(
+  pluginOptions?:
+    | PluginVisualizerOptions
+    | ((outputOptions: BundlerOutputOptions) => PluginVisualizerOptions),
+): VisualizerPlugin;
+export function visualizer(
   pluginOptions:
     | PluginVisualizerOptions
     | ((outputOptions: BundlerOutputOptions) => PluginVisualizerOptions) = {},
-): VisualizerPlugin => {
+): VisualizerPlugin {
+  let warnedAboutFunctionOptions = false;
   return {
     name: "visualizer",
 
@@ -153,6 +167,10 @@ export const visualizer = (
       outputOptions: BundlerNormalizedOutputOptions,
       outputBundle: BundlerOutputBundle,
     ): Promise<void> {
+      if (typeof pluginOptions === "function" && !warnedAboutFunctionOptions) {
+        warnedAboutFunctionOptions = true;
+        this.warn(WARN_FUNCTION_OPTIONS_DEPRECATED);
+      }
       const opts =
         typeof pluginOptions === "function" ? pluginOptions(outputOptions) : pluginOptions;
       const output = opts.output ?? "file";
@@ -284,6 +302,6 @@ export const visualizer = (
       }
     },
   };
-};
+}
 
 export default visualizer;

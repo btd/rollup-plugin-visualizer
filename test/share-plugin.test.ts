@@ -19,6 +19,49 @@ const fixture = {
 
 describe("plugin link output", () => {
   it.each(["rollup", "rolldown", "vite"] as const)(
+    "warns for each callback instance and accepts object options using %s",
+    async (bundler) => {
+      const warnings: string[] = [];
+      const options = { template: "raw-data" as const, emitFile: true };
+      const plugins = [
+        fixture,
+        visualizer({ ...options, filename: "object.json" }),
+        visualizer(() => ({ ...options, filename: "callback-one.json" })),
+        visualizer(() => ({ ...options, filename: "callback-two.json" })),
+      ];
+      const onLog = (level: string, log: { message: string }) => {
+        if (level === "warn") warnings.push(log.message);
+      };
+      if (bundler === "vite") {
+        await build({
+          configFile: false,
+          publicDir: false,
+          logLevel: "silent",
+          plugins,
+          build: {
+            write: false,
+            minify: false,
+            rolldownOptions: { input: "/share.js", onLog },
+          },
+        });
+      } else {
+        const bundle = await (bundler === "rollup"
+          ? rollup({ input: "/share.js", plugins, onLog })
+          : rolldown({ input: "/share.js", plugins, onLog }));
+        try {
+          await bundle.generate({ format: "es" });
+        } finally {
+          await bundle.close();
+        }
+      }
+      expect(warnings).toEqual([
+        expect.stringMatching(/function.*deprecated.*options object/i),
+        expect.stringMatching(/function.*deprecated.*options object/i),
+      ]);
+    },
+  );
+
+  it.each(["rollup", "rolldown", "vite"] as const)(
     "prints a complete link without report files using %s",
     async (bundler) => {
       const dir = await fs.mkdtemp(path.join(os.tmpdir(), "visualizer-link-"));
@@ -118,11 +161,11 @@ describe("plugin link output", () => {
 
   it("evaluates options for every output without mutating the supplied object", async () => {
     const formats: unknown[] = [],
-      messages: string[] = [];
+      messages: string[] = [],
+      warnings: string[] = [];
     const options = Object.freeze({
       output: "link" as const,
       template: "sunburst" as const,
-      json: false,
     });
     const bundle = await rollup({
       input: "/share.js",
@@ -133,15 +176,18 @@ describe("plugin link output", () => {
           return options;
         }),
       ],
-      onwarn: () => {},
       onLog(level, log) {
         if (level === "info") messages.push(log.message.slice(log.message.indexOf("https://")));
+        if (level === "warn") warnings.push(log.message);
       },
     });
     try {
       await bundle.generate({ format: "es", file: "one.js" });
       await bundle.generate({ format: "cjs", file: "two.js" });
       expect(formats).toEqual(["one.js", "two.js"]);
+      expect(warnings).toEqual([
+        expect.stringMatching(/function.*deprecated.*options object/i),
+      ]);
       expect(messages).toHaveLength(2);
       expect(messages.every((message) => new URL(message).pathname.endsWith("/sunburst/"))).toBe(
         true,

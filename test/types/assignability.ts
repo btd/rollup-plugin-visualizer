@@ -34,3 +34,8 @@ export const vitePlugins: VitePluginOption[] = [plugin];
 export const inferred = visualizer((o) => ({ filename: o.dir ?? "stats.html" }));
 export const annotatedRollup = visualizer((o: RollupOutputOptions) => ({ filename: o.dir }));
 export const annotatedRolldown = visualizer((o: RolldownOutputOptions) => ({ filename: o.dir }));
+
+export const explicitUndefined = visualizer(undefined);
+export const objectOptions = visualizer({ template: "raw-data" });
+declare const unionOptions: Parameters<typeof visualizer>[0];
+export const union = visualizer(unionOptions);
