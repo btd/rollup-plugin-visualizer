@@ -3,7 +3,7 @@
 - Author: Denis Bardadym
 - Status: Implemented locally; deployment and public smoke verification pending.
 - Date: 2026-11-13
-- Updated: 2026-11-14
+- Updated: 2026-11-15
 - Code baseline: `cb1bad2be80f4e02db9bead0a0c95573e90f2ca3`.
 
 This document covers two related features: a GitHub Pages viewer for local raw-data files, and
@@ -159,14 +159,14 @@ checks do not replace tests of the chosen standard library or browser implementa
 - Given: a contributor generated `template: "raw-data"` and attached the JSON file to an issue.
 - When: the recipient selects or drops that file on the index and chooses the template.
 - Then: the index reads and validates the file locally, serializes/compresses the report, and
-  displays a complete `/$template/#<version>.<base64url>` link after all checks succeed. The user
-  can open or copy it. There is no report upload, index rendering, or automatic navigation.
+  makes the complete `/$template/#<version>.<base64url>` link available through Open report and
+  Copy link after all checks succeed. The encoded URL is not displayed in a textarea. There is no report upload, index rendering, or automatic navigation.
 
 ### Generate a link beyond an external sharing limit
 
 - Given: the index has successfully validated and encoded a supported report.
 - When: its complete URL is longer than GitHub or another destination accepts.
-- Then: still display the complete link for opening or copying. Do not truncate it, substitute a
+- Then: still provide the complete link for opening or copying. Do not truncate it, substitute a
   size error, or add a GitHub-specific warning. External paste/rendering failure is outside the
   feature's guarantee. Invalid inputs and exceeded processing budgets remain separate errors.
 
@@ -667,7 +667,13 @@ After the input and chosen template are valid:
 2. Convert it to the shared compact report model.
 3. Serialize, compress, and base64url-encode with the selected version profile.
 4. Construct and validate the selected `/$template/#data` URL; record its length without a destination-specific cutoff.
-5. Show the completed report link, available to open or copy. The user chooses when to navigate.
+5. Show a compact ready state with Open report and Copy link. Keep the complete URL internally;
+   do not display the encoded payload in a textarea. The user chooses when to navigate.
+
+The file drop area also opens the native file picker when clicked or activated from the keyboard.
+Once selected, the file appears in a compact summary. Diagram choices use native radio inputs
+with visible keyboard focus. Copy link uses the clipboard API; if access is blocked, explain how
+to copy through Open report's context menu without displaying a full-URL text field.
 
 Do not load diagram renderer code on the index, render a preview there, or redirect automatically.
 The generated link is self-contained and is handled by the existing direct template-page flow.
@@ -694,6 +700,13 @@ Validate actual structure and references as well as the version field. Historica
 `version: 2` have used `nodes`/`links`, `mainUid`, and `metaUid` layouts; the number alone does not
 establish compatibility. Initial import need not implement those older layouts. Explain how to
 regenerate raw-data with the supported plugin when the structure is unsupported.
+
+If a concrete compatibility conversion needs to omit supplementary information, it may still
+generate a link when the remaining data supports a reliable diagram. Show one warning describing
+what was omitted, only when information is actually omitted. Lossless conversion needs no warning;
+do not add a lossy conversion just to provide a warning path. Missing required data, invalid
+references, or an unsupported interpretation still produce an error. Current supported reports
+are encoded losslessly; no omission warning is needed for that path.
 
 Check tree structure, UID references, module/part associations, option types, flags, and finite,
 nonnegative safe-integer size values. Preserve JSON environment values. Encoded references and
@@ -787,6 +800,9 @@ pipeline, then plugin integration. Public deployment must precede releasing plug
 | Deployment            | `.github/workflows/pages.yml`; validate, upload only `dist/viewer`, deploy through `github-pages`.                                                                                       |
 | Tests                 | Primitive/malformed-input coverage, independent frozen v1 bytes, Unicode/order/flags, optional extensions, real Rollup 4/Rolldown/Vite output, artifact assertions, three-browser flows. |
 
+Viewer styles live in `src/viewer/style.scss`. The existing Rollup/PostCSS/Sass pipeline compiles
+and extracts them into `dist/viewer/assets/viewer.css`; both index and report pages use that asset.
+
 `scripts/test-viewer.mjs` serves the built artifact under a repository-style subpath and checks
 all visual pages, resize, worker cancellation, stale results, invalid UTF-8/JSON, oversized input,
 complete long links, storage, and network requests. Chromium exercises nonempty 3D WebGL;
@@ -834,15 +850,15 @@ Budgets bound work; they do not guarantee every maximum-size graph renders smoot
 
 ## Publication remaining
 
-1. Review the complete change and explicitly authorize the commit/push needed for deployment.
+1. Review the local commits and explicitly authorize the push needed for deployment.
 2. Set repository Settings → Pages → Source to GitHub Actions. Run the Pages workflow on master;
    verify index and template assets at `https://btd.github.io/rollup-plugin-visualizer/` using
    a real generated link.
 3. Retain version-1 decoding in future deployments. Release the plugin only after the public
    viewer passes that smoke check. Npm publication is a separate action.
 
-Local implementation does not commit, push, change Pages settings, deploy, or publish npm releases.
-The workflow is ready for review and execution once publication is authorized.
+Changes are committed locally. No push, Pages settings change, deployment, or npm publication
+has been performed. The workflow is ready for execution once publication is authorized.
 
 ## References
 
