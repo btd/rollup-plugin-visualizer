@@ -1,3 +1,5 @@
+import "./style.scss";
+
 import { createReportUrl } from "../../shared/share/url.js";
 import { startWorker } from "./worker.js";
 
