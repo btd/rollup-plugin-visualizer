@@ -18,7 +18,7 @@
 * Run `npm run build` before `npm test`; tests consume the generated `dist` files.
 * Run `npm run lint` after code changes.
 * After frontend changes, also run `npx tsc -p src/tsconfig.json --noEmit`.
-* Regression tests should assert behavior directly. Use snapshots as supporting coverage, not as the only correctness check.
+* Regression tests should assert behavior directly. UI tests should verify interactions and rendered results rather than source or generated-HTML string presence/absence. Use snapshots as supporting coverage, not as the only correctness check.
 * Test bundler-specific behavior using output produced by the supported bundlers rather than only hand-written stand-ins.
 * Support performance claims with before-and-after measurements on representative inputs, alongside correctness tests.
 * When behavior depends on text offsets or sizes, state the measurement unit and include non-ASCII regression cases.
