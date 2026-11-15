@@ -14,7 +14,7 @@ visualizer({ template: "raw-data", filename: "stats.json" });
 
 The static [report viewer](https://btd.github.io/rollup-plugin-visualizer/) lets you choose or drop
 that file, select a diagram, and generate a complete link. Open the result or copy it. The index
-does not navigate automatically. The viewer must be deployed before this URL is available.
+does not navigate automatically.
 
 To print a report link directly during a build:
 

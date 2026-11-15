@@ -1,7 +1,7 @@
 # Static report viewer and shareable report links
 
 - Author: Denis Bardadym
-- Status: Implemented locally; deployment and public smoke verification pending.
+- Status: Static viewer deployed and verified; plugin release pending.
 - Date: 2026-11-13
 - Updated: 2026-11-15
 - Code baseline: `cb1bad2be80f4e02db9bead0a0c95573e90f2ca3`.
@@ -575,8 +575,7 @@ independent of the npm package version.
 One literal dot separates the version character from the payload. Dot is outside the base64url
 alphabet and needs no percent-encoding in the fragment. Every version uses unpadded base64url
 after the dot. There are no codec/compression labels or repeated transport-version fields inside
-the payload. The address above is a deployment proposal, not an existing deployment verified by
-this work.
+the payload. The address above is the live deployment, verified on 2026-11-15.
 
 The decoder reads one version character, requires a dot immediately after it, selects the
 supported profile, and base64url-decodes the payload after the dot. It then decompresses and
@@ -848,17 +847,17 @@ the synthetic graph up to 200,000 records, and `VIEWER_MEASURE_MEMORY=1` enables
 RSS sampling. Historical issues remain selected examples, not a population coverage estimate.
 Budgets bound work; they do not guarantee every maximum-size graph renders smoothly everywhere.
 
-## Publication remaining
+## Publication status
 
-1. Review the local commits and explicitly authorize the push needed for deployment.
-2. Set repository Settings → Pages → Source to GitHub Actions. Run the Pages workflow on master;
-   verify index and template assets at `https://btd.github.io/rollup-plugin-visualizer/` using
-   a real generated link.
-3. Retain version-1 decoding in future deployments. Release the plugin only after the public
-   viewer passes that smoke check. Npm publication is a separate action.
+The static viewer is deployed at `https://btd.github.io/rollup-plugin-visualizer/`.
+Public smoke checks on 2026-11-15 passed in Chromium, Firefox, and WebKit: index loading,
+local raw-data-to-link generation, all five template routes, a plugin-generated report link,
+and the frozen version-1 compatibility link. Requests contained only same-origin static GETs.
+The headless 3D coverage described above also applies to these checks.
 
-Changes are committed locally. No push, Pages settings change, deployment, or npm publication
-has been performed. The workflow is ready for execution once publication is authorized.
+The viewer publication prerequisite is complete. The remaining publication step is releasing the
+npm plugin containing `output: "link"`. Npm publication is a separate action. Future viewer
+deployments must retain version-1 decoding so previously generated links continue to open.
 
 ## References
 
