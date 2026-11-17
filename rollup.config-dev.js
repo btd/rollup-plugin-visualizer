@@ -45,6 +45,7 @@ export default ALL_TEMPLATE.map((templateType) => ({
       brotliSize: true,
       sourcemap: !!process.env.SOURCEMAP,
       open: !!process.env.OPEN,
+      output: process.env.OUTPUT ?? 'file'
     }),
   ],
 
