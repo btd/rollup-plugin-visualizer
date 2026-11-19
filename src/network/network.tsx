@@ -216,7 +216,7 @@ export const Network: FunctionalComponent<NetworkProps> = ({
                 className="node"
                 key={node.uid}
                 data-uid={node.uid}
-                aria-label={node.id}
+                aria-label={node.isEntry ? `${node.id} (Entry point)` : node.id}
                 r={node.radius}
                 fill={getColor(node)}
                 cx={node.x}
@@ -237,6 +237,20 @@ export const Network: FunctionalComponent<NetworkProps> = ({
                 }}
               />
             ))}
+          </g>
+          <g stroke="#fff" stroke-width="1.5" fill="none" pointer-events="none" aria-hidden="true">
+            {nodes
+              .filter((node) => node.isEntry)
+              .map((node) => (
+                <circle
+                  className="entry-point-ring"
+                  key={node.uid}
+                  data-uid={node.uid}
+                  r={node.radius - 3}
+                  cx={node.x}
+                  cy={node.y}
+                />
+              ))}
           </g>
         </g>
       </svg>

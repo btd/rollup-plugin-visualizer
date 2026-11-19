@@ -8,6 +8,7 @@
 * Apply configured filters consistently to diagrams, dependency links, tooltips, and exports.
 * Keep entirely excluded chunks out of reports.
 * Add network zoom, node dragging, fit/reset controls, and restoration of hidden nodes.
+* Mark network entry points with a double border and tooltip label.
 * Improve network package clustering around widely shared dependencies.
 * Fix network bundle filters, package-only entry points, and invisible tree-shaken nodes.
 * Support numeric input filenames in the CLI.

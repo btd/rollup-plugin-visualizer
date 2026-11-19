@@ -23,6 +23,11 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible }) =>
     return (
       <>
         <div>{node.id}</div>
+        {node.isEntry && (
+          <div>
+            <b>Entry point</b>
+          </div>
+        )}
 
         {node.uid && (
           <div>

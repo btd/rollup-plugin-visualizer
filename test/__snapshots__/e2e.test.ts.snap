@@ -8475,7 +8475,7 @@ var drawChart = (function (exports) {
         const content = w(() => {
             if (!node)
                 return null;
-            return (a$2(M, { children: [a$2("div", { children: node.id }), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
+            return (a$2(M, { children: [a$2("div", { children: node.id }), node.isEntry && (a$2("div", { children: a$2("b", { children: "Entry point" }) })), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
                                 const { id } = data.nodeMetas[uid];
                                 return a$2("div", { children: id }, id);
                             })] }))] }));
@@ -8683,7 +8683,7 @@ var drawChart = (function (exports) {
         return (a$2(M, { children: [a$2("svg", { ref: svgRef, className: \`network \${dragging ? "network-dragging" : ""}\`, xmlns: "http://www.w3.org/2000/svg", viewBox: \`\${-width / 2} \${-height / 2} \${width} \${height}\`, role: "img", "aria-label": "Module dependency network", onPointerDown: (event) => begin(event), onPointerMove: move, onPointerUp: finish, onPointerCancel: finish, onLostPointerCapture: finish, onClick: () => {
                         if (!suppressClick.current)
                             onCanvasClick();
-                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": node.id, r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
+                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": node.isEntry ? \`\${node.id} (Entry point)\` : node.id, r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
                                         var _a;
                                         event.stopPropagation();
                                         if (!((_a = gesture.current) === null || _a === void 0 ? void 0 : _a.moved))
@@ -8696,7 +8696,9 @@ var drawChart = (function (exports) {
                                         event.stopPropagation();
                                         if (!suppressClick.current)
                                             onNodeDblClick(node);
-                                    } }, node.uid))) })] }) }), a$2("div", { className: "network-controls", "aria-label": "Network navigation", children: a$2("div", { className: "network-buttons network-toolbar", children: [a$2("button", { type: "button", "aria-label": "Zoom in", onClick: () => zoom(1.3), children: "+" }), a$2("button", { type: "button", "aria-label": "Zoom out", onClick: () => zoom(1 / 1.3), children: "\\u2212" }), a$2("button", { type: "button", onClick: () => {
+                                    } }, node.uid))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", fill: "none", "pointer-events": "none", "aria-hidden": "true", children: nodes
+                                    .filter((node) => node.isEntry)
+                                    .map((node) => (a$2("circle", { className: "entry-point-ring", "data-uid": node.uid, r: node.radius - 3, cx: node.x, cy: node.y }, node.uid))) })] }) }), a$2("div", { className: "network-controls", "aria-label": "Network navigation", children: a$2("div", { className: "network-buttons network-toolbar", children: [a$2("button", { type: "button", "aria-label": "Zoom in", onClick: () => zoom(1.3), children: "+" }), a$2("button", { type: "button", "aria-label": "Zoom out", onClick: () => zoom(1 / 1.3), children: "\\u2212" }), a$2("button", { type: "button", onClick: () => {
                                     autoFit.current = false;
                                     fit();
                                 }, children: "Fit graph" }), a$2("details", { ref: controlsRef, className: "network-menu", onKeyDown: (event) => {
@@ -32273,7 +32275,7 @@ var drawChart = (function (exports) {
         const content = w(() => {
             if (!node)
                 return null;
-            return (a$2(M, { children: [a$2("div", { children: node.id }), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
+            return (a$2(M, { children: [a$2("div", { children: node.id }), node.isEntry && (a$2("div", { children: a$2("b", { children: "Entry point" }) })), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
                                 const { id } = data.nodeMetas[uid];
                                 return a$2("div", { children: id }, id);
                             })] }))] }));
@@ -32481,7 +32483,7 @@ var drawChart = (function (exports) {
         return (a$2(M, { children: [a$2("svg", { ref: svgRef, className: \`network \${dragging ? "network-dragging" : ""}\`, xmlns: "http://www.w3.org/2000/svg", viewBox: \`\${-width / 2} \${-height / 2} \${width} \${height}\`, role: "img", "aria-label": "Module dependency network", onPointerDown: (event) => begin(event), onPointerMove: move, onPointerUp: finish, onPointerCancel: finish, onLostPointerCapture: finish, onClick: () => {
                         if (!suppressClick.current)
                             onCanvasClick();
-                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": node.id, r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
+                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": node.isEntry ? \`\${node.id} (Entry point)\` : node.id, r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
                                         var _a;
                                         event.stopPropagation();
                                         if (!((_a = gesture.current) === null || _a === void 0 ? void 0 : _a.moved))
@@ -32494,7 +32496,9 @@ var drawChart = (function (exports) {
                                         event.stopPropagation();
                                         if (!suppressClick.current)
                                             onNodeDblClick(node);
-                                    } }, node.uid))) })] }) }), a$2("div", { className: "network-controls", "aria-label": "Network navigation", children: a$2("div", { className: "network-buttons network-toolbar", children: [a$2("button", { type: "button", "aria-label": "Zoom in", onClick: () => zoom(1.3), children: "+" }), a$2("button", { type: "button", "aria-label": "Zoom out", onClick: () => zoom(1 / 1.3), children: "\\u2212" }), a$2("button", { type: "button", onClick: () => {
+                                    } }, node.uid))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", fill: "none", "pointer-events": "none", "aria-hidden": "true", children: nodes
+                                    .filter((node) => node.isEntry)
+                                    .map((node) => (a$2("circle", { className: "entry-point-ring", "data-uid": node.uid, r: node.radius - 3, cx: node.x, cy: node.y }, node.uid))) })] }) }), a$2("div", { className: "network-controls", "aria-label": "Network navigation", children: a$2("div", { className: "network-buttons network-toolbar", children: [a$2("button", { type: "button", "aria-label": "Zoom in", onClick: () => zoom(1.3), children: "+" }), a$2("button", { type: "button", "aria-label": "Zoom out", onClick: () => zoom(1 / 1.3), children: "\\u2212" }), a$2("button", { type: "button", onClick: () => {
                                     autoFit.current = false;
                                     fit();
                                 }, children: "Fit graph" }), a$2("details", { ref: controlsRef, className: "network-menu", onKeyDown: (event) => {

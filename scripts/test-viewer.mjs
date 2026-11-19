@@ -253,6 +253,63 @@ try {
         await report.locator("main svg, main canvas").first().waitFor({ state: "attached" });
       await report.setViewportSize({ width: 960, height: 720 });
       assert.equal(await report.locator("main").getAttribute("data-viewer-state"), "ready");
+      if (template === "network") {
+        const [entryUid, entryMeta] = Object.entries(data.nodeMetas).find(
+          ([, meta]) => meta.isEntry,
+        );
+        const otherUid = Object.keys(data.nodeMetas).find((uid) => uid !== entryUid);
+        const entry = report.locator(`.node[data-uid="${entryUid}"]`);
+        const other = report.locator(`.node[data-uid="${otherUid}"]`);
+        const rings = report.locator(".network .entry-point-ring");
+        assert.equal(await rings.count(), 1);
+        assert.equal(await report.locator(".network-legend").count(), 0);
+        assert.match(await entry.getAttribute("aria-label"), /Entry point/);
+        await entry.hover();
+        assert.match(
+          await report.locator(".tooltip:not(.tooltip-hidden)").innerText(),
+          /Entry point/,
+        );
+        await other.hover();
+        assert.doesNotMatch(
+          await report.locator(".tooltip:not(.tooltip-hidden)").innerText(),
+          /Entry point/,
+        );
+        const radius = await entry.getAttribute("r");
+        await entry.click();
+        assert.equal(await entry.getAttribute("stroke-width"), "3");
+        const ringGap = () =>
+          entry.evaluate((node) => {
+            const ring = document.querySelector(
+              `.entry-point-ring[data-uid="${node.dataset.uid}"]`,
+            );
+            const scale = node.getScreenCTM().a;
+            return (
+              (node.r.baseVal.value -
+                ring.r.baseVal.value -
+                Number(node.getAttribute("stroke-width")) / 2 -
+                Number(getComputedStyle(ring).strokeWidth.replace("px", "")) / 2) *
+              scale
+            );
+          });
+        // Measure the visible separation in CSS pixels, including the selected outline.
+        const selectedGap = await ringGap();
+        assert(selectedGap > 0);
+        await report.getByRole("button", { name: "Zoom out", exact: true }).click();
+        assert((await ringGap()) > 0);
+        assert((await ringGap()) < selectedGap);
+        assert.equal(await entry.getAttribute("r"), radius);
+        await entry.dblclick();
+        assert.equal(await rings.count(), 0);
+        await report.locator(".network-menu summary").click();
+        await report.getByRole("button", { name: "Restore hidden (1)", exact: true }).click();
+        assert.equal(await rings.count(), 1);
+        assert.equal(await entry.getAttribute("aria-label"), `${entryMeta.id} (Entry point)`);
+        if (captureScreenshots) {
+          await report.screenshot({
+            path: path.join(process.env.VIEWER_SCREENSHOT_DIR, `${name}-network.png`),
+          });
+        }
+      }
       await report.close();
     }
     // Changing controls clears stale results synchronously, before a replacement worker replies.
