@@ -1,19 +1,35 @@
-import { useState, useMemo, useCallback } from "preact/hooks";
+import { useState, useMemo, useCallback, useLayoutEffect } from "preact/hooks";
 import { createFilter } from "../shared/create-filter";
 
 export type FilterSetter = (value: string) => void;
 
-const throttleFilter = (callback: FilterSetter, limit: number): typeof callback => {
-  let waiting = false;
-  return (val: string): void => {
-    if (!waiting) {
+export const throttleFilter = (callback: FilterSetter, limit: number) => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let pending: string | undefined;
+
+  const update = (val: string): void => {
+    if (timer === undefined) {
       callback(val);
-      waiting = true;
-      setTimeout(() => {
-        waiting = false;
+      timer = setTimeout(() => {
+        timer = undefined;
+        if (pending !== undefined) {
+          const latest = pending;
+          pending = undefined;
+          update(latest);
+        }
       }, limit);
+    } else {
+      pending = val;
     }
   };
+
+  update.cancel = () => {
+    clearTimeout(timer);
+    timer = undefined;
+    pending = undefined;
+  };
+
+  return update;
 };
 
 export type UseFilter = {
@@ -65,8 +81,16 @@ export const useFilter = (): UseFilter => {
   const [includeFilter, setIncludeFilter] = useState<string>("");
   const [excludeFilter, setExcludeFilter] = useState<string>("");
 
-  const setIncludeFilterTrottled = useMemo(() => throttleFilter(setIncludeFilter, 200), []);
-  const setExcludeFilterTrottled = useMemo(() => throttleFilter(setExcludeFilter, 200), []);
+  const setIncludeFilterThrottled = useMemo(() => throttleFilter(setIncludeFilter, 200), []);
+  const setExcludeFilterThrottled = useMemo(() => throttleFilter(setExcludeFilter, 200), []);
+
+  useLayoutEffect(
+    () => () => {
+      setIncludeFilterThrottled.cancel();
+      setExcludeFilterThrottled.cancel();
+    },
+    [setIncludeFilterThrottled, setExcludeFilterThrottled],
+  );
 
   const isIncluded = useMemo(
     () => createFilter(prepareFilter(includeFilter), prepareFilter(excludeFilter)),
@@ -84,7 +108,7 @@ export const useFilter = (): UseFilter => {
     getModuleFilterMultiplier,
     includeFilter,
     excludeFilter,
-    setExcludeFilter: setExcludeFilterTrottled,
-    setIncludeFilter: setIncludeFilterTrottled,
+    setExcludeFilter: setExcludeFilterThrottled,
+    setIncludeFilter: setIncludeFilterThrottled,
   };
 };

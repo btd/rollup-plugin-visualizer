@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Keep diagram filters in sync with the final input after rapid edits.
 * Deprecate function-valued plugin options; pass an options object instead.
 * Fix sourcemap filename attribution and filtering for spaces, Unicode, and literal percent escapes.
 * Add report sharing through `output: "link"` and a static raw-data viewer.

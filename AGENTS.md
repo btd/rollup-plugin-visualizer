@@ -34,8 +34,8 @@
 * Keep each feature's design in one descriptively named document; update it in place rather than creating additional generic drafts.
 * Implement compatibility for supported tools and concrete use cases; do not generalize to unrelated inputs without a demonstrated need.
 * Keep configured report filtering in a single selection stage. Collection, measurement, and serialization must not reapply include/exclude rules; interactive UI visibility filters remain separate.
-* Generated diagram reports target desktop browsers. Consider desktop window resizing and browser zoom; mobile layouts are out of scope unless explicitly requested.
-* Treat generated reports as developer tools: prioritize usability, readable data, efficient investigation, and chart space over decorative styling.
+* Generated diagram reports target desktop browsers. Consider desktop window resizing; browser-zoom improvements and mobile layouts are out of scope unless explicitly requested.
+* Treat generated reports as developer tools: prioritize usability, readable data, efficient investigation, and chart space over decorative styling. Evaluate UI improvements against large codebases; per-chart-node keyboard focus is not a priority.
 
 ## Changelogs
 
