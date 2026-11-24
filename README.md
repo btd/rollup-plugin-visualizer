@@ -2,7 +2,7 @@
 
 Visualize and analyze your bundle to quickly see which modules are taking up space.
 
-[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer) [![Node.js CI](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml/badge.svg)](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml)
+[![NPM Version](https://img.shields.io/npm/v/rollup-plugin-visualizer.svg)](https://npmjs.org/package/rollup-plugin-visualizer) [![Node.js CI](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml/badge.svg)](https://github.com/btd/rollup-plugin-visualizer/actions/workflows/node.js.yml) ![Rollup compatibility](https://registry.vite.dev/api/badges?package=rollup-plugin-visualizer&tool=rollup) ![Rolldown compatibility](https://registry.vite.dev/api/badges?package=rollup-plugin-visualizer&tool=rolldown) ![Vite compatibility](https://registry.vite.dev/api/badges?package=rollup-plugin-visualizer&tool=vite)
 
 ## Sharing reports
 
