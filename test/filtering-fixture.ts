@@ -17,7 +17,7 @@ import type { VisualizerData } from "../shared/types";
 
 export const FILTER_ROOT = "/filtering/";
 export const FILTER_ENTRY = `${FILTER_ROOT}src/入口😀.js`;
-export const FILTER_HTML = ["treemap", "treemap-3d", "sunburst", "flamegraph", "network"] as const;
+export const FILTER_HTML = ["treemap", "treemap-v2", "treemap-3d", "sunburst", "flamegraph", "network"] as const;
 export const packageExclusions = ["date-fns", "lodash-es", "lucide-react"].map((name) => ({
   file: `**/node_modules/${name}/**`,
 }));

@@ -2,6 +2,7 @@ import { invalid } from "./limits.js";
 
 export const VISUAL_TEMPLATES = [
   "treemap",
+  "treemap-v2",
   "sunburst",
   "flamegraph",
   "network",

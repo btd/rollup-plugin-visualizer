@@ -9,6 +9,7 @@
 * Distinguish verified facts, reasoned inferences, design decisions, and unresolved unknowns. Use judgment, but do not present guesses as facts or turn hypothetical cases into requirements without a demonstrated need.
 * Investigate consequential uncertainties and look for overlooked failure modes within the task's scope. Exhaustive discovery is not required; state the limits of the evidence and remaining uncertainty plainly.
 * Prefer consistency with existing behavior and the principle of least surprise when choosing defaults and edge-case semantics.
+* Keep paired actions symmetric: an inverse must restore every UI area changed by its forward action.
 
 ## Dependency updates
 
@@ -35,7 +36,9 @@
 * Implement compatibility for supported tools and concrete use cases; do not generalize to unrelated inputs without a demonstrated need.
 * Keep configured report filtering in a single selection stage. Collection, measurement, and serialization must not reapply include/exclude rules; interactive UI visibility filters remain separate.
 * Generated diagram reports target desktop browsers. Consider desktop window resizing; browser-zoom improvements and mobile layouts are out of scope unless explicitly requested.
+* Use Lucide for UI icons rather than Unicode character substitutes.
 * Treat generated reports as developer tools: prioritize usability, readable data, efficient investigation, and chart space over decorative styling. Evaluate UI improvements against large codebases; per-chart-node keyboard focus is not a priority.
+* UI prototypes must demonstrate relevant, realistic edge cases alongside the happy path, especially long paths, large relationship lists, and difficult selection or navigation states. Include them in design review rather than deferring them to implementation. Treat prototypes as interaction references, not exact production styling requirements; reuse existing components and chart renderers where they apply.
 
 ## Changelogs
 

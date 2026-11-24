@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 import { FunctionalComponent } from "preact";
 import { useContext, useMemo } from "preact/hooks";
 
@@ -29,7 +30,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, root, sizePro
 
     return (
       <>
-        <div className="details-name">{node.data.name}</div>
+        <div className="details-name">{displayModuleId(node.data.name)}</div>
         <div className="details-percentage">{percentageString}</div>
         {availableSizeProperties.map((sizeProp) => {
           if (sizeProp === sizeProperty) {

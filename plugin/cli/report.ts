@@ -45,7 +45,7 @@ export const filterCompatibleReports = (fileContents: ReportFile[]): ReportFile[
   return compatible;
 };
 
-export const warnAboutMixedSettings = (fileContents: ReportFile[]): void => {
+export const warnAboutMixedSettings = (fileContents: ReportFile[], sharedMetrics = false): void => {
   const first = fileContents[0];
   for (const { file, data } of fileContents.slice(1)) {
     const differences = (["gzip", "brotli", "sourcemap"] as const).filter(
@@ -53,7 +53,7 @@ export const warnAboutMixedSettings = (fileContents: ReportFile[]): void => {
     );
     if (differences.length > 0) {
       warn(
-        `Settings in ${file} differ from ${first.file} (${differences.join(", ")}). Using settings from ${first.file} for the merged report; measurements may not be comparable.`,
+        `Settings in ${file} differ from ${first.file} (${differences.join(", ")}). ${sharedMetrics ? "Treemap v2 enables compressed metrics only when every input provides them; measurements may not be comparable." : `Using settings from ${first.file} for the merged report; measurements may not be comparable.`}`,
       );
     }
   }

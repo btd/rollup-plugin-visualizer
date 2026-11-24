@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Treemap dependency inspector — interactive prototype</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; padding: 16px; background: light-dark(#ffffff, #171923); }
+  </style>
+</head>
+<body>
+<div id="treemap-inspector-demo" aria-label="Treemap dependency inspector concept">
+  <div class="prototype-cases">
+    <label>Prototype case <select class="case-select" aria-label="Prototype case"><option value="many">Many importers</option><option value="long">Long Unicode path</option><option value="graph">No output rectangle</option><option value="tiny">Tiny modules</option><option value="filtered">Hidden output selection</option><option value="kinds">Entrypoints and import kinds</option><option value="baseline">Small report</option></select></label>
+    <span class="case-summary"></span>
+    <label class="filter-example" hidden><input class="hide-react" type="checkbox" /> Hide React output in chart</label>
+  </div>
+  <div class="report-top">
+    <span class="report-name">app.js</span>
+    <span class="example-label">Example report</span>
+    <span class="top-spacer"></span>
+    <label class="metric-control">Size <select aria-label="Size metric"><option value="rendered">Rendered</option><option value="gzip">Gzip</option><option value="brotli">Brotli</option></select></label>
+  </div>
+  <div class="workspace">
+    <section class="chart-pane" aria-label="Treemap">
+      <div class="chart-navigation">
+        <nav class="chart-breadcrumbs" aria-label="Chart location"></nav>
+        <button class="inspector-toggle" type="button" aria-pressed="true">Details</button>
+      </div>
+      <div class="treemap-area" role="group" aria-label="Module sizes. Click to inspect; double-click a group to zoom."></div>
+      <div class="hover-summary"><span class="hover-path"></span><span class="hover-size"></span></div>
+      <div class="chart-hints"><span>Click: inspect</span><span>Double-click group: zoom</span></div>
+    </section>
+    <aside class="inspector" aria-label="Dependency details">
+      <div class="inspector-top"><button class="history-back" type="button" disabled>← Back</button><span class="inspector-heading">Details</span><button class="close-inspector" type="button" aria-label="Close details">×</button></div>
+      <div class="identity">
+        <div class="identity-type"></div>
+        <h3 class="identity-name"></h3>
+        <div class="path-row"><textarea class="identity-path" aria-label="Full module path" readonly rows="2"></textarea><button class="copy-path" type="button">Copy</button></div>
+        <div class="size-summary"><strong class="primary-size"></strong><span class="size-fraction"></span></div>
+        <div class="other-sizes"></div>
+        <div class="identity-actions"><button class="show-chart" type="button">Show in chart</button><span class="graph-note"></span></div>
+      </div>
+      <div class="relationship-tabs" role="group" aria-label="Details sections">
+        <button type="button" data-section="incoming" aria-pressed="true">Imported by <span></span></button>
+        <button type="button" data-section="outgoing" aria-pressed="false">Imports <span></span></button>
+        <button type="button" data-section="members" aria-pressed="false">Files <span></span></button>
+      </div>
+      <div class="relationship-body">
+        <div class="relationship-scope"></div>
+        <label class="path-search-label"><span class="sr-only-local">Find a related file by path</span><input class="path-search" type="search" placeholder="Find a path…" /></label>
+        <div class="relationship-list"></div>
+        <details class="internal-relationships"><summary></summary><div class="internal-list"></div></details>
+      </div>
+      <div class="interaction-status" role="status" aria-live="polite"></div>
+    </aside>
+  </div>
+</div>
+<style>
+#treemap-inspector-demo {
+  --rp-bg: light-dark(#f1f3f6, #2b2d42);
+  --rp-panel: light-dark(#fafbfc, #232638);
+  --rp-input: light-dark(#ffffff, #1e2131);
+  --rp-text: light-dark(#202536, #edf2f4);
+  --rp-muted: light-dark(#565e70, #b6bfce);
+  --rp-border: light-dark(#c5cad4, #52586c);
+  --rp-active: light-dark(#dce6f5, #3c4864);
+  --rp-focus: light-dark(#203e75, #d1e0ff);
+  --rp-dependency: light-dark(#c2d6bf, #375940);
+  --rp-dependency-leaf: light-dark(#d6e4d3, #466b4b);
+  --rp-source: light-dark(#bcd4e7, #395a74);
+  --rp-source-leaf: light-dark(#d0e2ef, #476c85);
+  --rp-secondary: light-dark(#d7ccdf, #61466b);
+  --rp-secondary-leaf: light-dark(#e5dcea, #765780);
+  --inspector-width: 380px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 32px);
+  color: var(--rp-text);
+  background: var(--rp-bg);
+  font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  width: 100%;
+  border: 1px solid var(--rp-border);
+}
+#treemap-inspector-demo * { box-sizing: border-box; }
+#treemap-inspector-demo button, #treemap-inspector-demo input, #treemap-inspector-demo select, #treemap-inspector-demo textarea { font: inherit; color: inherit; }
+#treemap-inspector-demo button { cursor: pointer; border: 1px solid var(--rp-border); background: var(--rp-panel); border-radius: 3px; padding: 4px 8px; }
+#treemap-inspector-demo button:hover { background: var(--rp-active); }
+#treemap-inspector-demo button:disabled { opacity: .55; cursor: default; }
+#treemap-inspector-demo button:focus-visible, #treemap-inspector-demo input:focus-visible, #treemap-inspector-demo select:focus-visible, #treemap-inspector-demo textarea:focus-visible { outline: 2px solid var(--rp-focus); outline-offset: 2px; }
+#treemap-inspector-demo input, #treemap-inspector-demo select, #treemap-inspector-demo textarea { background: var(--rp-input); border: 1px solid var(--rp-border); border-radius: 3px; padding: 5px 7px; min-width: 0; }
+#treemap-inspector-demo .prototype-cases { display: flex; flex-shrink: 0; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 12px; border-bottom: 1px solid var(--rp-border); }
+#treemap-inspector-demo .prototype-cases [hidden] { display: none; }
+#treemap-inspector-demo .prototype-cases label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+#treemap-inspector-demo .case-summary { color: var(--rp-muted); font-size: 12px; }
+#treemap-inspector-demo .report-top { display: flex; flex-shrink: 0; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--rp-border); }
+#treemap-inspector-demo .report-name { font-weight: 600; font-family: ui-monospace, monospace; }
+#treemap-inspector-demo .example-label { color: var(--rp-muted); font-size: 12px; }
+#treemap-inspector-demo .top-spacer { flex: 1; }
+#treemap-inspector-demo .metric-control { display: flex; align-items: center; gap: 6px; }
+#treemap-inspector-demo .workspace { display: grid; grid-template-columns: minmax(0, 1fr) clamp(300px, 30%, var(--inspector-width)); flex: 1; min-height: 0; }
+#treemap-inspector-demo .workspace.details-closed { grid-template-columns: minmax(0, 1fr); }
+#treemap-inspector-demo .workspace.details-closed .inspector { display: none; }
+#treemap-inspector-demo .chart-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 10px; gap: 8px; }
+#treemap-inspector-demo .chart-navigation { min-height: 31px; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+#treemap-inspector-demo .chart-breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; min-width: 0; }
+#treemap-inspector-demo .chart-breadcrumbs button { background: transparent; padding: 3px 5px; border-color: transparent; }
+#treemap-inspector-demo .chart-breadcrumbs button:hover { background: var(--rp-active); }
+#treemap-inspector-demo .chart-breadcrumbs span { color: var(--rp-muted); }
+#treemap-inspector-demo .inspector-toggle { flex-shrink: 0; }
+#treemap-inspector-demo .inspector-toggle[aria-pressed="true"] { background: var(--rp-active); }
+#treemap-inspector-demo .treemap-area { position: relative; min-width: 0; min-height: 0; flex: 1; isolation: isolate; }
+#treemap-inspector-demo .map-group { position: absolute; padding: 0; overflow: hidden; background: var(--rp-dependency); }
+#treemap-inspector-demo .map-group[data-palette="source"] { background: var(--rp-source); }
+#treemap-inspector-demo .map-group[data-palette="secondary"] { background: var(--rp-secondary); }
+#treemap-inspector-demo .group-heading { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 3px 6px; height: 29px; width: 100%; min-width: 0; border: 0; border-radius: 0; background: transparent; text-align: left; font-family: ui-monospace, monospace; }
+#treemap-inspector-demo .group-heading span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#treemap-inspector-demo .group-heading small { font-size: 11px; white-space: nowrap; }
+#treemap-inspector-demo .map-group .map-leaf { position: absolute; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3px; padding: 3px; border: 0; border-radius: 0; background: var(--rp-dependency-leaf); min-width: 0; overflow: hidden; }
+#treemap-inspector-demo .map-group[data-palette="source"] .map-leaf { background: var(--rp-source-leaf); }
+#treemap-inspector-demo .map-group[data-palette="secondary"] .map-leaf { background: var(--rp-secondary-leaf); }
+#treemap-inspector-demo .map-leaf span { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 12px/1.3 ui-monospace, monospace; }
+#treemap-inspector-demo .map-leaf small { font-size: 11px; font-variant-numeric: tabular-nums; }
+#treemap-inspector-demo .map-leaf:hover, #treemap-inspector-demo .group-heading:hover { filter: brightness(1.1); }
+#treemap-inspector-demo .map-group.is-inspected { outline: 2px solid var(--rp-focus); outline-offset: -2px; }
+#treemap-inspector-demo .map-leaf.is-inspected { outline: 2px solid var(--rp-focus); outline-offset: -2px; z-index: 1; }
+#treemap-inspector-demo .hover-summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 23px; color: var(--rp-text); font: 12px/1.4 ui-monospace, monospace; }
+#treemap-inspector-demo .hover-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#treemap-inspector-demo .hover-size { white-space: nowrap; font-variant-numeric: tabular-nums; }
+#treemap-inspector-demo .chart-hints { display: flex; flex-wrap: wrap; gap: 5px 14px; color: var(--rp-muted); font-size: 11px; }
+#treemap-inspector-demo .inspector { background: var(--rp-panel); border-left: 1px solid var(--rp-border); min-width: 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+#treemap-inspector-demo .inspector-top { display: flex; flex-shrink: 0; align-items: center; gap: 8px; min-height: 45px; padding: 8px 10px; border-bottom: 1px solid var(--rp-border); }
+#treemap-inspector-demo .inspector-heading { flex: 1; font-weight: 600; }
+#treemap-inspector-demo .close-inspector { font-size: 18px; padding: 0 6px; }
+#treemap-inspector-demo .identity { padding: 12px; flex-shrink: 0; max-height: 40%; overflow-y: auto; }
+#treemap-inspector-demo .identity-type { color: var(--rp-muted); font-size: 11px; margin-bottom: 2px; }
+#treemap-inspector-demo .identity-name { font-size: 15px; line-height: 1.4; margin: 0 0 7px; font-weight: 600; overflow-wrap: anywhere; }
+#treemap-inspector-demo .path-row { display: flex; align-items: flex-start; gap: 5px; }
+#treemap-inspector-demo .identity-path { flex: 1; width: 0; resize: none; font: 11px/1.5 ui-monospace, monospace; min-height: 47px; }
+#treemap-inspector-demo .identity-path { height: 72px; flex-shrink: 0; overflow-wrap: anywhere; }
+#treemap-inspector-demo .copy-path { flex-shrink: 0; }
+#treemap-inspector-demo .size-summary { margin-top: 10px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+#treemap-inspector-demo .primary-size { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+#treemap-inspector-demo .size-fraction { font-size: 12px; color: var(--rp-muted); font-variant-numeric: tabular-nums; }
+#treemap-inspector-demo .other-sizes { margin-top: 2px; color: var(--rp-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+#treemap-inspector-demo .identity-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; }
+#treemap-inspector-demo .graph-note { color: var(--rp-muted); font-size: 11px; }
+#treemap-inspector-demo .relationship-tabs { display: flex; flex-shrink: 0; gap: 0; padding: 0 10px; border-bottom: 1px solid var(--rp-border); }
+#treemap-inspector-demo .relationship-tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; padding: 7px 6px; font-size: 12px; white-space: nowrap; }
+#treemap-inspector-demo .relationship-tabs button[aria-pressed="true"] { border-bottom-color: var(--rp-focus); color: var(--rp-text); background: var(--rp-active); }
+#treemap-inspector-demo .relationship-tabs button span { margin-left: 2px; color: var(--rp-muted); font-variant-numeric: tabular-nums; }
+#treemap-inspector-demo .relationship-body { padding: 10px 12px; flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+#treemap-inspector-demo .relationship-scope { color: var(--rp-muted); font-size: 11px; min-height: 32px; margin-bottom: 7px; }
+#treemap-inspector-demo .path-search-label { display: block; margin-bottom: 8px; }
+#treemap-inspector-demo .path-search { width: 100%; font-size: 12px; }
+#treemap-inspector-demo .relationship-list { min-width: 0; min-height: 0; overflow-y: auto; flex: 1; scrollbar-gutter: stable; overscroll-behavior: contain; }
+#treemap-inspector-demo .relation-row { display: block; width: 100%; text-align: left; padding: 8px 0; border: 0; border-bottom: 1px solid var(--rp-border); border-radius: 0; background: transparent; }
+#treemap-inspector-demo .relation-row:hover { background: var(--rp-active); }
+#treemap-inspector-demo .relation-row .row-path { display: block; font: 12px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+#treemap-inspector-demo .relation-row .row-context { display: block; margin-top: 3px; color: var(--rp-muted); font: 11px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+#treemap-inspector-demo .empty-list { padding: 10px 0; color: var(--rp-muted); font-size: 12px; }
+#treemap-inspector-demo .internal-relationships { margin-top: 11px; max-height: 100px; overflow-y: auto; flex-shrink: 0; font-size: 11px; color: var(--rp-muted); }
+#treemap-inspector-demo .internal-relationships summary { cursor: pointer; }
+#treemap-inspector-demo .internal-edge { margin-top: 7px; font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+#treemap-inspector-demo .interaction-status { height: 40px; flex-shrink: 0; overflow-y: auto; overflow-wrap: anywhere; padding: 7px 12px; border-top: 1px solid var(--rp-border); font-size: 11px; color: var(--rp-muted); }
+#treemap-inspector-demo .sr-only-local { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (max-height: 700px) {
+  #treemap-inspector-demo .identity { padding: 8px 12px; }
+  #treemap-inspector-demo .identity-name { font-size: 13px; margin-bottom: 4px; }
+  #treemap-inspector-demo .identity-path { height: 48px; min-height: 48px; }
+  #treemap-inspector-demo .size-summary { margin-top: 6px; }
+}
+</style>
+<script>
+(() => {
+  const root = document.getElementById('treemap-inspector-demo');
+  const groups = [
+    {id:'recharts', name:'recharts', path:'node_modules/recharts', palette:'dependency', members:['linechart','line','tooltip','grid','chartutils','domutils','barrel']},
+    {id:'react', name:'react', path:'node_modules/react', palette:'secondary', members:['reactcore','reactjsx']},
+    {id:'source', name:'src', path:'src', palette:'source', members:['revenue','traffic','app']},
+    {id:'d3', name:'d3-scale', path:'node_modules/d3-scale', palette:'dependency', members:['continuous','ticks','d3barrel']},
+    {id:'lodash', name:'lodash', path:'node_modules/lodash', palette:'dependency', members:['debounce','throttle']}
+  ];
+  const definitions = [
+    ['linechart','recharts/es6/chart/LineChart.js',110000,'recharts'],
+    ['line','recharts/es6/cartesian/Line.js',70000,'recharts'],
+    ['tooltip','recharts/es6/component/Tooltip.js',65000,'recharts'],
+    ['grid','recharts/es6/cartesian/CartesianGrid.js',40000,'recharts'],
+    ['chartutils','recharts/es6/util/ChartUtils.js',25000,'recharts'],
+    ['domutils','recharts/es6/util/DOMUtils.js',10000,'recharts'],
+    ['barrel','recharts/es6/index.js',0,'recharts'],
+    ['reactcore','react/cjs/react.production.js',112000,'react'],
+    ['reactjsx','react/cjs/react-jsx-runtime.production.js',68000,'react'],
+    ['revenue','src/features/reports/RevenueChart.tsx',40000,'source'],
+    ['traffic','src/features/analytics/TrafficChart.tsx',35000,'source'],
+    ['app','src/App.tsx',20000,'source'],
+    ['continuous','d3-scale/src/continuous.js',45000,'d3'],
+    ['ticks','d3-scale/src/tickFormat.js',20000,'d3'],
+    ['d3barrel','d3-scale/src/index.js',0,'d3'],
+    ['debounce','lodash/debounce.js',25000,'lodash'],
+    ['throttle','lodash/throttle.js',20000,'lodash']
+  ];
+  const nodes = Object.fromEntries(definitions.map(([id,path,size,group]) => [id, {id, path:group==='source'?path:'node_modules/'+path, size, group, name:path.split('/').pop()}]));
+  nodes.barrel.output=false;
+  nodes.d3barrel.output=false;
+  groups.forEach(group => { nodes[group.id] = {...group, isGroup:true}; });
+  const edges = [['revenue','barrel'],['traffic','line'],['app','revenue'],['app','traffic'],['app','reactcore'],['barrel','linechart'],['barrel','tooltip'],['linechart','line'],['linechart','grid'],['linechart','chartutils'],['linechart','reactcore'],['line','domutils'],['chartutils','d3barrel'],['domutils','debounce'],['tooltip','reactcore'],['d3barrel','continuous'],['d3barrel','ticks'],['reactjsx','reactcore']];
+  const originalMembers = new Map(groups.map(group=>[group.id,[...group.members]]));
+  const originalEdges = edges.map(edge=>[...edge]);
+  const state = { selected:'react', zoom:null, section:'incoming', history:[], metric:'rendered', open:true, query:'', example:'many', hideReact:false };
+  const cases = {
+    many: {selected:'react', section:'incoming', summary:'259 incoming relationships · bounded list'},
+    long: {selected:'longroute', section:'outgoing', summary:'Long Unicode path · repeated filename'},
+    graph: {selected:'barrel', section:'incoming', summary:'Re-export intermediary · no emitted rectangle'},
+    tiny: {selected:'source', section:'members', summary:'100 one-byte modules · searchable files'},
+    filtered: {selected:'reactcore', section:'incoming', summary:'Held details survive chart visibility changes'},
+    kinds: {selected:'react', section:'incoming', summary:'Distinct endpoints and static/dynamic relationships'},
+    baseline: {selected:'recharts', section:'incoming', summary:'Small report'}
+  };
+  function loadCase(example) {
+    state.example=Object.hasOwn(cases,example)?example:'many';
+    state.hideReact=state.example==='filtered';
+    groups.forEach(group=>{group.members=[...originalMembers.get(group.id)];nodes[group.id].members=group.members;});
+    edges.splice(0,edges.length,...originalEdges.map(edge=>[...edge]));
+    const source=groups.find(group=>group.id==='source');
+    if(state.example==='many') {
+      for(let i=0;i<256;i++) {
+        const id='route-'+i;
+        nodes[id]={id,path:'src/features/route-'+String(i).padStart(3,'0')+'/index.tsx',name:'index.tsx',size:250,group:'source'};
+        source.members.push(id);edges.push([id,'reactcore']);
+      }
+    }
+    if(state.example==='long') {
+      const path='src/features/customer-workspaces/enterprise-reporting/地域別レポート😀/components/revenue-forecasting/financial-year-comparison/segment-breakdown/currency-adjusted-revenue/experimental-visualizations/café/RevenueChart.tsx';
+      nodes.longroute={id:'longroute',path,name:'RevenueChart.tsx',size:2500,group:'source'};
+      source.members.push('longroute');edges.push(['app','longroute'],['longroute','barrel']);
+    }
+    if(state.example==='tiny') {
+      for(let i=0;i<100;i++) {
+        const id='small-'+String(i).padStart(3,'0');
+        nodes[id]={id,path:'src/generated/入口😀/'+id+'.ts',name:id+'.ts',size:1,group:'source'};
+        source.members.push(id);edges.push(['app',id]);
+      }
+    }
+    if(state.example==='kinds') edges.push(['app','reactcore'],['app','reactcore','dynamic']);
+  }
+  const design = { width:380 };
+  const saved = window.openai?.widgetState;
+  function applySaved(value) {
+    const s = value?.privateContent;
+    if (!s) return;
+    loadCase(s.example||'baseline');
+    if(!nodes[s.selected])return;
+    state.selected=s.selected;
+    state.zoom=nodes[s.zoom]&&nodes[s.zoom].output!==false?s.zoom:null;
+    state.section=['incoming','outgoing','members'].includes(s.section)?s.section:'incoming';
+    state.history=Array.isArray(s.history)?s.history.map(item=>typeof item==='string'?{id:item,section:'incoming',query:'',scrollTop:0}:item).filter(item=>item&&nodes[item.id]).slice(-20):[];
+    state.metric=['rendered','gzip','brotli'].includes(s.metric)?s.metric:'rendered';
+    state.open=s.open!==false;
+  }
+  loadCase(state.example);
+  applySaved(saved);
+  function persist() {
+    window.openai?.setWidgetState?.({ modelContent:{example:state.example,inspectedPath:nodes[state.selected].path, section:state.section, chartGroup:state.zoom}, privateContent:{example:state.example,selected:state.selected,zoom:state.zoom,section:state.section,history:state.history.slice(-20),metric:state.metric,open:state.open} }).catch(()=>{});
+  }
+  const $ = selector => root.querySelector(selector);
+  const all = selector => [...root.querySelectorAll(selector)];
+  const escaped = value => String(value).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const members = id => nodes[id].isGroup ? nodes[id].members.filter(key=>nodes[key].output!==false) : [id];
+  const rawSize = id => members(id).reduce((sum,key)=>sum+nodes[key].size,0);
+  const size = id => rawSize(id)*(state.metric==='gzip'?.29:state.metric==='brotli'?.23:1);
+  const total = () => groups.reduce((sum,g)=>sum+size(g.id),0);
+  const format = bytes => bytes===0?'No emitted code':bytes<1024?Number(bytes.toFixed(2))+' B':(bytes/1024).toFixed(1)+' KiB';
+  const hiddenByFilter = id => state.hideReact&&(id==='react'||nodes[id].group==='react');
+  const chartMembers = id => members(id).filter(key=>!hiddenByFilter(key)&&nodes[key].output!==false);
+  const chartSize = id => chartMembers(id).reduce((sum,key)=>sum+size(key),0);
+  const compare = (a,b) => a<b?-1:a>b?1:0;
+  function relations(id) {
+    const set = new Set(members(id));
+    const unique=[...new Map(edges.map(([from,to,kind='static'])=>[JSON.stringify([from,to,kind]),[from,to,kind]])).values()];
+    const ordered=(links,incoming)=>links.sort((a,b)=>compare(nodes[a[incoming?0:1]].path,nodes[b[incoming?0:1]].path)||compare(nodes[a[incoming?1:0]].path,nodes[b[incoming?1:0]].path)||Number(a[2]==='dynamic')-Number(b[2]==='dynamic')||compare(a[0],b[0])||compare(a[1],b[1]));
+    return {
+      incoming:ordered(unique.filter(([from,to])=>set.has(to)&&(!nodes[id].isGroup||!set.has(from))),true),
+      outgoing:ordered(unique.filter(([from,to])=>set.has(from)&&(!nodes[id].isGroup||!set.has(to))),false),
+      internal:nodes[id].isGroup?ordered(unique.filter(([from,to])=>set.has(from)&&set.has(to)),true):[],
+    };
+  }
+  function status(message) { $('.interaction-status').textContent=message; }
+  function inspect(id, navigation=false) {
+    if (id===state.selected) return;
+    if (navigation) state.history.push({id:state.selected,section:state.section,query:state.query,scrollTop:$('.relationship-list').scrollTop}); else state.history=[];
+    state.selected=id;
+    state.query='';
+    if (state.section==='members'&&!nodes[id].isGroup) state.section='incoming';
+    renderDetails(); highlight(); persist();
+    $('.relationship-list').scrollTop=0;
+    status(navigation?'Following relationship · chart view unchanged.':'Details held · hover will not replace this selection.');
+  }
+  function highlight() {
+    all('[data-node]').forEach(el=>el.classList.toggle('is-inspected',el.dataset.node===state.selected));
+  }
+  function squarify(items, x, y, width, height) {
+    const sum=items.reduce((acc,item)=>acc+item.value,0);
+    if (!sum||width<=0||height<=0) return [];
+    const remaining=items.map(item=>({...item,area:item.value/sum*width*height})).sort((a,b)=>b.area-a.area);
+    const result=[];
+    function worst(row, side) {
+      if(!row.length||side<=0)return Infinity;
+      const areas=row.map(n=>n.area), s=areas.reduce((a,b)=>a+b,0);
+      return Math.max(side*side*Math.max(...areas)/(s*s),s*s/(side*side*Math.min(...areas)));
+    }
+    function place(row) {
+      const area=row.reduce((s,n)=>s+n.area,0);
+      if(width>=height) {
+        const rw=area/height;
+        let offset=y;
+        row.forEach(item=>{const rh=item.area/rw;result.push({...item,x,y:offset,w:rw,h:rh});offset+=rh;});
+        x+=rw;width-=rw;
+      } else {
+        const rh=area/width;
+        let offset=x;
+        row.forEach(item=>{const rw=item.area/rh;result.push({...item,x:offset,y,w:rw,h:rh});offset+=rw;});
+        y+=rh;height-=rh;
+      }
+    }
+    while(remaining.length) {
+      const row=[remaining.shift()];
+      while(remaining.length&&worst([...row,remaining[0]],Math.min(width,height))<=worst(row,Math.min(width,height)))row.push(remaining.shift());
+      place(row);
+    }
+    return result;
+  }
+  function preview(id) {
+    $('.hover-path').textContent=nodes[id].path;
+    $('.hover-size').textContent=format(size(id));
+  }
+  function renderMap() {
+    const plot=$('.treemap-area');
+    const width=plot.clientWidth, height=plot.clientHeight;
+    const focus=state.zoom&&!nodes[state.zoom].isGroup?state.zoom:null;
+    const visible=state.zoom?groups.filter(g=>g.id===(focus?nodes[focus].group:state.zoom)):groups;
+    const rectangles=squarify(visible.map(g=>({id:g.id,value:focus?chartSize(focus):chartSize(g.id)})).filter(g=>g.value>0),0,0,width,height);
+    plot.innerHTML='';
+    rectangles.forEach(rect=>{
+      const group=nodes[rect.id];
+      const outer=document.createElement('div');
+      outer.className='map-group';outer.dataset.node=group.id;outer.dataset.palette=group.palette;
+      Object.assign(outer.style,{left:rect.x+'px',top:rect.y+'px',width:Math.max(0,rect.w-3)+'px',height:Math.max(0,rect.h-3)+'px'});
+      const heading=document.createElement('button');
+      heading.type='button';heading.className='group-heading';heading.innerHTML='<span>'+escaped(group.name)+'</span>'+(rect.w>160?'<small>'+format(size(group.id))+'</small>':'');
+      heading.setAttribute('aria-label','Inspect '+group.path);
+      heading.onclick=()=>inspect(group.id);heading.onmouseenter=()=>preview(group.id);
+      outer.ondblclick=()=>zoom(group.id);
+      outer.append(heading);
+      const leaves=focus?chartMembers(focus):chartMembers(group.id).filter(id=>nodes[id].size>0);
+      const layout=squarify(leaves.map(id=>({id,value:size(id)})),3,30,Math.max(0,rect.w-9),Math.max(0,rect.h-36));
+      layout.forEach(leaf=>{
+        const element=document.createElement('button');
+        element.className='map-leaf';element.type='button';element.dataset.node=leaf.id;
+        Object.assign(element.style,{left:leaf.x+'px',top:leaf.y+'px',width:Math.max(0,leaf.w-2)+'px',height:Math.max(0,leaf.h-2)+'px'});
+        element.setAttribute('aria-label','Inspect '+nodes[leaf.id].path);
+        element.innerHTML=leaf.w>45&&leaf.h>25?'<span>'+escaped(nodes[leaf.id].name)+'</span>'+(leaf.w>65&&leaf.h>55?'<small>'+format(size(leaf.id))+'</small>':''):'';
+        element.onclick=event=>{event.stopPropagation();inspect(leaf.id);};
+        element.ondblclick=event=>event.stopPropagation();
+        element.onmouseenter=()=>preview(leaf.id);
+        outer.append(element);
+      });
+      plot.append(outer);
+    });
+    $('.chart-breadcrumbs').innerHTML='<button type="button" data-zoom="overview">Overview</button><span>/</span><span>app.js</span>'+(focus?'<span>/</span><button type="button" data-zoom="'+nodes[focus].group+'">'+escaped(nodes[nodes[focus].group].name)+'</button>':'')+(state.zoom?'<span>/</span><button type="button" data-zoom="'+state.zoom+'">'+escaped(nodes[state.zoom].name)+'</button>':'');
+    all('[data-zoom]').forEach(button=>button.onclick=()=>zoom(button.dataset.zoom==='overview'?null:button.dataset.zoom));
+    highlight();
+  }
+  function zoom(id) { state.zoom=id;renderMap();renderDetails(true);persist();status(id?'Chart zoom: '+nodes[id].name:'Chart zoom: overview'); }
+  function renderList(preserveScroll=false) {
+    const node=nodes[state.selected], graph=relations(state.selected), list=$('.relationship-list');
+    const previousScroll=list.scrollTop, query=state.query.toLowerCase();
+    const entries=state.section==='members'?members(state.selected).sort((a,b)=>compare(nodes[a].path,nodes[b].path)).map(id=>({id,search:[nodes[id].path],context:format(size(id))})):graph[state.section].map(([from,to,kind])=>({id:state.section==='incoming'?from:to,search:[nodes[from].path,nodes[to].path],context:(state.section==='incoming'?'→ ':'← ')+nodes[state.section==='incoming'?to:from].path+' · '+kind}));
+    const filtered=entries.filter(entry=>entry.search.some(path=>path.toLowerCase().includes(query)));
+    list.innerHTML=filtered.length?filtered.map(entry=>'<button type="button" class="relation-row" data-inspect="'+entry.id+'"><span class="row-path">'+escaped(nodes[entry.id].path)+'</span><span class="row-context">'+escaped(entry.context)+'</span></button>').join(''):'<div class="empty-list">'+(query?'No matching paths.':state.section==='incoming'?'No direct importers.':'No direct imports.')+'</div>';
+    all('[data-inspect]').forEach(button=>button.onclick=()=>inspect(button.dataset.inspect,true));
+    const scope=state.section==='members'?'Output files in this group':node.isGroup?(state.section==='incoming'?'From outside this group → into this group':'From this group → outside this group'):(state.section==='incoming'?'Files that directly import this module':'Modules directly imported by this file');
+    $('.relationship-scope').textContent=scope+' · '+(query?filtered.length+' of ':'')+entries.length+(state.section==='members'?(entries.length===1?' file':' files'):(entries.length===1?' relationship':' relationships'));
+    const internal=$('.internal-relationships');
+    internal.hidden=!node.isGroup||!graph.internal.length||state.section==='members';
+    internal.querySelector('summary').textContent=graph.internal.length+' internal relationships';
+    $('.internal-list').innerHTML=graph.internal.map(([from,to,kind])=>'<div class="internal-edge">'+escaped(nodes[from].path)+' → '+escaped(nodes[to].path)+' · '+kind+'</div>').join('');
+    list.scrollTop=preserveScroll?previousScroll:0;
+  }
+  function renderDetails(preserveScroll=false) {
+    const previousScroll=$('.relationship-list').scrollTop;
+    const node=nodes[state.selected], graph=relations(state.selected);
+    $('.identity-type').textContent=node.isGroup?'Output group · app.js · '+members(node.id).length+' files':node.output!==false?'File · app.js':'Graph-only module · no emitted rectangle';
+    $('.identity-name').textContent=node.name;
+    $('.identity-path').value=node.path;
+    $('.primary-size').textContent=node.output===false?'No output measurement':format(size(node.id));
+    $('.size-fraction').textContent=rawSize(node.id)?(size(node.id)/total()*100).toFixed(1)+'% of measured app.js':'';
+    $('.other-sizes').textContent=rawSize(node.id)?'Rendered '+format(rawSize(node.id))+' · Gzip '+format(rawSize(node.id)*.29)+' · Brotli '+format(rawSize(node.id)*.23):'';
+    $('.show-chart').disabled=node.output===false||hiddenByFilter(node.id);
+    $('.graph-note').textContent=node.output===false?'Relationships remain available.':hiddenByFilter(node.id)?'Output hidden by chart filter. Clear the filter to locate it.':state.zoom&&state.zoom!==node.id&&state.zoom!==node.group?'Outside current chart view.':'';
+    $('.history-back').disabled=state.history.length===0;
+    $('.path-search').value=state.query;
+    all('[data-section]').forEach(button=>{
+      const section=button.dataset.section;
+      button.hidden=section==='members'&&!node.isGroup;
+      button.setAttribute('aria-pressed',String(state.section===section));
+      button.querySelector('span').textContent=section==='members'?members(node.id).length:graph[section].length;
+    });
+    renderList();
+    if(preserveScroll) $('.relationship-list').scrollTop=previousScroll;
+  }
+  function applyLayout() {
+    root.style.setProperty('--inspector-width',design.width+'px');
+    $('.workspace').classList.toggle('details-closed',!state.open);
+    $('.inspector-toggle').setAttribute('aria-pressed',String(state.open));
+    $('.chart-hints span').textContent=state.open?'Click: inspect':'Click: select · Details: inspect';
+  }
+  all('[data-section]').forEach(button=>button.onclick=()=>{state.section=button.dataset.section;state.query='';$('.path-search').value='';renderDetails();persist();});
+  $('.path-search').oninput=event=>{state.query=event.currentTarget.value;renderList();};
+  $('.history-back').onclick=()=>{const previous=state.history.pop();if(previous){state.selected=previous.id;state.query=previous.query||'';state.section=previous.section;if(state.section==='members'&&!nodes[previous.id].isGroup)state.section='incoming';renderDetails();$('.relationship-list').scrollTop=previous.scrollTop||0;highlight();persist();status('Previous tab, search and list position restored.');}};
+  $('.show-chart').onclick=()=>{zoom(state.selected);status('Chart focused on '+nodes[state.zoom].name+'.');};
+  $('.copy-path').onclick=async()=>{
+    const path=nodes[state.selected].path;
+    try { if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(path);status('Copied '+path); }
+    catch { $('.identity-path').focus();$('.identity-path').select();status('Path selected · Ctrl+C / Cmd+C to copy.'); }
+  };
+  $('.close-inspector').onclick=()=>{state.open=false;applyLayout();$('.inspector-toggle').focus();persist();};
+  $('.inspector-toggle').onclick=()=>{state.open=!state.open;applyLayout();persist();};
+  $('.metric-control select').onchange=event=>{state.metric=event.currentTarget.value;renderDetails(true);renderMap();persist();};
+  $('.hide-react').onchange=event=>{state.hideReact=event.currentTarget.checked;renderMap();renderDetails(true);persist();};
+  $('.case-select').onchange=event=>{
+    loadCase(event.currentTarget.value);
+    const example=cases[state.example];
+    Object.assign(state,{selected:example.selected,section:example.section,zoom:null,history:[],query:'',open:true});
+    render();$('.relationship-list').scrollTop=0;persist();status('');
+  };
+  window.addEventListener('openai:set_globals',event=>{const saved=event.detail?.globals?.widgetState;if(saved){applySaved(saved);render();}});
+  function render() { $('.case-select').value=state.example;$('.case-summary').textContent=cases[state.example].summary;$('.filter-example').hidden=state.example!=='filtered';$('.hide-react').checked=state.hideReact;$('.metric-control select').value=state.metric;applyLayout();renderDetails();renderMap();preview(state.selected); }
+  render();
+  new ResizeObserver(()=>renderMap()).observe($('.treemap-area'));
+  if(globalThis.Tweak) { const tweak=new Tweak({container:root,onChange:()=>{applyLayout();renderMap();}});tweak.addSlider(design,'width',{label:'Inspector width',min:300,max:380,step:10,unit:'px'}); }
+})();
+</script>
+
+</body>
+</html>

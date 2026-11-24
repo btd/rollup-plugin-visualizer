@@ -3292,6 +3292,8 @@ var drawChart = (function (exports) {
       };
   };
 
+  const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
   const TOP_PADDING = 20;
   const PADDING = 2;
 
@@ -3343,7 +3345,7 @@ var drawChart = (function (exports) {
                       if (((_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.toString()) !== "") {
                           event.stopPropagation();
                       }
-                  } }, textProps, { children: data.name }))] }));
+                  } }, textProps, { children: displayModuleId(data.name) }))] }));
   };
 
   const FlameGraph = ({ root, onNodeHover, selectedNode, onNodeClick, }) => {
@@ -3560,7 +3562,7 @@ var drawChart = (function (exports) {
               const mainUid = data.nodeParts[node.data.uid].metaUid;
               dataNode = data.nodeMetas[mainUid];
           }
-          return (a$1(M, { children: [a$1("div", { children: path }), availableSizeProperties.map((sizeProp) => {
+          return (a$1(M, { children: [a$1("div", { children: displayModuleId(path) }), availableSizeProperties.map((sizeProp) => {
                       if (sizeProp === sizeProperty) {
                           return (a$1("div", { children: [a$1("b", { children: [LABELS[sizeProp], ": ", bytesExports.format(mainSize)] }), " ", "(", percentageString, ")"] }, sizeProp));
                       }
@@ -3569,7 +3571,7 @@ var drawChart = (function (exports) {
                       }
                   }), a$1("br", {}), dataNode && dataNode.importedBy.length > 0 && (a$1("div", { children: [a$1("div", { children: [a$1("b", { children: "Imported By" }), ":"] }), dataNode.importedBy.map(({ uid }) => {
                               const id = data.nodeMetas[uid].id;
-                              return a$1("div", { children: id }, id);
+                              return a$1("div", { children: displayModuleId(id) }, id);
                           })] })), a$1("br", {}), a$1("small", { children: data.options.sourcemap ? SOURCEMAP_RENDERED : RENDRED }), (data.options.gzip || data.options.brotli) && (a$1(M, { children: [a$1("br", {}), a$1("small", { children: COMPRESSED })] }))] }));
       }, [availableSizeProperties, data, getModuleSize, node, root.data, sizeProperty]);
       const updatePosition = (mouseCoords) => {
@@ -8497,6 +8499,8 @@ var drawChart = (function (exports) {
         return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
     };
 
+    const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
     const Tooltip_marginX = 10;
     const Tooltip_marginY = 30;
     const Tooltip = ({ node, visible }) => {
@@ -8506,9 +8510,9 @@ var drawChart = (function (exports) {
         const content = w(() => {
             if (!node)
                 return null;
-            return (a$2(M, { children: [a$2("div", { children: node.id }), node.isEntry && (a$2("div", { children: a$2("b", { children: "Entry point" }) })), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
+            return (a$2(M, { children: [a$2("div", { children: displayModuleId(node.id) }), node.isEntry && (a$2("div", { children: a$2("b", { children: "Entry point" }) })), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
                                 const { id } = data.nodeMetas[uid];
-                                return a$2("div", { children: id }, id);
+                                return a$2("div", { children: displayModuleId(id) }, id);
                             })] }))] }));
         }, [data, node]);
         const updatePosition = (mouseCoords) => {
@@ -8714,7 +8718,7 @@ var drawChart = (function (exports) {
         return (a$2(M, { children: [a$2("svg", { ref: svgRef, className: \`network \${dragging ? "network-dragging" : ""}\`, xmlns: "http://www.w3.org/2000/svg", viewBox: \`\${-width / 2} \${-height / 2} \${width} \${height}\`, role: "img", "aria-label": "Module dependency network", onPointerDown: (event) => begin(event), onPointerMove: move, onPointerUp: finish, onPointerCancel: finish, onLostPointerCapture: finish, onClick: () => {
                         if (!suppressClick.current)
                             onCanvasClick();
-                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": node.isEntry ? \`\${node.id} (Entry point)\` : node.id, r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
+                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": displayModuleId(node.id) + (node.isEntry ? " (Entry point)" : ""), r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
                                         var _a;
                                         event.stopPropagation();
                                         if (!((_a = gesture.current) === null || _a === void 0 ? void 0 : _a.moved))
@@ -17778,6 +17782,8 @@ var drawChart = (function (exports) {
       };
   };
 
+  const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
   var bytes = {exports: {}};
 
   /*!
@@ -17968,7 +17974,7 @@ var drawChart = (function (exports) {
           const percentageNum = (100 * mainSize) / getModuleSize(root.data, sizeProperty);
           const percentage = percentageNum.toFixed(2);
           const percentageString = percentage + "%";
-          return (a$1(M, { children: [a$1("div", { className: "details-name", children: node.data.name }), a$1("div", { className: "details-percentage", children: percentageString }), availableSizeProperties.map((sizeProp) => {
+          return (a$1(M, { children: [a$1("div", { className: "details-name", children: displayModuleId(node.data.name) }), a$1("div", { className: "details-percentage", children: percentageString }), availableSizeProperties.map((sizeProp) => {
                       if (sizeProp === sizeProperty) {
                           return (a$1("div", { className: "details-size", children: a$1("b", { children: [LABELS[sizeProp], ": ", bytesExports.format(getModuleSize(node.data, sizeProp))] }) }, sizeProp));
                       }
@@ -21732,6 +21738,8 @@ var drawChart = (function (exports) {
     return (reverse ? -1 : 1) * (inc < 0 ? 1 / -inc : inc);
   }
 
+  const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
   const TOP_PADDING = 20;
   const PADDING = 2;
 
@@ -21791,7 +21799,7 @@ var drawChart = (function (exports) {
                       if (((_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.toString()) !== "") {
                           event.stopPropagation();
                       }
-                  } }, textProps, { children: data.name }))] }));
+                  } }, textProps, { children: displayModuleId(data.name) }))] }));
   };
 
   const TreeMap = ({ root, onNodeHover, selectedNode, onNodeClick, }) => {
@@ -22022,7 +22030,7 @@ var drawChart = (function (exports) {
               const mainUid = data.nodeParts[node.data.uid].metaUid;
               dataNode = data.nodeMetas[mainUid];
           }
-          return (a$1(M, { children: [a$1("div", { children: path }), availableSizeProperties.map((sizeProp) => {
+          return (a$1(M, { children: [a$1("div", { children: displayModuleId(path) }), availableSizeProperties.map((sizeProp) => {
                       if (sizeProp === sizeProperty) {
                           return (a$1("div", { children: [a$1("b", { children: [LABELS[sizeProp], ": ", bytesExports.format(mainSize)] }), " ", "(", percentageString, ")"] }, sizeProp));
                       }
@@ -22031,7 +22039,7 @@ var drawChart = (function (exports) {
                       }
                   }), a$1("br", {}), dataNode && dataNode.importedBy.length > 0 && (a$1("div", { children: [a$1("div", { children: [a$1("b", { children: "Imported By" }), ":"] }), dataNode.importedBy.map(({ uid }) => {
                               const id = data.nodeMetas[uid].id;
-                              return a$1("div", { children: id }, id);
+                              return a$1("div", { children: displayModuleId(id) }, id);
                           })] })), a$1("br", {}), a$1("small", { children: data.options.sourcemap ? SOURCEMAP_RENDERED : RENDRED }), (data.options.gzip || data.options.brotli) && (a$1(M, { children: [a$1("br", {}), a$1("small", { children: COMPRESSED })] }))] }));
       }, [availableSizeProperties, data, getModuleSize, node, root.data, sizeProperty]);
       const updatePosition = (mouseCoords) => {
@@ -27118,6 +27126,8 @@ var drawChart = (function (exports) {
       };
   };
 
+  const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
   const TOP_PADDING = 20;
   const PADDING = 2;
 
@@ -27169,7 +27179,7 @@ var drawChart = (function (exports) {
                       if (((_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.toString()) !== "") {
                           event.stopPropagation();
                       }
-                  } }, textProps, { children: data.name }))] }));
+                  } }, textProps, { children: displayModuleId(data.name) }))] }));
   };
 
   const FlameGraph = ({ root, onNodeHover, selectedNode, onNodeClick, }) => {
@@ -27386,7 +27396,7 @@ var drawChart = (function (exports) {
               const mainUid = data.nodeParts[node.data.uid].metaUid;
               dataNode = data.nodeMetas[mainUid];
           }
-          return (a$1(M, { children: [a$1("div", { children: path }), availableSizeProperties.map((sizeProp) => {
+          return (a$1(M, { children: [a$1("div", { children: displayModuleId(path) }), availableSizeProperties.map((sizeProp) => {
                       if (sizeProp === sizeProperty) {
                           return (a$1("div", { children: [a$1("b", { children: [LABELS[sizeProp], ": ", bytesExports.format(mainSize)] }), " ", "(", percentageString, ")"] }, sizeProp));
                       }
@@ -27395,7 +27405,7 @@ var drawChart = (function (exports) {
                       }
                   }), a$1("br", {}), dataNode && dataNode.importedBy.length > 0 && (a$1("div", { children: [a$1("div", { children: [a$1("b", { children: "Imported By" }), ":"] }), dataNode.importedBy.map(({ uid }) => {
                               const id = data.nodeMetas[uid].id;
-                              return a$1("div", { children: id }, id);
+                              return a$1("div", { children: displayModuleId(id) }, id);
                           })] })), a$1("br", {}), a$1("small", { children: data.options.sourcemap ? SOURCEMAP_RENDERED : RENDRED }), (data.options.gzip || data.options.brotli) && (a$1(M, { children: [a$1("br", {}), a$1("small", { children: COMPRESSED })] }))] }));
       }, [availableSizeProperties, data, getModuleSize, node, root.data, sizeProperty]);
       const updatePosition = (mouseCoords) => {
@@ -32319,6 +32329,8 @@ var drawChart = (function (exports) {
         return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
     };
 
+    const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
     const Tooltip_marginX = 10;
     const Tooltip_marginY = 30;
     const Tooltip = ({ node, visible }) => {
@@ -32328,9 +32340,9 @@ var drawChart = (function (exports) {
         const content = w(() => {
             if (!node)
                 return null;
-            return (a$2(M, { children: [a$2("div", { children: node.id }), node.isEntry && (a$2("div", { children: a$2("b", { children: "Entry point" }) })), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
+            return (a$2(M, { children: [a$2("div", { children: displayModuleId(node.id) }), node.isEntry && (a$2("div", { children: a$2("b", { children: "Entry point" }) })), node.uid && (a$2("div", { children: [a$2("div", { children: [a$2("b", { children: "Imported By" }), ":"] }), data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
                                 const { id } = data.nodeMetas[uid];
-                                return a$2("div", { children: id }, id);
+                                return a$2("div", { children: displayModuleId(id) }, id);
                             })] }))] }));
         }, [data, node]);
         const updatePosition = (mouseCoords) => {
@@ -32536,7 +32548,7 @@ var drawChart = (function (exports) {
         return (a$2(M, { children: [a$2("svg", { ref: svgRef, className: \`network \${dragging ? "network-dragging" : ""}\`, xmlns: "http://www.w3.org/2000/svg", viewBox: \`\${-width / 2} \${-height / 2} \${width} \${height}\`, role: "img", "aria-label": "Module dependency network", onPointerDown: (event) => begin(event), onPointerMove: move, onPointerUp: finish, onPointerCancel: finish, onLostPointerCapture: finish, onClick: () => {
                         if (!suppressClick.current)
                             onCanvasClick();
-                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": node.isEntry ? \`\${node.id} (Entry point)\` : node.id, r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
+                    }, children: a$2("g", { transform: transform.toString(), children: [a$2("g", { stroke: "#fff", "stroke-width": "1", children: links.map((link, index) => (a$2("line", { "stroke-opacity": selectedNode ? (link.target.uid === selectedNode ? 0.85 : 0.06) : 0.22, x1: link.source.x, y1: link.source.y, x2: link.target.x, y2: link.target.y }, \`\${link.source.uid}-\${link.target.uid}-\${index}\`))) }), a$2("g", { stroke: "#fff", "stroke-width": "1.5", children: nodes.map((node) => (a$2("circle", { className: "node", "data-uid": node.uid, "aria-label": displayModuleId(node.id) + (node.isEntry ? " (Entry point)" : ""), r: node.radius, fill: getColor(node), cx: node.x, cy: node.y, "stroke-width": node.uid === selectedNode ? 3 : 1.5, onPointerDown: (event) => begin(event, node), onMouseOver: (event) => {
                                         var _a;
                                         event.stopPropagation();
                                         if (!((_a = gesture.current) === null || _a === void 0 ? void 0 : _a.moved))
@@ -41592,6 +41604,8 @@ var drawChart = (function (exports) {
       };
   };
 
+  const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
   var bytes = {exports: {}};
 
   /*!
@@ -41782,7 +41796,7 @@ var drawChart = (function (exports) {
           const percentageNum = (100 * mainSize) / getModuleSize(root.data, sizeProperty);
           const percentage = percentageNum.toFixed(2);
           const percentageString = percentage + "%";
-          return (a$1(M, { children: [a$1("div", { className: "details-name", children: node.data.name }), a$1("div", { className: "details-percentage", children: percentageString }), availableSizeProperties.map((sizeProp) => {
+          return (a$1(M, { children: [a$1("div", { className: "details-name", children: displayModuleId(node.data.name) }), a$1("div", { className: "details-percentage", children: percentageString }), availableSizeProperties.map((sizeProp) => {
                       if (sizeProp === sizeProperty) {
                           return (a$1("div", { className: "details-size", children: a$1("b", { children: [LABELS[sizeProp], ": ", bytesExports.format(getModuleSize(node.data, sizeProp))] }) }, sizeProp));
                       }
@@ -45546,6 +45560,8 @@ var drawChart = (function (exports) {
     return (reverse ? -1 : 1) * (inc < 0 ? 1 / -inc : inc);
   }
 
+  const displayModuleId = (id) => id.replaceAll("\\0", "\\\\0");
+
   const TOP_PADDING = 20;
   const PADDING = 2;
 
@@ -45605,7 +45621,7 @@ var drawChart = (function (exports) {
                       if (((_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.toString()) !== "") {
                           event.stopPropagation();
                       }
-                  } }, textProps, { children: data.name }))] }));
+                  } }, textProps, { children: displayModuleId(data.name) }))] }));
   };
 
   const TreeMap = ({ root, onNodeHover, selectedNode, onNodeClick, }) => {
@@ -45836,7 +45852,7 @@ var drawChart = (function (exports) {
               const mainUid = data.nodeParts[node.data.uid].metaUid;
               dataNode = data.nodeMetas[mainUid];
           }
-          return (a$1(M, { children: [a$1("div", { children: path }), availableSizeProperties.map((sizeProp) => {
+          return (a$1(M, { children: [a$1("div", { children: displayModuleId(path) }), availableSizeProperties.map((sizeProp) => {
                       if (sizeProp === sizeProperty) {
                           return (a$1("div", { children: [a$1("b", { children: [LABELS[sizeProp], ": ", bytesExports.format(mainSize)] }), " ", "(", percentageString, ")"] }, sizeProp));
                       }
@@ -45845,7 +45861,7 @@ var drawChart = (function (exports) {
                       }
                   }), a$1("br", {}), dataNode && dataNode.importedBy.length > 0 && (a$1("div", { children: [a$1("div", { children: [a$1("b", { children: "Imported By" }), ":"] }), dataNode.importedBy.map(({ uid }) => {
                               const id = data.nodeMetas[uid].id;
-                              return a$1("div", { children: id }, id);
+                              return a$1("div", { children: displayModuleId(id) }, id);
                           })] })), a$1("br", {}), a$1("small", { children: data.options.sourcemap ? SOURCEMAP_RENDERED : RENDRED }), (data.options.gzip || data.options.brotli) && (a$1(M, { children: [a$1("br", {}), a$1("small", { children: COMPRESSED })] }))] }));
       }, [availableSizeProperties, data, getModuleSize, node, root.data, sizeProperty]);
       const updatePosition = (mouseCoords) => {

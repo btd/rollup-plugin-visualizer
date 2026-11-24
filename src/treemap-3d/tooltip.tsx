@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 import { useState, useRef, useEffect, useMemo, useContext } from "preact/hooks";
 
 import { format as formatBytes } from "bytes";
@@ -52,7 +53,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({
 
     return (
       <>
-        <div>{path}</div>
+        <div>{displayModuleId(path)}</div>
         {availableSizeProperties.map((sizeProp) => {
           if (sizeProp === sizeProperty) {
             return (
@@ -79,7 +80,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({
             </div>
             {dataNode.importedBy.map(({ uid }) => {
               const id = data.nodeMetas[uid].id;
-              return <div key={id}>{id}</div>;
+              return <div key={id}>{displayModuleId(id)}</div>;
             })}
           </div>
         )}

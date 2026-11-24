@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -22,7 +23,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible }) =>
 
     return (
       <>
-        <div>{node.id}</div>
+        <div>{displayModuleId(node.id)}</div>
         {node.isEntry && (
           <div>
             <b>Entry point</b>
@@ -36,7 +37,7 @@ export const Tooltip: FunctionalComponent<TooltipProps> = ({ node, visible }) =>
             </div>
             {data.nodeMetas[node.uid].importedBy.map(({ uid }) => {
               const { id } = data.nodeMetas[uid];
-              return <div key={id}>{id}</div>;
+              return <div key={id}>{displayModuleId(id)}</div>;
             })}
           </div>
         )}

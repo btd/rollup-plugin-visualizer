@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 import { VisualizerData } from "../../shared/types.js";
 import { RenderTemplateReportConfig } from "./types.js";
 
@@ -198,7 +199,7 @@ export const outputMarkdown = (strData: string, reportConfig?: RenderTemplateRep
     output += "- none\n";
   } else {
     for (const row of topRows) {
-      output += `- \`${row.id}\`: ${sharePercent(row.renderedLength, totalRendered)} (${formatBytes(row.renderedLength)})\n`;
+      output += `- \`${displayModuleId(row.id)}\`: ${sharePercent(row.renderedLength, totalRendered)} (${formatBytes(row.renderedLength)})\n`;
     }
   }
   output += "\n";
@@ -207,7 +208,7 @@ export const outputMarkdown = (strData: string, reportConfig?: RenderTemplateRep
   output += `| Rendered% | Rendered | Gzip | Brotli | Bundles | Imported By | Imports | Module |\n`;
   output += `| ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |\n`;
   for (const row of hotModules.slice(0, 15)) {
-    output += `| ${sharePercent(row.renderedLength, totalRendered)} | ${formatBytes(row.renderedLength)} | ${formatBytes(row.gzipLength)} | ${formatBytes(row.brotliLength)} | ${String(row.bundles)} | ${String(row.importedByCount)} | ${String(row.importedCount)} | \`${row.id}\` |\n`;
+    output += `| ${sharePercent(row.renderedLength, totalRendered)} | ${formatBytes(row.renderedLength)} | ${formatBytes(row.gzipLength)} | ${formatBytes(row.brotliLength)} | ${String(row.bundles)} | ${String(row.importedByCount)} | ${String(row.importedCount)} | \`${displayModuleId(row.id)}\` |\n`;
   }
   output += "\n";
 
@@ -223,7 +224,7 @@ export const outputMarkdown = (strData: string, reportConfig?: RenderTemplateRep
   output += `| Duplicated Rendered | Total Rendered | Bundles | Module |\n`;
   output += `| ---: | ---: | ---: | --- |\n`;
   for (const row of duplicatedModules.slice(0, 15)) {
-    output += `| ${formatBytes(row.duplicatedRendered)} | ${formatBytes(row.renderedLength)} | ${String(row.bundles)} | \`${row.id}\` |\n`;
+    output += `| ${formatBytes(row.duplicatedRendered)} | ${formatBytes(row.renderedLength)} | ${String(row.bundles)} | \`${displayModuleId(row.id)}\` |\n`;
   }
   if (duplicatedModules.length === 0) {
     output += `| 0 B | 0 B | 0 | none |\n`;
@@ -234,7 +235,7 @@ export const outputMarkdown = (strData: string, reportConfig?: RenderTemplateRep
   output += `| Package | Modules | Rendered |\n`;
   output += `| --- | ---: | ---: |\n`;
   for (const row of packageRows.slice(0, 15)) {
-    output += `| \`${row.name}\` | ${String(row.modules)} | ${formatBytes(row.renderedLength)} |\n`;
+    output += `| \`${displayModuleId(row.name)}\` | ${String(row.modules)} | ${formatBytes(row.renderedLength)} |\n`;
   }
   if (packageRows.length === 0) {
     output += `| none | 0 | 0 B |\n`;
@@ -259,7 +260,7 @@ export const outputMarkdown = (strData: string, reportConfig?: RenderTemplateRep
         output += `| none | 0.0% | 0 B | 0 B | 0 B |\n`;
       } else {
         for (const part of parts) {
-          output += `| \`${part.id}\` | ${sharePercent(part.renderedLength, bundle.renderedLength)} | ${formatBytes(part.renderedLength)} | ${formatBytes(part.gzipLength)} | ${formatBytes(part.brotliLength)} |\n`;
+          output += `| \`${displayModuleId(part.id)}\` | ${sharePercent(part.renderedLength, bundle.renderedLength)} | ${formatBytes(part.renderedLength)} | ${formatBytes(part.gzipLength)} | ${formatBytes(part.brotliLength)} |\n`;
         }
       }
       output += "\n";
@@ -282,7 +283,7 @@ export const outputMarkdown = (strData: string, reportConfig?: RenderTemplateRep
         parts.length > SLICE_MEMBERSHIP_BUNDLE_PARTS
           ? `; +${String(parts.length - SLICE_MEMBERSHIP_BUNDLE_PARTS)} more`
           : "";
-      output += `| \`${row.id}\` | ${String(row.bundles)} | ${formatBytes(row.renderedLength)} | ${formattedParts.join("; ")}${moreParts} |\n`;
+      output += `| \`${displayModuleId(row.id)}\` | ${String(row.bundles)} | ${formatBytes(row.renderedLength)} | ${formattedParts.join("; ")}${moreParts} |\n`;
     }
   }
   output += "\n";

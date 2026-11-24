@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Add `treemap-v2` with a docked inspector for module sizes, imports, and importers.
+* Display NUL characters in module IDs as `\0` in diagrams and text reports.
 * Keep diagram filters in sync with the final input after rapid edits.
 * Deprecate function-valued plugin options; pass an options object instead.
 * Fix sourcemap filename attribution and filtering for spaces, Unicode, and literal percent escapes.

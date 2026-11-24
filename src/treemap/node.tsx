@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 /* eslint-disable react/no-unknown-property */
 import { FunctionalComponent } from "preact";
 import { useContext, useLayoutEffect, useRef } from "preact/hooks";
@@ -108,7 +109,7 @@ export const Node: FunctionalComponent<NodeProps> = ({ node, onMouseOver, onClic
         }}
         {...textProps}
       >
-        {data.name}
+        {displayModuleId(data.name)}
       </text>
     </g>
   );

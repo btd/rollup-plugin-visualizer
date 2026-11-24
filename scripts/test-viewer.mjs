@@ -136,6 +136,9 @@ try {
     peakRssBytes = 0;
     browser = await engines[name].launch({
       headless: true,
+      ...(name === "chromium" && process.env.CHROME_PATH
+        ? { executablePath: process.env.CHROME_PATH }
+        : {}),
       ...(name === "chromium" ? { args: ["--no-sandbox", "--enable-unsafe-swiftshader"] } : {}),
     });
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
@@ -154,7 +157,7 @@ try {
     const page = await context.newPage();
     await page.goto(base);
     assert.equal(await page.locator('input[type="file"]').count(), 1);
-    assert.equal(await page.locator('input[name="template"]').count(), 5);
+    assert.equal(await page.locator('input[name="template"]').count(), 6);
     if (captureScreenshots) {
       await fs.mkdir(process.env.VIEWER_SCREENSHOT_DIR, { recursive: true });
       await page.screenshot({
@@ -237,7 +240,14 @@ try {
         window.copiedReportLink = text;
       };
     });
-    for (const template of ["treemap", "sunburst", "flamegraph", "network", "treemap-3d"]) {
+    for (const template of [
+      "treemap",
+      "sunburst",
+      "flamegraph",
+      "network",
+      "treemap-3d",
+      "treemap-v2",
+    ]) {
       await page.locator(`input[name="template"][value="${template}"]`).check();
       const url = await readyLink(page);
       assert.equal(new URL(url).pathname, mount + template + "/");
@@ -309,6 +319,29 @@ try {
             path: path.join(process.env.VIEWER_SCREENSHOT_DIR, `${name}-network.png`),
           });
         }
+      }
+      if (template === "treemap-v2") {
+        await report.evaluate(
+          () =>
+            new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+        );
+        const target = report.locator(".tmv2-node[data-module-id]").first();
+        // SVG geometry excludes the selection outline, whose thicker stroke
+        // legitimately changes its painted bounding box by one CSS pixel.
+        const readShape = (node) => {
+          const box = node.querySelector("rect").getBBox();
+          return {
+            transform: node.getAttribute("transform"),
+            width: box.width,
+            height: box.height,
+          };
+        };
+        const shape = await target.evaluate(readShape);
+        await target.click({ position: { x: 5, y: 5 } });
+        assert(await report.locator(".tmv2-id").textContent());
+        assert.deepEqual(await target.evaluate(readShape), shape);
+        await report.setViewportSize({ width: 1100, height: 760 });
+        assert(await report.locator(".tmv2-id").textContent());
       }
       await report.close();
     }

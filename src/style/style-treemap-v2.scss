@@ -1,0 +1,444 @@
+@use "base";
+
+main {
+  padding: 10px 12px;
+}
+
+.treemap-v2 {
+  --muted: #b9c0d0;
+  --control-border: #626a80;
+  --control-radius: 4px;
+  --hover: rgb(255 255 255 / 7%);
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  button,
+  summary,
+  .size-selector,
+  .tmv2-row {
+    border-radius: var(--control-radius);
+  }
+  button {
+    border: 0;
+    background: transparent;
+    padding: 4px 7px;
+    min-height: 26px;
+    cursor: pointer;
+  }
+  button:enabled:hover,
+  button:enabled:focus-visible,
+  summary:hover,
+  summary:focus-visible,
+  .size-selector:hover,
+  .tmv2-internal-row:hover,
+  .tmv2-internal-row:focus-within {
+    background: var(--hover);
+  }
+  button:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .tmv2-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    vertical-align: -3px;
+  }
+  .tmv2-icon-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tmv2-measurement-note > summary,
+  .tmv2-internal > summary {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    padding: 4px;
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  details[open] > summary > .tmv2-disclosure-icon {
+    transform: rotate(90deg);
+  }
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid #d1e0ff;
+    outline-offset: 2px;
+  }
+  input,
+  select {
+    border: 1px solid var(--control-border);
+    border-radius: var(--control-radius);
+    background: rgb(0 0 0 / 9%);
+    padding: 5px 6px;
+    min-width: 0;
+  }
+  select {
+    color: var(--text-color);
+    cursor: pointer;
+  }
+  select option {
+    color: #222536;
+    background-color: #f5f6fa;
+  }
+  select:hover,
+  input:not([type="radio"]):hover {
+    border-color: var(--muted);
+  }
+  .size-selector :is(input, label) {
+    cursor: pointer;
+  }
+  .tmv2-controls {
+    display: flex;
+    flex-shrink: 0;
+    padding-bottom: 8px;
+  }
+  .sidebar {
+    position: static;
+    height: auto;
+    margin: 0;
+    flex: 1;
+    flex-wrap: wrap;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .module-filters {
+    min-width: 260px;
+    gap: 14px;
+  }
+  .module-filter {
+    min-width: 0;
+  }
+  .module-filter + .module-filter {
+    margin-left: 0;
+  }
+  .module-filter input {
+    min-width: 0;
+    height: auto;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .tmv2-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 30%, 380px);
+    flex: 1;
+    min-height: 0;
+    column-gap: 16px;
+  }
+  .tmv2-workspace.details-closed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tmv2-chart {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tmv2-chart-navigation {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .tmv2-chart-navigation nav {
+    flex: 1;
+    min-width: 0;
+    max-height: 72px;
+    overflow: auto;
+    overflow-wrap: anywhere;
+  }
+  .tmv2-chart-navigation nav button {
+    padding-inline: 3px;
+    text-align: left;
+  }
+  .tmv2-plot {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+  }
+  .tmv2-plot svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    font-size: 1rem;
+  }
+  .tmv2-chart-empty {
+    position: absolute;
+    padding: 12px;
+    max-width: 34em;
+    pointer-events: none;
+  }
+  .tmv2-hover {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+    min-width: 0;
+    color: var(--muted);
+    font: 11px/18px monospace;
+  }
+  .tmv2-hover span:first-child {
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .tmv2-hover span:last-child {
+    flex-shrink: 0;
+  }
+
+  .tmv2-inspector {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+  }
+  .tmv2-inspector[hidden] {
+    display: none;
+  }
+  .tmv2-inspector-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    margin-bottom: 8px;
+  }
+  .tmv2-identity {
+    flex-shrink: 0;
+    max-height: 45%;
+    overflow-y: auto;
+    padding: 0 4px 10px;
+  }
+  .tmv2-kind,
+  .tmv2-measurement-note,
+  .tmv2-availability {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .tmv2-kind {
+    margin-bottom: 3px;
+    overflow-wrap: anywhere;
+  }
+  h2 {
+    font-size: 15px;
+    margin: 0 0 7px;
+    overflow-wrap: anywhere;
+  }
+  .tmv2-id {
+    display: block;
+    min-width: 0;
+    max-height: 96px;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    user-select: text;
+    font: 11px/16px monospace;
+  }
+  .tmv2-measurement {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    margin: 9px 0 4px;
+  }
+  .tmv2-measurement strong {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .tmv2-measurement span,
+  .tmv2-other-sizes {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .tmv2-measurement span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .tmv2-other-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tmv2-measurement-note {
+    margin-top: 7px;
+  }
+  .tmv2-measurement-note p {
+    margin: 5px 0;
+  }
+  .tmv2-availability {
+    margin-top: 5px;
+  }
+  .tmv2-availability:empty {
+    margin: 0;
+  }
+  .tmv2-show-chart {
+    color: #d1e0ff;
+  }
+  .tmv2-occurrence-choice {
+    display: block;
+    margin-top: 8px;
+  }
+  .tmv2-occurrence-choice select {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .tmv2-occurrences {
+    max-height: 110px;
+    overflow-y: auto;
+  }
+  .tmv2-occurrences > div {
+    margin: 7px 0;
+  }
+  .tmv2-occurrences b,
+  .tmv2-occurrences span {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+
+  .tmv2-sections {
+    display: flex;
+    flex-shrink: 0;
+    gap: 5px;
+  }
+  .tmv2-sections button {
+    border-bottom: 2px solid transparent;
+    padding: 7px 4px;
+  }
+  .tmv2-sections button[aria-pressed="true"] {
+    border-bottom-color: #d1e0ff;
+  }
+  .tmv2-sections span {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .tmv2-list-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    padding-top: 8px;
+  }
+  .tmv2-list-scope {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+  .tmv2-search {
+    display: block;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+  .tmv2-search input {
+    width: 100%;
+    display: block;
+    color: var(--text-color);
+  }
+  .tmv2-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+  }
+  .tmv2-row {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 4px;
+  }
+  .tmv2-sort {
+    margin-bottom: 6px;
+    color: var(--muted);
+  }
+  .tmv2-file {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 8px;
+  }
+  .tmv2-file small {
+    grid-column: 1;
+  }
+  .tmv2-file b {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .tmv2-path {
+    display: block;
+    font: 11px/17px monospace;
+    overflow-wrap: anywhere;
+  }
+  .tmv2-path + .tmv2-path {
+    color: var(--muted);
+  }
+  .tmv2-row small {
+    color: var(--muted);
+    display: block;
+    font-size: 11px;
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+  }
+  .tmv2-kind-label {
+    color: #d1e0ff;
+  }
+  .tmv2-internal {
+    flex-shrink: 0;
+    max-height: 30%;
+    overflow-y: auto;
+    margin-top: 8px;
+    font-size: 11px;
+  }
+  .tmv2-internal summary {
+    color: var(--muted);
+  }
+  .tmv2-internal-row button {
+    min-height: 0;
+    padding: 0;
+    text-align: inherit;
+    overflow-wrap: anywhere;
+    background: transparent;
+  }
+  .tmv2-internal-row button:enabled:hover,
+  .tmv2-internal-row button:enabled:focus-visible {
+    background: transparent;
+    text-decoration: underline;
+  }
+  .tmv2-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (max-height: 700px) {
+  .treemap-v2 .tmv2-identity {
+    max-height: 40%;
+  }
+}

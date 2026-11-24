@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 import { BundleId, ModuleLengths, VisualizerData } from "../../shared/types.js";
 
 export const outputPlainTextList = (strData: string) => {
@@ -25,7 +26,7 @@ export const outputPlainTextList = (strData: string) => {
     files.sort((e1, e2) => e1[0].localeCompare(e2[0]));
 
     for (const [file, lengths] of files) {
-      output += IDENT + file + ":\n";
+      output += IDENT + displayModuleId(file) + ":\n";
       output += IDENT + IDENT + `rendered: ${String(lengths.renderedLength)}\n`;
       if (data.options.gzip) {
         output += IDENT + IDENT + `gzip: ${String(lengths.gzipLength)}\n`;

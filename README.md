@@ -22,8 +22,8 @@ To print a report link directly during a build:
 visualizer({ output: "link", template: "treemap", open: false });
 ```
 
-File output remains the default. Link output supports treemap, sunburst, flamegraph, network,
-and treemap-3d. It ignores `filename`, rejects `emitFile: true`, and creates no report file or asset.
+File output remains the default. Link output supports treemap, treemap-v2, sunburst, flamegraph,
+network, and treemap-3d. It ignores `filename`, rejects `emitFile: true`, and creates no report file or asset.
 `open: true` opens the report link. Links use the bundler's info logger, so keep info logs enabled.
 Markdown, list, and raw-data still use file output.
 
@@ -169,6 +169,32 @@ This is a top-down version of the sunburst view and should feel familiar if you 
 
 This rectangular hierarchical view makes large modules easy to find quickly. It can also reveal repeated modules, because repeated content tends to show similar structure and relative size.
 
+### Treemap v2
+
+Select `template: "treemap-v2"` for a treemap with a docked dependency inspector:
+
+```js
+visualizer({ template: "treemap-v2" });
+```
+
+Click a file or group to hold its details. Follow **Imported by** and **Imports**
+without moving the chart; group relationships preserve both file endpoints.
+Search **Files** to find small modules. **Clear selection** returns the panel to
+the current chart view's summary without changing zoom. Full module IDs are
+selectable monospace text. **Hide details** recovers chart space; clicking a node
+opens its details again.
+
+Double-click a group or use **Zoom to selection** to enter its view in both the
+chart and panel. That same button becomes **Undo zoom** for the focused selection,
+restoring the previous chart and panel, including the tab, search, and scroll position. Breadcrumbs and **Overview** navigate both
+to the chosen location. If a module contributes to several chunks, choose the
+output occurrence to locate. Sizes identify their chunk; relationships
+come from the report's source dependency graph. Compressed sums are not bundle
+transfer sizes.
+
+Chart filters retain the held details and explain hidden targets. Existing
+`treemap` behavior and the default template are unchanged.
+
 ### Network
 
 Use this view to answer, "Why is this included?"  
@@ -207,7 +233,7 @@ Produces a Markdown report with summary tables and notes about config and size p
 - `filename` (`string`, default `stats.{ext based on template}`): Name of the generated report file. Ignored with `output: "link"`.
 - `title` (`string`, default `Rollup Visualizer`): HTML `<title>` value.
 - `open` (`boolean`, default `false`): Open the generated file in your default browser.
-- `template` (`string`, default `treemap`): Report type: `sunburst`, `treemap`, `treemap-3d`, `network`, `raw-data`, `list`, `markdown`, `flamegraph`.
+- `template` (`string`, default `treemap`): Report type: `sunburst`, `treemap`, `treemap-v2`, `treemap-3d`, `network`, `raw-data`, `list`, `markdown`, `flamegraph`.
 - `gzipSize` (`boolean`, default `false`): Include gzip size in the report.
 - `brotliSize` (`boolean`, default `false`): Include Brotli size in the report.
 

@@ -1,3 +1,4 @@
+import { displayModuleId } from "../../shared/display-module-id.js";
 import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useRef, useState } from "preact/hooks";
 import { fitTransform, identityTransform, Transform } from "./transform";
@@ -216,7 +217,7 @@ export const Network: FunctionalComponent<NetworkProps> = ({
                 className="node"
                 key={node.uid}
                 data-uid={node.uid}
-                aria-label={node.isEntry ? `${node.id} (Entry point)` : node.id}
+                aria-label={displayModuleId(node.id) + (node.isEntry ? " (Entry point)" : "")}
                 r={node.radius}
                 fill={getColor(node)}
                 cx={node.x}

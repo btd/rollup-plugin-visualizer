@@ -3,6 +3,7 @@
 export type TemplateType =
   | "sunburst"
   | "treemap"
+  | "treemap-v2"
   | "treemap-3d"
   | "network"
   | "raw-data"
@@ -13,6 +14,7 @@ export type TemplateType =
 const templates: ReadonlyArray<TemplateType> = [
   "sunburst",
   "treemap",
+  "treemap-v2",
   "treemap-3d",
   "network",
   "list",

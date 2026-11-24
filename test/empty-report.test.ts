@@ -2,6 +2,7 @@ import vm from "node:vm";
 import { render } from "preact";
 import { describe, expect, it, vi } from "vitest";
 import treemap from "../src/treemap";
+import treemapV2 from "../src/treemap-v2";
 import treemap3d from "../src/treemap-3d";
 import sunburst from "../src/sunburst";
 import flamegraph from "../src/flamegraph";
@@ -15,7 +16,7 @@ vi.mock("preact", async (importOriginal) => ({
   render: vi.fn(),
 }));
 
-const charts = { treemap, "treemap-3d": treemap3d, sunburst, flamegraph, network };
+const charts = { treemap, "treemap-v2": treemapV2, "treemap-3d": treemap3d, sunburst, flamegraph, network };
 
 describe("Empty report frontend entry points", () => {
   it.each([false, true])(

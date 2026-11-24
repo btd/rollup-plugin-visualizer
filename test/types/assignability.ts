@@ -37,5 +37,6 @@ export const annotatedRolldown = visualizer((o: RolldownOutputOptions) => ({ fil
 
 export const explicitUndefined = visualizer(undefined);
 export const objectOptions = visualizer({ template: "raw-data" });
+export const inspectorOptions = visualizer({ template: "treemap-v2" });
 declare const unionOptions: Parameters<typeof visualizer>[0];
 export const union = visualizer(unionOptions);

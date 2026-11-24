@@ -9,6 +9,7 @@ const TEMPLATE_TYPE_RENDERED: Record<TemplateType, TemplateRenderer> = {
   network: buildHtml("network"),
   sunburst: buildHtml("sunburst"),
   treemap: buildHtml("treemap"),
+  "treemap-v2": buildHtml("treemap-v2"),
   "treemap-3d": buildHtml("treemap-3d"),
   "raw-data": async ({ data }) => outputRawData(data),
   list: async ({ data }) => outputPlainTextList(data),

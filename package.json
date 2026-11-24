@@ -41,7 +41,8 @@
     "test:unit": "vitest --run",
     "test:consumers": "node test/run-consumer-fixtures.mjs",
     "build:viewer": "rollup -c rollup.config-viewer.js && node scripts/package-viewer.mjs",
-    "test:viewer": "node scripts/test-viewer.mjs"
+    "test:viewer": "node scripts/test-viewer.mjs",
+    "test:treemap-v2": "node scripts/test-treemap-v2.mjs"
   },
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.31",
@@ -85,6 +86,7 @@
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.2.0",
     "del-cli": "^8.0.1",
+    "lucide-preact": "^1.77.0",
     "npm-run-all": "^4.1.5",
     "oxlint": "^1.78.0",
     "playwright": "^1.65.1",
