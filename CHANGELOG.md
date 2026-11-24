@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.2.0
+## 7.3.0
 
 * Update dependencies.
 * Add `treemap-v2` with a docked inspector for module sizes, imports, and importers.
