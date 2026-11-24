@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-visualizer",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "description": "Visualize and analyze bundle sizes and module dependencies in Rollup, Rolldown, and Vite.",
   "author": "Denis Bardadym <bardadymchik@gmail.com>",
   "license": "MIT",
