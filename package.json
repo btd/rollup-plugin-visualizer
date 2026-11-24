@@ -41,6 +41,7 @@
     "test:unit": "vitest --run",
     "test:consumers": "node test/run-consumer-fixtures.mjs",
     "build:viewer": "rollup -c rollup.config-viewer.js && node scripts/package-viewer.mjs",
+    "test:browser": "run-s test:viewer test:treemap-v2",
     "test:viewer": "node scripts/test-viewer.mjs",
     "test:treemap-v2": "node scripts/test-treemap-v2.mjs"
   },

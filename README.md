@@ -44,7 +44,7 @@ for the wire contract and processing limits.
 `npm run build` produces the complete static application in `dist/viewer/`, with real template
 directories and relative assets. Host that directory through HTTP(S); no report backend is needed.
 For local verification, run `npx playwright install --with-deps chromium firefox webkit`, then
-`npm run test:viewer` after building.
+`npm run test:browser` after building to check the viewer and treemap inspector.
 
 The [Pages workflow](.github/workflows/pages.yml) validates and deploys that directory on master
 updates or manual dispatch. First set Settings → Pages → Source to **GitHub Actions**. Deploy and

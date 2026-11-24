@@ -30,7 +30,7 @@ jobs:
       - run: npm run lint
       - run: npx tsc -p src/tsconfig.json --noEmit
       - run: npx playwright install --with-deps chromium firefox webkit
-      - run: npm run test:viewer
+      - run: npm run test:browser
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

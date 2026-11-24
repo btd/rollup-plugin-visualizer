@@ -534,8 +534,7 @@ npm run build
 npm test
 npm run lint
 npx tsc -p src/tsconfig.json --noEmit
-npm run test:viewer
-npm run test:treemap-v2
+npm run test:browser
 ```
 
 The build must precede tests. Existing viewer browser checks are not automatically
